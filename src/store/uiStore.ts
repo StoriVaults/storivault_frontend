@@ -14,9 +14,6 @@ interface UiState {
   // Loading states
   globalLoading: boolean;
   
-  // Sidebar
-  sidebarOpen: boolean;
-  
   // Actions
   setTheme: (theme: Theme) => void;
   addToast: (toast: Omit<Toast, 'id'>) => void;
@@ -26,8 +23,6 @@ interface UiState {
   closeModal: (id: string) => void;
   closeAllModals: () => void;
   setGlobalLoading: (loading: boolean) => void;
-  setSidebarOpen: (open: boolean) => void;
-  toggleSidebar: () => void;
 }
 
 let toastIdCounter = 0;
@@ -39,7 +34,6 @@ export const useUiStore = create<UiState>((set, get) => ({
   toasts: [],
   modals: [],
   globalLoading: false,
-  sidebarOpen: false,
 
   // Theme actions
   setTheme: (theme: Theme) => {
@@ -112,15 +106,6 @@ export const useUiStore = create<UiState>((set, get) => ({
   // Loading actions
   setGlobalLoading: (loading: boolean) => {
     set({ globalLoading: loading });
-  },
-
-  // Sidebar actions
-  setSidebarOpen: (open: boolean) => {
-    set({ sidebarOpen: open });
-  },
-
-  toggleSidebar: () => {
-    set((state) => ({ sidebarOpen: !state.sidebarOpen }));
   }
 }));
 

@@ -128,14 +128,13 @@
     --shadow-strong: 0 8px 32px -8px hsl(0 0% 0% / 0.5);
     --shadow-primary: 0 4px 16px -4px hsl(16 100% 55% / 0.4);
   }
-}
 
-@layer base {
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
 
   body {
-    @apply bg-background text-foreground;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
 }

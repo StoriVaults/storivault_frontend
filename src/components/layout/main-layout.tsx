@@ -1,17 +1,22 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { Header } from './header';
-import { Sidebar } from './sidebar';
-import { useAuthStore } from '@/store/authStore';
-import { cn } from '@/lib/utils';
+import { useEffect } from "react";
+import { Header } from "./header";
+import { Footer } from "./footer";
+import { useAuthStore } from "@/store/authStore";
+import { cn } from "@/lib/utils";
 
 interface MainLayoutProps {
   children: React.ReactNode;
   className?: string;
+  showFooter?: boolean;
 }
 
-export function MainLayout({ children, className }: MainLayoutProps) {
+export function MainLayout({
+  children,
+  className,
+  showFooter = true,
+}: MainLayoutProps) {
   const { isAuthenticated, fetchMe } = useAuthStore();
 
   // Fetch user data on mount if authenticated
@@ -22,17 +27,12 @@ export function MainLayout({ children, className }: MainLayoutProps) {
   }, [isAuthenticated, fetchMe]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header />
-      <div className="flex">
-        <Sidebar />
-        <main className={cn(
-          "flex-1 md:ml-64 transition-all duration-300",
-          className
-        )}>
-          {children}
-        </main>
-      </div>
+      <main className={cn("flex-1 flex flex-col", className)}>
+        <div className="flex-1">{children}</div>
+        {showFooter && <Footer />}
+      </main>
     </div>
   );
 }
