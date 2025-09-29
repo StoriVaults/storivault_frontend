@@ -7,7 +7,6 @@ Generated from: `.`
 ## 📚 Table of Contents
 
 ### 📁 Root Files
-
 - [eslint.config.js](#eslintconfigjs)
 - [package.json](#packagejson)
 - [postcss.config.js](#postcssconfigjs)
@@ -18,7 +17,6 @@ Generated from: `.`
 - [vite.config.ts](#viteconfigts)
 
 ### 📁 src
-
 - [App.css](#src-Appcss)
 - [App.tsx](#src-Apptsx)
 - [index.css](#src-indexcss)
@@ -26,7 +24,6 @@ Generated from: `.`
 - [vite-env.d.ts](#src-vite-envdts)
 
 ### 📁 src\apis
-
 - [auth.ts](#src-apis-authts)
 - [client.ts](#src-apis-clientts)
 - [index.ts](#src-apis-indexts)
@@ -36,60 +33,52 @@ Generated from: `.`
 - [votes.ts](#src-apis-votests)
 
 ### 📁 src\components\layout
-
+- [footer.tsx](#src-components-layout-footertsx)
 - [header.tsx](#src-components-layout-headertsx)
 - [main-layout.tsx](#src-components-layout-main-layouttsx)
 
 ### 📁 src\components\ui
-
 - [file-dropzone.tsx](#src-components-ui-file-dropzonetsx)
 - [image-with-fallback.tsx](#src-components-ui-image-with-fallbacktsx)
 - [loading-spinner.tsx](#src-components-ui-loading-spinnertsx)
+- [logo.tsx](#src-components-ui-logotsx)
 - [story-card.tsx](#src-components-ui-story-cardtsx)
 - [toast-provider.tsx](#src-components-ui-toast-providertsx)
 - [toast.tsx](#src-components-ui-toasttsx)
 
 ### 📁 src\controllers
-
 - [authController.ts](#src-controllers-authControllerts)
 - [index.ts](#src-controllers-indexts)
 - [storyController.ts](#src-controllers-storyControllerts)
 - [userController.ts](#src-controllers-userControllerts)
 
 ### 📁 src\helper
-
 - [constants.ts](#src-helper-constantsts)
 - [formatting.ts](#src-helper-formattingts)
 - [index.ts](#src-helper-indexts)
 - [validation.ts](#src-helper-validationts)
 
 ### 📁 src\hooks
-
 - [use-mobile.tsx](#src-hooks-use-mobiletsx)
 
 ### 📁 src\lib
-
 - [utils.ts](#src-lib-utilsts)
 
 ### 📁 src\pages
-
 - [HomePage.tsx](#src-pages-HomePagetsx)
 - [Index.tsx](#src-pages-Indextsx)
 - [NotFound.tsx](#src-pages-NotFoundtsx)
 - [StoriesPage.tsx](#src-pages-StoriesPagetsx)
 
 ### 📁 src\pages\auth
-
 - [LoginPage.tsx](#src-pages-auth-LoginPagetsx)
 - [SignupPage.tsx](#src-pages-auth-SignupPagetsx)
 
 ### 📁 src\store
-
 - [authStore.ts](#src-store-authStorets)
 - [uiStore.ts](#src-store-uiStorets)
 
 ### 📁 src\types
-
 - [api.ts](#src-types-apits)
 - [index.ts](#src-types-indexts)
 
@@ -100,7 +89,6 @@ Generated from: `.`
 ### 📁 Root Files
 
 #### 📄 eslint.config.js
-
 <a name='eslintconfigjs'></a>
 
 **Path:** `eslint.config.js`
@@ -127,20 +115,16 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      "react-refresh/only-export-components": [
-        "warn",
-        { allowConstantExport: true },
-      ],
+      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       "@typescript-eslint/no-unused-vars": "off",
     },
-  }
+  },
 );
 ```
 
 ---
 
 #### 📄 package.json
-
 <a name='packagejson'></a>
 
 **Path:** `package.json`
@@ -236,7 +220,6 @@ export default tseslint.config(
 ---
 
 #### 📄 postcss.config.js
-
 <a name='postcssconfigjs'></a>
 
 **Path:** `postcss.config.js`
@@ -253,7 +236,6 @@ export default {
 ---
 
 #### 📄 tailwind.config.ts
-
 <a name='tailwindconfigts'></a>
 
 **Path:** `tailwind.config.ts`
@@ -263,114 +245,16 @@ import type { Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
-  content: [
-    "./pages/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
-  ],
+  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
   prefix: "",
   theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
-    },
+    // ... existing config ...
     extend: {
-      colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-          hover: "hsl(var(--primary-hover))",
-          light: "hsl(var(--primary-light))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-          hover: "hsl(var(--secondary-hover))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-          light: "hsl(var(--destructive-light))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-          hover: "hsl(var(--accent-hover))",
-        },
-        success: {
-          DEFAULT: "hsl(var(--success))",
-          foreground: "hsl(var(--success-foreground))",
-          light: "hsl(var(--success-light))",
-        },
-        warning: {
-          DEFAULT: "hsl(var(--warning))",
-          foreground: "hsl(var(--warning-foreground))",
-          light: "hsl(var(--warning-light))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
-        reading: {
-          bg: "hsl(var(--reading-bg))",
-          text: "hsl(var(--reading-text))",
-        },
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+        display: ['Playfair Display', 'serif'],
       },
-      backgroundImage: {
-        "gradient-primary": "var(--gradient-primary)",
-        "gradient-hero": "var(--gradient-hero)",
-        "gradient-card": "var(--gradient-card)",
-      },
-      boxShadow: {
-        soft: "var(--shadow-soft)",
-        medium: "var(--shadow-medium)",
-        strong: "var(--shadow-strong)",
-        primary: "var(--shadow-primary)",
-      },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
-      },
-      keyframes: {
-        "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
-        },
-        "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
-        },
-      },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-      },
+      // ... rest of your existing extend config ...
     },
   },
   plugins: [require("tailwindcss-animate")],
@@ -380,7 +264,6 @@ export default {
 ---
 
 #### 📄 tsconfig.app.json
-
 <a name='tsconfigappjson'></a>
 
 **Path:** `tsconfig.app.json`
@@ -421,7 +304,6 @@ export default {
 ---
 
 #### 📄 tsconfig.json
-
 <a name='tsconfigjson'></a>
 
 **Path:** `tsconfig.json`
@@ -429,10 +311,7 @@ export default {
 ```json
 {
   "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ],
+  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
@@ -451,7 +330,6 @@ export default {
 ---
 
 #### 📄 tsconfig.node.json
-
 <a name='tsconfignodejson'></a>
 
 **Path:** `tsconfig.node.json`
@@ -484,7 +362,6 @@ export default {
 ---
 
 #### 📄 vite.config.ts
-
 <a name='viteconfigts'></a>
 
 **Path:** `vite.config.ts`
@@ -501,9 +378,7 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  plugins: [react(), mode === "development" && componentTagger()].filter(
-    Boolean
-  ),
+  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -517,7 +392,6 @@ export default defineConfig(({ mode }) => ({
 ### 📁 src
 
 #### 📄 src\App.css
-
 <a name='src-Appcss'></a>
 
 **Path:** `src\App.css`
@@ -570,7 +444,6 @@ export default defineConfig(({ mode }) => ({
 ---
 
 #### 📄 src\App.tsx
-
 <a name='src-Apptsx'></a>
 
 **Path:** `src\App.tsx`
@@ -630,7 +503,6 @@ export default App;
 ---
 
 #### 📄 src\index.css
-
 <a name='src-indexcss'></a>
 
 **Path:** `src\index.css`
@@ -697,18 +569,10 @@ export default App;
     /* Reading-specific colors */
     --reading-bg: 43 46% 97%;
     --reading-text: 220 13% 18%;
-
+    
     /* Gradients */
-    --gradient-primary: linear-gradient(
-      135deg,
-      hsl(16 100% 50%),
-      hsl(16 100% 45%)
-    );
-    --gradient-hero: linear-gradient(
-      135deg,
-      hsl(16 100% 50%),
-      hsl(210 100% 50%)
-    );
+    --gradient-primary: linear-gradient(135deg, hsl(16 100% 50%), hsl(16 100% 45%));
+    --gradient-hero: linear-gradient(135deg, hsl(16 100% 50%), hsl(210 100% 50%));
     --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(210 16% 98%));
 
     /* Shadows */
@@ -765,16 +629,8 @@ export default App;
     --reading-bg: 220 13% 8%;
     --reading-text: 210 20% 90%;
 
-    --gradient-primary: linear-gradient(
-      135deg,
-      hsl(16 100% 55%),
-      hsl(16 100% 50%)
-    );
-    --gradient-hero: linear-gradient(
-      135deg,
-      hsl(16 100% 55%),
-      hsl(210 100% 60%)
-    );
+    --gradient-primary: linear-gradient(135deg, hsl(16 100% 55%), hsl(16 100% 50%));
+    --gradient-hero: linear-gradient(135deg, hsl(16 100% 55%), hsl(210 100% 60%));
     --gradient-card: linear-gradient(135deg, hsl(220 13% 8%), hsl(220 13% 10%));
 
     --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
@@ -782,15 +638,14 @@ export default App;
     --shadow-strong: 0 8px 32px -8px hsl(0 0% 0% / 0.5);
     --shadow-primary: 0 4px 16px -4px hsl(16 100% 55% / 0.4);
   }
-}
 
-@layer base {
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
 
   body {
-    @apply bg-background text-foreground;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
 }
 ```
@@ -798,7 +653,6 @@ export default App;
 ---
 
 #### 📄 src\main.tsx
-
 <a name='src-maintsx'></a>
 
 **Path:** `src\main.tsx`
@@ -808,13 +662,15 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 
+// Set document title
+document.title = "StoriVault - Your Gateway to Infinite Stories";
+
 createRoot(document.getElementById("root")!).render(<App />);
 ```
 
 ---
 
 #### 📄 src\vite-env.d.ts
-
 <a name='src-vite-envdts'></a>
 
 **Path:** `src\vite-env.d.ts`
@@ -828,80 +684,70 @@ createRoot(document.getElementById("root")!).render(<App />);
 ### 📁 src\apis
 
 #### 📄 src\apis\auth.ts
-
 <a name='src-apis-authts'></a>
 
 **Path:** `src\apis\auth.ts`
 
 ```typescript
-import { apiClient, createFormData } from "./client";
-import { TokenResponse, User, SignupRequest } from "@/types";
+import { apiClient, createFormData } from './client';
+import { TokenResponse, User, SignupRequest } from '@/types';
 
 export const authApi = {
   // Login with email/password
   login: async (email: string, password: string): Promise<TokenResponse> => {
     const formData = createFormData({
       username: email, // Backend expects 'username' field for email
-      password: password,
+      password: password
     });
 
-    const response = await apiClient.post<TokenResponse>(
-      "/auth/token",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
+    const response = await apiClient.post<TokenResponse>('/auth/token', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
 
     return response.data;
   },
 
   // Sign up new user
-  signup: async (
-    username: string,
-    email: string,
-    password: string
-  ): Promise<User> => {
+  signup: async (username: string, email: string, password: string): Promise<User> => {
     const request: SignupRequest = {
       username,
       email,
-      password,
+      password
     };
 
-    const response = await apiClient.post<User>("/auth/signup", request);
+    const response = await apiClient.post<User>('/auth/signup', request);
     return response.data;
   },
 
   // Get current user profile
   getMe: async (token?: string): Promise<User> => {
     const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
-    const response = await apiClient.get<User>("/users/me", { headers });
+    
+    const response = await apiClient.get<User>('/users/me', { headers });
     return response.data;
-  },
+  }
 };
 ```
 
 ---
 
 #### 📄 src\apis\client.ts
-
 <a name='src-apis-clientts'></a>
 
 **Path:** `src\apis\client.ts`
 
 ```typescript
-import axios, { AxiosInstance, AxiosError, AxiosResponse } from "axios";
-import { ApiEnvelope, ApiError } from "@/types";
+import axios, { AxiosInstance, AxiosError, AxiosResponse } from 'axios';
+import { ApiEnvelope, ApiError } from '@/types';
 
 // Create axios instance
 export const apiClient: AxiosInstance = axios.create({
-  baseURL: "https://usman678zafar-storivault-backend.hf.space",
+  baseURL: 'https://usman678zafar-storivault-backend.hf.space',
   timeout: 30000,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
@@ -909,7 +755,7 @@ export const apiClient: AxiosInstance = axios.create({
 apiClient.interceptors.request.use(
   (config) => {
     // Get token from auth store
-    const authStorage = localStorage.getItem("auth-storage");
+    const authStorage = localStorage.getItem('auth-storage');
     if (authStorage) {
       try {
         const { state } = JSON.parse(authStorage);
@@ -917,10 +763,10 @@ apiClient.interceptors.request.use(
           config.headers.Authorization = `Bearer ${state.accessToken}`;
         }
       } catch (error) {
-        console.warn("Failed to parse auth storage:", error);
+        console.warn('Failed to parse auth storage:', error);
       }
     }
-
+    
     return config;
   },
   (error) => {
@@ -932,20 +778,18 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
     // Handle /auth/token endpoint (doesn't use envelope)
-    if (response.config.url?.includes("/auth/token")) {
+    if (response.config.url?.includes('/auth/token')) {
       return response;
     }
-
+    
     // Unwrap envelope for other endpoints
     const envelope = response.data as ApiEnvelope;
-
+    
     if (envelope.success) {
       return { ...response, data: envelope.data };
     } else {
       // Convert envelope error to ApiError
-      const apiError: ApiError = new Error(
-        envelope.message || "API Error"
-      ) as ApiError;
+      const apiError: ApiError = new Error(envelope.message || 'API Error') as ApiError;
       apiError.status = response.status;
       apiError.details = envelope.error?.details;
       throw apiError;
@@ -954,20 +798,20 @@ apiClient.interceptors.response.use(
   (error: AxiosError) => {
     // Handle network errors and HTTP error responses
     const apiError: ApiError = new Error() as ApiError;
-
+    
     if (error.response) {
       // Server responded with error status
       const data = error.response.data as any;
-
-      if (data && typeof data === "object") {
+      
+      if (data && typeof data === 'object') {
         if (data.success === false) {
           // Envelope error
-          apiError.message = data.message || "API Error";
+          apiError.message = data.message || 'API Error';
           apiError.details = data.error?.details;
         } else if (data.detail) {
           // FastAPI validation error
-          apiError.message = Array.isArray(data.detail)
-            ? data.detail.map((d: any) => d.msg).join(", ")
+          apiError.message = Array.isArray(data.detail) 
+            ? data.detail.map((d: any) => d.msg).join(', ')
             : data.detail;
         } else {
           apiError.message = error.message;
@@ -975,30 +819,27 @@ apiClient.interceptors.response.use(
       } else {
         apiError.message = error.message;
       }
-
+      
       apiError.status = error.response.status;
-
+      
       // Handle 401 errors - logout user
       if (error.response.status === 401) {
         // Clear auth storage
-        localStorage.removeItem("auth-storage");
-
+        localStorage.removeItem('auth-storage');
+        
         // Redirect to login if not already there
-        if (
-          typeof window !== "undefined" &&
-          !window.location.pathname.includes("/auth")
-        ) {
-          window.location.href = "/auth/login";
+        if (typeof window !== 'undefined' && !window.location.pathname.includes('/auth')) {
+          window.location.href = '/auth/login';
         }
       }
     } else if (error.request) {
       // Network error
-      apiError.message = "Network error. Please check your connection.";
+      apiError.message = 'Network error. Please check your connection.';
     } else {
       // Other error
-      apiError.message = error.message || "Unknown error occurred";
+      apiError.message = error.message || 'Unknown error occurred';
     }
-
+    
     return Promise.reject(apiError);
   }
 );
@@ -1006,20 +847,20 @@ apiClient.interceptors.response.use(
 // Helper function to create multipart form data
 export const createFormData = (data: Record<string, any>): FormData => {
   const formData = new FormData();
-
+  
   for (const [key, value] of Object.entries(data)) {
     if (value !== undefined && value !== null) {
       if (value instanceof File) {
         formData.append(key, value);
       } else if (Array.isArray(value)) {
         // Handle arrays (e.g., tags)
-        formData.append(key, value.join(","));
+        formData.append(key, value.join(','));
       } else {
         formData.append(key, String(value));
       }
     }
   }
-
+  
   return formData;
 };
 
@@ -1029,38 +870,29 @@ export default apiClient;
 ---
 
 #### 📄 src\apis\index.ts
-
 <a name='src-apis-indexts'></a>
 
 **Path:** `src\apis\index.ts`
 
 ```typescript
-export * from "./client";
-export * from "./auth";
-export * from "./users";
-export * from "./stories";
-export * from "./uploads";
-export * from "./votes";
+export * from './client';
+export * from './auth';
+export * from './users';
+export * from './stories';
+export * from './uploads';
+export * from './votes';
 ```
 
 ---
 
 #### 📄 src\apis\stories.ts
-
 <a name='src-apis-storiests'></a>
 
 **Path:** `src\apis\stories.ts`
 
 ```typescript
-import { apiClient, createFormData } from "./client";
-import {
-  Story,
-  CreateStoryRequest,
-  UpdateStoryRequest,
-  StoriesQuery,
-  SearchQuery,
-  PaginatedResponse,
-} from "@/types";
+import { apiClient, createFormData } from './client';
+import { Story, CreateStoryRequest, UpdateStoryRequest, StoriesQuery, SearchQuery, PaginatedResponse } from '@/types';
 
 export const storiesApi = {
   // Create story with multipart form (including cover upload)
@@ -1069,63 +901,52 @@ export const storiesApi = {
     description?: string;
     genre: string;
     tags?: string;
-    visibility?: "public" | "private";
+    visibility?: 'public' | 'private';
     cover?: File;
   }): Promise<Story> => {
     const formData = createFormData(data);
-
-    const response = await apiClient.post<Story>("/stories", formData, {
+    
+    const response = await apiClient.post<Story>('/stories', formData, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
     });
-
+    
     return response.data;
   },
 
   // Create story with JSON
   createStory: async (data: CreateStoryRequest): Promise<Story> => {
-    const response = await apiClient.post<Story>("/stories/json", data);
+    const response = await apiClient.post<Story>('/stories/json', data);
     return response.data;
   },
 
   // Update story cover
   updateStoryCover: async (storyId: string, cover: File): Promise<Story> => {
     const formData = createFormData({ cover });
-
-    const response = await apiClient.patch<Story>(
-      `/stories/${storyId}/cover`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-
+    
+    const response = await apiClient.patch<Story>(`/stories/${storyId}/cover`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    
     return response.data;
   },
 
   // Get stories with filters and pagination
-  getStories: async (
-    query: StoriesQuery = {}
-  ): Promise<PaginatedResponse<Story>> => {
-    const response = await apiClient.get<PaginatedResponse<Story>>("/stories", {
-      params: query,
+  getStories: async (query: StoriesQuery = {}): Promise<PaginatedResponse<Story>> => {
+    const response = await apiClient.get<PaginatedResponse<Story>>('/stories', {
+      params: query
     });
     return response.data;
   },
 
   // Search stories
-  searchStories: async (
-    query: SearchQuery
-  ): Promise<PaginatedResponse<Story>> => {
-    const response = await apiClient.get<PaginatedResponse<Story>>(
-      "/stories/search",
-      {
-        params: query,
-      }
-    );
+  searchStories: async (query: SearchQuery): Promise<PaginatedResponse<Story>> => {
+    const response = await apiClient.get<PaginatedResponse<Story>>('/stories/search', {
+      params: query
+    });
     return response.data;
   },
 
@@ -1136,10 +957,7 @@ export const storiesApi = {
   },
 
   // Update story
-  updateStory: async (
-    storyId: string,
-    data: UpdateStoryRequest
-  ): Promise<Story> => {
+  updateStory: async (storyId: string, data: UpdateStoryRequest): Promise<Story> => {
     const response = await apiClient.patch<Story>(`/stories/${storyId}`, data);
     return response.data;
   },
@@ -1147,73 +965,57 @@ export const storiesApi = {
   // Delete story
   deleteStory: async (storyId: string): Promise<void> => {
     await apiClient.delete(`/stories/${storyId}`);
-  },
+  }
 };
 ```
 
 ---
 
 #### 📄 src\apis\uploads.ts
-
 <a name='src-apis-uploadsts'></a>
 
 **Path:** `src\apis\uploads.ts`
 
 ```typescript
-import { apiClient, createFormData } from "./client";
-import {
-  UploadResponse,
-  PresignRequest,
-  PresignResponse,
-  GetUrlQuery,
-  GetUrlResponse,
-} from "@/types";
+import { apiClient, createFormData } from './client';
+import { UploadResponse, PresignRequest, PresignResponse, GetUrlQuery, GetUrlResponse } from '@/types';
 
 export const uploadsApi = {
   // Check upload status
   getStatus: async (): Promise<{ configured: boolean }> => {
-    const response = await apiClient.get<{ configured: boolean }>(
-      "/uploads/status"
-    );
+    const response = await apiClient.get<{ configured: boolean }>('/uploads/status');
     return response.data;
   },
 
   // Direct file upload
   uploadFile: async (
-    file: File,
-    folder?: "images" | "covers" | "media" | "avatars"
+    file: File, 
+    folder?: 'images' | 'covers' | 'media' | 'avatars'
   ): Promise<UploadResponse> => {
     const formData = createFormData({ uploadedFile: file });
-
+    
     const params = folder ? { folder } : {};
-
-    const response = await apiClient.post<UploadResponse>(
-      "/uploads/file",
-      formData,
-      {
-        params,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-
+    
+    const response = await apiClient.post<UploadResponse>('/uploads/file', formData, {
+      params,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    
     return response.data;
   },
 
   // Get presigned URL for upload
   getPresignedUrl: async (data: PresignRequest): Promise<PresignResponse> => {
-    const response = await apiClient.post<PresignResponse>(
-      "/uploads/presign",
-      data
-    );
+    const response = await apiClient.post<PresignResponse>('/uploads/presign', data);
     return response.data;
   },
 
   // Get signed URL for private file access
   getSignedUrl: async (query: GetUrlQuery): Promise<GetUrlResponse> => {
-    const response = await apiClient.get<GetUrlResponse>("/uploads/get-url", {
-      params: query,
+    const response = await apiClient.get<GetUrlResponse>('/uploads/get-url', {
+      params: query
     });
     return response.data;
   },
@@ -1222,48 +1024,38 @@ export const uploadsApi = {
   deleteFile: async (key: string): Promise<{ key: string }> => {
     const response = await apiClient.delete<{ key: string }>(`/uploads/${key}`);
     return response.data;
-  },
+  }
 };
 ```
 
 ---
 
 #### 📄 src\apis\users.ts
-
 <a name='src-apis-usersts'></a>
 
 **Path:** `src\apis\users.ts`
 
 ```typescript
-import { apiClient, createFormData } from "./client";
-import {
-  User,
-  UpdateProfileRequest,
-  ChangePasswordRequest,
-  PaginatedResponse,
-} from "@/types";
+import { apiClient, createFormData } from './client';
+import { User, UpdateProfileRequest, ChangePasswordRequest, PaginatedResponse } from '@/types';
 
 export const usersApi = {
   // Update current user profile
   updateProfile: async (data: UpdateProfileRequest): Promise<User> => {
-    const response = await apiClient.patch<User>("/users/me", data);
+    const response = await apiClient.patch<User>('/users/me', data);
     return response.data;
   },
 
   // Upload profile picture
   uploadProfilePicture: async (file: File): Promise<User> => {
     const formData = createFormData({ file });
-
-    const response = await apiClient.post<User>(
-      "/users/me/profile-pic",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-
+    
+    const response = await apiClient.post<User>('/users/me/profile-pic', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    
     return response.data;
   },
 
@@ -1284,68 +1076,53 @@ export const usersApi = {
   },
 
   // Get user followers
-  getFollowers: async (
-    username: string,
-    page = 1,
-    limit = 20
-  ): Promise<PaginatedResponse<User>> => {
-    const response = await apiClient.get<PaginatedResponse<User>>(
-      `/users/${username}/followers`,
-      {
-        params: { page, limit },
-      }
-    );
+  getFollowers: async (username: string, page = 1, limit = 20): Promise<PaginatedResponse<User>> => {
+    const response = await apiClient.get<PaginatedResponse<User>>(`/users/${username}/followers`, {
+      params: { page, limit }
+    });
     return response.data;
   },
 
   // Get user following
-  getFollowing: async (
-    username: string,
-    page = 1,
-    limit = 20
-  ): Promise<PaginatedResponse<User>> => {
-    const response = await apiClient.get<PaginatedResponse<User>>(
-      `/users/${username}/following`,
-      {
-        params: { page, limit },
-      }
-    );
+  getFollowing: async (username: string, page = 1, limit = 20): Promise<PaginatedResponse<User>> => {
+    const response = await apiClient.get<PaginatedResponse<User>>(`/users/${username}/following`, {
+      params: { page, limit }
+    });
     return response.data;
   },
 
   // Change password
   changePassword: async (data: ChangePasswordRequest): Promise<void> => {
-    await apiClient.post("/users/me/password", data);
+    await apiClient.post('/users/me/password', data);
   },
 
   // Delete account
   deleteAccount: async (): Promise<void> => {
-    await apiClient.delete("/users/me");
-  },
+    await apiClient.delete('/users/me');
+  }
 };
 ```
 
 ---
 
 #### 📄 src\apis\votes.ts
-
 <a name='src-apis-votests'></a>
 
 **Path:** `src\apis\votes.ts`
 
 ```typescript
-import { apiClient } from "./client";
-import { VoteRequest } from "@/types";
+import { apiClient } from './client';
+import { VoteRequest } from '@/types';
 
 export const votesApi = {
   // Vote on a chapter
   vote: async (chapterId: string): Promise<void> => {
     const request: VoteRequest = {
-      chapter_id: chapterId,
+      chapter_id: chapterId
     };
-
-    await apiClient.post("/votes", request);
-  },
+    
+    await apiClient.post('/votes', request);
+  }
 };
 ```
 
@@ -1354,65 +1131,55 @@ export const votesApi = {
 ### 📁 src\controllers
 
 #### 📄 src\controllers\authController.ts
-
 <a name='src-controllers-authControllerts'></a>
 
 **Path:** `src\controllers\authController.ts`
 
 ```typescript
-import { authApi } from "@/apis";
-import { useAuthStore } from "@/store/authStore";
-import { useUiStore } from "@/store/uiStore";
+import { authApi } from '@/apis';
+import { useAuthStore } from '@/store/authStore';
+import { useUiStore } from '@/store/uiStore';
 
 export class AuthController {
-  static async loginWithToast(
-    email: string,
-    password: string
-  ): Promise<boolean> {
+  static async loginWithToast(email: string, password: string): Promise<boolean> {
     const { login } = useAuthStore.getState();
     const { addToast } = useUiStore.getState();
-
+    
     try {
       await login(email, password);
       addToast({
-        title: "Welcome back!",
-        description: "You have successfully signed in.",
-        type: "success",
+        title: 'Welcome back!',
+        description: 'You have successfully signed in.',
+        type: 'success'
       });
       return true;
     } catch (error: any) {
       addToast({
-        title: "Login failed",
-        description:
-          error.message || "Please check your credentials and try again.",
-        type: "error",
+        title: 'Login failed',
+        description: error.message || 'Please check your credentials and try again.',
+        type: 'error'
       });
       return false;
     }
   }
 
-  static async signupWithToast(
-    username: string,
-    email: string,
-    password: string
-  ): Promise<boolean> {
+  static async signupWithToast(username: string, email: string, password: string): Promise<boolean> {
     const { signup } = useAuthStore.getState();
     const { addToast } = useUiStore.getState();
-
+    
     try {
       await signup(username, email, password);
       addToast({
-        title: "Welcome to StoriVault!",
-        description: "Your account has been created successfully.",
-        type: "success",
+        title: 'Welcome to StoriVault!',
+        description: 'Your account has been created successfully.',
+        type: 'success'
       });
       return true;
     } catch (error: any) {
       addToast({
-        title: "Signup failed",
-        description:
-          error.message || "Please check your information and try again.",
-        type: "error",
+        title: 'Signup failed',
+        description: error.message || 'Please check your information and try again.',
+        type: 'error'
       });
       return false;
     }
@@ -1421,12 +1188,12 @@ export class AuthController {
   static logoutWithToast(): void {
     const { logout } = useAuthStore.getState();
     const { addToast } = useUiStore.getState();
-
+    
     logout();
     addToast({
-      title: "Signed out",
-      description: "You have been successfully signed out.",
-      type: "success",
+      title: 'Signed out',
+      description: 'You have been successfully signed out.',
+      type: 'success'
     });
   }
 }
@@ -1435,49 +1202,47 @@ export class AuthController {
 ---
 
 #### 📄 src\controllers\index.ts
-
 <a name='src-controllers-indexts'></a>
 
 **Path:** `src\controllers\index.ts`
 
 ```typescript
 // Controllers orchestrate complex business logic flows
-export * from "./storyController";
-export * from "./userController";
-export * from "./authController";
+export * from './storyController';
+export * from './userController';
+export * from './authController';
 ```
 
 ---
 
 #### 📄 src\controllers\storyController.ts
-
 <a name='src-controllers-storyControllerts'></a>
 
 **Path:** `src\controllers\storyController.ts`
 
 ```typescript
-import { storiesApi, uploadsApi } from "@/apis";
-import { useUiStore } from "@/store/uiStore";
-import { Story, CreateStoryRequest } from "@/types";
+import { storiesApi, uploadsApi } from '@/apis';
+import { useUiStore } from '@/store/uiStore';
+import { Story, CreateStoryRequest } from '@/types';
 
 export class StoryController {
   static async createStoryWithCover(
-    data: Omit<CreateStoryRequest, "cover_image"> & { cover?: File }
+    data: Omit<CreateStoryRequest, 'cover_image'> & { cover?: File }
   ): Promise<Story | null> {
     const { addToast } = useUiStore.getState();
-
+    
     try {
       let story: Story;
-
+      
       if (data.cover) {
         // Upload cover and create story with multipart
         story = await storiesApi.createStoryMultipart({
           title: data.title,
           description: data.description,
           genre: data.genre,
-          tags: data.tags?.join(","),
+          tags: data.tags?.join(','),
           visibility: data.visibility,
-          cover: data.cover,
+          cover: data.cover
         });
       } else {
         // Create story without cover
@@ -1486,48 +1251,45 @@ export class StoryController {
           description: data.description,
           genre: data.genre,
           tags: data.tags,
-          visibility: data.visibility,
+          visibility: data.visibility
         });
       }
-
+      
       addToast({
-        title: "Story created!",
-        description: "Your story has been published successfully.",
-        type: "success",
+        title: 'Story created!',
+        description: 'Your story has been published successfully.',
+        type: 'success'
       });
-
+      
       return story;
     } catch (error: any) {
       addToast({
-        title: "Failed to create story",
-        description: error.message || "Please try again later.",
-        type: "error",
+        title: 'Failed to create story',
+        description: error.message || 'Please try again later.',
+        type: 'error'
       });
       return null;
     }
   }
 
-  static async updateStoryCover(
-    storyId: string,
-    cover: File
-  ): Promise<Story | null> {
+  static async updateStoryCover(storyId: string, cover: File): Promise<Story | null> {
     const { addToast } = useUiStore.getState();
-
+    
     try {
       const story = await storiesApi.updateStoryCover(storyId, cover);
-
+      
       addToast({
-        title: "Cover updated!",
-        description: "Your story cover has been updated successfully.",
-        type: "success",
+        title: 'Cover updated!',
+        description: 'Your story cover has been updated successfully.',
+        type: 'success'
       });
-
+      
       return story;
     } catch (error: any) {
       addToast({
-        title: "Failed to update cover",
-        description: error.message || "Please try again later.",
-        type: "error",
+        title: 'Failed to update cover',
+        description: error.message || 'Please try again later.',
+        type: 'error'
       });
       return null;
     }
@@ -1535,28 +1297,28 @@ export class StoryController {
 
   static async deleteStoryWithConfirmation(storyId: string): Promise<boolean> {
     const { addToast } = useUiStore.getState();
-
+    
     const confirmed = window.confirm(
-      "Are you sure you want to delete this story? This action cannot be undone."
+      'Are you sure you want to delete this story? This action cannot be undone.'
     );
-
+    
     if (!confirmed) return false;
-
+    
     try {
       await storiesApi.deleteStory(storyId);
-
+      
       addToast({
-        title: "Story deleted",
-        description: "Your story has been deleted successfully.",
-        type: "success",
+        title: 'Story deleted',
+        description: 'Your story has been deleted successfully.',
+        type: 'success'
       });
-
+      
       return true;
     } catch (error: any) {
       addToast({
-        title: "Failed to delete story",
-        description: error.message || "Please try again later.",
-        type: "error",
+        title: 'Failed to delete story',
+        description: error.message || 'Please try again later.',
+        type: 'error'
       });
       return false;
     }
@@ -1567,40 +1329,37 @@ export class StoryController {
 ---
 
 #### 📄 src\controllers\userController.ts
-
 <a name='src-controllers-userControllerts'></a>
 
 **Path:** `src\controllers\userController.ts`
 
 ```typescript
-import { usersApi } from "@/apis";
-import { useAuthStore } from "@/store/authStore";
-import { useUiStore } from "@/store/uiStore";
-import { User, UpdateProfileRequest } from "@/types";
+import { usersApi } from '@/apis';
+import { useAuthStore } from '@/store/authStore';
+import { useUiStore } from '@/store/uiStore';
+import { User, UpdateProfileRequest } from '@/types';
 
 export class UserController {
-  static async updateProfileWithToast(
-    data: UpdateProfileRequest
-  ): Promise<User | null> {
+  static async updateProfileWithToast(data: UpdateProfileRequest): Promise<User | null> {
     const { updateUser } = useAuthStore.getState();
     const { addToast } = useUiStore.getState();
-
+    
     try {
       const user = await usersApi.updateProfile(data);
       updateUser(user);
-
+      
       addToast({
-        title: "Profile updated!",
-        description: "Your profile has been updated successfully.",
-        type: "success",
+        title: 'Profile updated!',
+        description: 'Your profile has been updated successfully.',
+        type: 'success'
       });
-
+      
       return user;
     } catch (error: any) {
       addToast({
-        title: "Failed to update profile",
-        description: error.message || "Please try again later.",
-        type: "error",
+        title: 'Failed to update profile',
+        description: error.message || 'Please try again later.',
+        type: 'error'
       });
       return null;
     }
@@ -1609,23 +1368,23 @@ export class UserController {
   static async uploadProfilePictureWithToast(file: File): Promise<User | null> {
     const { updateUser } = useAuthStore.getState();
     const { addToast } = useUiStore.getState();
-
+    
     try {
       const user = await usersApi.uploadProfilePicture(file);
       updateUser(user);
-
+      
       addToast({
-        title: "Profile picture updated!",
-        description: "Your profile picture has been updated successfully.",
-        type: "success",
+        title: 'Profile picture updated!',
+        description: 'Your profile picture has been updated successfully.',
+        type: 'success'
       });
-
+      
       return user;
     } catch (error: any) {
       addToast({
-        title: "Failed to update profile picture",
-        description: error.message || "Please try again later.",
-        type: "error",
+        title: 'Failed to update profile picture',
+        description: error.message || 'Please try again later.',
+        type: 'error'
       });
       return null;
     }
@@ -1633,22 +1392,22 @@ export class UserController {
 
   static async followUserWithToast(username: string): Promise<boolean> {
     const { addToast } = useUiStore.getState();
-
+    
     try {
       await usersApi.followUser(username);
-
+      
       addToast({
-        title: "Following!",
+        title: 'Following!',
         description: `You are now following @${username}.`,
-        type: "success",
+        type: 'success'
       });
-
+      
       return true;
     } catch (error: any) {
       addToast({
-        title: "Failed to follow user",
-        description: error.message || "Please try again later.",
-        type: "error",
+        title: 'Failed to follow user',
+        description: error.message || 'Please try again later.',
+        type: 'error'
       });
       return false;
     }
@@ -1656,52 +1415,45 @@ export class UserController {
 
   static async unfollowUserWithToast(username: string): Promise<boolean> {
     const { addToast } = useUiStore.getState();
-
+    
     try {
       await usersApi.unfollowUser(username);
-
+      
       addToast({
-        title: "Unfollowed",
+        title: 'Unfollowed',
         description: `You have unfollowed @${username}.`,
-        type: "success",
+        type: 'success'
       });
-
+      
       return true;
     } catch (error: any) {
       addToast({
-        title: "Failed to unfollow user",
-        description: error.message || "Please try again later.",
-        type: "error",
+        title: 'Failed to unfollow user',
+        description: error.message || 'Please try again later.',
+        type: 'error'
       });
       return false;
     }
   }
 
-  static async changePasswordWithToast(
-    oldPassword: string,
-    newPassword: string
-  ): Promise<boolean> {
+  static async changePasswordWithToast(oldPassword: string, newPassword: string): Promise<boolean> {
     const { addToast } = useUiStore.getState();
-
+    
     try {
-      await usersApi.changePassword({
-        old_password: oldPassword,
-        new_password: newPassword,
-      });
-
+      await usersApi.changePassword({ old_password: oldPassword, new_password: newPassword });
+      
       addToast({
-        title: "Password changed!",
-        description: "Your password has been updated successfully.",
-        type: "success",
+        title: 'Password changed!',
+        description: 'Your password has been updated successfully.',
+        type: 'success'
       });
-
+      
       return true;
     } catch (error: any) {
       addToast({
-        title: "Failed to change password",
-        description:
-          error.message || "Please check your current password and try again.",
-        type: "error",
+        title: 'Failed to change password',
+        description: error.message || 'Please check your current password and try again.',
+        type: 'error'
       });
       return false;
     }
@@ -1714,7 +1466,6 @@ export class UserController {
 ### 📁 src\helper
 
 #### 📄 src\helper\constants.ts
-
 <a name='src-helper-constantsts'></a>
 
 **Path:** `src\helper\constants.ts`
@@ -1722,75 +1473,74 @@ export class UserController {
 ```typescript
 // Application constants
 
-export const API_BASE_URL = "https://usman678zafar-storivault-backend.hf.space";
+export const API_BASE_URL = 'https://usman678zafar-storivault-backend.hf.space';
 
 export const GENRES = [
-  "Romance",
-  "Fantasy",
-  "Mystery",
-  "Sci-Fi",
-  "Horror",
-  "Adventure",
-  "Drama",
-  "Comedy",
-  "Thriller",
-  "Historical",
-  "Young Adult",
-  "Literary Fiction",
-  "Poetry",
-  "Non-Fiction",
+  'Romance',
+  'Fantasy',
+  'Mystery',
+  'Sci-Fi',
+  'Horror',
+  'Adventure',
+  'Drama',
+  'Comedy',
+  'Thriller',
+  'Historical',
+  'Young Adult',
+  'Literary Fiction',
+  'Poetry',
+  'Non-Fiction'
 ] as const;
 
 export const STORY_VISIBILITY = {
-  PUBLIC: "public",
-  PRIVATE: "private",
+  PUBLIC: 'public',
+  PRIVATE: 'private'
 } as const;
 
 export const SORT_OPTIONS = {
-  LATEST: "latest",
-  POPULAR: "popular",
-  TRENDING: "trending",
+  LATEST: 'latest',
+  POPULAR: 'popular',
+  TRENDING: 'trending'
 } as const;
 
 export const FILE_LIMITS = {
   IMAGE_MAX_SIZE: 5 * 1024 * 1024, // 5MB
   COVER_MAX_SIZE: 5 * 1024 * 1024, // 5MB
-  ALLOWED_IMAGE_TYPES: ["image/jpeg", "image/jpg", "image/png", "image/webp"],
+  ALLOWED_IMAGE_TYPES: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
 } as const;
 
 export const PAGINATION = {
   DEFAULT_LIMIT: 12,
-  MAX_LIMIT: 50,
+  MAX_LIMIT: 50
 } as const;
 
 export const QUERY_KEYS = {
-  STORIES: "stories",
-  STORY: "story",
-  USER: "user",
-  USERS: "users",
-  SEARCH: "search",
-  FOLLOWERS: "followers",
-  FOLLOWING: "following",
+  STORIES: 'stories',
+  STORY: 'story',
+  USER: 'user',
+  USERS: 'users',
+  SEARCH: 'search',
+  FOLLOWERS: 'followers',
+  FOLLOWING: 'following'
 } as const;
 
 export const ROUTES = {
-  HOME: "/",
-  LOGIN: "/auth/login",
-  SIGNUP: "/auth/signup",
-  STORIES: "/stories",
-  STORY_DETAIL: "/stories/:id",
-  STORY_CREATE: "/stories/create",
-  STORY_EDIT: "/stories/:id/edit",
-  USER_PROFILE: "/users/:username",
-  SETTINGS: "/settings",
-  LIBRARY: "/library",
+  HOME: '/',
+  LOGIN: '/auth/login',
+  SIGNUP: '/auth/signup',
+  STORIES: '/stories',
+  STORY_DETAIL: '/stories/:id',
+  STORY_CREATE: '/stories/create',
+  STORY_EDIT: '/stories/:id/edit',
+  USER_PROFILE: '/users/:username',
+  SETTINGS: '/settings',
+  LIBRARY: '/library'
 } as const;
 ```
 
 ---
 
 #### 📄 src\helper\formatting.ts
-
 <a name='src-helper-formattingts'></a>
 
 **Path:** `src\helper\formatting.ts`
@@ -1819,36 +1569,36 @@ export const formatDate = (dateString: string): string => {
     const diffInMinutes = diffInMs / (1000 * 60);
     return `${Math.floor(diffInMinutes)}m ago`;
   }
-
+  
   if (diffInHours < 24) {
     return `${Math.floor(diffInHours)}h ago`;
   }
-
+  
   if (diffInDays < 7) {
     return `${Math.floor(diffInDays)}d ago`;
   }
-
+  
   if (diffInDays < 30) {
     const diffInWeeks = diffInDays / 7;
     return `${Math.floor(diffInWeeks)}w ago`;
   }
-
+  
   return date.toLocaleDateString();
 };
 
 export const formatRelativeTime = (dateString: string): string => {
   const date = new Date(dateString);
-  const formatter = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
-
+  const formatter = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+  
   const diffInMs = date.getTime() - Date.now();
   const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
-
-  return formatter.format(diffInDays, "day");
+  
+  return formatter.format(diffInDays, 'day');
 };
 
 export const truncateText = (text: string, maxLength: number): string => {
   if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength) + "...";
+  return text.slice(0, maxLength) + '...';
 };
 
 export const capitalizeFirst = (str: string): string => {
@@ -1858,44 +1608,42 @@ export const capitalizeFirst = (str: string): string => {
 export const slugify = (text: string): string => {
   return text
     .toLowerCase()
-    .replace(/[^\w\s-]/g, "") // Remove special characters
-    .replace(/[\s_-]+/g, "-") // Replace spaces and underscores with hyphens
-    .replace(/^-+|-+$/g, ""); // Remove leading/trailing hyphens
+    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .replace(/[\s_-]+/g, '-') // Replace spaces and underscores with hyphens
+    .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
 };
 
 export const parseTagString = (tagString: string): string[] => {
   return tagString
-    .split(",")
-    .map((tag) => tag.trim())
-    .filter((tag) => tag.length > 0);
+    .split(',')
+    .map(tag => tag.trim())
+    .filter(tag => tag.length > 0);
 };
 
 export const formatTagsForDisplay = (tags: string[]): string => {
-  if (tags.length === 0) return "";
+  if (tags.length === 0) return '';
   if (tags.length === 1) return tags[0];
-  if (tags.length === 2) return tags.join(" and ");
-  return `${tags.slice(0, -1).join(", ")}, and ${tags[tags.length - 1]}`;
+  if (tags.length === 2) return tags.join(' and ');
+  return `${tags.slice(0, -1).join(', ')}, and ${tags[tags.length - 1]}`;
 };
 ```
 
 ---
 
 #### 📄 src\helper\index.ts
-
 <a name='src-helper-indexts'></a>
 
 **Path:** `src\helper\index.ts`
 
 ```typescript
-export * from "./validation";
-export * from "./formatting";
-export * from "./constants";
+export * from './validation';
+export * from './formatting';
+export * from './constants';
 ```
 
 ---
 
 #### 📄 src\helper\validation.ts
-
 <a name='src-helper-validationts'></a>
 
 **Path:** `src\helper\validation.ts`
@@ -1910,48 +1658,46 @@ export const validateEmail = (email: string): boolean => {
 
 export const validateUsername = (username: string): string | null => {
   if (!username.trim()) {
-    return "Username is required";
+    return 'Username is required';
   }
   if (username.length < 3) {
-    return "Username must be at least 3 characters";
+    return 'Username must be at least 3 characters';
   }
   if (username.length > 30) {
-    return "Username must be less than 30 characters";
+    return 'Username must be less than 30 characters';  
   }
   if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
-    return "Username can only contain letters, numbers, hyphens, and underscores";
+    return 'Username can only contain letters, numbers, hyphens, and underscores';
   }
   return null;
 };
 
 export const validatePassword = (password: string): string | null => {
   if (!password) {
-    return "Password is required";
+    return 'Password is required';
   }
   if (password.length < 6) {
-    return "Password must be at least 6 characters";
+    return 'Password must be at least 6 characters';
   }
   if (password.length > 128) {
-    return "Password must be less than 128 characters";
+    return 'Password must be less than 128 characters';
   }
   return null;
 };
 
 export const validateStoryTitle = (title: string): string | null => {
   if (!title.trim()) {
-    return "Title is required";
+    return 'Title is required';
   }
   if (title.length > 200) {
-    return "Title must be less than 200 characters";
+    return 'Title must be less than 200 characters';
   }
   return null;
 };
 
-export const validateStoryDescription = (
-  description: string
-): string | null => {
+export const validateStoryDescription = (description: string): string | null => {
   if (description.length > 2000) {
-    return "Description must be less than 2000 characters";
+    return 'Description must be less than 2000 characters';
   }
   return null;
 };
@@ -1960,10 +1706,7 @@ export const validateObjectId = (id: string): boolean => {
   return /^[0-9a-fA-F]{24}$/.test(id);
 };
 
-export const validateFileSize = (
-  file: File,
-  maxSizeInMB: number
-): string | null => {
+export const validateFileSize = (file: File, maxSizeInMB: number): string | null => {
   const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
   if (file.size > maxSizeInBytes) {
     return `File size must be less than ${maxSizeInMB}MB`;
@@ -1972,11 +1715,11 @@ export const validateFileSize = (
 };
 
 export const validateImageFile = (file: File): string | null => {
-  const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+  const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
   if (!allowedTypes.includes(file.type)) {
-    return "Only JPEG, PNG, and WebP images are allowed";
+    return 'Only JPEG, PNG, and WebP images are allowed';
   }
-
+  
   return validateFileSize(file, 5); // 5MB limit for images
 };
 ```
@@ -1986,7 +1729,6 @@ export const validateImageFile = (file: File): string | null => {
 ### 📁 src\hooks
 
 #### 📄 src\hooks\use-mobile.tsx
-
 <a name='src-hooks-use-mobiletsx'></a>
 
 **Path:** `src\hooks\use-mobile.tsx`
@@ -1997,9 +1739,7 @@ import * as React from "react";
 const MOBILE_BREAKPOINT = 768;
 
 export function useIsMobile() {
-  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(
-    undefined
-  );
+  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined);
 
   React.useEffect(() => {
     const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
@@ -2020,7 +1760,6 @@ export function useIsMobile() {
 ### 📁 src\lib
 
 #### 📄 src\lib\utils.ts
-
 <a name='src-lib-utilsts'></a>
 
 **Path:** `src\lib\utils.ts`
@@ -2039,7 +1778,6 @@ export function cn(...inputs: ClassValue[]) {
 ### 📁 src\pages
 
 #### 📄 src\pages\HomePage.tsx
-
 <a name='src-pages-HomePagetsx'></a>
 
 **Path:** `src\pages\HomePage.tsx`
@@ -2050,47 +1788,227 @@ export function cn(...inputs: ClassValue[]) {
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
-  TrendingUp,
-  Star,
-  Users2,
   Sparkles,
   ArrowRight,
   BookOpen,
   PenTool,
+  Heart,
+  Eye,
+  Star,
+  Users,
+  TrendingUp,
+  Award,
+  MessageCircle,
+  ChevronRight,
+  Feather,
+  Coffee,
+  Bookmark,
+  Library,
+  FileText,
+  Glasses,
+  Lamp,
+  Trophy,
+  Rocket,
+  Scroll,
+  Clock,
+  Flame,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { StoryCard } from "@/components/ui/story-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { MainLayout } from "@/components/layout/main-layout";
 import { useAuthStore } from "@/store/authStore";
 import { Story } from "@/types";
 import { storiesApi } from "@/apis";
+import { cn } from "@/lib/utils";
+
+// Literary color palette - warm and inviting
+const literaryColors = {
+  cream: "#FFF8E7",
+  parchment: "#F4E8D0",
+  coffee: "#6F4E37",
+  ink: "#2C3E50",
+  gold: "#D4A574",
+  sage: "#87A96B",
+  dustyRose: "#C08081",
+  lavender: "#E6E6FA",
+  mint: "#B5EAD7",
+  peach: "#FFD3B6",
+  skyBlue: "#A8DADC",
+};
+
+// Featured Authors with literary avatars
+const featuredAuthors = [
+  {
+    id: 1,
+    name: "Eleanor Whitmore",
+    avatar:
+      "https://api.dicebear.com/7.x/lorelei/svg?seed=Eleanor&backgroundColor=FFD3B6",
+    genre: "Romance",
+    stories: 47,
+    followers: "15.2K",
+    quote: "Every story begins with a single word...",
+  },
+  {
+    id: 2,
+    name: "Marcus Chen",
+    avatar:
+      "https://api.dicebear.com/7.x/lorelei/svg?seed=Marcus&backgroundColor=A8DADC",
+    genre: "Mystery",
+    stories: 32,
+    followers: "12.8K",
+    quote: "In the shadows of words, truth emerges.",
+  },
+  {
+    id: 3,
+    name: "Isabella Rose",
+    avatar:
+      "https://api.dicebear.com/7.x/lorelei/svg?seed=Isabella&backgroundColor=E6E6FA",
+    genre: "Fantasy",
+    stories: 68,
+    followers: "28.5K",
+    quote: "Magic lives between the lines.",
+  },
+  {
+    id: 4,
+    name: "Thomas Blackwood",
+    avatar:
+      "https://api.dicebear.com/7.x/lorelei/svg?seed=Thomas&backgroundColor=B5EAD7",
+    genre: "Thriller",
+    stories: 29,
+    followers: "9.7K",
+    quote: "Every chapter holds a secret.",
+  },
+];
+
+// Reading quotes
+const inspiringQuotes = [
+  {
+    text: "A reader lives a thousand lives before he dies.",
+    author: "George R.R. Martin",
+  },
+  { text: "Books are a uniquely portable magic.", author: "Stephen King" },
+  {
+    text: "There is no friend as loyal as a book.",
+    author: "Ernest Hemingway",
+  },
+  { text: "Reading is dreaming with open eyes.", author: "Unknown" },
+];
+
+// Genre cards with unique shapes and colors
+const genreCards = [
+  {
+    name: "Romance",
+    icon: Heart,
+    color: literaryColors.dustyRose,
+    stories: "5.2K",
+    shape: "rounded-[30px]",
+  },
+  {
+    name: "Mystery",
+    icon: Glasses,
+    color: literaryColors.ink,
+    stories: "3.8K",
+    shape: "rounded-tl-[40px] rounded-br-[40px]",
+  },
+  {
+    name: "Fantasy",
+    icon: Sparkles,
+    color: literaryColors.lavender,
+    stories: "7.1K",
+    shape: "rounded-[20px_50px]",
+  },
+  {
+    name: "Sci-Fi",
+    icon: Rocket,
+    color: literaryColors.skyBlue,
+    stories: "2.9K",
+    shape: "rounded-tr-[50px] rounded-bl-[50px]",
+  },
+  {
+    name: "Poetry",
+    icon: Feather,
+    color: literaryColors.gold,
+    stories: "1.5K",
+    shape: "rounded-[40px_20px]",
+  },
+  {
+    name: "Non-Fiction",
+    icon: Library,
+    color: literaryColors.sage,
+    stories: "4.3K",
+    shape: "rounded-[25px]",
+  },
+];
+
+// Writing tools features
+const writingTools = [
+  {
+    title: "Story Planner",
+    description: "Organize your plot with our intuitive story mapping tool",
+    icon: FileText,
+    color: literaryColors.peach,
+  },
+  {
+    title: "Character Builder",
+    description: "Create deep, memorable characters with guided templates",
+    icon: Users,
+    color: literaryColors.mint,
+  },
+  {
+    title: "Writing Prompts",
+    description: "Never run out of ideas with daily writing inspiration",
+    icon: Lamp,
+    color: literaryColors.lavender,
+  },
+  {
+    title: "Grammar Guide",
+    description: "Perfect your prose with intelligent writing assistance",
+    icon: Glasses,
+    color: literaryColors.skyBlue,
+  },
+];
 
 export function HomePage() {
   const { isAuthenticated, user } = useAuthStore();
   const [featuredStories, setFeaturedStories] = useState<Story[]>([]);
   const [trendingStories, setTrendingStories] = useState<Story[]>([]);
+  const [newStories, setNewStories] = useState<Story[]>([]);
+  const [popularStories, setPopularStories] = useState<Story[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentQuote, setCurrentQuote] = useState(0);
+  const [hoveredGenre, setHoveredGenre] = useState<string | null>(null);
+
+  // Rotate quotes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentQuote((prev) => (prev + 1) % inspiringQuotes.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const fetchHomeData = async () => {
       try {
-        // Fetch featured and trending stories
-        const [featuredResponse, trendingResponse] = await Promise.all([
-          storiesApi.getStories({ page: 1, limit: 3, sort: "popular" }),
-          storiesApi.getStories({ page: 1, limit: 6, sort: "trending" }),
+        const [
+          featuredResponse,
+          trendingResponse,
+          newResponse,
+          popularResponse,
+        ] = await Promise.all([
+          storiesApi.getStories({ page: 1, limit: 6, sort: "popular" }),
+          storiesApi.getStories({ page: 1, limit: 12, sort: "trending" }),
+          storiesApi.getStories({ page: 1, limit: 8, sort: "latest" }),
+          storiesApi.getStories({ page: 1, limit: 4, sort: "popular" }),
         ]);
 
         setFeaturedStories(featuredResponse.items);
         setTrendingStories(trendingResponse.items);
+        setNewStories(newResponse.items);
+        setPopularStories(popularResponse.items);
       } catch (error) {
         console.error("Failed to fetch home data:", error);
       } finally {
@@ -2112,250 +2030,688 @@ export function HomePage() {
   }
 
   return (
-    <MainLayout>
-      <div className="space-y-12">
-        {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-hero rounded-2xl text-white mx-4 mt-6">
-          <div className="absolute inset-0 bg-black/20"></div>
-          <div className="relative px-8 py-16 md:px-16 md:py-24">
-            <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-                Your Gateway to
-                <span className="block bg-gradient-to-r from-white to-primary-light bg-clip-text text-transparent">
-                  Infinite Stories
-                </span>
-              </h1>
-              <p className="text-xl md:text-2xl text-gray-200 mb-8 max-w-2xl mx-auto leading-relaxed">
-                Discover captivating tales, connect with passionate writers, and
-                immerse yourself in worlds beyond imagination.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                {isAuthenticated ? (
-                  <>
-                    <Button
-                      size="lg"
-                      className="bg-white text-primary hover:bg-gray-100"
-                      asChild
-                    >
-                      <Link to="/stories">
-                        <BookOpen className="mr-2 h-5 w-5" />
-                        Explore Stories
-                      </Link>
-                    </Button>
-                    <Button
-                      size="lg"
-                      variant="outline"
-                      className="border-white text-white hover:bg-white/10"
-                      asChild
-                    >
-                      <Link to="/stories/create">
-                        <PenTool className="mr-2 h-5 w-5" />
-                        Start Writing
-                      </Link>
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Button
-                      size="lg"
-                      className="bg-white text-primary hover:bg-gray-100"
-                      asChild
-                    >
-                      <Link to="/auth/signup">
-                        Get Started Free
-                        <ArrowRight className="ml-2 h-5 w-5" />
-                      </Link>
-                    </Button>
-                    <Button
-                      size="lg"
-                      variant="outline"
-                      className="border-white text-white hover:bg-white/10"
-                      asChild
-                    >
-                      <Link to="/stories">Browse Stories</Link>
-                    </Button>
-                  </>
-                )}
+    <MainLayout showFooter={true}>
+      {/* Custom Literary Styles */}
+      <style>{`
+        @keyframes page-float {
+          0%, 100% { transform: translateY(0) rotate(-2deg); }
+          50% { transform: translateY(-20px) rotate(2deg); }
+        }
+        
+        @keyframes quill-write {
+          0%, 100% { transform: translateX(0) rotate(0deg); }
+          50% { transform: translateX(10px) rotate(10deg); }
+        }
+        
+        @keyframes fade-in-up {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes text-glow {
+          0%, 100% { text-shadow: 0 0 20px rgba(212, 165, 116, 0.5); }
+          50% { text-shadow: 0 0 40px rgba(212, 165, 116, 0.8); }
+        }
+        
+        .page-float { animation: page-float 6s ease-in-out infinite; }
+        .quill-write { animation: quill-write 4s ease-in-out infinite; }
+        .fade-in-up { animation: fade-in-up 0.8s ease-out; }
+        .text-glow { animation: text-glow 3s ease-in-out infinite; }
+        
+        .paper-texture {
+          background-image: 
+            repeating-linear-gradient(
+              90deg,
+              transparent,
+              transparent 2px,
+              rgba(212, 165, 116, 0.03) 2px,
+              rgba(212, 165, 116, 0.03) 4px
+            ),
+            repeating-linear-gradient(
+              0deg,
+              transparent,
+              transparent 2px,
+              rgba(212, 165, 116, 0.03) 2px,
+              rgba(212, 165, 116, 0.03) 4px
+            );
+        }
+        
+        .book-shadow {
+          box-shadow: 
+            0 2px 4px rgba(111, 78, 55, 0.1),
+            0 8px 16px rgba(111, 78, 55, 0.1),
+            0 16px 32px rgba(111, 78, 55, 0.1);
+        }
+        
+        .handwritten {
+          font-family: 'Kalam', cursive;
+        }
+        
+        .gold-ring {
+          box-shadow: 0 0 0 4px ${literaryColors.gold}, 0 0 0 8px rgba(212, 165, 116, 0.3);
+        }
+      `}</style>
+
+      {/* Add Google Font for handwritten style */}
+      <link
+        href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap"
+        rel="stylesheet"
+      />
+
+      <div
+        className="min-h-screen"
+        style={{ backgroundColor: literaryColors.cream }}
+      >
+        {/* Hero Section - Cozy Library Theme */}
+        <section className="relative overflow-hidden py-20 px-4">
+          {/* Floating background elements */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-10 left-10 w-32 h-40 bg-white/40 rounded-lg rotate-12 page-float" />
+            <div
+              className="absolute top-20 right-20 w-28 h-36 bg-white/30 rounded-lg -rotate-6 page-float"
+              style={{ animationDelay: "2s" }}
+            />
+            <div
+              className="absolute bottom-10 left-1/4 w-24 h-32 bg-white/35 rounded-lg rotate-3 page-float"
+              style={{ animationDelay: "4s" }}
+            />
+            <Feather className="absolute top-1/3 right-10 h-20 w-20 text-amber-700/20 quill-write" />
+            <BookOpen className="absolute bottom-20 right-1/3 h-24 w-24 text-amber-600/15 rotate-12" />
+            <Coffee className="absolute top-1/2 left-10 h-16 w-16 text-amber-800/20" />
+          </div>
+
+          <div className="relative z-10 max-w-7xl mx-auto text-center">
+            <div className="mb-8">
+              <Badge
+                className="px-4 py-2 text-sm font-medium rounded-full"
+                style={{
+                  backgroundColor: literaryColors.gold,
+                  color: literaryColors.coffee,
+                }}
+              >
+                <Sparkles className="h-4 w-4 mr-2" />
+                Welcome to Your Literary Haven
+              </Badge>
+            </div>
+
+            <h1
+              className="text-6xl md:text-7xl lg:text-8xl font-serif mb-6 fade-in-up"
+              style={{ color: literaryColors.coffee }}
+            >
+              Where Stories
+              <span
+                className="block text-glow"
+                style={{ color: literaryColors.gold }}
+              >
+                Come to Life
+              </span>
+            </h1>
+
+            <p
+              className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto handwritten fade-in-up"
+              style={{ color: literaryColors.ink, animationDelay: "0.2s" }}
+            >
+              "{inspiringQuotes[currentQuote].text}"
+              <span className="block text-sm mt-2 font-serif">
+                — {inspiringQuotes[currentQuote].author}
+              </span>
+            </p>
+
+            <div
+              className="flex flex-col sm:flex-row gap-4 justify-center mb-12 fade-in-up"
+              style={{ animationDelay: "0.4s" }}
+            >
+              {isAuthenticated ? (
+                <>
+                  <Button
+                    size="lg"
+                    className="group px-8 py-6 text-lg rounded-full shadow-lg transform hover:scale-105 transition-all"
+                    style={{
+                      backgroundColor: literaryColors.coffee,
+                      color: literaryColors.cream,
+                    }}
+                    asChild
+                  >
+                    <Link to="/stories">
+                      <Library className="mr-3 h-5 w-5 group-hover:rotate-12 transition-transform" />
+                      Explore Library
+                    </Link>
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="px-8 py-6 text-lg rounded-full border-2 transform hover:scale-105 transition-all"
+                    style={{
+                      borderColor: literaryColors.gold,
+                      color: literaryColors.coffee,
+                    }}
+                    asChild
+                  >
+                    <Link to="/stories/create">
+                      <PenTool className="mr-3 h-5 w-5" />
+                      Start Writing
+                    </Link>
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    size="lg"
+                    className="group px-10 py-6 text-xl rounded-full book-shadow transform hover:scale-105 transition-all"
+                    style={{
+                      backgroundColor: literaryColors.gold,
+                      color: literaryColors.coffee,
+                    }}
+                    asChild
+                  >
+                    <Link to="/stories">
+                      <BookOpen className="mr-3 h-6 w-6 group-hover:rotate-12 transition-transform" />
+                      Start Reading Free
+                    </Link>
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="px-8 py-6 text-lg rounded-full border-2"
+                    style={{
+                      borderColor: literaryColors.coffee,
+                      color: literaryColors.coffee,
+                    }}
+                    asChild
+                  >
+                    <Link to="/auth/signup">Join as Writer</Link>
+                  </Button>
+                </>
+              )}
+            </div>
+
+            {/* Live Reading Stats */}
+            <div
+              className="flex flex-wrap justify-center gap-8 fade-in-up"
+              style={{ animationDelay: "0.6s" }}
+            >
+              <div className="text-center">
+                <div
+                  className="text-4xl font-bold"
+                  style={{ color: literaryColors.gold }}
+                >
+                  2.5M+
+                </div>
+                <div className="text-sm" style={{ color: literaryColors.ink }}>
+                  Pages Read Today
+                </div>
+              </div>
+              <div className="text-center">
+                <div
+                  className="text-4xl font-bold"
+                  style={{ color: literaryColors.dustyRose }}
+                >
+                  850K+
+                </div>
+                <div className="text-sm" style={{ color: literaryColors.ink }}>
+                  Active Readers
+                </div>
+              </div>
+              <div className="text-center">
+                <div
+                  className="text-4xl font-bold"
+                  style={{ color: literaryColors.sage }}
+                >
+                  125K+
+                </div>
+                <div className="text-sm" style={{ color: literaryColors.ink }}>
+                  Stories Published
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Featured Stories */}
+        {/* Featured Stories Section - Showcase */}
         {featuredStories.length > 0 && (
-          <section className="px-4">
+          <section
+            className="py-20 px-4"
+            style={{ backgroundColor: literaryColors.parchment }}
+          >
             <div className="max-w-7xl mx-auto">
-              <div className="flex items-center justify-between mb-8">
-                <div>
-                  <h2 className="text-3xl font-bold flex items-center gap-3">
-                    <Star className="h-8 w-8 text-primary" />
-                    Featured Stories
-                  </h2>
-                  <p className="text-muted-foreground mt-1">
-                    Hand-picked stories you'll love
-                  </p>
-                </div>
-                <Button variant="outline" asChild>
+              <div className="text-center mb-12">
+                <Badge
+                  className="mb-4 px-4 py-2 rounded-full"
+                  style={{
+                    backgroundColor: literaryColors.gold,
+                    color: literaryColors.coffee,
+                  }}
+                >
+                  <Star className="h-4 w-4 mr-2" />
+                  Editor's Choice
+                </Badge>
+                <h2
+                  className="text-4xl md:text-5xl font-serif mb-4"
+                  style={{ color: literaryColors.coffee }}
+                >
+                  Featured Stories This Week
+                </h2>
+                <p className="text-lg" style={{ color: literaryColors.ink }}>
+                  Handpicked tales that will captivate your imagination
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {featuredStories.slice(0, 6).map((story, index) => (
+                  <div
+                    key={story.id}
+                    className="group fade-in-up"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <Card className="overflow-hidden border-0 book-shadow hover:scale-105 transition-all duration-300">
+                      <div className="aspect-[3/4] relative overflow-hidden">
+                        <img
+                          src={
+                            story.cover_image ||
+                            `https://source.unsplash.com/400x600/?book,library,${index}`
+                          }
+                          alt={story.title}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                        <div className="absolute top-4 left-4">
+                          <Badge
+                            style={{
+                              backgroundColor: literaryColors.gold,
+                              color: literaryColors.coffee,
+                            }}
+                          >
+                            {story.genre}
+                          </Badge>
+                        </div>
+                        <div className="absolute bottom-4 left-4 right-4 text-white">
+                          <h3 className="text-xl font-serif font-bold mb-2">
+                            {story.title}
+                          </h3>
+                          <div className="flex items-center gap-3 text-sm">
+                            <span className="flex items-center gap-1">
+                              <Eye className="h-4 w-4" />
+                              {(story.reads_count / 1000).toFixed(1)}K
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Heart className="h-4 w-4" />
+                              {(story.votes_count / 1000).toFixed(1)}K
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+                  </div>
+                ))}
+              </div>
+
+              <div className="text-center mt-8">
+                <Button
+                  variant="outline"
+                  className="rounded-full border-2"
+                  style={{
+                    borderColor: literaryColors.gold,
+                    color: literaryColors.coffee,
+                  }}
+                  asChild
+                >
                   <Link to="/stories?sort=popular">
-                    View All
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                    View All Featured Stories
+                    <ChevronRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {featuredStories.map((story) => (
-                  <StoryCard key={story.id} story={story} variant="featured" />
-                ))}
               </div>
             </div>
           </section>
         )}
 
-        {/* Stats Section */}
-        <section className="px-4 bg-secondary/30">
-          <div className="max-w-7xl mx-auto py-16">
+        {/* Genre Discovery Section */}
+        <section className="py-20 px-4">
+          <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">
-                Join Our Growing Community
+              <h2
+                className="text-4xl md:text-5xl font-serif mb-4"
+                style={{ color: literaryColors.coffee }}
+              >
+                Find Your Perfect Genre
               </h2>
-              <p className="text-muted-foreground text-lg">
-                Thousands of readers and writers sharing their passion for
-                storytelling
+              <p className="text-lg" style={{ color: literaryColors.ink }}>
+                Every reader has a story waiting to be discovered
               </p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <Card className="text-center border-0 shadow-soft">
-                <CardContent className="pt-6">
-                  <div className="h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <BookOpen className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-primary">10K+</h3>
-                  <p className="text-muted-foreground">Stories Published</p>
-                </CardContent>
-              </Card>
-              <Card className="text-center border-0 shadow-soft">
-                <CardContent className="pt-6">
-                  <div className="h-12 w-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Users2 className="h-6 w-6 text-accent" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-accent">25K+</h3>
-                  <p className="text-muted-foreground">Active Readers</p>
-                </CardContent>
-              </Card>
-              <Card className="text-center border-0 shadow-soft">
-                <CardContent className="pt-6">
-                  <div className="h-12 w-12 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <PenTool className="h-6 w-6 text-success" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-success">5K+</h3>
-                  <p className="text-muted-foreground">Authors</p>
-                </CardContent>
-              </Card>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+              {genreCards.map((genre) => {
+                const Icon = genre.icon;
+                return (
+                  <Link
+                    key={genre.name}
+                    to={`/stories?genre=${genre.name}`}
+                    className={cn(
+                      "group cursor-pointer transform hover:scale-110 transition-all duration-300",
+                      genre.shape
+                    )}
+                    onMouseEnter={() => setHoveredGenre(genre.name)}
+                    onMouseLeave={() => setHoveredGenre(null)}
+                  >
+                    <Card
+                      className={cn(
+                        "p-6 h-full border-0 text-center book-shadow",
+                        genre.shape
+                      )}
+                      style={{
+                        backgroundColor:
+                          hoveredGenre === genre.name ? genre.color : "white",
+                        transition: "all 0.3s ease",
+                      }}
+                    >
+                      <Icon
+                        className="h-10 w-10 mx-auto mb-3"
+                        style={{
+                          color:
+                            hoveredGenre === genre.name ? "white" : genre.color,
+                        }}
+                      />
+                      <h3
+                        className="font-bold text-sm mb-1"
+                        style={{
+                          color:
+                            hoveredGenre === genre.name
+                              ? "white"
+                              : literaryColors.coffee,
+                        }}
+                      >
+                        {genre.name}
+                      </h3>
+                      <p
+                        className="text-xs"
+                        style={{
+                          color:
+                            hoveredGenre === genre.name
+                              ? "rgba(255,255,255,0.8)"
+                              : literaryColors.ink,
+                        }}
+                      >
+                        {genre.stories} stories
+                      </p>
+                    </Card>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </section>
 
-        {/* Trending Stories */}
-        {trendingStories.length > 0 && (
-          <section className="px-4">
+        {/* Popular Stories Carousel */}
+        {popularStories.length > 0 && (
+          <section className="py-20 px-4" style={{ backgroundColor: "white" }}>
             <div className="max-w-7xl mx-auto">
-              <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center justify-between mb-12">
                 <div>
-                  <h2 className="text-3xl font-bold flex items-center gap-3">
-                    <TrendingUp className="h-8 w-8 text-primary" />
-                    Trending Now
+                  <h2
+                    className="text-4xl font-serif flex items-center gap-3"
+                    style={{ color: literaryColors.coffee }}
+                  >
+                    <Flame
+                      className="h-10 w-10"
+                      style={{ color: literaryColors.dustyRose }}
+                    />
+                    Most Popular Stories
                   </h2>
-                  <p className="text-muted-foreground mt-1">
-                    Stories everyone's talking about
+                  <p className="mt-2" style={{ color: literaryColors.ink }}>
+                    All-time reader favorites
                   </p>
                 </div>
-                <Button variant="outline" asChild>
-                  <Link to="/stories?sort=trending">
-                    View All
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {trendingStories.map((story) => (
-                  <StoryCard key={story.id} story={story} />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {popularStories.map((story, index) => (
+                  <StoryCard key={story.id} story={story} variant="default" />
                 ))}
               </div>
             </div>
           </section>
         )}
 
-        {/* CTA Section */}
-        {!isAuthenticated && (
-          <section className="px-4">
-            <div className="max-w-4xl mx-auto">
-              <Card className="bg-gradient-primary text-white border-0 shadow-strong">
-                <CardContent className="p-12 text-center">
-                  <Sparkles className="h-12 w-12 mx-auto mb-6 text-white" />
-                  <h2 className="text-3xl font-bold mb-4">
-                    Ready to Start Your Story?
+        {/* Trending Stories Section */}
+        {trendingStories.length > 0 && (
+          <section
+            className="py-20 px-4"
+            style={{ backgroundColor: literaryColors.parchment }}
+          >
+            <div className="max-w-7xl mx-auto">
+              <div className="flex items-center justify-between mb-12">
+                <div>
+                  <h2
+                    className="text-4xl font-serif flex items-center gap-3"
+                    style={{ color: literaryColors.coffee }}
+                  >
+                    <TrendingUp
+                      className="h-10 w-10"
+                      style={{ color: literaryColors.sage }}
+                    />
+                    Trending This Week
                   </h2>
-                  <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-                    Join StoriVault today and become part of a vibrant community
-                    of storytellers and book lovers.
+                  <p className="mt-2" style={{ color: literaryColors.ink }}>
+                    Stories gaining momentum right now
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Button
-                      size="lg"
-                      className="bg-white text-primary hover:bg-gray-100"
-                      asChild
-                    >
-                      <Link to="/auth/signup">
-                        Create Free Account
-                        <ArrowRight className="ml-2 h-5 w-5" />
-                      </Link>
-                    </Button>
-                    <Button
-                      size="lg"
-                      variant="outline"
-                      className="border-white text-white hover:bg-white/10"
-                      asChild
-                    >
-                      <Link to="/auth/login">Sign In</Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                </div>
+                <Button
+                  variant="outline"
+                  className="rounded-full border-2"
+                  style={{
+                    borderColor: literaryColors.sage,
+                    color: literaryColors.coffee,
+                  }}
+                  asChild
+                >
+                  <Link to="/stories?sort=trending">
+                    View All Trending
+                    <ChevronRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {trendingStories.slice(0, 8).map((story, index) => (
+                  <Card
+                    key={story.id}
+                    className="group border-0 overflow-hidden book-shadow hover:scale-105 transition-all"
+                  >
+                    <Link to={`/stories/${story.id}`}>
+                      <div className="p-4" style={{ backgroundColor: "white" }}>
+                        <div className="flex items-start gap-3">
+                          <span
+                            className="text-2xl font-bold"
+                            style={{ color: literaryColors.sage }}
+                          >
+                            #{index + 1}
+                          </span>
+                          <div className="flex-1">
+                            <h3
+                              className="font-serif font-bold line-clamp-2 group-hover:text-primary transition-colors"
+                              style={{ color: literaryColors.coffee }}
+                            >
+                              {story.title}
+                            </h3>
+                            <p
+                              className="text-sm mt-1 line-clamp-2"
+                              style={{ color: literaryColors.ink }}
+                            >
+                              {story.description}
+                            </p>
+                            <div className="flex items-center gap-2 mt-2">
+                              <Badge variant="outline" className="text-xs">
+                                {story.genre}
+                              </Badge>
+                              <span
+                                className="text-xs flex items-center gap-1"
+                                style={{ color: literaryColors.ink }}
+                              >
+                                <Eye className="h-3 w-3" />
+                                {(story.reads_count / 1000).toFixed(1)}K
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  </Card>
+                ))}
+              </div>
             </div>
           </section>
         )}
 
-        {/* Personal Welcome */}
-        {isAuthenticated && user && (
-          <section className="px-4">
-            <div className="max-w-4xl mx-auto">
-              <Card className="bg-gradient-card border-0 shadow-medium">
-                <CardContent className="p-8 text-center">
-                  <h2 className="text-2xl font-bold mb-4">
-                    Welcome back, {user.username}! 📚
+        {/* New Stories Section */}
+        {newStories.length > 0 && (
+          <section className="py-20 px-4">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex items-center justify-between mb-12">
+                <div>
+                  <h2
+                    className="text-4xl font-serif flex items-center gap-3"
+                    style={{ color: literaryColors.coffee }}
+                  >
+                    <Sparkles
+                      className="h-10 w-10"
+                      style={{ color: literaryColors.lavender }}
+                    />
+                    Fresh Off the Press
                   </h2>
-                  <p className="text-muted-foreground mb-6">
-                    Ready to continue your reading journey or share a new story?
+                  <p className="mt-2" style={{ color: literaryColors.ink }}>
+                    Discover new stories published this week
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Button asChild>
-                      <Link to="/library">
-                        <BookOpen className="mr-2 h-4 w-4" />
-                        My Library
-                      </Link>
-                    </Button>
-                    <Button variant="outline" asChild>
-                      <Link to="/stories/create">
-                        <PenTool className="mr-2 h-4 w-4" />
-                        Write a Story
-                      </Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+                {newStories.map((story, index) => (
+                  <Link
+                    key={story.id}
+                    to={`/stories/${story.id}`}
+                    className="group cursor-pointer fade-in-up"
+                    style={{ animationDelay: `${index * 0.05}s` }}
+                  >
+                    <div className="aspect-[2/3] relative overflow-hidden rounded-lg book-shadow transform hover:scale-110 transition-all">
+                      <img
+                        src={
+                          story.cover_image ||
+                          `https://source.unsplash.com/200x300/?book,cover,${index}`
+                        }
+                        alt={story.title}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="absolute bottom-2 left-2 right-2">
+                          <p className="text-xs text-white font-bold line-clamp-2">
+                            {story.title}
+                          </p>
+                          <Badge
+                            className="mt-1 text-xs"
+                            style={{ backgroundColor: literaryColors.lavender }}
+                          >
+                            {story.genre}
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
             </div>
           </section>
         )}
+
+        {/* Reading Challenge Section */}
+        <section className="py-20 px-4">
+          <div className="max-w-7xl mx-auto">
+            <Card
+              className="p-12 border-0 paper-texture relative overflow-hidden"
+              style={{ backgroundColor: literaryColors.lavender }}
+            >
+              <Bookmark className="absolute top-10 right-10 h-32 w-32 opacity-10 -rotate-12" />
+              <div className="relative z-10 text-center">
+                <h2
+                  className="text-4xl font-serif mb-4"
+                  style={{ color: literaryColors.coffee }}
+                >
+                  Join the Monthly Reading Challenge
+                </h2>
+                <p
+                  className="text-lg mb-8 max-w-2xl mx-auto"
+                  style={{ color: literaryColors.ink }}
+                >
+                  Read 10 stories this month and earn exclusive badges, unlock
+                  special features, and join our community of passionate
+                  readers!
+                </p>
+                <Button
+                  size="lg"
+                  className="rounded-full px-8 py-6 text-lg book-shadow"
+                  style={{
+                    backgroundColor: literaryColors.coffee,
+                    color: literaryColors.cream,
+                  }}
+                >
+                  <Trophy className="mr-3 h-5 w-5" />
+                  Start Challenge
+                </Button>
+              </div>
+            </Card>
+          </div>
+        </section>
+
+        {/* Final CTA */}
+        <section className="py-32 px-4 relative overflow-hidden">
+          <div className="absolute inset-0">
+            <div
+              className="absolute inset-0"
+              style={{
+                background: `linear-gradient(135deg, ${literaryColors.gold}20, ${literaryColors.dustyRose}20, ${literaryColors.lavender}20)`,
+              }}
+            />
+          </div>
+
+          <div className="relative z-10 max-w-4xl mx-auto text-center">
+            <BookOpen
+              className="h-20 w-20 mx-auto mb-8 text-glow"
+              style={{ color: literaryColors.gold }}
+            />
+            <h2
+              className="text-5xl md:text-6xl font-serif mb-6"
+              style={{ color: literaryColors.coffee }}
+            >
+              Your Next Great Story Awaits
+            </h2>
+            <p
+              className="text-xl mb-10 handwritten"
+              style={{ color: literaryColors.ink }}
+            >
+              "The journey of a thousand pages begins with a single click"
+            </p>
+            <Button
+              size="lg"
+              className="px-12 py-7 text-xl rounded-full book-shadow transform hover:scale-105 transition-all"
+              style={{
+                backgroundColor: literaryColors.coffee,
+                color: literaryColors.cream,
+              }}
+              asChild
+            >
+              <Link to="/stories">
+                <Sparkles className="mr-3 h-6 w-6" />
+                Begin Your Journey
+              </Link>
+            </Button>
+          </div>
+        </section>
       </div>
     </MainLayout>
   );
@@ -2365,7 +2721,6 @@ export function HomePage() {
 ---
 
 #### 📄 src\pages\Index.tsx
-
 <a name='src-pages-Indextsx'></a>
 
 **Path:** `src\pages\Index.tsx`
@@ -2378,9 +2733,7 @@ const Index = () => {
     <div className="flex min-h-screen items-center justify-center bg-background">
       <div className="text-center">
         <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">
-          Start building your amazing project here!
-        </p>
+        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
       </div>
     </div>
   );
@@ -2392,7 +2745,6 @@ export default Index;
 ---
 
 #### 📄 src\pages\NotFound.tsx
-
 <a name='src-pages-NotFoundtsx'></a>
 
 **Path:** `src\pages\NotFound.tsx`
@@ -2405,10 +2757,7 @@ const NotFound = () => {
   const location = useLocation();
 
   useEffect(() => {
-    console.error(
-      "404 Error: User attempted to access non-existent route:",
-      location.pathname
-    );
+    console.error("404 Error: User attempted to access non-existent route:", location.pathname);
   }, [location.pathname]);
 
   return (
@@ -2430,7 +2779,6 @@ export default NotFound;
 ---
 
 #### 📄 src\pages\StoriesPage.tsx
-
 <a name='src-pages-StoriesPagetsx'></a>
 
 **Path:** `src\pages\StoriesPage.tsx`
@@ -2439,8 +2787,18 @@ export default NotFound;
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
-import { Search, Filter, Grid, List, BookOpen } from "lucide-react";
+import { useSearchParams, Link } from "react-router-dom";
+import {
+  Search,
+  Filter,
+  Grid,
+  List,
+  BookOpen,
+  Sparkles,
+  TrendingUp,
+  Award,
+  Heart,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -2451,12 +2809,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StoryCard } from "@/components/ui/story-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { MainLayout } from "@/components/layout/main-layout";
 import { Story, PaginatedResponse } from "@/types";
 import { storiesApi } from "@/apis";
+import { useAuthStore } from "@/store/authStore";
 import { cn } from "@/lib/utils";
 
 const genres = [
@@ -2482,7 +2841,11 @@ const sortOptions = [
 export function StoriesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [stories, setStories] = useState<Story[]>([]);
+  const [recommendedStories, setRecommendedStories] = useState<Story[]>([]);
+  const [editorPicks, setEditorPicks] = useState<Story[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingRecommendations, setIsLoadingRecommendations] =
+    useState(true);
   const [pagination, setPagination] = useState<
     Pick<PaginatedResponse<any>, "total" | "page" | "limit">
   >({
@@ -2490,6 +2853,8 @@ export function StoriesPage() {
     page: 1,
     limit: 12,
   });
+
+  const { isAuthenticated, user } = useAuthStore();
 
   // Filters from URL
   const searchQuery = searchParams.get("q") || "";
@@ -2517,6 +2882,33 @@ export function StoriesPage() {
     }
 
     setSearchParams(newParams);
+  };
+
+  // Fetch recommendations
+  const fetchRecommendations = async () => {
+    setIsLoadingRecommendations(true);
+    try {
+      // Fetch personalized recommendations (based on user preferences if logged in)
+      const [recommendedResponse, editorResponse] = await Promise.all([
+        storiesApi.getStories({
+          page: 1,
+          limit: 6,
+          sort: isAuthenticated ? "popular" : "trending",
+        }),
+        storiesApi.getStories({
+          page: 1,
+          limit: 3,
+          sort: "popular",
+        }),
+      ]);
+
+      setRecommendedStories(recommendedResponse.items);
+      setEditorPicks(editorResponse.items);
+    } catch (error) {
+      console.error("Failed to fetch recommendations:", error);
+    } finally {
+      setIsLoadingRecommendations(false);
+    }
   };
 
   const fetchStories = async () => {
@@ -2557,6 +2949,10 @@ export function StoriesPage() {
     fetchStories();
   }, [searchQuery, selectedGenre, sortBy, currentPage]);
 
+  useEffect(() => {
+    fetchRecommendations();
+  }, [isAuthenticated]);
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     updateSearchParams({ q: localSearch.trim() || null });
@@ -2576,14 +2972,153 @@ export function StoriesPage() {
 
   const handlePageChange = (page: number) => {
     updateSearchParams({ page: page.toString() });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const totalPages = Math.ceil(pagination.total / pagination.limit);
 
   return (
     <MainLayout>
-      <div className="space-y-6 p-4">
-        {/* Header */}
+      <div className="space-y-8 p-4">
+        {/* Welcome Section for New Users */}
+        {!isAuthenticated && !searchQuery && (
+          <section className="max-w-7xl mx-auto">
+            <Card className="bg-gradient-to-r from-amber-50 to-orange-50 border-0 shadow-lg">
+              <CardContent className="p-8">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                  <div className="flex-1">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                      Welcome to StoriVault! 📚
+                    </h2>
+                    <p className="text-gray-700 mb-4">
+                      Dive into thousands of amazing stories from talented
+                      writers worldwide. Create your free account to save
+                      favorites, follow authors, and share your own stories!
+                    </p>
+                    <div className="flex flex-wrap gap-3">
+                      <Button asChild>
+                        <Link to="/auth/signup">Create Free Account</Link>
+                      </Button>
+                      <Button variant="outline" asChild>
+                        <Link to="/auth/login">Sign In</Link>
+                      </Button>
+                    </div>
+                  </div>
+                  <BookOpen className="h-24 w-24 text-orange-400 opacity-50" />
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+        )}
+
+        {/* Recommendations Section - Show before main content */}
+        {!searchQuery &&
+          !isLoadingRecommendations &&
+          recommendedStories.length > 0 && (
+            <section className="max-w-7xl mx-auto">
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold flex items-center gap-2 mb-2">
+                  <Sparkles className="h-6 w-6 text-yellow-500" />
+                  {isAuthenticated
+                    ? "Recommended for You"
+                    : "Popular Right Now"}
+                </h2>
+                <p className="text-muted-foreground">
+                  {isAuthenticated
+                    ? "Stories we think you'll love based on your reading history"
+                    : "Trending stories loved by our community"}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-6">
+                {recommendedStories.map((story) => (
+                  <Card
+                    key={story.id}
+                    className="group hover:shadow-lg transition-all duration-300"
+                  >
+                    <Link to={`/stories/${story.id}`}>
+                      <div className="aspect-[3/4] relative overflow-hidden rounded-t-lg">
+                        <img
+                          src={
+                            story.cover_image ||
+                            `https://source.unsplash.com/200x300/?book,${story.genre}`
+                          }
+                          alt={story.title}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                        <Badge className="absolute top-2 right-2 bg-white/90">
+                          {story.genre}
+                        </Badge>
+                        <div className="absolute bottom-2 left-2 right-2">
+                          <h3 className="text-white font-semibold text-sm line-clamp-2">
+                            {story.title}
+                          </h3>
+                        </div>
+                      </div>
+                      <div className="p-3">
+                        <div className="flex items-center justify-between text-xs text-muted-foreground">
+                          <span className="flex items-center gap-1">
+                            <Heart className="h-3 w-3" />
+                            {(story.votes_count / 1000).toFixed(1)}K
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <BookOpen className="h-3 w-3" />
+                            {(story.reads_count / 1000).toFixed(1)}K
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                  </Card>
+                ))}
+              </div>
+            </section>
+          )}
+
+        {/* Editor's Picks - Sidebar style for desktop */}
+        {!searchQuery && editorPicks.length > 0 && (
+          <section className="max-w-7xl mx-auto">
+            <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-0">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Award className="h-5 w-5 text-purple-600" />
+                  Editor's Picks This Week
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {editorPicks.map((story, index) => (
+                    <Link key={story.id} to={`/stories/${story.id}`}>
+                      <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-white/60 transition-colors">
+                        <span className="text-2xl font-bold text-purple-600">
+                          #{index + 1}
+                        </span>
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-sm line-clamp-2 hover:text-purple-600 transition-colors">
+                            {story.title}
+                          </h4>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            by @{story.author_id.slice(0, 8)}
+                          </p>
+                          <div className="flex items-center gap-2 mt-2">
+                            <Badge variant="outline" className="text-xs">
+                              {story.genre}
+                            </Badge>
+                            <span className="text-xs text-muted-foreground">
+                              {(story.reads_count / 1000).toFixed(1)}K reads
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+        )}
+
+        {/* Main Header and Search */}
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-3 mb-2">
             <BookOpen className="h-8 w-8 text-primary" />
@@ -2721,10 +3256,20 @@ export function StoriesPage() {
               <CardContent>
                 <BookOpen className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-lg font-semibold mb-2">No stories found</h3>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground mb-4">
                   Try adjusting your search or filter criteria to find more
                   stories.
                 </p>
+                {!isAuthenticated && (
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Sign up to get personalized recommendations!
+                    </p>
+                    <Button asChild>
+                      <Link to="/auth/signup">Create Free Account</Link>
+                    </Button>
+                  </div>
+                )}
               </CardContent>
             </Card>
           ) : (
@@ -2789,6 +3334,26 @@ export function StoriesPage() {
             </>
           )}
         </div>
+
+        {/* Bottom CTA for non-authenticated users */}
+        {!isAuthenticated && stories.length > 0 && (
+          <section className="max-w-7xl mx-auto mt-12">
+            <Card className="bg-gradient-to-r from-primary/10 to-accent/10 border-0">
+              <CardContent className="p-8 text-center">
+                <h3 className="text-2xl font-bold mb-2">
+                  Want Personalized Recommendations?
+                </h3>
+                <p className="text-muted-foreground mb-4">
+                  Join StoriVault to get story suggestions tailored to your
+                  taste!
+                </p>
+                <Button size="lg" asChild>
+                  <Link to="/auth/signup">Sign Up Free</Link>
+                </Button>
+              </CardContent>
+            </Card>
+          </section>
+        )}
       </div>
     </MainLayout>
   );
@@ -2800,16 +3365,15 @@ export function StoriesPage() {
 ### 📁 src\store
 
 #### 📄 src\store\authStore.ts
-
 <a name='src-store-authStorets'></a>
 
 **Path:** `src\store\authStore.ts`
 
 ```typescript
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { User, ApiError } from "@/types";
-import { authApi } from "@/apis/auth";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { User, ApiError } from '@/types';
+import { authApi } from '@/apis/auth';
 
 interface AuthState {
   // State
@@ -2818,7 +3382,7 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
-
+  
   // Actions
   login: (email: string, password: string) => Promise<void>;
   signup: (username: string, email: string, password: string) => Promise<void>;
@@ -2843,26 +3407,25 @@ export const useAuthStore = create<AuthState>()(
       login: async (email: string, password: string) => {
         try {
           set({ isLoading: true, error: null });
-
+          
           const tokenResponse = await authApi.login(email, password);
           const userResponse = await authApi.getMe(tokenResponse.access_token);
-
+          
           set({
             accessToken: tokenResponse.access_token,
             user: userResponse,
             isAuthenticated: true,
             isLoading: false,
-            error: null,
+            error: null
           });
         } catch (error: any) {
-          const errorMessage =
-            error.details?.message || error.message || "Login failed";
+          const errorMessage = error.details?.message || error.message || 'Login failed';
           set({
             accessToken: null,
             user: null,
             isAuthenticated: false,
             isLoading: false,
-            error: errorMessage,
+            error: errorMessage
           });
           throw error;
         }
@@ -2871,19 +3434,18 @@ export const useAuthStore = create<AuthState>()(
       signup: async (username: string, email: string, password: string) => {
         try {
           set({ isLoading: true, error: null });
-
+          
           const user = await authApi.signup(username, email, password);
-
+          
           // Auto-login after signup
           await get().login(email, password);
-
+          
           set({ isLoading: false, error: null });
         } catch (error: any) {
-          const errorMessage =
-            error.details?.message || error.message || "Signup failed";
+          const errorMessage = error.details?.message || error.message || 'Signup failed';
           set({
             isLoading: false,
-            error: errorMessage,
+            error: errorMessage
           });
           throw error;
         }
@@ -2894,7 +3456,7 @@ export const useAuthStore = create<AuthState>()(
           accessToken: null,
           user: null,
           isAuthenticated: false,
-          error: null,
+          error: null
         });
       },
 
@@ -2905,12 +3467,12 @@ export const useAuthStore = create<AuthState>()(
         try {
           set({ isLoading: true, error: null });
           const user = await authApi.getMe(accessToken);
-
+          
           set({
             user,
             isAuthenticated: true,
             isLoading: false,
-            error: null,
+            error: null
           });
         } catch (error: any) {
           if (error.status === 401) {
@@ -2919,7 +3481,7 @@ export const useAuthStore = create<AuthState>()(
           } else {
             set({
               isLoading: false,
-              error: error.message || "Failed to fetch user",
+              error: error.message || 'Failed to fetch user'
             });
           }
         }
@@ -2935,15 +3497,15 @@ export const useAuthStore = create<AuthState>()(
 
       setLoading: (loading: boolean) => {
         set({ isLoading: loading });
-      },
+      }
     }),
     {
-      name: "auth-storage",
+      name: 'auth-storage',
       partialize: (state) => ({
         accessToken: state.accessToken,
         user: state.user,
-        isAuthenticated: state.isAuthenticated,
-      }),
+        isAuthenticated: state.isAuthenticated
+      })
     }
   )
 );
@@ -2952,42 +3514,36 @@ export const useAuthStore = create<AuthState>()(
 ---
 
 #### 📄 src\store\uiStore.ts
-
 <a name='src-store-uiStorets'></a>
 
 **Path:** `src\store\uiStore.ts`
 
 ```typescript
-import { create } from "zustand";
-import { Toast, Modal, Theme } from "@/types";
+import { create } from 'zustand';
+import { Toast, Modal, Theme } from '@/types';
 
 interface UiState {
   // Theme
   theme: Theme;
-
+  
   // Toasts
   toasts: Toast[];
-
+  
   // Modals
   modals: Modal[];
-
+  
   // Loading states
   globalLoading: boolean;
-
-  // Sidebar
-  sidebarOpen: boolean;
-
+  
   // Actions
   setTheme: (theme: Theme) => void;
-  addToast: (toast: Omit<Toast, "id">) => void;
+  addToast: (toast: Omit<Toast, 'id'>) => void;
   removeToast: (id: string) => void;
   clearToasts: () => void;
   openModal: (component: React.ComponentType<any>, props?: any) => string;
   closeModal: (id: string) => void;
   closeAllModals: () => void;
   setGlobalLoading: (loading: boolean) => void;
-  setSidebarOpen: (open: boolean) => void;
-  toggleSidebar: () => void;
 }
 
 let toastIdCounter = 0;
@@ -2995,41 +3551,38 @@ let modalIdCounter = 0;
 
 export const useUiStore = create<UiState>((set, get) => ({
   // Initial state
-  theme: "system",
+  theme: 'system',
   toasts: [],
   modals: [],
   globalLoading: false,
-  sidebarOpen: false,
 
   // Theme actions
   setTheme: (theme: Theme) => {
     set({ theme });
-
+    
     // Apply theme to document
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else if (theme === "light") {
-      document.documentElement.classList.remove("dark");
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else if (theme === 'light') {
+      document.documentElement.classList.remove('dark');
     } else {
       // System theme
-      const prefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-      ).matches;
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       if (prefersDark) {
-        document.documentElement.classList.add("dark");
+        document.documentElement.classList.add('dark');
       } else {
-        document.documentElement.classList.remove("dark");
+        document.documentElement.classList.remove('dark');
       }
     }
   },
 
   // Toast actions
-  addToast: (toast: Omit<Toast, "id">) => {
+  addToast: (toast: Omit<Toast, 'id'>) => {
     const id = `toast-${++toastIdCounter}`;
     const newToast: Toast = { ...toast, id };
-
+    
     set((state) => ({
-      toasts: [...state.toasts, newToast],
+      toasts: [...state.toasts, newToast]
     }));
 
     // Auto-remove toast after duration
@@ -3041,7 +3594,7 @@ export const useUiStore = create<UiState>((set, get) => ({
 
   removeToast: (id: string) => {
     set((state) => ({
-      toasts: state.toasts.filter((toast) => toast.id !== id),
+      toasts: state.toasts.filter(toast => toast.id !== id)
     }));
   },
 
@@ -3053,9 +3606,9 @@ export const useUiStore = create<UiState>((set, get) => ({
   openModal: (component: React.ComponentType<any>, props?: any) => {
     const id = `modal-${++modalIdCounter}`;
     const modal: Modal = { id, component, props };
-
+    
     set((state) => ({
-      modals: [...state.modals, modal],
+      modals: [...state.modals, modal]
     }));
 
     return id;
@@ -3063,7 +3616,7 @@ export const useUiStore = create<UiState>((set, get) => ({
 
   closeModal: (id: string) => {
     set((state) => ({
-      modals: state.modals.filter((modal) => modal.id !== id),
+      modals: state.modals.filter(modal => modal.id !== id)
     }));
   },
 
@@ -3074,35 +3627,24 @@ export const useUiStore = create<UiState>((set, get) => ({
   // Loading actions
   setGlobalLoading: (loading: boolean) => {
     set({ globalLoading: loading });
-  },
-
-  // Sidebar actions
-  setSidebarOpen: (open: boolean) => {
-    set({ sidebarOpen: open });
-  },
-
-  toggleSidebar: () => {
-    set((state) => ({ sidebarOpen: !state.sidebarOpen }));
-  },
+  }
 }));
 
 // Initialize theme on load
-if (typeof window !== "undefined") {
+if (typeof window !== 'undefined') {
   const store = useUiStore.getState();
   store.setTheme(store.theme);
-
+  
   // Listen for system theme changes
-  window
-    .matchMedia("(prefers-color-scheme: dark)")
-    .addEventListener("change", (e) => {
-      if (store.theme === "system") {
-        if (e.matches) {
-          document.documentElement.classList.add("dark");
-        } else {
-          document.documentElement.classList.remove("dark");
-        }
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (store.theme === 'system') {
+      if (e.matches) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
       }
-    });
+    }
+  });
 }
 ```
 
@@ -3111,7 +3653,6 @@ if (typeof window !== "undefined") {
 ### 📁 src\types
 
 #### 📄 src\types\api.ts
-
 <a name='src-types-apits'></a>
 
 **Path:** `src\types\api.ts`
@@ -3131,7 +3672,7 @@ export interface ApiEnvelope<T = any> {
 export interface PaginatedResponse<T> {
   total: number;
   page: number;
-  limit: number;
+  limit: number; 
   items: T[];
 }
 
@@ -3275,13 +3816,12 @@ export interface ApiError extends Error {
 ---
 
 #### 📄 src\types\index.ts
-
 <a name='src-types-indexts'></a>
 
 **Path:** `src\types\index.ts`
 
 ```typescript
-export * from "./api";
+export * from './api';
 
 // UI Types
 export interface LoadingState {
@@ -3293,7 +3833,7 @@ export interface Toast {
   id: string;
   title: string;
   description?: string;
-  type: "success" | "error" | "warning" | "info";
+  type: 'success' | 'error' | 'warning' | 'info';
   duration?: number;
 }
 
@@ -3318,7 +3858,7 @@ export interface FormState {
 }
 
 // Theme Types
-export type Theme = "light" | "dark" | "system";
+export type Theme = 'light' | 'dark' | 'system';
 
 // Navigation Types
 export interface NavigationItem {
@@ -3333,8 +3873,179 @@ export interface NavigationItem {
 
 ### 📁 src\components\layout
 
-#### 📄 src\components\layout\header.tsx
+#### 📄 src\components\layout\footer.tsx
+<a name='src-components-layout-footertsx'></a>
 
+**Path:** `src\components\layout\footer.tsx`
+
+```tsx
+"use client";
+
+import { Link } from "react-router-dom";
+import { Github, Twitter, Mail, ExternalLink } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/ui/logo";
+
+export function Footer() {
+  const currentYear = new Date().getFullYear();
+
+  const footerLinks = {
+    product: [
+      { label: "Features", href: "/features" },
+      { label: "Pricing", href: "/pricing" },
+      { label: "Stories", href: "/stories" },
+      { label: "Authors", href: "/authors" },
+    ],
+    company: [
+      { label: "About", href: "/about" },
+      { label: "Blog", href: "/blog" },
+      { label: "Careers", href: "/careers" },
+      { label: "Contact", href: "/contact" },
+    ],
+    legal: [
+      { label: "Privacy Policy", href: "/privacy" },
+      { label: "Terms of Service", href: "/terms" },
+      { label: "Cookie Policy", href: "/cookies" },
+      { label: "Guidelines", href: "/guidelines" },
+    ],
+    social: [
+      { label: "Twitter", href: "https://twitter.com", icon: Twitter },
+      { label: "GitHub", href: "https://github.com", icon: Github },
+      { label: "Email", href: "mailto:support@storivault.com", icon: Mail },
+    ],
+  };
+
+  return (
+    <footer className="bg-background border-t mt-auto">
+      {/* Main Footer Content - Dark Background */}
+      <div className="bg-gray-800">
+        <div className="container mx-auto px-4 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+            {/* Brand Section with New Logo */}
+            <div className="lg:col-span-2">
+              <Logo size="md" className="mb-4" />
+              <p className="text-gray-300 mb-4 max-w-sm">
+                Your gateway to infinite stories. Discover captivating tales,
+                connect with passionate writers, and immerse yourself in worlds
+                beyond imagination.
+              </p>
+              <div className="flex gap-2">
+                {footerLinks.social.map((social) => {
+                  const Icon = social.icon;
+                  return (
+                    <Button
+                      key={social.label}
+                      variant="ghost"
+                      size="sm"
+                      className="h-9 w-9 p-0 hover:bg-gray-700 text-gray-300 hover:text-white"
+                      asChild
+                    >
+                      <a
+                        href={social.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={social.label}
+                      >
+                        <Icon className="h-4 w-4" />
+                      </a>
+                    </Button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Product Links */}
+            <div>
+              <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-white">
+                Product
+              </h3>
+              <ul className="space-y-2">
+                {footerLinks.product.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      to={link.href}
+                      className="text-gray-300 hover:text-white transition-colors text-sm"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Company Links */}
+            <div>
+              <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-white">
+                Company
+              </h3>
+              <ul className="space-y-2">
+                {footerLinks.company.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      to={link.href}
+                      className="text-gray-300 hover:text-white transition-colors text-sm"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Legal Links */}
+            <div>
+              <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-white">
+                Legal
+              </h3>
+              <ul className="space-y-2">
+                {footerLinks.legal.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      to={link.href}
+                      className="text-gray-300 hover:text-white transition-colors text-sm"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Footer - Light Background */}
+      <div className="bg-background border-t border-gray-200">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="text-sm text-muted-foreground">
+              <span>© {currentYear} StoriVault. All rights reserved.</span>
+            </div>
+
+            {/* Powered by NexusNao - Right Side */}
+            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+              <span>Powered by</span>
+              <a
+                href="https://nexusnao.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-primary hover:text-primary-hover inline-flex items-center gap-1 transition-colors"
+              >
+                NexusNao
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+```
+
+---
+
+#### 📄 src\components\layout\header.tsx
 <a name='src-components-layout-headertsx'></a>
 
 **Path:** `src\components\layout\header.tsx`
@@ -3348,16 +4059,15 @@ import {
   Search,
   Bell,
   Plus,
-  Menu,
   User,
   Settings,
   LogOut,
-  BookOpen,
   Library,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Logo } from "@/components/ui/logo";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -3366,19 +4076,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuthStore } from "@/store/authStore";
-import { useUiStore } from "@/store/uiStore";
-import { cn } from "@/lib/utils";
 
 export function Header() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const { user, isAuthenticated, logout } = useAuthStore();
-  const { toggleSidebar } = useUiStore();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/stories/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      navigate(`/stories?q=${encodeURIComponent(searchQuery.trim())}`);
     }
   };
 
@@ -3388,28 +4095,10 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
-        {/* Left side */}
-        <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="md:hidden"
-            onClick={toggleSidebar}
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-
-          <Link to="/" className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-gradient-primary flex items-center justify-center">
-              <BookOpen className="h-5 w-5 text-white" />
-            </div>
-            <span className="font-bold text-xl bg-gradient-primary bg-clip-text text-transparent">
-              StoriVault
-            </span>
-          </Link>
-        </div>
+    <header className="sticky top-0 z-50 w-full border-b bg-background shadow-sm">
+      <div className="container flex h-16 items-center justify-between px-4 bg-background">
+        {/* Logo */}
+        <Logo size="sm" />
 
         {/* Center - Search */}
         <div className="hidden md:flex flex-1 max-w-md mx-8">
@@ -3420,14 +4109,19 @@ export function Header() {
               placeholder="Search stories, authors..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 w-full"
+              className="pl-10 w-full rounded-full"
             />
           </form>
         </div>
 
         {/* Right side */}
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" className="md:hidden">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="md:hidden"
+            onClick={() => navigate("/stories")}
+          >
             <Search className="h-5 w-5" />
           </Button>
 
@@ -3485,6 +4179,12 @@ export function Header() {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
+                    <Link to="/stories">
+                      <Search className="mr-2 h-4 w-4" />
+                      Browse Stories
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link to="/settings">
                       <Settings className="mr-2 h-4 w-4" />
                       Settings
@@ -3503,7 +4203,11 @@ export function Header() {
               <Button variant="ghost" size="sm" asChild>
                 <Link to="/auth/login">Sign In</Link>
               </Button>
-              <Button size="sm" asChild>
+              <Button
+                size="sm"
+                className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white border-0"
+                asChild
+              >
                 <Link to="/auth/signup">Sign Up</Link>
               </Button>
             </div>
@@ -3518,7 +4222,6 @@ export function Header() {
 ---
 
 #### 📄 src\components\layout\main-layout.tsx
-
 <a name='src-components-layout-main-layouttsx'></a>
 
 **Path:** `src\components\layout\main-layout.tsx`
@@ -3528,16 +4231,21 @@ export function Header() {
 
 import { useEffect } from "react";
 import { Header } from "./header";
-import { Sidebar } from "./sidebar";
+import { Footer } from "./footer";
 import { useAuthStore } from "@/store/authStore";
 import { cn } from "@/lib/utils";
 
 interface MainLayoutProps {
   children: React.ReactNode;
   className?: string;
+  showFooter?: boolean;
 }
 
-export function MainLayout({ children, className }: MainLayoutProps) {
+export function MainLayout({
+  children,
+  className,
+  showFooter = true,
+}: MainLayoutProps) {
   const { isAuthenticated, fetchMe } = useAuthStore();
 
   // Fetch user data on mount if authenticated
@@ -3548,19 +4256,12 @@ export function MainLayout({ children, className }: MainLayoutProps) {
   }, [isAuthenticated, fetchMe]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header />
-      <div className="flex">
-        <Sidebar />
-        <main
-          className={cn(
-            "flex-1 md:ml-64 transition-all duration-300",
-            className
-          )}
-        >
-          {children}
-        </main>
-      </div>
+      <main className={cn("flex-1 flex flex-col", className)}>
+        <div className="flex-1">{children}</div>
+        {showFooter && <Footer />}
+      </main>
     </div>
   );
 }
@@ -3571,18 +4272,17 @@ export function MainLayout({ children, className }: MainLayoutProps) {
 ### 📁 src\components\ui
 
 #### 📄 src\components\ui\file-dropzone.tsx
-
 <a name='src-components-ui-file-dropzonetsx'></a>
 
 **Path:** `src\components\ui\file-dropzone.tsx`
 
 ```tsx
-"use client";
+'use client';
 
-import { useCallback, useState } from "react";
-import { Upload, X, File, Image } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "./button";
+import { useCallback, useState } from 'react';
+import { Upload, X, File, Image } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Button } from './button';
 
 interface FileDropzoneProps {
   onFileSelect: (file: File) => void;
@@ -3597,7 +4297,7 @@ interface FileDropzoneProps {
 
 export function FileDropzone({
   onFileSelect,
-  accept = "image/*",
+  accept = 'image/*',
   maxSize = 5 * 1024 * 1024, // 5MB default
   className,
   disabled = false,
@@ -3608,77 +4308,60 @@ export function FileDropzone({
   const [isDragOver, setIsDragOver] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const validateFile = useCallback(
-    (file: File): boolean => {
-      setError(null);
+  const validateFile = useCallback((file: File): boolean => {
+    setError(null);
+    
+    if (maxSize && file.size > maxSize) {
+      setError(`File size must be less than ${Math.round(maxSize / 1024 / 1024)}MB`);
+      return false;
+    }
 
-      if (maxSize && file.size > maxSize) {
-        setError(
-          `File size must be less than ${Math.round(maxSize / 1024 / 1024)}MB`
-        );
-        return false;
+    if (accept && !accept.split(',').some(type => {
+      const trimmedType = type.trim();
+      if (trimmedType.endsWith('/*')) {
+        return file.type.startsWith(trimmedType.slice(0, -1));
       }
+      return file.type === trimmedType;
+    })) {
+      setError('File type not supported');
+      return false;
+    }
 
-      if (
-        accept &&
-        !accept.split(",").some((type) => {
-          const trimmedType = type.trim();
-          if (trimmedType.endsWith("/*")) {
-            return file.type.startsWith(trimmedType.slice(0, -1));
-          }
-          return file.type === trimmedType;
-        })
-      ) {
-        setError("File type not supported");
-        return false;
+    return true;
+  }, [accept, maxSize]);
+
+  const handleFileSelect = useCallback((files: FileList) => {
+    const fileArray = Array.from(files);
+    
+    if (multiple) {
+      const validFiles = fileArray.filter(validateFile);
+      validFiles.forEach(onFileSelect);
+    } else {
+      const file = fileArray[0];
+      if (file && validateFile(file)) {
+        onFileSelect(file);
       }
+    }
+  }, [multiple, validateFile, onFileSelect]);
 
-      return true;
-    },
-    [accept, maxSize]
-  );
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    
+    if (disabled) return;
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleFileSelect(files);
+    }
+  }, [disabled, handleFileSelect]);
 
-  const handleFileSelect = useCallback(
-    (files: FileList) => {
-      const fileArray = Array.from(files);
-
-      if (multiple) {
-        const validFiles = fileArray.filter(validateFile);
-        validFiles.forEach(onFileSelect);
-      } else {
-        const file = fileArray[0];
-        if (file && validateFile(file)) {
-          onFileSelect(file);
-        }
-      }
-    },
-    [multiple, validateFile, onFileSelect]
-  );
-
-  const handleDrop = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault();
-      setIsDragOver(false);
-
-      if (disabled) return;
-
-      const files = e.dataTransfer.files;
-      if (files.length > 0) {
-        handleFileSelect(files);
-      }
-    },
-    [disabled, handleFileSelect]
-  );
-
-  const handleDragOver = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault();
-      if (!disabled) {
-        setIsDragOver(true);
-      }
-    },
-    [disabled]
-  );
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    if (!disabled) {
+      setIsDragOver(true);
+    }
+  }, [disabled]);
 
   const handleDragLeave = useCallback(() => {
     setIsDragOver(false);
@@ -3686,9 +4369,9 @@ export function FileDropzone({
 
   const handleClick = () => {
     if (disabled) return;
-
-    const input = document.createElement("input");
-    input.type = "file";
+    
+    const input = document.createElement('input');
+    input.type = 'file';
     input.accept = accept;
     input.multiple = multiple;
     input.onchange = (e) => {
@@ -3704,16 +4387,13 @@ export function FileDropzone({
     if (!value) return null;
 
     const files = Array.isArray(value) ? value : [value];
-
+    
     return (
       <div className="mt-4 space-y-2">
         {files.map((file, index) => (
-          <div
-            key={`${file.name}-${index}`}
-            className="flex items-center gap-3 p-3 bg-secondary rounded-lg"
-          >
+          <div key={`${file.name}-${index}`} className="flex items-center gap-3 p-3 bg-secondary rounded-lg">
             <div className="flex-shrink-0">
-              {file.type.startsWith("image/") ? (
+              {file.type.startsWith('image/') ? (
                 <Image className="h-5 w-5 text-primary" />
               ) : (
                 <File className="h-5 w-5 text-muted-foreground" />
@@ -3759,24 +4439,23 @@ export function FileDropzone({
         onClick={handleClick}
       >
         <div className="flex flex-col items-center justify-center text-center">
-          <Upload
-            className={cn(
-              "h-10 w-10 mb-4",
-              isDragOver ? "text-primary" : "text-muted-foreground"
-            )}
-          />
+          <Upload className={cn(
+            "h-10 w-10 mb-4",
+            isDragOver ? "text-primary" : "text-muted-foreground"
+          )} />
           <p className="text-sm font-medium mb-1">
             Drop files here or click to browse
           </p>
           <p className="text-xs text-muted-foreground">
-            {accept === "image/*" ? "Images only" : accept} • Max{" "}
-            {Math.round(maxSize / 1024 / 1024)}MB
+            {accept === 'image/*' ? 'Images only' : accept} • Max {Math.round(maxSize / 1024 / 1024)}MB
           </p>
         </div>
       </div>
-
-      {error && <p className="text-sm text-destructive">{error}</p>}
-
+      
+      {error && (
+        <p className="text-sm text-destructive">{error}</p>
+      )}
+      
       {renderPreview()}
     </div>
   );
@@ -3786,26 +4465,24 @@ export function FileDropzone({
 ---
 
 #### 📄 src\components\ui\image-with-fallback.tsx
-
 <a name='src-components-ui-image-with-fallbacktsx'></a>
 
 **Path:** `src\components\ui\image-with-fallback.tsx`
 
 ```tsx
-"use client";
+'use client';
 
-import { useState } from "react";
-import { cn } from "@/lib/utils";
+import { useState } from 'react';
+import { cn } from '@/lib/utils';
 
-interface ImageWithFallbackProps
-  extends React.ImgHTMLAttributes<HTMLImageElement> {
+interface ImageWithFallbackProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   fallback?: string;
   fallbackComponent?: React.ReactNode;
 }
 
 export function ImageWithFallback({
   src,
-  fallback = "/placeholder.svg",
+  fallback = '/placeholder.svg',
   fallbackComponent,
   className,
   alt,
@@ -3830,12 +4507,10 @@ export function ImageWithFallback({
   return (
     <div className="relative">
       {isLoading && (
-        <div
-          className={cn(
-            "absolute inset-0 bg-muted animate-pulse rounded",
-            className
-          )}
-        />
+        <div className={cn(
+          "absolute inset-0 bg-muted animate-pulse rounded",
+          className
+        )} />
       )}
       <img
         {...props}
@@ -3857,37 +4532,270 @@ export function ImageWithFallback({
 ---
 
 #### 📄 src\components\ui\loading-spinner.tsx
-
 <a name='src-components-ui-loading-spinnertsx'></a>
 
 **Path:** `src\components\ui\loading-spinner.tsx`
 
 ```tsx
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 interface LoadingSpinnerProps {
-  size?: "sm" | "md" | "lg";
+  size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
 
-export function LoadingSpinner({
-  size = "md",
-  className,
-}: LoadingSpinnerProps) {
+export function LoadingSpinner({ size = 'md', className }: LoadingSpinnerProps) {
   const sizeClasses = {
-    sm: "h-4 w-4",
-    md: "h-6 w-6",
-    lg: "h-8 w-8",
+    sm: 'h-4 w-4',
+    md: 'h-6 w-6',
+    lg: 'h-8 w-8'
   };
 
   return (
-    <div
+    <div className={cn(
+      "animate-spin rounded-full border-2 border-current border-t-transparent",
+      sizeClasses[size],
+      className
+    )} />
+  );
+}
+```
+
+---
+
+#### 📄 src\components\ui\logo.tsx
+<a name='src-components-ui-logotsx'></a>
+
+**Path:** `src\components\ui\logo.tsx`
+
+```tsx
+"use client";
+
+import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
+
+interface LogoProps {
+  className?: string;
+  showText?: boolean;
+  size?: "sm" | "md" | "lg";
+  asLink?: boolean;
+  variant?: "default" | "light" | "dark";
+}
+
+export function Logo({
+  className,
+  showText = true,
+  size = "md",
+  asLink = true,
+  variant = "default",
+}: LogoProps) {
+  const sizes = {
+    sm: {
+      container: "h-8",
+      icon: "h-8 w-8",
+      text: "text-xl",
+      spacing: "gap-2",
+    },
+    md: {
+      container: "h-10",
+      icon: "h-10 w-10",
+      text: "text-2xl",
+      spacing: "gap-2.5",
+    },
+    lg: {
+      container: "h-14",
+      icon: "h-14 w-14",
+      text: "text-4xl",
+      spacing: "gap-3",
+    },
+  };
+
+  const logoIcon = (
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={sizes[size].icon}
+    >
+      {/* Gradient definitions */}
+      <defs>
+        <linearGradient id="bookGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FF6B35" />
+          <stop offset="50%" stopColor="#F77737" />
+          <stop offset="100%" stopColor="#FFA500" />
+        </linearGradient>
+        <linearGradient id="starGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FFD700" />
+          <stop offset="100%" stopColor="#FFA500" />
+        </linearGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+          <feMerge>
+            <feMergeNode in="coloredBlur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      {/* Book pages background */}
+      <path
+        d="M6 8C6 6.89543 6.89543 6 8 6H22V38H8C6.89543 38 6 37.1046 6 36V8Z"
+        fill="url(#bookGradient)"
+        opacity="0.9"
+      />
+      <path
+        d="M26 6H40C41.1046 6 42 6.89543 42 8V36C42 37.1046 41.1046 38 40 38H26V6Z"
+        fill="url(#bookGradient)"
+        opacity="0.8"
+      />
+
+      {/* Book spine */}
+      <rect x="22" y="6" width="4" height="32" fill="#E85D04" opacity="0.9" />
+
+      {/* Pages effect */}
+      <path d="M9 10H20V34H9V10Z" fill="white" opacity="0.3" />
+      <path d="M28 10H39V34H28V10Z" fill="white" opacity="0.25" />
+
+      {/* Page lines */}
+      <line
+        x1="11"
+        y1="14"
+        x2="18"
+        y2="14"
+        stroke="white"
+        strokeWidth="1"
+        opacity="0.5"
+      />
+      <line
+        x1="11"
+        y1="18"
+        x2="18"
+        y2="18"
+        stroke="white"
+        strokeWidth="1"
+        opacity="0.5"
+      />
+      <line
+        x1="11"
+        y1="22"
+        x2="18"
+        y2="22"
+        stroke="white"
+        strokeWidth="1"
+        opacity="0.5"
+      />
+      <line
+        x1="30"
+        y1="14"
+        x2="37"
+        y2="14"
+        stroke="white"
+        strokeWidth="1"
+        opacity="0.5"
+      />
+      <line
+        x1="30"
+        y1="18"
+        x2="37"
+        y2="18"
+        stroke="white"
+        strokeWidth="1"
+        opacity="0.5"
+      />
+      <line
+        x1="30"
+        y1="22"
+        x2="37"
+        y2="22"
+        stroke="white"
+        strokeWidth="1"
+        opacity="0.5"
+      />
+
+      {/* Central star/sparkle */}
+      <path
+        d="M24 16 L25.5 20 L29.5 20 L26.5 22.5 L27.5 26.5 L24 24 L20.5 26.5 L21.5 22.5 L18.5 20 L22.5 20 Z"
+        fill="url(#starGradient)"
+        filter="url(#glow)"
+      />
+
+      {/* Small sparkles */}
+      <circle cx="12" cy="28" r="1" fill="#FFD700" opacity="0.8" />
+      <circle cx="36" cy="28" r="1" fill="#FFD700" opacity="0.8" />
+    </svg>
+  );
+
+  const logoContent = (
+    <>
+      {logoIcon}
+      {showText && (
+        <div className={cn("flex flex-col justify-center", sizes[size].text)}>
+          <span
+            className="font-display leading-none tracking-tight"
+            style={{ fontFamily: "'Crimson Text', serif" }}
+          >
+            <span
+              className={cn(
+                "font-bold",
+                variant === "light"
+                  ? "text-white"
+                  : variant === "dark"
+                  ? "text-gray-900"
+                  : "bg-gradient-to-r from-orange-600 via-orange-500 to-amber-500 bg-clip-text text-transparent"
+              )}
+            >
+              Stori
+            </span>
+            <span
+              className={cn(
+                "font-light",
+                variant === "light"
+                  ? "text-gray-200"
+                  : variant === "dark"
+                  ? "text-gray-700"
+                  : "text-gray-700 dark:text-gray-300"
+              )}
+            >
+              Vault
+            </span>
+          </span>
+          <span
+            className={cn(
+              "text-[0.4em] tracking-[0.3em] uppercase font-medium mt-0.5",
+              variant === "light"
+                ? "text-gray-300"
+                : variant === "dark"
+                ? "text-gray-500"
+                : "text-gray-500 dark:text-gray-400"
+            )}
+          >
+            Your Story Awaits
+          </span>
+        </div>
+      )}
+    </>
+  );
+
+  if (!asLink) {
+    return (
+      <div className={cn("flex items-center", sizes[size].spacing, className)}>
+        {logoContent}
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      to="/"
       className={cn(
-        "animate-spin rounded-full border-2 border-current border-t-transparent",
-        sizeClasses[size],
+        "flex items-center transition-all hover:scale-105 hover:drop-shadow-lg",
+        sizes[size].spacing,
         className
       )}
-    />
+      aria-label="StoriVault Home"
+    >
+      {logoContent}
+    </Link>
   );
 }
 ```
@@ -3895,39 +4803,38 @@ export function LoadingSpinner({
 ---
 
 #### 📄 src\components\ui\story-card.tsx
-
 <a name='src-components-ui-story-cardtsx'></a>
 
 **Path:** `src\components\ui\story-card.tsx`
 
 ```tsx
-"use client";
+'use client';
 
-import { Link } from "react-router-dom";
-import { Eye, Heart, MessageCircle, Clock } from "lucide-react";
-import { Story } from "@/types";
-import { ImageWithFallback } from "./image-with-fallback";
-import { Badge } from "./badge";
-import { cn } from "@/lib/utils";
+import { Link } from 'react-router-dom';
+import { Eye, Heart, MessageCircle, Clock } from 'lucide-react';
+import { Story } from '@/types';
+import { ImageWithFallback } from './image-with-fallback';
+import { Badge } from './badge';
+import { cn } from '@/lib/utils';
 
 interface StoryCardProps {
   story: Story;
   className?: string;
   showStats?: boolean;
-  variant?: "default" | "compact" | "featured";
+  variant?: 'default' | 'compact' | 'featured';
 }
 
-export function StoryCard({
-  story,
-  className,
+export function StoryCard({ 
+  story, 
+  className, 
   showStats = true,
-  variant = "default",
+  variant = 'default' 
 }: StoryCardProps) {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return new Intl.RelativeTimeFormat("en", { numeric: "auto" }).format(
+    return new Intl.RelativeTimeFormat('en', { numeric: 'auto' }).format(
       Math.ceil((date.getTime() - Date.now()) / (1000 * 60 * 60 * 24)),
-      "day"
+      'day'
     );
   };
 
@@ -3937,18 +4844,16 @@ export function StoryCard({
     return count.toString();
   };
 
-  if (variant === "compact") {
+  if (variant === 'compact') {
     return (
       <Link to={`/stories/${story.id}`}>
-        <div
-          className={cn(
-            "group flex gap-3 p-3 rounded-lg transition-colors hover:bg-secondary/50",
-            className
-          )}
-        >
+        <div className={cn(
+          "group flex gap-3 p-3 rounded-lg transition-colors hover:bg-secondary/50",
+          className
+        )}>
           <div className="relative flex-shrink-0">
             <ImageWithFallback
-              src={story.cover_image || "/placeholder.svg"}
+              src={story.cover_image || '/placeholder.svg'}
               alt={story.title}
               className="w-16 h-20 object-cover rounded-md"
             />
@@ -3977,27 +4882,22 @@ export function StoryCard({
     );
   }
 
-  if (variant === "featured") {
+  if (variant === 'featured') {
     return (
       <Link to={`/stories/${story.id}`}>
-        <div
-          className={cn(
-            "group relative overflow-hidden rounded-xl bg-gradient-card shadow-medium hover:shadow-strong transition-all duration-300",
-            className
-          )}
-        >
+        <div className={cn(
+          "group relative overflow-hidden rounded-xl bg-gradient-card shadow-medium hover:shadow-strong transition-all duration-300",
+          className
+        )}>
           <div className="aspect-[16/9] relative">
             <ImageWithFallback
-              src={story.cover_image || "/placeholder.svg"}
+              src={story.cover_image || '/placeholder.svg'}
               alt={story.title}
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
             <div className="absolute bottom-4 left-4 right-4 text-white">
-              <Badge
-                variant="secondary"
-                className="mb-2 bg-primary text-primary-foreground"
-              >
+              <Badge variant="secondary" className="mb-2 bg-primary text-primary-foreground">
                 {story.genre}
               </Badge>
               <h3 className="font-bold text-lg line-clamp-2 group-hover:text-primary-light transition-colors">
@@ -4037,23 +4937,18 @@ export function StoryCard({
 
   return (
     <Link to={`/stories/${story.id}`}>
-      <div
-        className={cn(
-          "group bg-card rounded-lg shadow-soft hover:shadow-medium transition-all duration-300 overflow-hidden",
-          className
-        )}
-      >
+      <div className={cn(
+        "group bg-card rounded-lg shadow-soft hover:shadow-medium transition-all duration-300 overflow-hidden",
+        className
+      )}>
         <div className="aspect-[2/3] relative">
           <ImageWithFallback
-            src={story.cover_image || "/placeholder.svg"}
+            src={story.cover_image || '/placeholder.svg'}
             alt={story.title}
             className="w-full h-full object-cover"
           />
           <div className="absolute top-2 right-2">
-            <Badge
-              variant="secondary"
-              className="bg-background/90 text-foreground"
-            >
+            <Badge variant="secondary" className="bg-background/90 text-foreground">
               {story.genre}
             </Badge>
           </div>
@@ -4107,18 +5002,17 @@ export function StoryCard({
 ---
 
 #### 📄 src\components\ui\toast-provider.tsx
-
 <a name='src-components-ui-toast-providertsx'></a>
 
 **Path:** `src\components\ui\toast-provider.tsx`
 
 ```tsx
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { CheckCircle, XCircle, AlertCircle, Info, X } from "lucide-react";
-import { useUiStore } from "@/store/uiStore";
-import { cn } from "@/lib/utils";
+import { useEffect } from 'react';
+import { CheckCircle, XCircle, AlertCircle, Info, X } from 'lucide-react';
+import { useUiStore } from '@/store/uiStore';
+import { cn } from '@/lib/utils';
 
 const toastIcons = {
   success: CheckCircle,
@@ -4128,10 +5022,10 @@ const toastIcons = {
 };
 
 const toastStyles = {
-  success: "bg-success-light text-success border-success/20",
-  error: "bg-destructive-light text-destructive border-destructive/20",
-  warning: "bg-warning-light text-warning border-warning/20",
-  info: "bg-accent/10 text-accent border-accent/20",
+  success: 'bg-success-light text-success border-success/20',
+  error: 'bg-destructive-light text-destructive border-destructive/20',
+  warning: 'bg-warning-light text-warning border-warning/20',
+  info: 'bg-accent/10 text-accent border-accent/20',
 };
 
 export function ToastProvider() {
@@ -4141,7 +5035,7 @@ export function ToastProvider() {
     <div className="fixed top-4 right-4 z-50 space-y-2">
       {toasts.map((toast) => {
         const Icon = toastIcons[toast.type];
-
+        
         return (
           <div
             key={toast.id}
@@ -4174,7 +5068,6 @@ export function ToastProvider() {
 ---
 
 #### 📄 src\components\ui\toast.tsx
-
 <a name='src-components-ui-toasttsx'></a>
 
 **Path:** `src\components\ui\toast.tsx`
@@ -4197,7 +5090,7 @@ const ToastViewport = React.forwardRef<
     ref={ref}
     className={cn(
       "fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]",
-      className
+      className,
     )}
     {...props}
   />
@@ -4210,28 +5103,20 @@ const toastVariants = cva(
     variants: {
       variant: {
         default: "border bg-background text-foreground",
-        destructive:
-          "destructive group border-destructive bg-destructive text-destructive-foreground",
+        destructive: "destructive group border-destructive bg-destructive text-destructive-foreground",
       },
     },
     defaultVariants: {
       variant: "default",
     },
-  }
+  },
 );
 
 const Toast = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Root>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> &
-    VariantProps<typeof toastVariants>
+  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> & VariantProps<typeof toastVariants>
 >(({ className, variant, ...props }, ref) => {
-  return (
-    <ToastPrimitives.Root
-      ref={ref}
-      className={cn(toastVariants({ variant }), className)}
-      {...props}
-    />
-  );
+  return <ToastPrimitives.Root ref={ref} className={cn(toastVariants({ variant }), className)} {...props} />;
 });
 Toast.displayName = ToastPrimitives.Root.displayName;
 
@@ -4243,7 +5128,7 @@ const ToastAction = React.forwardRef<
     ref={ref}
     className={cn(
       "inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium ring-offset-background transition-colors group-[.destructive]:border-muted/40 hover:bg-secondary group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 group-[.destructive]:focus:ring-destructive disabled:pointer-events-none disabled:opacity-50",
-      className
+      className,
     )}
     {...props}
   />
@@ -4258,7 +5143,7 @@ const ToastClose = React.forwardRef<
     ref={ref}
     className={cn(
       "absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity group-hover:opacity-100 group-[.destructive]:text-red-300 hover:text-foreground group-[.destructive]:hover:text-red-50 focus:opacity-100 focus:outline-none focus:ring-2 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600",
-      className
+      className,
     )}
     toast-close=""
     {...props}
@@ -4272,11 +5157,7 @@ const ToastTitle = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Title>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Title>
 >(({ className, ...props }, ref) => (
-  <ToastPrimitives.Title
-    ref={ref}
-    className={cn("text-sm font-semibold", className)}
-    {...props}
-  />
+  <ToastPrimitives.Title ref={ref} className={cn("text-sm font-semibold", className)} {...props} />
 ));
 ToastTitle.displayName = ToastPrimitives.Title.displayName;
 
@@ -4284,11 +5165,7 @@ const ToastDescription = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Description>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Description>
 >(({ className, ...props }, ref) => (
-  <ToastPrimitives.Description
-    ref={ref}
-    className={cn("text-sm opacity-90", className)}
-    {...props}
-  />
+  <ToastPrimitives.Description ref={ref} className={cn("text-sm opacity-90", className)} {...props} />
 ));
 ToastDescription.displayName = ToastPrimitives.Description.displayName;
 
@@ -4314,88 +5191,81 @@ export {
 ### 📁 src\pages\auth
 
 #### 📄 src\pages\auth\LoginPage.tsx
-
 <a name='src-pages-auth-LoginPagetsx'></a>
 
 **Path:** `src\pages\auth\LoginPage.tsx`
 
 ```tsx
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff, BookOpen, Mail, Lock } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { useAuthStore } from "@/store/authStore";
-import { useUiStore } from "@/store/uiStore";
-import { cn } from "@/lib/utils";
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Eye, EyeOff, BookOpen, Mail, Lock } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { useAuthStore } from '@/store/authStore';
+import { useUiStore } from '@/store/uiStore';
+import { cn } from '@/lib/utils';
 
 export function LoginPage() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email: '',
+    password: ''
   });
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-
+  
   const { login, isLoading, error, clearError } = useAuthStore();
   const { addToast } = useUiStore();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-
+    setFormData(prev => ({ ...prev, [name]: value }));
+    
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
+      setErrors(prev => ({ ...prev, [name]: '' }));
     }
     clearError();
   };
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-
+    
     if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
+      newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email";
+      newErrors.email = 'Please enter a valid email';
     }
-
+    
     if (!formData.password) {
-      newErrors.password = "Password is required";
+      newErrors.password = 'Password is required';
     } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+      newErrors.password = 'Password must be at least 6 characters';
     }
-
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    
     if (!validateForm()) return;
-
+    
     try {
       await login(formData.email, formData.password);
       addToast({
-        title: "Welcome back!",
-        description: "You have successfully signed in.",
-        type: "success",
+        title: 'Welcome back!',
+        description: 'You have successfully signed in.',
+        type: 'success'
       });
-      navigate("/");
+      navigate('/');
     } catch (error: any) {
       // Error handling is done in the store
       if (error.details) {
@@ -4451,8 +5321,7 @@ export function LoginPage() {
                     placeholder="Enter your email"
                     className={cn(
                       "pl-10",
-                      errors.email &&
-                        "border-destructive focus-visible:ring-destructive"
+                      errors.email && "border-destructive focus-visible:ring-destructive"
                     )}
                     disabled={isLoading}
                   />
@@ -4469,14 +5338,13 @@ export function LoginPage() {
                   <Input
                     id="password"
                     name="password"
-                    type={showPassword ? "text" : "password"}
+                    type={showPassword ? 'text' : 'password'}
                     value={formData.password}
                     onChange={handleInputChange}
                     placeholder="Enter your password"
                     className={cn(
                       "pl-10 pr-10",
-                      errors.password &&
-                        "border-destructive focus-visible:ring-destructive"
+                      errors.password && "border-destructive focus-visible:ring-destructive"
                     )}
                     disabled={isLoading}
                   />
@@ -4500,9 +5368,9 @@ export function LoginPage() {
                 )}
               </div>
 
-              <Button
-                type="submit"
-                className="w-full bg-gradient-primary hover:opacity-90"
+              <Button 
+                type="submit" 
+                className="w-full bg-gradient-primary hover:opacity-90" 
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -4511,15 +5379,13 @@ export function LoginPage() {
                     Signing in...
                   </>
                 ) : (
-                  "Sign In"
+                  'Sign In'
                 )}
               </Button>
             </form>
 
             <div className="mt-6 text-center text-sm">
-              <span className="text-muted-foreground">
-                Don't have an account?{" "}
-              </span>
+              <span className="text-muted-foreground">Don't have an account? </span>
               <Link
                 to="/auth/signup"
                 className="font-medium text-primary hover:text-primary/80 transition-colors"
@@ -4538,106 +5404,98 @@ export function LoginPage() {
 ---
 
 #### 📄 src\pages\auth\SignupPage.tsx
-
 <a name='src-pages-auth-SignupPagetsx'></a>
 
 **Path:** `src\pages\auth\SignupPage.tsx`
 
 ```tsx
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff, BookOpen, Mail, Lock, User } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { useAuthStore } from "@/store/authStore";
-import { useUiStore } from "@/store/uiStore";
-import { cn } from "@/lib/utils";
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Eye, EyeOff, BookOpen, Mail, Lock, User } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { useAuthStore } from '@/store/authStore';
+import { useUiStore } from '@/store/uiStore';
+import { cn } from '@/lib/utils';
 
 export function SignupPage() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-
+  
   const { signup, isLoading, error, clearError } = useAuthStore();
   const { addToast } = useUiStore();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-
+    setFormData(prev => ({ ...prev, [name]: value }));
+    
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
+      setErrors(prev => ({ ...prev, [name]: '' }));
     }
     clearError();
   };
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-
+    
     if (!formData.username.trim()) {
-      newErrors.username = "Username is required";
+      newErrors.username = 'Username is required';
     } else if (formData.username.length < 3) {
-      newErrors.username = "Username must be at least 3 characters";
+      newErrors.username = 'Username must be at least 3 characters';
     } else if (!/^[a-zA-Z0-9_-]+$/.test(formData.username)) {
-      newErrors.username =
-        "Username can only contain letters, numbers, hyphens, and underscores";
+      newErrors.username = 'Username can only contain letters, numbers, hyphens, and underscores';
     }
-
+    
     if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
+      newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email";
+      newErrors.email = 'Please enter a valid email';
     }
-
+    
     if (!formData.password) {
-      newErrors.password = "Password is required";
+      newErrors.password = 'Password is required';
     } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+      newErrors.password = 'Password must be at least 6 characters';
     }
-
+    
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password";
+      newErrors.confirmPassword = 'Please confirm your password';
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
+      newErrors.confirmPassword = 'Passwords do not match';
     }
-
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    
     if (!validateForm()) return;
-
+    
     try {
       await signup(formData.username, formData.email, formData.password);
       addToast({
-        title: "Welcome to StoriVault!",
-        description: "Your account has been created successfully.",
-        type: "success",
+        title: 'Welcome to StoriVault!',
+        description: 'Your account has been created successfully.',
+        type: 'success'
       });
-      navigate("/");
+      navigate('/');
     } catch (error: any) {
       // Error handling is done in the store
       if (error.details) {
@@ -4667,9 +5525,7 @@ export function SignupPage() {
 
         <Card className="shadow-strong border-0 bg-card/50 backdrop-blur-sm">
           <CardHeader className="space-y-1 text-center">
-            <CardTitle className="text-2xl font-bold">
-              Create your account
-            </CardTitle>
+            <CardTitle className="text-2xl font-bold">Create your account</CardTitle>
             <CardDescription>
               Join thousands of readers and writers on StoriVault
             </CardDescription>
@@ -4695,8 +5551,7 @@ export function SignupPage() {
                     placeholder="Choose a username"
                     className={cn(
                       "pl-10",
-                      errors.username &&
-                        "border-destructive focus-visible:ring-destructive"
+                      errors.username && "border-destructive focus-visible:ring-destructive"
                     )}
                     disabled={isLoading}
                   />
@@ -4719,8 +5574,7 @@ export function SignupPage() {
                     placeholder="Enter your email"
                     className={cn(
                       "pl-10",
-                      errors.email &&
-                        "border-destructive focus-visible:ring-destructive"
+                      errors.email && "border-destructive focus-visible:ring-destructive"
                     )}
                     disabled={isLoading}
                   />
@@ -4737,14 +5591,13 @@ export function SignupPage() {
                   <Input
                     id="password"
                     name="password"
-                    type={showPassword ? "text" : "password"}
+                    type={showPassword ? 'text' : 'password'}
                     value={formData.password}
                     onChange={handleInputChange}
                     placeholder="Create a password"
                     className={cn(
                       "pl-10 pr-10",
-                      errors.password &&
-                        "border-destructive focus-visible:ring-destructive"
+                      errors.password && "border-destructive focus-visible:ring-destructive"
                     )}
                     disabled={isLoading}
                   />
@@ -4775,14 +5628,13 @@ export function SignupPage() {
                   <Input
                     id="confirmPassword"
                     name="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
+                    type={showConfirmPassword ? 'text' : 'password'}
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
                     placeholder="Confirm your password"
                     className={cn(
                       "pl-10 pr-10",
-                      errors.confirmPassword &&
-                        "border-destructive focus-visible:ring-destructive"
+                      errors.confirmPassword && "border-destructive focus-visible:ring-destructive"
                     )}
                     disabled={isLoading}
                   />
@@ -4802,15 +5654,13 @@ export function SignupPage() {
                   </Button>
                 </div>
                 {errors.confirmPassword && (
-                  <p className="text-sm text-destructive">
-                    {errors.confirmPassword}
-                  </p>
+                  <p className="text-sm text-destructive">{errors.confirmPassword}</p>
                 )}
               </div>
 
-              <Button
-                type="submit"
-                className="w-full bg-gradient-primary hover:opacity-90"
+              <Button 
+                type="submit" 
+                className="w-full bg-gradient-primary hover:opacity-90" 
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -4819,15 +5669,13 @@ export function SignupPage() {
                     Creating account...
                   </>
                 ) : (
-                  "Create Account"
+                  'Create Account'
                 )}
               </Button>
             </form>
 
             <div className="mt-6 text-center text-sm">
-              <span className="text-muted-foreground">
-                Already have an account?{" "}
-              </span>
+              <span className="text-muted-foreground">Already have an account? </span>
               <Link
                 to="/auth/login"
                 className="font-medium text-primary hover:text-primary/80 transition-colors"
@@ -4844,3 +5692,4 @@ export function SignupPage() {
 ```
 
 ---
+

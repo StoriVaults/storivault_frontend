@@ -323,10 +323,10 @@ export function HomePage() {
         className="min-h-screen"
         style={{ backgroundColor: literaryColors.cream }}
       >
-        {/* Hero Section - Cozy Library Theme */}
-        <section className="relative overflow-hidden py-20 px-4">
-          {/* Floating background elements */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Hero Section - Cozy Library Theme - MOBILE OPTIMIZED */}
+        <section className="relative overflow-hidden py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
+          {/* Floating background elements - Hidden on mobile for performance */}
+          <div className="hidden sm:block absolute inset-0 overflow-hidden pointer-events-none">
             <div className="absolute top-10 left-10 w-32 h-40 bg-white/40 rounded-lg rotate-12 page-float" />
             <div
               className="absolute top-20 right-20 w-28 h-36 bg-white/30 rounded-lg -rotate-6 page-float"
@@ -342,26 +342,26 @@ export function HomePage() {
           </div>
 
           <div className="relative z-10 max-w-7xl mx-auto text-center">
-            <div className="mb-8">
+            <div className="mb-4 sm:mb-6 md:mb-8">
               <Badge
-                className="px-4 py-2 text-sm font-medium rounded-full"
+                className="px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium rounded-full"
                 style={{
                   backgroundColor: literaryColors.gold,
                   color: literaryColors.coffee,
                 }}
               >
-                <Sparkles className="h-4 w-4 mr-2" />
+                <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
                 Welcome to Your Literary Haven
               </Badge>
             </div>
 
             <h1
-              className="text-6xl md:text-7xl lg:text-8xl font-serif mb-6 fade-in-up"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif mb-4 sm:mb-6 fade-in-up leading-tight"
               style={{ color: literaryColors.coffee }}
             >
               Where Stories
               <span
-                className="block text-glow"
+                className="block text-glow mt-1 sm:mt-2"
                 style={{ color: literaryColors.gold }}
               >
                 Come to Life
@@ -369,24 +369,24 @@ export function HomePage() {
             </h1>
 
             <p
-              className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto handwritten fade-in-up"
+              className="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 sm:mb-8 max-w-3xl mx-auto handwritten fade-in-up px-4"
               style={{ color: literaryColors.ink, animationDelay: "0.2s" }}
             >
               "{inspiringQuotes[currentQuote].text}"
-              <span className="block text-sm mt-2 font-serif">
+              <span className="block text-xs sm:text-sm mt-2 font-serif">
                 — {inspiringQuotes[currentQuote].author}
               </span>
             </p>
 
             <div
-              className="flex flex-col sm:flex-row gap-4 justify-center mb-12 fade-in-up"
+              className="flex flex-col gap-3 sm:flex-row sm:gap-4 justify-center mb-8 sm:mb-12 fade-in-up px-4"
               style={{ animationDelay: "0.4s" }}
             >
               {isAuthenticated ? (
                 <>
                   <Button
-                    size="lg"
-                    className="group px-8 py-6 text-lg rounded-full shadow-lg transform hover:scale-105 transition-all"
+                    size="default"
+                    className="group px-6 py-5 sm:px-8 sm:py-6 text-base sm:text-lg rounded-full shadow-lg transform hover:scale-105 transition-all"
                     style={{
                       backgroundColor: literaryColors.coffee,
                       color: literaryColors.cream,
@@ -394,14 +394,14 @@ export function HomePage() {
                     asChild
                   >
                     <Link to="/stories">
-                      <Library className="mr-3 h-5 w-5 group-hover:rotate-12 transition-transform" />
+                      <Library className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5 group-hover:rotate-12 transition-transform" />
                       Explore Library
                     </Link>
                   </Button>
                   <Button
-                    size="lg"
+                    size="default"
                     variant="outline"
-                    className="px-8 py-6 text-lg rounded-full border-2 transform hover:scale-105 transition-all"
+                    className="px-6 py-5 sm:px-8 sm:py-6 text-base sm:text-lg rounded-full border-2 transform hover:scale-105 transition-all"
                     style={{
                       borderColor: literaryColors.gold,
                       color: literaryColors.coffee,
@@ -409,7 +409,7 @@ export function HomePage() {
                     asChild
                   >
                     <Link to="/stories/create">
-                      <PenTool className="mr-3 h-5 w-5" />
+                      <PenTool className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5" />
                       Start Writing
                     </Link>
                   </Button>
@@ -417,8 +417,8 @@ export function HomePage() {
               ) : (
                 <>
                   <Button
-                    size="lg"
-                    className="group px-10 py-6 text-xl rounded-full book-shadow transform hover:scale-105 transition-all"
+                    size="default"
+                    className="group px-8 py-5 sm:px-10 sm:py-6 text-lg sm:text-xl rounded-full book-shadow transform hover:scale-105 transition-all"
                     style={{
                       backgroundColor: literaryColors.gold,
                       color: literaryColors.coffee,
@@ -426,14 +426,14 @@ export function HomePage() {
                     asChild
                   >
                     <Link to="/stories">
-                      <BookOpen className="mr-3 h-6 w-6 group-hover:rotate-12 transition-transform" />
+                      <BookOpen className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6 group-hover:rotate-12 transition-transform" />
                       Start Reading Free
                     </Link>
                   </Button>
                   <Button
-                    size="lg"
+                    size="default"
                     variant="outline"
-                    className="px-8 py-6 text-lg rounded-full border-2"
+                    className="px-6 py-5 sm:px-8 sm:py-6 text-base sm:text-lg rounded-full border-2"
                     style={{
                       borderColor: literaryColors.coffee,
                       color: literaryColors.coffee,
@@ -446,78 +446,90 @@ export function HomePage() {
               )}
             </div>
 
-            {/* Live Reading Stats */}
+            {/* Live Reading Stats - Mobile Optimized Grid */}
             <div
-              className="flex flex-wrap justify-center gap-8 fade-in-up"
+              className="grid grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-sm sm:max-w-md md:max-w-none mx-auto fade-in-up"
               style={{ animationDelay: "0.6s" }}
             >
               <div className="text-center">
                 <div
-                  className="text-4xl font-bold"
+                  className="text-2xl sm:text-3xl md:text-4xl font-bold"
                   style={{ color: literaryColors.gold }}
                 >
                   2.5M+
                 </div>
-                <div className="text-sm" style={{ color: literaryColors.ink }}>
-                  Pages Read Today
+                <div
+                  className="text-xs sm:text-sm"
+                  style={{ color: literaryColors.ink }}
+                >
+                  Pages Today
                 </div>
               </div>
               <div className="text-center">
                 <div
-                  className="text-4xl font-bold"
+                  className="text-2xl sm:text-3xl md:text-4xl font-bold"
                   style={{ color: literaryColors.dustyRose }}
                 >
                   850K+
                 </div>
-                <div className="text-sm" style={{ color: literaryColors.ink }}>
+                <div
+                  className="text-xs sm:text-sm"
+                  style={{ color: literaryColors.ink }}
+                >
                   Active Readers
                 </div>
               </div>
               <div className="text-center">
                 <div
-                  className="text-4xl font-bold"
+                  className="text-2xl sm:text-3xl md:text-4xl font-bold"
                   style={{ color: literaryColors.sage }}
                 >
                   125K+
                 </div>
-                <div className="text-sm" style={{ color: literaryColors.ink }}>
-                  Stories Published
+                <div
+                  className="text-xs sm:text-sm"
+                  style={{ color: literaryColors.ink }}
+                >
+                  Stories
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Featured Stories Section - Showcase */}
+        {/* Featured Stories Section - Mobile Responsive */}
         {featuredStories.length > 0 && (
           <section
-            className="py-20 px-4"
+            className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8"
             style={{ backgroundColor: literaryColors.parchment }}
           >
             <div className="max-w-7xl mx-auto">
-              <div className="text-center mb-12">
+              <div className="text-center mb-8 sm:mb-10 md:mb-12">
                 <Badge
-                  className="mb-4 px-4 py-2 rounded-full"
+                  className="mb-3 sm:mb-4 px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm rounded-full"
                   style={{
                     backgroundColor: literaryColors.gold,
                     color: literaryColors.coffee,
                   }}
                 >
-                  <Star className="h-4 w-4 mr-2" />
+                  <Star className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
                   Editor's Choice
                 </Badge>
                 <h2
-                  className="text-4xl md:text-5xl font-serif mb-4"
+                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif mb-3 sm:mb-4"
                   style={{ color: literaryColors.coffee }}
                 >
                   Featured Stories This Week
                 </h2>
-                <p className="text-lg" style={{ color: literaryColors.ink }}>
+                <p
+                  className="text-sm sm:text-base md:text-lg px-4"
+                  style={{ color: literaryColors.ink }}
+                >
                   Handpicked tales that will captivate your imagination
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
                 {featuredStories.slice(0, 6).map((story, index) => (
                   <div
                     key={story.id}
@@ -537,6 +549,7 @@ export function HomePage() {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                         <div className="absolute top-4 left-4">
                           <Badge
+                            className="text-xs"
                             style={{
                               backgroundColor: literaryColors.gold,
                               color: literaryColors.coffee,
@@ -546,16 +559,16 @@ export function HomePage() {
                           </Badge>
                         </div>
                         <div className="absolute bottom-4 left-4 right-4 text-white">
-                          <h3 className="text-xl font-serif font-bold mb-2">
+                          <h3 className="text-lg sm:text-xl font-serif font-bold mb-2">
                             {story.title}
                           </h3>
-                          <div className="flex items-center gap-3 text-sm">
+                          <div className="flex items-center gap-3 text-xs sm:text-sm">
                             <span className="flex items-center gap-1">
-                              <Eye className="h-4 w-4" />
+                              <Eye className="h-3 w-3 sm:h-4 sm:w-4" />
                               {(story.reads_count / 1000).toFixed(1)}K
                             </span>
                             <span className="flex items-center gap-1">
-                              <Heart className="h-4 w-4" />
+                              <Heart className="h-3 w-3 sm:h-4 sm:w-4" />
                               {(story.votes_count / 1000).toFixed(1)}K
                             </span>
                           </div>
@@ -566,10 +579,10 @@ export function HomePage() {
                 ))}
               </div>
 
-              <div className="text-center mt-8">
+              <div className="text-center mt-6 sm:mt-8">
                 <Button
                   variant="outline"
-                  className="rounded-full border-2"
+                  className="rounded-full border-2 text-sm sm:text-base"
                   style={{
                     borderColor: literaryColors.gold,
                     color: literaryColors.coffee,
@@ -578,7 +591,7 @@ export function HomePage() {
                 >
                   <Link to="/stories?sort=popular">
                     View All Featured Stories
-                    <ChevronRight className="ml-2 h-4 w-4" />
+                    <ChevronRight className="ml-1.5 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                   </Link>
                 </Button>
               </div>
@@ -586,22 +599,25 @@ export function HomePage() {
           </section>
         )}
 
-        {/* Genre Discovery Section */}
-        <section className="py-20 px-4">
+        {/* Genre Discovery Section - Mobile Responsive */}
+        <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-12">
+            <div className="text-center mb-8 sm:mb-10 md:mb-12">
               <h2
-                className="text-4xl md:text-5xl font-serif mb-4"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif mb-3 sm:mb-4"
                 style={{ color: literaryColors.coffee }}
               >
                 Find Your Perfect Genre
               </h2>
-              <p className="text-lg" style={{ color: literaryColors.ink }}>
+              <p
+                className="text-sm sm:text-base md:text-lg"
+                style={{ color: literaryColors.ink }}
+              >
                 Every reader has a story waiting to be discovered
               </p>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
               {genreCards.map((genre) => {
                 const Icon = genre.icon;
                 return (
@@ -617,7 +633,7 @@ export function HomePage() {
                   >
                     <Card
                       className={cn(
-                        "p-6 h-full border-0 text-center book-shadow",
+                        "p-3 sm:p-4 md:p-6 h-full border-0 text-center book-shadow",
                         genre.shape
                       )}
                       style={{
@@ -627,14 +643,14 @@ export function HomePage() {
                       }}
                     >
                       <Icon
-                        className="h-10 w-10 mx-auto mb-3"
+                        className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 mx-auto mb-2 sm:mb-3"
                         style={{
                           color:
                             hoveredGenre === genre.name ? "white" : genre.color,
                         }}
                       />
                       <h3
-                        className="font-bold text-sm mb-1"
+                        className="font-bold text-xs sm:text-sm mb-0.5 sm:mb-1"
                         style={{
                           color:
                             hoveredGenre === genre.name
@@ -645,7 +661,7 @@ export function HomePage() {
                         {genre.name}
                       </h3>
                       <p
-                        className="text-xs"
+                        className="text-[10px] sm:text-xs"
                         style={{
                           color:
                             hoveredGenre === genre.name
@@ -663,29 +679,35 @@ export function HomePage() {
           </div>
         </section>
 
-        {/* Popular Stories Carousel */}
+        {/* Popular Stories Carousel - Mobile Responsive */}
         {popularStories.length > 0 && (
-          <section className="py-20 px-4" style={{ backgroundColor: "white" }}>
+          <section
+            className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8"
+            style={{ backgroundColor: "white" }}
+          >
             <div className="max-w-7xl mx-auto">
-              <div className="flex items-center justify-between mb-12">
+              <div className="flex items-center justify-between mb-8 sm:mb-10 md:mb-12">
                 <div>
                   <h2
-                    className="text-4xl font-serif flex items-center gap-3"
+                    className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-serif flex items-center gap-2 sm:gap-3"
                     style={{ color: literaryColors.coffee }}
                   >
                     <Flame
-                      className="h-10 w-10"
+                      className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10"
                       style={{ color: literaryColors.dustyRose }}
                     />
                     Most Popular Stories
                   </h2>
-                  <p className="mt-2" style={{ color: literaryColors.ink }}>
+                  <p
+                    className="mt-1 sm:mt-2 text-xs sm:text-sm md:text-base"
+                    style={{ color: literaryColors.ink }}
+                  >
                     All-time reader favorites
                   </p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 {popularStories.map((story, index) => (
                   <StoryCard key={story.id} story={story} variant="default" />
                 ))}
@@ -694,32 +716,35 @@ export function HomePage() {
           </section>
         )}
 
-        {/* Trending Stories Section */}
+        {/* Trending Stories Section - Mobile Responsive */}
         {trendingStories.length > 0 && (
           <section
-            className="py-20 px-4"
+            className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8"
             style={{ backgroundColor: literaryColors.parchment }}
           >
             <div className="max-w-7xl mx-auto">
-              <div className="flex items-center justify-between mb-12">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 sm:mb-10 md:mb-12 gap-4">
                 <div>
                   <h2
-                    className="text-4xl font-serif flex items-center gap-3"
+                    className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-serif flex items-center gap-2 sm:gap-3"
                     style={{ color: literaryColors.coffee }}
                   >
                     <TrendingUp
-                      className="h-10 w-10"
+                      className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10"
                       style={{ color: literaryColors.sage }}
                     />
                     Trending This Week
                   </h2>
-                  <p className="mt-2" style={{ color: literaryColors.ink }}>
+                  <p
+                    className="mt-1 sm:mt-2 text-xs sm:text-sm md:text-base"
+                    style={{ color: literaryColors.ink }}
+                  >
                     Stories gaining momentum right now
                   </p>
                 </div>
                 <Button
                   variant="outline"
-                  className="rounded-full border-2"
+                  className="rounded-full border-2 text-xs sm:text-sm"
                   style={{
                     borderColor: literaryColors.sage,
                     color: literaryColors.coffee,
@@ -728,48 +753,54 @@ export function HomePage() {
                 >
                   <Link to="/stories?sort=trending">
                     View All Trending
-                    <ChevronRight className="ml-2 h-4 w-4" />
+                    <ChevronRight className="ml-1.5 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                   </Link>
                 </Button>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
                 {trendingStories.slice(0, 8).map((story, index) => (
                   <Card
                     key={story.id}
                     className="group border-0 overflow-hidden book-shadow hover:scale-105 transition-all"
                   >
                     <Link to={`/stories/${story.id}`}>
-                      <div className="p-4" style={{ backgroundColor: "white" }}>
-                        <div className="flex items-start gap-3">
+                      <div
+                        className="p-3 sm:p-4"
+                        style={{ backgroundColor: "white" }}
+                      >
+                        <div className="flex items-start gap-2 sm:gap-3">
                           <span
-                            className="text-2xl font-bold"
+                            className="text-lg sm:text-xl md:text-2xl font-bold"
                             style={{ color: literaryColors.sage }}
                           >
                             #{index + 1}
                           </span>
                           <div className="flex-1">
                             <h3
-                              className="font-serif font-bold line-clamp-2 group-hover:text-primary transition-colors"
+                              className="text-sm sm:text-base font-serif font-bold line-clamp-2 group-hover:text-primary transition-colors"
                               style={{ color: literaryColors.coffee }}
                             >
                               {story.title}
                             </h3>
                             <p
-                              className="text-sm mt-1 line-clamp-2"
+                              className="text-xs sm:text-sm mt-1 line-clamp-2"
                               style={{ color: literaryColors.ink }}
                             >
                               {story.description}
                             </p>
-                            <div className="flex items-center gap-2 mt-2">
-                              <Badge variant="outline" className="text-xs">
+                            <div className="flex items-center gap-1.5 sm:gap-2 mt-2">
+                              <Badge
+                                variant="outline"
+                                className="text-[10px] sm:text-xs"
+                              >
                                 {story.genre}
                               </Badge>
                               <span
-                                className="text-xs flex items-center gap-1"
+                                className="text-[10px] sm:text-xs flex items-center gap-1"
                                 style={{ color: literaryColors.ink }}
                               >
-                                <Eye className="h-3 w-3" />
+                                <Eye className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                                 {(story.reads_count / 1000).toFixed(1)}K
                               </span>
                             </div>
@@ -784,29 +815,32 @@ export function HomePage() {
           </section>
         )}
 
-        {/* New Stories Section */}
+        {/* New Stories Section - Mobile Responsive */}
         {newStories.length > 0 && (
-          <section className="py-20 px-4">
+          <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
             <div className="max-w-7xl mx-auto">
-              <div className="flex items-center justify-between mb-12">
+              <div className="flex items-center justify-between mb-8 sm:mb-10 md:mb-12">
                 <div>
                   <h2
-                    className="text-4xl font-serif flex items-center gap-3"
+                    className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-serif flex items-center gap-2 sm:gap-3"
                     style={{ color: literaryColors.coffee }}
                   >
                     <Sparkles
-                      className="h-10 w-10"
+                      className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10"
                       style={{ color: literaryColors.lavender }}
                     />
                     Fresh Off the Press
                   </h2>
-                  <p className="mt-2" style={{ color: literaryColors.ink }}>
+                  <p
+                    className="mt-1 sm:mt-2 text-xs sm:text-sm md:text-base"
+                    style={{ color: literaryColors.ink }}
+                  >
                     Discover new stories published this week
                   </p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4">
                 {newStories.map((story, index) => (
                   <Link
                     key={story.id}
@@ -824,12 +858,12 @@ export function HomePage() {
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="absolute bottom-2 left-2 right-2">
-                          <p className="text-xs text-white font-bold line-clamp-2">
+                        <div className="absolute bottom-1.5 sm:bottom-2 left-1.5 sm:left-2 right-1.5 sm:right-2">
+                          <p className="text-[10px] sm:text-xs text-white font-bold line-clamp-2">
                             {story.title}
                           </p>
                           <Badge
-                            className="mt-1 text-xs"
+                            className="mt-0.5 sm:mt-1 text-[10px] sm:text-xs px-1.5 py-0"
                             style={{ backgroundColor: literaryColors.lavender }}
                           >
                             {story.genre}
@@ -844,23 +878,23 @@ export function HomePage() {
           </section>
         )}
 
-        {/* Reading Challenge Section */}
-        <section className="py-20 px-4">
+        {/* Reading Challenge Section - Mobile Responsive */}
+        <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
           <div className="max-w-7xl mx-auto">
             <Card
-              className="p-12 border-0 paper-texture relative overflow-hidden"
+              className="p-6 sm:p-8 md:p-12 border-0 paper-texture relative overflow-hidden"
               style={{ backgroundColor: literaryColors.lavender }}
             >
-              <Bookmark className="absolute top-10 right-10 h-32 w-32 opacity-10 -rotate-12" />
+              <Bookmark className="absolute top-5 right-5 sm:top-10 sm:right-10 h-20 w-20 sm:h-32 sm:w-32 opacity-10 -rotate-12" />
               <div className="relative z-10 text-center">
                 <h2
-                  className="text-4xl font-serif mb-4"
+                  className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-serif mb-3 sm:mb-4"
                   style={{ color: literaryColors.coffee }}
                 >
                   Join the Monthly Reading Challenge
                 </h2>
                 <p
-                  className="text-lg mb-8 max-w-2xl mx-auto"
+                  className="text-sm sm:text-base md:text-lg mb-6 sm:mb-8 max-w-2xl mx-auto px-4"
                   style={{ color: literaryColors.ink }}
                 >
                   Read 10 stories this month and earn exclusive badges, unlock
@@ -868,14 +902,14 @@ export function HomePage() {
                   readers!
                 </p>
                 <Button
-                  size="lg"
-                  className="rounded-full px-8 py-6 text-lg book-shadow"
+                  size="default"
+                  className="rounded-full px-6 py-5 sm:px-8 sm:py-6 text-base sm:text-lg book-shadow"
                   style={{
                     backgroundColor: literaryColors.coffee,
                     color: literaryColors.cream,
                   }}
                 >
-                  <Trophy className="mr-3 h-5 w-5" />
+                  <Trophy className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5" />
                   Start Challenge
                 </Button>
               </div>
@@ -883,8 +917,8 @@ export function HomePage() {
           </div>
         </section>
 
-        {/* Final CTA */}
-        <section className="py-32 px-4 relative overflow-hidden">
+        {/* Final CTA - Mobile Responsive */}
+        <section className="py-16 sm:py-24 md:py-32 px-4 sm:px-6 md:px-8 relative overflow-hidden">
           <div className="absolute inset-0">
             <div
               className="absolute inset-0"
@@ -896,24 +930,24 @@ export function HomePage() {
 
           <div className="relative z-10 max-w-4xl mx-auto text-center">
             <BookOpen
-              className="h-20 w-20 mx-auto mb-8 text-glow"
+              className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 mx-auto mb-6 sm:mb-8 text-glow"
               style={{ color: literaryColors.gold }}
             />
             <h2
-              className="text-5xl md:text-6xl font-serif mb-6"
+              className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-serif mb-4 sm:mb-6 px-4"
               style={{ color: literaryColors.coffee }}
             >
               Your Next Great Story Awaits
             </h2>
             <p
-              className="text-xl mb-10 handwritten"
+              className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8 md:mb-10 handwritten px-4"
               style={{ color: literaryColors.ink }}
             >
               "The journey of a thousand pages begins with a single click"
             </p>
             <Button
-              size="lg"
-              className="px-12 py-7 text-xl rounded-full book-shadow transform hover:scale-105 transition-all"
+              size="default"
+              className="px-8 py-5 sm:px-10 sm:py-6 md:px-12 md:py-7 text-base sm:text-lg md:text-xl rounded-full book-shadow transform hover:scale-105 transition-all"
               style={{
                 backgroundColor: literaryColors.coffee,
                 color: literaryColors.cream,
@@ -921,7 +955,7 @@ export function HomePage() {
               asChild
             >
               <Link to="/stories">
-                <Sparkles className="mr-3 h-6 w-6" />
+                <Sparkles className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
                 Begin Your Journey
               </Link>
             </Button>
