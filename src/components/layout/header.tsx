@@ -12,6 +12,10 @@ import {
   Library,
   Menu,
   X,
+  ChevronDown,
+  BookOpen,
+  PenTool,
+  FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,9 +27,32 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { useAuthStore } from "@/store/authStore";
 import { cn } from "@/lib/utils";
+
+const browseCategories = [
+  { label: "Browse", href: "/stories", isHeader: true },
+  { label: "Romance", href: "/stories?genre=Romance" },
+  { label: "Fanfiction", href: "/stories?genre=Fanfiction" },
+  { label: "Fantasy", href: "/stories?genre=Fantasy" },
+  { label: "Short Story", href: "/stories?genre=Short Story" },
+  { label: "Teen Fiction", href: "/stories?genre=Teen Fiction" },
+  { label: "Historical Fiction", href: "/stories?genre=Historical Fiction" },
+  { label: "Paranormal", href: "/stories?genre=Paranormal" },
+  { label: "Editor's Picks", href: "/stories?sort=popular", isSpecial: true },
+  { label: "Humor", href: "/stories?genre=Humor" },
+  { label: "Horror", href: "/stories?genre=Horror" },
+  { label: "Contemporary Lit", href: "/stories?genre=Contemporary Lit" },
+  { label: "Diverse Lit", href: "/stories?genre=Diverse Lit" },
+  { label: "Mystery", href: "/stories?genre=Mystery" },
+  { label: "Thriller", href: "/stories?genre=Thriller" },
+  { label: "Science Fiction", href: "/stories?genre=Science Fiction" },
+  { label: "Adventure", href: "/stories?genre=Adventure" },
+  { label: "Non-Fiction", href: "/stories?genre=Non-Fiction" },
+  { label: "Poetry", href: "/stories?genre=Poetry" },
+];
 
 export function Header() {
   const navigate = useNavigate();
@@ -66,17 +93,17 @@ export function Header() {
         <div className="relative">
           {/* Main Header Content */}
           <div
-            className="h-14 sm:h-16 px-4 sm:px-6 lg:px-8"
+            className="h-14 sm:h-16 px-3 sm:px-6 lg:px-8"
             style={{ backgroundColor: "#FFFFFF" }}
           >
             <div className="flex h-full items-center justify-between max-w-7xl mx-auto">
-              {/* Left Section - Logo and Mobile Menu */}
+              {/* Left Section - Mobile Menu, Logo, and Browse */}
               <div className="flex items-center gap-2 sm:gap-4">
                 {/* Mobile Menu Button */}
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="sm:hidden h-9 w-9 p-0"
+                  className="sm:hidden h-8 w-8 p-0"
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                   style={{ color: "#374151" }}
                 >
@@ -87,7 +114,7 @@ export function Header() {
                   )}
                 </Button>
 
-                {/* Logo - Smaller on Mobile */}
+                {/* Logo */}
                 <Logo size="sm" className="hidden sm:flex" variant="default" />
                 <div className="sm:hidden">
                   <Link to="/" className="flex items-center">
@@ -122,6 +149,50 @@ export function Header() {
                     </svg>
                   </Link>
                 </div>
+
+                {/* Browse Dropdown - Desktop Only */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="hidden sm:flex items-center gap-1 font-medium"
+                      style={{ color: "#374151" }}
+                    >
+                      Browse
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="start"
+                    className="w-56 max-h-[80vh] overflow-y-auto"
+                    style={{ backgroundColor: "#FFFFFF" }}
+                  >
+                    {browseCategories.map((category, index) =>
+                      category.isHeader ? (
+                        <DropdownMenuLabel
+                          key={index}
+                          className="font-bold text-gray-900"
+                        >
+                          {category.label}
+                        </DropdownMenuLabel>
+                      ) : (
+                        <DropdownMenuItem key={index} asChild>
+                          <Link
+                            to={category.href}
+                            className={cn(
+                              "cursor-pointer",
+                              category.isSpecial &&
+                                "font-semibold text-orange-600"
+                            )}
+                          >
+                            {category.label}
+                          </Link>
+                        </DropdownMenuItem>
+                      )
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
 
               {/* Center - Desktop Search */}
@@ -145,34 +216,59 @@ export function Header() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="md:hidden h-9 w-9 p-0"
+                  className="md:hidden h-8 w-8 p-0"
                   onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
                   style={{ color: "#374151" }}
                 >
                   <Search className="h-5 w-5" />
                 </Button>
 
-                {isAuthenticated ? (
-                  <>
-                    {/* Write Button - Hidden on Mobile */}
+                {/* Write Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="hidden sm:flex items-center"
+                      className="hidden sm:flex items-center gap-1 font-medium"
                       style={{ color: "#374151" }}
-                      asChild
                     >
-                      <Link to="/stories/create">
-                        <Plus className="h-5 w-5" />
-                        <span className="hidden lg:inline ml-2">Write</span>
-                      </Link>
+                      Write
+                      <ChevronDown className="h-4 w-4" />
                     </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="end"
+                    className="w-48"
+                    style={{ backgroundColor: "#FFFFFF" }}
+                  >
+                    <DropdownMenuItem asChild>
+                      <Link
+                        to="/stories/create"
+                        className="cursor-pointer flex items-center gap-2"
+                      >
+                        <Plus className="h-4 w-4" />
+                        Create a new story
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        to="/my-stories"
+                        className="cursor-pointer flex items-center gap-2"
+                      >
+                        <FileText className="h-4 w-4" />
+                        My Stories
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
 
+                {isAuthenticated ? (
+                  <>
                     {/* Notifications - Hidden on Mobile */}
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="hidden sm:block h-9 w-9 p-0"
+                      className="hidden sm:block h-8 w-8 p-0"
                       style={{ color: "#374151" }}
                     >
                       <Bell className="h-5 w-5" />
@@ -233,25 +329,19 @@ export function Header() {
                             My Library
                           </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem asChild className="sm:hidden">
-                          <Link to="/stories/create" className="cursor-pointer">
-                            <Plus className="mr-2 h-4 w-4" />
-                            Write Story
-                          </Link>
-                        </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link to="/stories" className="cursor-pointer">
-                            <Search className="mr-2 h-4 w-4" />
-                            Browse Stories
+                          <Link to="/my-stories" className="cursor-pointer">
+                            <FileText className="mr-2 h-4 w-4" />
+                            My Stories
                           </Link>
                         </DropdownMenuItem>
+                        <DropdownMenuSeparator />
                         <DropdownMenuItem asChild>
                           <Link to="/settings" className="cursor-pointer">
                             <Settings className="mr-2 h-4 w-4" />
                             Settings
                           </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator />
                         <DropdownMenuItem
                           onClick={handleLogout}
                           className="cursor-pointer"
@@ -267,7 +357,7 @@ export function Header() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="hidden sm:inline-flex"
+                      className="hidden sm:inline-flex text-sm font-medium"
                       style={{ color: "#374151" }}
                       asChild
                     >
@@ -275,7 +365,7 @@ export function Header() {
                     </Button>
                     <Button
                       size="sm"
-                      className="text-white border-0 px-3 sm:px-4"
+                      className="text-white border-0 px-3 sm:px-4 text-sm font-medium"
                       style={{
                         background:
                           "linear-gradient(to right, #FB923C, #F97316)",
@@ -315,7 +405,7 @@ export function Header() {
           )}
 
           {/* Mobile Menu - Slide Down */}
-          {mobileMenuOpen && !isAuthenticated && (
+          {mobileMenuOpen && (
             <div
               className="sm:hidden border-t"
               style={{
@@ -324,64 +414,110 @@ export function Header() {
               }}
             >
               <div className="px-4 py-3 space-y-1">
-                <Link
-                  to="/stories"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
-                  onClick={closeMobileMenu}
-                >
-                  Browse Stories
-                </Link>
-                <Link
-                  to="/auth/login"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
-                  onClick={closeMobileMenu}
-                >
-                  Sign In
-                </Link>
-                <Link
-                  to="/auth/signup"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-white bg-gradient-to-r from-orange-400 to-orange-500"
-                  onClick={closeMobileMenu}
-                >
-                  Sign Up Free
-                </Link>
-              </div>
-            </div>
-          )}
+                {/* Browse Section for Mobile */}
+                <div className="pb-2 mb-2 border-b border-gray-200">
+                  <p className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2 px-3">
+                    Browse Stories
+                  </p>
+                  {browseCategories.slice(1, 8).map((category, index) => (
+                    <Link
+                      key={index}
+                      to={category.href}
+                      className={cn(
+                        "block px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100",
+                        category.isSpecial ? "text-orange-600" : "text-gray-700"
+                      )}
+                      onClick={closeMobileMenu}
+                    >
+                      {category.label}
+                    </Link>
+                  ))}
+                  <Link
+                    to="/stories"
+                    className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                    onClick={closeMobileMenu}
+                  >
+                    View All Genres →
+                  </Link>
+                </div>
 
-          {mobileMenuOpen && isAuthenticated && (
-            <div
-              className="sm:hidden border-t"
-              style={{
-                backgroundColor: "#FFFFFF",
-                borderTopColor: "#E5E7EB",
-              }}
-            >
-              <div className="px-4 py-3 space-y-1">
-                <Link
-                  to="/stories/create"
-                  className="flex items-center px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
-                  onClick={closeMobileMenu}
-                >
-                  <Plus className="mr-2 h-4 w-4" />
-                  Write Story
-                </Link>
-                <Link
-                  to="/library"
-                  className="flex items-center px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
-                  onClick={closeMobileMenu}
-                >
-                  <Library className="mr-2 h-4 w-4" />
-                  My Library
-                </Link>
-                <Link
-                  to="/stories"
-                  className="flex items-center px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
-                  onClick={closeMobileMenu}
-                >
-                  <Search className="mr-2 h-4 w-4" />
-                  Browse Stories
-                </Link>
+                {/* Write Section for Mobile */}
+                {!isAuthenticated ? (
+                  <div className="pb-2 mb-2 border-b border-gray-200">
+                    <p className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2 px-3">
+                      Start Writing
+                    </p>
+                    <Link
+                      to="/auth/signup"
+                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                      onClick={closeMobileMenu}
+                    >
+                      <PenTool className="mr-2 h-4 w-4" />
+                      Sign Up to Write
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="pb-2 mb-2 border-b border-gray-200">
+                    <p className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2 px-3">
+                      Writing
+                    </p>
+                    <Link
+                      to="/stories/create"
+                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                      onClick={closeMobileMenu}
+                    >
+                      <Plus className="mr-2 h-4 w-4" />
+                      Create New Story
+                    </Link>
+                    <Link
+                      to="/my-stories"
+                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                      onClick={closeMobileMenu}
+                    >
+                      <FileText className="mr-2 h-4 w-4" />
+                      My Stories
+                    </Link>
+                  </div>
+                )}
+
+                {/* User Actions */}
+                {isAuthenticated ? (
+                  <>
+                    <Link
+                      to="/library"
+                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                      onClick={closeMobileMenu}
+                    >
+                      <Library className="mr-2 h-4 w-4" />
+                      My Library
+                    </Link>
+                    <Link
+                      to={`/users/${user?.username}`}
+                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                      onClick={closeMobileMenu}
+                    >
+                      <User className="mr-2 h-4 w-4" />
+                      Profile
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/auth/login"
+                      className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                      onClick={closeMobileMenu}
+                    >
+                      Sign In
+                    </Link>
+                    <Link
+                      to="/auth/signup"
+                      className="block px-3 py-2 rounded-md text-sm font-medium text-white bg-gradient-to-r from-orange-400 to-orange-500"
+                      onClick={closeMobileMenu}
+                    >
+                      Sign Up Free
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           )}
