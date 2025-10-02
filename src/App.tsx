@@ -15,7 +15,8 @@ import { StoriesPage } from "./pages/StoriesPage";
 import { FeedPage } from "./pages/FeedPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { CreateStoryPage } from "./pages/CreateStoryPage";
-import { StoryDetailPage } from "./pages/StoryDetailPage"; // Add this import
+import { StoryDetailPage } from "./pages/StoryDetailPage";
+import { EditStoryPage } from "./pages/EditStoryPage"; // Add this import
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient({
@@ -123,7 +124,7 @@ const App = () => {
               path="/stories/:id/edit"
               element={
                 <ProtectedRoute>
-                  <div>Edit Story Page (To be implemented)</div>
+                  <EditStoryPage />
                 </ProtectedRoute>
               }
             />

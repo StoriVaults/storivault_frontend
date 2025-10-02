@@ -12,30 +12,13 @@ import {
   MessageCircle,
   Calendar,
   Edit,
-  Trash2,
   Lock,
   Globe,
-  Upload,
-  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MainLayout } from "@/components/layout/main-layout";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
@@ -45,10 +28,6 @@ import { Story, User } from "@/types";
 import { storiesApi, usersApi } from "@/apis";
 import { formatNumber, formatDate } from "@/helper/formatting";
 import { cn } from "@/lib/utils";
-import { FileDropzone } from "@/components/ui/file-dropzone";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 
 interface ExtendedAuthor extends User {
   is_following?: boolean;
@@ -72,19 +51,6 @@ export function StoryDetailPage() {
   const [isLiked, setIsLiked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
-
-  // Edit form state
-  const [editForm, setEditForm] = useState({
-    title: "",
-    description: "",
-    genre: "",
-    tags: [] as string[],
-    visibility: "public" as "public" | "private",
-  });
-  const [newCoverImage, setNewCoverImage] = useState<File | null>(null);
-  const [coverPreview, setCoverPreview] = useState<string>("");
 
   // Is this the author's own story?
   const isOwnStory = user?.id === story?.author_id;
@@ -103,19 +69,22 @@ export function StoryDetailPage() {
 
       // Fetch story details
       const storyData = await storiesApi.getStory(id);
-      setStory(storyData);
 
-      // Initialize edit form
-      setEditForm({
-        title: storyData.title,
-        description: storyData.description,
-        genre: storyData.genre,
-        tags: storyData.tags,
-        visibility: storyData.visibility,
-      });
-      if (storyData.cover_image) {
-        setCoverPreview(storyData.cover_image);
+      // Check if story is private and user is not the owner
+      if (
+        storyData.visibility === "private" &&
+        storyData.author_id !== user?.id
+      ) {
+        addToast({
+          title: "Private Story",
+          description: "This story is private and cannot be accessed",
+          type: "error",
+        });
+        navigate("/stories");
+        return;
       }
+
+      setStory(storyData);
 
       // Fetch author details
       try {
@@ -165,12 +134,14 @@ export function StoryDetailPage() {
         setIsSaved(savedStories.includes(id));
       }
 
-      // Fetch related stories
+      // Fetch related stories (only public ones)
       const relatedRes = await storiesApi.getStories({
         genre: storyData.genre,
         limit: 4,
       });
-      setRelatedStories(relatedRes.items.filter((s) => s.id !== id));
+      setRelatedStories(
+        relatedRes.items.filter((s) => s.id !== id && s.visibility === "public")
+      );
     } catch (error) {
       console.error("Failed to fetch story details:", error);
       addToast({
@@ -178,6 +149,7 @@ export function StoryDetailPage() {
         description: "Failed to load story details",
         type: "error",
       });
+      navigate("/stories");
     } finally {
       setIsLoading(false);
     }
@@ -293,83 +265,6 @@ export function StoryDetailPage() {
     }
   };
 
-  const handleCoverSelect = (file: File) => {
-    setNewCoverImage(file);
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setCoverPreview(reader.result as string);
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const handleUpdateStory = async () => {
-    if (!story || !id) return;
-
-    try {
-      setIsUpdating(true);
-
-      // Update story details
-      const updatedStory = await storiesApi.updateStory(id, {
-        title: editForm.title,
-        description: editForm.description,
-        genre: editForm.genre,
-        tags: editForm.tags,
-        visibility: editForm.visibility,
-      });
-
-      // Update cover if changed
-      if (newCoverImage) {
-        await storiesApi.updateStoryCover(id, newCoverImage);
-      }
-
-      setStory(updatedStory);
-      setEditDialogOpen(false);
-      setNewCoverImage(null);
-
-      addToast({
-        title: "Story updated!",
-        description: "Your changes have been saved successfully.",
-        type: "success",
-      });
-    } catch (error) {
-      console.error("Failed to update story:", error);
-      addToast({
-        title: "Update failed",
-        description: "Failed to update your story. Please try again.",
-        type: "error",
-      });
-    } finally {
-      setIsUpdating(false);
-    }
-  };
-
-  const handleDeleteStory = async () => {
-    if (!story || !id) return;
-
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this story? This action cannot be undone."
-    );
-
-    if (!confirmed) return;
-
-    try {
-      await storiesApi.deleteStory(id);
-      addToast({
-        title: "Story deleted",
-        description: "Your story has been deleted successfully.",
-        type: "success",
-      });
-      navigate("/profile/" + user?.username);
-    } catch (error) {
-      console.error("Failed to delete story:", error);
-      addToast({
-        title: "Delete failed",
-        description: "Failed to delete your story. Please try again.",
-        type: "error",
-      });
-    }
-  };
-
   if (isLoading) {
     return (
       <MainLayout>
@@ -385,22 +280,6 @@ export function StoryDetailPage() {
       <MainLayout>
         <div className="text-center py-12">
           <h2 className="text-2xl font-bold mb-2">Story not found</h2>
-          <Button onClick={() => navigate("/stories")}>Browse Stories</Button>
-        </div>
-      </MainLayout>
-    );
-  }
-
-  // Don't show private stories to non-owners
-  if (story.visibility === "private" && !isOwnStory) {
-    return (
-      <MainLayout>
-        <div className="text-center py-12">
-          <Lock className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-          <h2 className="text-2xl font-bold mb-2">Private Story</h2>
-          <p className="text-gray-600 mb-4">
-            This story is private and only visible to the author.
-          </p>
           <Button onClick={() => navigate("/stories")}>Browse Stories</Button>
         </div>
       </MainLayout>
@@ -562,7 +441,7 @@ export function StoryDetailPage() {
                       <Button
                         size="lg"
                         className="bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
-                        onClick={() => setEditDialogOpen(true)}
+                        onClick={() => navigate(`/stories/${id}/edit`)}
                       >
                         <Edit className="h-5 w-5 mr-2" />
                         Edit Story
@@ -575,15 +454,6 @@ export function StoryDetailPage() {
                       >
                         <Share2 className="h-5 w-5 mr-2" />
                         Share
-                      </Button>
-                      <Button
-                        size="lg"
-                        variant="destructive"
-                        className="bg-red-500 hover:bg-red-600 text-white shadow-lg"
-                        onClick={handleDeleteStory}
-                      >
-                        <Trash2 className="h-5 w-5 mr-2" />
-                        Delete
                       </Button>
                     </>
                   ) : (
@@ -816,178 +686,6 @@ export function StoryDetailPage() {
           )}
         </div>
       </div>
-
-      {/* Edit Story Dialog */}
-      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Edit Story</DialogTitle>
-            <DialogDescription>
-              Update your story details and settings
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-6 mt-4">
-            {/* Cover Image */}
-            <div>
-              <Label>Cover Image</Label>
-              {coverPreview ? (
-                <div className="relative aspect-[2/3] w-48 mx-auto rounded-lg overflow-hidden bg-gray-100 mt-2">
-                  <img
-                    src={coverPreview}
-                    alt="Cover preview"
-                    className="h-full w-full object-cover"
-                  />
-                  <Button
-                    variant="destructive"
-                    size="icon"
-                    className="absolute top-2 right-2"
-                    onClick={() => {
-                      setNewCoverImage(null);
-                      setCoverPreview(story?.cover_image || "");
-                    }}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              ) : (
-                <FileDropzone
-                  onFileSelect={handleCoverSelect}
-                  accept="image/*"
-                  className="mt-2"
-                />
-              )}
-            </div>
-
-            {/* Title */}
-            <div>
-              <Label htmlFor="edit-title">Title</Label>
-              <Input
-                id="edit-title"
-                value={editForm.title}
-                onChange={(e) =>
-                  setEditForm({ ...editForm, title: e.target.value })
-                }
-                className="mt-1"
-              />
-            </div>
-
-            {/* Description */}
-            <div>
-              <Label htmlFor="edit-description">Description</Label>
-              <Textarea
-                id="edit-description"
-                value={editForm.description}
-                onChange={(e) =>
-                  setEditForm({ ...editForm, description: e.target.value })
-                }
-                rows={4}
-                className="mt-1"
-              />
-            </div>
-
-            {/* Genre */}
-            <div>
-              <Label htmlFor="edit-genre">Genre</Label>
-              <Select
-                value={editForm.genre}
-                onValueChange={(value) =>
-                  setEditForm({ ...editForm, genre: value })
-                }
-              >
-                <SelectTrigger className="mt-1">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {[
-                    "Romance",
-                    "Fantasy",
-                    "Mystery",
-                    "Sci-Fi",
-                    "Horror",
-                    "Adventure",
-                    "Drama",
-                    "Comedy",
-                    "Thriller",
-                    "Historical",
-                  ].map((genre) => (
-                    <SelectItem key={genre} value={genre}>
-                      {genre}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Visibility */}
-            <div>
-              <Label htmlFor="edit-visibility">Visibility</Label>
-              <Select
-                value={editForm.visibility}
-                onValueChange={(value: "public" | "private") =>
-                  setEditForm({ ...editForm, visibility: value })
-                }
-              >
-                <SelectTrigger className="mt-1">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="public">
-                    <div className="flex items-center">
-                      <Globe className="h-4 w-4 mr-2" />
-                      Public - Anyone can read
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="private">
-                    <div className="flex items-center">
-                      <Lock className="h-4 w-4 mr-2" />
-                      Private - Only you can see
-                    </div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Actions */}
-            <div className="flex justify-end gap-3 pt-4 border-t">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setEditDialogOpen(false);
-                  setNewCoverImage(null);
-                  if (story) {
-                    setCoverPreview(story.cover_image || "");
-                    setEditForm({
-                      title: story.title,
-                      description: story.description,
-                      genre: story.genre,
-                      tags: story.tags,
-                      visibility: story.visibility,
-                    });
-                  }
-                }}
-                disabled={isUpdating}
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={handleUpdateStory}
-                disabled={isUpdating}
-                className="bg-orange-500 hover:bg-orange-600"
-              >
-                {isUpdating ? (
-                  <>
-                    <LoadingSpinner size="sm" className="mr-2" />
-                    Saving...
-                  </>
-                ) : (
-                  "Save Changes"
-                )}
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </MainLayout>
   );
 }

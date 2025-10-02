@@ -1,73 +1,73 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, BookOpen, Mail, Lock } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { useAuthStore } from '@/store/authStore';
-import { useUiStore } from '@/store/uiStore';
-import { cn } from '@/lib/utils';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Eye, EyeOff, BookOpen, Mail, Lock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { useAuthStore } from "@/store/authStore";
+import { cn } from "@/lib/utils";
 
 export function LoginPage() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  
+
   const { login, isLoading, error, clearError } = useAuthStore();
-  const { addToast } = useUiStore();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
     clearError();
   };
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    
+
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
+      newErrors.email = "Please enter a valid email";
     }
-    
+
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = "Password is required";
     } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = "Password must be at least 6 characters";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     try {
       await login(formData.email, formData.password);
-      addToast({
-        title: 'Welcome back!',
-        description: 'You have successfully signed in.',
-        type: 'success'
-      });
-      navigate('/');
+      // Simply navigate without toast
+      navigate("/");
     } catch (error: any) {
       // Error handling is done in the store
       if (error.details) {
@@ -123,7 +123,8 @@ export function LoginPage() {
                     placeholder="Enter your email"
                     className={cn(
                       "pl-10",
-                      errors.email && "border-destructive focus-visible:ring-destructive"
+                      errors.email &&
+                        "border-destructive focus-visible:ring-destructive"
                     )}
                     disabled={isLoading}
                   />
@@ -140,13 +141,14 @@ export function LoginPage() {
                   <Input
                     id="password"
                     name="password"
-                    type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? "text" : "password"}
                     value={formData.password}
                     onChange={handleInputChange}
                     placeholder="Enter your password"
                     className={cn(
                       "pl-10 pr-10",
-                      errors.password && "border-destructive focus-visible:ring-destructive"
+                      errors.password &&
+                        "border-destructive focus-visible:ring-destructive"
                     )}
                     disabled={isLoading}
                   />
@@ -170,9 +172,9 @@ export function LoginPage() {
                 )}
               </div>
 
-              <Button 
-                type="submit" 
-                className="w-full bg-gradient-primary hover:opacity-90" 
+              <Button
+                type="submit"
+                className="w-full bg-gradient-primary hover:opacity-90"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -181,13 +183,15 @@ export function LoginPage() {
                     Signing in...
                   </>
                 ) : (
-                  'Sign In'
+                  "Sign In"
                 )}
               </Button>
             </form>
 
             <div className="mt-6 text-center text-sm">
-              <span className="text-muted-foreground">Don't have an account? </span>
+              <span className="text-muted-foreground">
+                Don't have an account?{" "}
+              </span>
               <Link
                 to="/auth/signup"
                 className="font-medium text-primary hover:text-primary/80 transition-colors"
