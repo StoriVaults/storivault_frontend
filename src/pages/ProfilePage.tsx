@@ -8,29 +8,22 @@ import {
   Settings,
   MoreHorizontal,
   Plus,
-  Edit,
   Check,
   Camera,
   X,
+  Trash2,
+  Upload,
+  User as UserIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { MainLayout } from "@/components/layout/main-layout";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { FileDropzone } from "@/components/ui/file-dropzone";
 import { useAuthStore } from "@/store/authStore";
 import { Story, User } from "@/types";
 import { storiesApi, usersApi } from "@/apis";
@@ -74,17 +67,13 @@ export function ProfilePage() {
     try {
       setIsLoading(true);
 
-      // Fetch user profile
       let userData: User;
       if (isOwnProfile && user) {
-        // Use current user data if viewing own profile
         userData = user;
       } else {
-        // Fetch user data by username
         try {
           userData = await usersApi.getUserByUsername(username);
         } catch (error) {
-          // If user not found, use mock data for demo
           userData = {
             id: username,
             username: username,
@@ -101,7 +90,6 @@ export function ProfilePage() {
       }
       setProfileUser(userData);
 
-      // Initialize edit form with user data
       if (isOwnProfile) {
         setEditForm({
           username: userData.username,
@@ -113,14 +101,12 @@ export function ProfilePage() {
         }
       }
 
-      // Fetch user's stories - Filter by author_id
       const storiesResponse = await storiesApi.getStories({
         page: 1,
-        limit: 100, // Get all user stories
+        limit: 100,
         sort: "latest",
       });
 
-      // Filter stories to only show this user's stories
       const filteredStories = storiesResponse.items.filter(
         (story) => story.author_id === userData.id
       );
@@ -135,10 +121,7 @@ export function ProfilePage() {
           : null
       );
 
-      // For saved stories (only for own profile)
       if (isOwnProfile) {
-        // In a real app, this would fetch the user's saved stories
-        // For now, we'll just show some popular stories as placeholder
         const savedResponse = await storiesApi.getStories({
           page: 1,
           limit: 12,
@@ -196,20 +179,36 @@ export function ProfilePage() {
     }
   };
 
-  const handleProfilePicSelect = (file: File) => {
-    setNewProfilePic(file);
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setProfilePicPreview(reader.result as string);
-    };
-    reader.readAsDataURL(file);
+  const handleProfilePicSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        addToast({
+          title: "File too large",
+          description: "Profile picture must be less than 5MB",
+          type: "error",
+        });
+        return;
+      }
+
+      setNewProfilePic(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfilePicPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveProfilePic = () => {
+    setNewProfilePic(null);
+    setProfilePicPreview("");
   };
 
   const handleUpdateProfile = async () => {
     try {
       setIsUpdatingProfile(true);
 
-      // Update profile picture if changed
       if (newProfilePic) {
         const updatedUser = await UserController.uploadProfilePictureWithToast(
           newProfilePic
@@ -220,10 +219,14 @@ export function ProfilePage() {
         }
       }
 
-      // Update profile info if changed
       const updates: any = {};
       if (editForm.bio !== profileUser?.bio) {
         updates.bio = editForm.bio || null;
+      }
+
+      // If removing profile pic
+      if (!profilePicPreview && profileUser?.profile_pic) {
+        updates.profile_pic = null;
       }
 
       if (Object.keys(updates).length > 0) {
@@ -239,13 +242,11 @@ export function ProfilePage() {
       setEditDialogOpen(false);
       setNewProfilePic(null);
 
-      if (!newProfilePic && Object.keys(updates).length === 0) {
-        addToast({
-          title: "No changes",
-          description: "No changes were made to your profile",
-          type: "info",
-        });
-      }
+      addToast({
+        title: "Profile updated!",
+        description: "Your profile has been successfully updated.",
+        type: "success",
+      });
     } catch (error) {
       console.error("Failed to update profile:", error);
     } finally {
@@ -285,7 +286,6 @@ export function ProfilePage() {
       <div className="max-w-5xl mx-auto px-4 py-8">
         {/* Profile Header */}
         <div className="flex flex-col md:flex-row items-start md:items-center gap-8 mb-8">
-          {/* Profile Picture */}
           <div className="flex-shrink-0">
             <Avatar className="h-32 w-32 md:h-40 md:w-40 border-4 border-gray-200">
               <AvatarImage src={profileUser.profile_pic || undefined} />
@@ -295,9 +295,7 @@ export function ProfilePage() {
             </Avatar>
           </div>
 
-          {/* Profile Info */}
           <div className="flex-1 w-full">
-            {/* Username and Actions */}
             <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
               <h1 className="text-2xl font-medium">{profileUser.username}</h1>
               <div className="flex items-center gap-2">
@@ -341,7 +339,6 @@ export function ProfilePage() {
               </div>
             </div>
 
-            {/* Stats */}
             <div className="flex items-center gap-8 mb-4">
               <div className="text-center md:text-left">
                 <span className="font-semibold">
@@ -365,7 +362,6 @@ export function ProfilePage() {
               </button>
             </div>
 
-            {/* Bio */}
             {profileUser.bio && (
               <div className="text-sm whitespace-pre-line">
                 {profileUser.bio}
@@ -395,7 +391,6 @@ export function ProfilePage() {
             )}
           </TabsList>
 
-          {/* Stories Grid */}
           <TabsContent value="stories" className="mt-6">
             {userStories.length === 0 ? (
               <div className="text-center py-12">
@@ -450,7 +445,6 @@ export function ProfilePage() {
             )}
           </TabsContent>
 
-          {/* Saved Stories */}
           {isOwnProfile && (
             <TabsContent value="saved" className="mt-6">
               {savedStories.length === 0 ? (
@@ -498,7 +492,6 @@ export function ProfilePage() {
           )}
         </Tabs>
 
-        {/* Create Story FAB for own profile */}
         {isOwnProfile && (
           <Button
             className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg"
@@ -510,130 +503,223 @@ export function ProfilePage() {
         )}
       </div>
 
-      {/* Edit Profile Dialog */}
-      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle>Edit Profile</DialogTitle>
-            <DialogDescription>
-              Update your profile information and picture
-            </DialogDescription>
-          </DialogHeader>
+      {/* Enhanced Edit Profile Modal */}
+      {editDialogOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setEditDialogOpen(false)}
+          />
 
-          <div className="space-y-6 py-4">
-            {/* Profile Picture */}
-            <div className="flex flex-col items-center gap-4">
-              <Avatar className="h-24 w-24">
-                <AvatarImage
-                  src={
-                    profilePicPreview || profileUser?.profile_pic || undefined
-                  }
-                />
-                <AvatarFallback>
-                  {editForm.username?.[0].toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+          {/* Modal */}
+          <div className="relative w-full max-w-lg bg-white rounded-xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+            {/* Modal Header */}
+            <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold text-white">Edit Profile</h2>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setEditDialogOpen(false)}
+                  className="text-white hover:bg-white/20"
+                >
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+              <p className="text-white/90 text-sm mt-1">
+                Update your profile information and picture
+              </p>
+            </div>
 
-              {profilePicPreview && newProfilePic && (
+            {/* Modal Content */}
+            <div className="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
+              {/* Profile Picture Section */}
+              <div className="flex flex-col items-center space-y-4">
+                <div className="relative group">
+                  <Avatar className="h-32 w-32 border-4 border-orange-200 shadow-lg">
+                    <AvatarImage
+                      src={
+                        profilePicPreview ||
+                        profileUser?.profile_pic ||
+                        undefined
+                      }
+                    />
+                    <AvatarFallback className="bg-gradient-to-br from-orange-400 to-amber-400 text-white text-3xl">
+                      {editForm.username?.[0].toUpperCase() || (
+                        <UserIcon className="h-12 w-12" />
+                      )}
+                    </AvatarFallback>
+                  </Avatar>
+
+                  {/* Upload Overlay */}
+                  <label className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                    <Camera className="h-8 w-8 text-white" />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleProfilePicSelect}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-2">
+                  <label className="inline-flex">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="border-orange-200 hover:bg-orange-50"
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      Upload Photo
+                    </Button>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleProfilePicSelect}
+                      className="hidden"
+                    />
+                  </label>
+
+                  {(profilePicPreview || profileUser?.profile_pic) && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={handleRemoveProfilePic}
+                      className="border-red-200 hover:bg-red-50 text-red-600"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Remove
+                    </Button>
+                  )}
+                </div>
+              </div>
+
+              {/* Form Fields */}
+              <div className="space-y-4">
+                {/* Username Field */}
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="edit-username"
+                    className="text-sm font-semibold text-gray-700"
+                  >
+                    Username
+                  </Label>
+                  <Input
+                    id="edit-username"
+                    value={editForm.username}
+                    disabled
+                    className="bg-gray-50 border-gray-200 text-gray-600 cursor-not-allowed"
+                  />
+                  <p className="text-xs text-gray-500">
+                    Username cannot be changed
+                  </p>
+                </div>
+
+                {/* Email Field */}
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="edit-email"
+                    className="text-sm font-semibold text-gray-700"
+                  >
+                    Email Address
+                  </Label>
+                  <Input
+                    id="edit-email"
+                    type="email"
+                    value={editForm.email}
+                    disabled
+                    className="bg-gray-50 border-gray-200 text-gray-600 cursor-not-allowed"
+                  />
+                  <p className="text-xs text-gray-500">
+                    To change your email, go to account settings
+                  </p>
+                </div>
+
+                {/* Bio Field */}
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="edit-bio"
+                    className="text-sm font-semibold text-gray-700"
+                  >
+                    Bio
+                  </Label>
+                  <Textarea
+                    id="edit-bio"
+                    value={editForm.bio}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, bio: e.target.value })
+                    }
+                    placeholder="Tell the world about yourself..."
+                    rows={4}
+                    maxLength={160}
+                    className="resize-none border-gray-200 focus:border-orange-400 focus:ring-orange-400"
+                  />
+                  <div className="flex justify-between">
+                    <p className="text-xs text-gray-500">
+                      Share your story, interests, or writing goals
+                    </p>
+                    <p
+                      className={cn(
+                        "text-xs font-medium",
+                        editForm.bio.length > 140
+                          ? "text-orange-500"
+                          : "text-gray-500"
+                      )}
+                    >
+                      {editForm.bio.length}/160
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="border-t bg-gray-50 px-6 py-4">
+              <div className="flex justify-end gap-3">
                 <Button
                   variant="outline"
-                  size="sm"
                   onClick={() => {
+                    setEditDialogOpen(false);
                     setNewProfilePic(null);
                     setProfilePicPreview(profileUser?.profile_pic || "");
+                    setEditForm({
+                      username: profileUser?.username || "",
+                      email: profileUser?.email || "",
+                      bio: profileUser?.bio || "",
+                    });
                   }}
+                  disabled={isUpdatingProfile}
+                  className="border-gray-300"
                 >
-                  <X className="h-4 w-4 mr-2" />
-                  Remove
+                  Cancel
                 </Button>
-              )}
-
-              <FileDropzone
-                onFileSelect={handleProfilePicSelect}
-                accept="image/*"
-                maxSize={5 * 1024 * 1024}
-                className="w-full"
-              />
-            </div>
-
-            {/* Username (read-only) */}
-            <div className="space-y-2">
-              <Label htmlFor="edit-username">Username</Label>
-              <Input
-                id="edit-username"
-                value={editForm.username}
-                disabled
-                className="bg-muted"
-              />
-              <p className="text-xs text-muted-foreground">
-                Username cannot be changed
-              </p>
-            </div>
-
-            {/* Email (read-only) */}
-            <div className="space-y-2">
-              <Label htmlFor="edit-email">Email</Label>
-              <Input
-                id="edit-email"
-                type="email"
-                value={editForm.email}
-                disabled
-                className="bg-muted"
-              />
-              <p className="text-xs text-muted-foreground">
-                Email can be changed in settings
-              </p>
-            </div>
-
-            {/* Bio */}
-            <div className="space-y-2">
-              <Label htmlFor="edit-bio">Bio</Label>
-              <Textarea
-                id="edit-bio"
-                value={editForm.bio}
-                onChange={(e) =>
-                  setEditForm({ ...editForm, bio: e.target.value })
-                }
-                placeholder="Tell us about yourself..."
-                rows={4}
-                maxLength={160}
-              />
-              <p className="text-xs text-muted-foreground text-right">
-                {editForm.bio.length}/160 characters
-              </p>
+                <Button
+                  onClick={handleUpdateProfile}
+                  disabled={isUpdatingProfile}
+                  className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white"
+                >
+                  {isUpdatingProfile ? (
+                    <>
+                      <LoadingSpinner size="sm" className="mr-2" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Check className="h-4 w-4 mr-2" />
+                      Save Changes
+                    </>
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
-
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setEditDialogOpen(false);
-                setNewProfilePic(null);
-                setProfilePicPreview(profileUser?.profile_pic || "");
-                setEditForm({
-                  username: profileUser?.username || "",
-                  email: profileUser?.email || "",
-                  bio: profileUser?.bio || "",
-                });
-              }}
-              disabled={isUpdatingProfile}
-            >
-              Cancel
-            </Button>
-            <Button onClick={handleUpdateProfile} disabled={isUpdatingProfile}>
-              {isUpdatingProfile ? (
-                <>
-                  <LoadingSpinner size="sm" className="mr-2" />
-                  Saving...
-                </>
-              ) : (
-                "Save Changes"
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        </div>
+      )}
     </MainLayout>
   );
 }
