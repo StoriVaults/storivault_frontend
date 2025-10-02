@@ -5,6 +5,7 @@ import { ToastProvider } from "@/components/ui/toast-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
+import { useEffect } from "react";
 
 // Pages
 import { HomePage } from "./pages/HomePage";
@@ -21,7 +22,7 @@ const queryClient = new QueryClient({
     queries: {
       retry: 1,
       refetchOnWindowFocus: false,
-      staleTime: 5 * 60 * 1000,
+      staleTime: 5 * 60 * 1000, // 5 minutes
     },
     mutations: {
       retry: 1,
@@ -32,11 +33,34 @@ const queryClient = new QueryClient({
 // Protected Route Component
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthStore();
-  return isAuthenticated ? <>{children}</> : <Navigate to="/auth/login" />;
+
+  if (!isAuthenticated) {
+    return <Navigate to="/auth/login" replace />;
+  }
+
+  return <>{children}</>;
+}
+
+// Public-only Route (redirects to home if authenticated)
+function PublicOnlyRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated } = useAuthStore();
+
+  if (isAuthenticated) {
+    return <Navigate to="/feed" replace />;
+  }
+
+  return <>{children}</>;
 }
 
 const App = () => {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, fetchMe } = useAuthStore();
+
+  // Check authentication status on app load
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchMe();
+    }
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -46,21 +70,41 @@ const App = () => {
         <ToastProvider />
         <BrowserRouter>
           <Routes>
-            {/* Redirect authenticated users from home to feed */}
+            {/* Home - Conditional based on auth */}
             <Route
               path="/"
-              element={isAuthenticated ? <Navigate to="/feed" /> : <HomePage />}
+              element={
+                isAuthenticated ? <Navigate to="/feed" replace /> : <HomePage />
+              }
             />
 
-            {/* Auth Routes */}
-            <Route path="/auth/login" element={<LoginPage />} />
-            <Route path="/auth/signup" element={<SignupPage />} />
+            {/* Auth Routes - Only accessible when not authenticated */}
+            <Route
+              path="/auth/login"
+              element={
+                <PublicOnlyRoute>
+                  <LoginPage />
+                </PublicOnlyRoute>
+              }
+            />
+            <Route
+              path="/auth/signup"
+              element={
+                <PublicOnlyRoute>
+                  <SignupPage />
+                </PublicOnlyRoute>
+              }
+            />
 
-            {/* Public Routes */}
+            {/* Public Routes - Accessible by everyone */}
             <Route path="/stories" element={<StoriesPage />} />
             <Route path="/stories/search" element={<StoriesPage />} />
+            <Route
+              path="/stories/:id"
+              element={<div>Story Detail Page (To be implemented)</div>}
+            />
 
-            {/* Protected Routes */}
+            {/* Protected Routes - Require authentication */}
             <Route
               path="/feed"
               element={
@@ -77,9 +121,70 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-            <Route path="/profile/:username" element={<ProfilePage />} />
+            <Route
+              path="/stories/:id/edit"
+              element={
+                <ProtectedRoute>
+                  <div>Edit Story Page (To be implemented)</div>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/my-stories"
+              element={
+                <ProtectedRoute>
+                  <div>My Stories Page (To be implemented)</div>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/library"
+              element={
+                <ProtectedRoute>
+                  <div>Library Page (To be implemented)</div>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <ProtectedRoute>
+                  <div>Settings Page (To be implemented)</div>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/settings/profile"
+              element={
+                <ProtectedRoute>
+                  <div>Profile Settings Page (To be implemented)</div>
+                </ProtectedRoute>
+              }
+            />
 
-            {/* Catch-all */}
+            {/* Profile Routes - Can be viewed by anyone but edit requires auth */}
+            <Route path="/profile/:username" element={<ProfilePage />} />
+            <Route path="/users/:username" element={<ProfilePage />} />
+
+            {/* Static Pages */}
+            <Route
+              path="/about"
+              element={<div>About Page (To be implemented)</div>}
+            />
+            <Route
+              path="/privacy"
+              element={<div>Privacy Policy (To be implemented)</div>}
+            />
+            <Route
+              path="/terms"
+              element={<div>Terms of Service (To be implemented)</div>}
+            />
+            <Route
+              path="/contact"
+              element={<div>Contact Page (To be implemented)</div>}
+            />
+
+            {/* 404 Catch-all - MUST BE LAST */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
