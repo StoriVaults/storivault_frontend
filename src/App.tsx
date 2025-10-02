@@ -15,6 +15,7 @@ import { StoriesPage } from "./pages/StoriesPage";
 import { FeedPage } from "./pages/FeedPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { CreateStoryPage } from "./pages/CreateStoryPage";
+import { StoryDetailPage } from "./pages/StoryDetailPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient({
@@ -99,10 +100,7 @@ const App = () => {
             {/* Public Routes - Accessible by everyone */}
             <Route path="/stories" element={<StoriesPage />} />
             <Route path="/stories/search" element={<StoriesPage />} />
-            <Route
-              path="/stories/:id"
-              element={<div>Story Detail Page (To be implemented)</div>}
-            />
+            <Route path="/stories/:id" element={<StoryDetailPage />} />
 
             {/* Protected Routes - Require authentication */}
             <Route

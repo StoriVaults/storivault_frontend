@@ -14,6 +14,7 @@ Generated from: `.`
 - [tsconfig.app.json](#tsconfigappjson)
 - [tsconfig.json](#tsconfigjson)
 - [tsconfig.node.json](#tsconfignodejson)
+- [vercel.json](#verceljson)
 - [vite.config.ts](#viteconfigts)
 
 ### 📁 src
@@ -65,10 +66,14 @@ Generated from: `.`
 - [utils.ts](#src-lib-utilsts)
 
 ### 📁 src\pages
+- [CreateStoryPage.tsx](#src-pages-CreateStoryPagetsx)
+- [FeedPage.tsx](#src-pages-FeedPagetsx)
 - [HomePage.tsx](#src-pages-HomePagetsx)
 - [Index.tsx](#src-pages-Indextsx)
 - [NotFound.tsx](#src-pages-NotFoundtsx)
+- [ProfilePage.tsx](#src-pages-ProfilePagetsx)
 - [StoriesPage.tsx](#src-pages-StoriesPagetsx)
+- [StoryDetailPage.tsx](#src-pages-StoryDetailPagetsx)
 
 ### 📁 src\pages\auth
 - [LoginPage.tsx](#src-pages-auth-LoginPagetsx)
@@ -131,16 +136,17 @@ export default tseslint.config(
 
 ```json
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "storivault-frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "tsc && vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -172,7 +178,7 @@ export default tseslint.config(
     "@radix-ui/react-toggle-group": "^1.1.10",
     "@radix-ui/react-tooltip": "^1.2.7",
     "@tanstack/react-query": "^5.90.2",
-    "axios": "^1.12.2",
+    "axios": "^1.7.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -213,6 +219,10 @@ export default tseslint.config(
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.38.0",
     "vite": "^5.4.19"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   }
 }
 ```
@@ -361,6 +371,55 @@ export default {
 
 ---
 
+#### 📄 vercel.json
+<a name='verceljson'></a>
+
+**Path:** `vercel.json`
+
+```json
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    }
+  ],
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": null
+}
+```
+
+---
+
 #### 📄 vite.config.ts
 <a name='viteconfigts'></a>
 
@@ -384,6 +443,20 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    outDir: "dist",
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom", "react-router-dom"],
+          ui: ["@radix-ui/react-dialog", "@radix-ui/react-dropdown-menu"],
+        },
+      },
+    },
+  },
+  // Add base URL if your app is not served from root
+  base: "/",
 }));
 ```
 
@@ -454,13 +527,18 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ToastProvider } from "@/components/ui/toast-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useAuthStore } from "@/store/authStore";
+import { useEffect } from "react";
 
 // Pages
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/auth/LoginPage";
 import { SignupPage } from "./pages/auth/SignupPage";
 import { StoriesPage } from "./pages/StoriesPage";
+import { FeedPage } from "./pages/FeedPage";
+import { ProfilePage } from "./pages/ProfilePage";
+import { CreateStoryPage } from "./pages/CreateStoryPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient({
@@ -476,26 +554,168 @@ const queryClient = new QueryClient({
   },
 });
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <ToastProvider />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/auth/login" element={<LoginPage />} />
-          <Route path="/auth/signup" element={<SignupPage />} />
-          <Route path="/stories" element={<StoriesPage />} />
-          <Route path="/stories/search" element={<StoriesPage />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+// Protected Route Component
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated } = useAuthStore();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/auth/login" replace />;
+  }
+
+  return <>{children}</>;
+}
+
+// Public-only Route (redirects to home if authenticated)
+function PublicOnlyRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated } = useAuthStore();
+
+  if (isAuthenticated) {
+    return <Navigate to="/feed" replace />;
+  }
+
+  return <>{children}</>;
+}
+
+const App = () => {
+  const { isAuthenticated, fetchMe } = useAuthStore();
+
+  // Check authentication status on app load
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchMe();
+    }
+  }, []);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <ToastProvider />
+        <BrowserRouter>
+          <Routes>
+            {/* Home - Conditional based on auth */}
+            <Route
+              path="/"
+              element={
+                isAuthenticated ? <Navigate to="/feed" replace /> : <HomePage />
+              }
+            />
+
+            {/* Auth Routes - Only accessible when not authenticated */}
+            <Route
+              path="/auth/login"
+              element={
+                <PublicOnlyRoute>
+                  <LoginPage />
+                </PublicOnlyRoute>
+              }
+            />
+            <Route
+              path="/auth/signup"
+              element={
+                <PublicOnlyRoute>
+                  <SignupPage />
+                </PublicOnlyRoute>
+              }
+            />
+
+            {/* Public Routes - Accessible by everyone */}
+            <Route path="/stories" element={<StoriesPage />} />
+            <Route path="/stories/search" element={<StoriesPage />} />
+            <Route
+              path="/stories/:id"
+              element={<div>Story Detail Page (To be implemented)</div>}
+            />
+
+            {/* Protected Routes - Require authentication */}
+            <Route
+              path="/feed"
+              element={
+                <ProtectedRoute>
+                  <FeedPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/stories/create"
+              element={
+                <ProtectedRoute>
+                  <CreateStoryPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/stories/:id/edit"
+              element={
+                <ProtectedRoute>
+                  <div>Edit Story Page (To be implemented)</div>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/my-stories"
+              element={
+                <ProtectedRoute>
+                  <div>My Stories Page (To be implemented)</div>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/library"
+              element={
+                <ProtectedRoute>
+                  <div>Library Page (To be implemented)</div>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <ProtectedRoute>
+                  <div>Settings Page (To be implemented)</div>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/settings/profile"
+              element={
+                <ProtectedRoute>
+                  <div>Profile Settings Page (To be implemented)</div>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Profile Routes - Can be viewed by anyone but edit requires auth */}
+            <Route path="/profile/:username" element={<ProfilePage />} />
+            <Route path="/users/:username" element={<ProfilePage />} />
+
+            {/* Static Pages */}
+            <Route
+              path="/about"
+              element={<div>About Page (To be implemented)</div>}
+            />
+            <Route
+              path="/privacy"
+              element={<div>Privacy Policy (To be implemented)</div>}
+            />
+            <Route
+              path="/terms"
+              element={<div>Terms of Service (To be implemented)</div>}
+            />
+            <Route
+              path="/contact"
+              element={<div>Contact Page (To be implemented)</div>}
+            />
+
+            {/* 404 Catch-all - MUST BE LAST */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
 ```
@@ -1777,6 +1997,1363 @@ export function cn(...inputs: ClassValue[]) {
 
 ### 📁 src\pages
 
+#### 📄 src\pages\CreateStoryPage.tsx
+<a name='src-pages-CreateStoryPagetsx'></a>
+
+**Path:** `src\pages\CreateStoryPage.tsx`
+
+```tsx
+"use client";
+
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Save,
+  Eye,
+  Upload,
+  Bold,
+  Italic,
+  Underline,
+  List,
+  ListOrdered,
+  Quote,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  Plus,
+  X,
+  Image as ImageIcon,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { MainLayout } from "@/components/layout/main-layout";
+import { FileDropzone } from "@/components/ui/file-dropzone";
+import { useAuthStore } from "@/store/authStore";
+import { useUiStore } from "@/store/uiStore";
+import { storiesApi } from "@/apis";
+import { GENRES } from "@/helper/constants";
+
+interface Chapter {
+  id: string;
+  title: string;
+  content: string;
+  order: number;
+}
+
+export function CreateStoryPage() {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuthStore();
+  const { addToast } = useUiStore();
+
+  const [storyData, setStoryData] = useState({
+    title: "",
+    description: "",
+    genre: "",
+    tags: [] as string[],
+    visibility: "public" as "public" | "private",
+  });
+
+  const [coverImage, setCoverImage] = useState<File | null>(null);
+  const [coverPreview, setCoverPreview] = useState<string>("");
+  const [chapters, setChapters] = useState<Chapter[]>([
+    { id: "1", title: "Chapter 1", content: "", order: 1 },
+  ]);
+  const [activeChapter, setActiveChapter] = useState("1");
+  const [currentTag, setCurrentTag] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [activeTab, setActiveTab] = useState("details");
+
+  const handleCoverSelect = (file: File) => {
+    setCoverImage(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setCoverPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const addTag = () => {
+    if (currentTag.trim() && !storyData.tags.includes(currentTag.trim())) {
+      setStoryData({
+        ...storyData,
+        tags: [...storyData.tags, currentTag.trim()],
+      });
+      setCurrentTag("");
+    }
+  };
+
+  const removeTag = (tag: string) => {
+    setStoryData({
+      ...storyData,
+      tags: storyData.tags.filter((t) => t !== tag),
+    });
+  };
+
+  const addChapter = () => {
+    const newChapter: Chapter = {
+      id: Date.now().toString(),
+      title: `Chapter ${chapters.length + 1}`,
+      content: "",
+      order: chapters.length + 1,
+    };
+    setChapters([...chapters, newChapter]);
+    setActiveChapter(newChapter.id);
+  };
+
+  const updateChapter = (id: string, updates: Partial<Chapter>) => {
+    setChapters(
+      chapters.map((ch) => (ch.id === id ? { ...ch, ...updates } : ch))
+    );
+  };
+
+  const deleteChapter = (id: string) => {
+    if (chapters.length > 1) {
+      setChapters(chapters.filter((ch) => ch.id !== id));
+      if (activeChapter === id) {
+        setActiveChapter(chapters[0].id);
+      }
+    }
+  };
+
+  const handleFormatting = (format: string) => {
+    // Simple formatting implementation
+    const textarea = document.getElementById(
+      `chapter-${activeChapter}`
+    ) as HTMLTextAreaElement;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = textarea.value.substring(start, end);
+
+    let formattedText = selectedText;
+    switch (format) {
+      case "bold":
+        formattedText = `**${selectedText}**`;
+        break;
+      case "italic":
+        formattedText = `*${selectedText}*`;
+        break;
+      case "underline":
+        formattedText = `__${selectedText}__`;
+        break;
+      case "quote":
+        formattedText = `> ${selectedText}`;
+        break;
+    }
+
+    const newText =
+      textarea.value.substring(0, start) +
+      formattedText +
+      textarea.value.substring(end);
+
+    const chapter = chapters.find((ch) => ch.id === activeChapter);
+    if (chapter) {
+      updateChapter(activeChapter, { content: newText });
+    }
+  };
+
+  const handleSubmit = async () => {
+    // Validation
+    if (!storyData.title.trim()) {
+      addToast({
+        title: "Title Required",
+        description: "Please enter a title for your story",
+        type: "error",
+      });
+      return;
+    }
+
+    if (!storyData.genre) {
+      addToast({
+        title: "Genre Required",
+        description: "Please select a genre for your story",
+        type: "error",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      // Create story with cover image
+      const story = await storiesApi.createStoryMultipart({
+        title: storyData.title,
+        description: storyData.description,
+        genre: storyData.genre,
+        tags: storyData.tags.join(","),
+        visibility: storyData.visibility,
+        cover: coverImage || undefined,
+      });
+
+      addToast({
+        title: "Story Created!",
+        description: "Your story has been published successfully",
+        type: "success",
+      });
+
+      navigate(`/stories/${story.id}`);
+    } catch (error) {
+      addToast({
+        title: "Error",
+        description: "Failed to create story. Please try again.",
+        type: "error",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (!isAuthenticated) {
+    navigate("/auth/login");
+    return null;
+  }
+
+  return (
+    <MainLayout showFooter={false}>
+      <div className="max-w-6xl mx-auto px-4 py-6">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold">Create New Story</h1>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={() => navigate(-1)}>
+              Cancel
+            </Button>
+            <Button variant="outline">
+              <Eye className="h-4 w-4 mr-2" />
+              Preview
+            </Button>
+            <Button onClick={handleSubmit} disabled={isSubmitting}>
+              <Save className="h-4 w-4 mr-2" />
+              {isSubmitting ? "Publishing..." : "Publish Story"}
+            </Button>
+          </div>
+        </div>
+
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="details">Story Details</TabsTrigger>
+            <TabsTrigger value="chapters">Chapters</TabsTrigger>
+            <TabsTrigger value="settings">Settings</TabsTrigger>
+          </TabsList>
+
+          {/* Story Details Tab */}
+          <TabsContent value="details" className="space-y-6 mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Cover Image */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Cover Image</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {coverPreview ? (
+                    <div className="relative aspect-[2/3] rounded-lg overflow-hidden bg-gray-100">
+                      <img
+                        src={coverPreview}
+                        alt="Cover preview"
+                        className="h-full w-full object-cover"
+                      />
+                      <Button
+                        variant="destructive"
+                        size="icon"
+                        className="absolute top-2 right-2"
+                        onClick={() => {
+                          setCoverImage(null);
+                          setCoverPreview("");
+                        }}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <FileDropzone
+                      onFileSelect={handleCoverSelect}
+                      accept="image/*"
+                      className="aspect-[2/3]"
+                    />
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Story Info */}
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="title">Title</Label>
+                  <Input
+                    id="title"
+                    value={storyData.title}
+                    onChange={(e) =>
+                      setStoryData({ ...storyData, title: e.target.value })
+                    }
+                    placeholder="Enter your story title"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    value={storyData.description}
+                    onChange={(e) =>
+                      setStoryData({
+                        ...storyData,
+                        description: e.target.value,
+                      })
+                    }
+                    placeholder="Write a brief description of your story"
+                    rows={4}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="genre">Genre</Label>
+                  <Select
+                    value={storyData.genre}
+                    onValueChange={(value) =>
+                      setStoryData({ ...storyData, genre: value })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a genre" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {GENRES.map((genre) => (
+                        <SelectItem key={genre} value={genre}>
+                          {genre}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="tags">Tags</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="tags"
+                      value={currentTag}
+                      onChange={(e) => setCurrentTag(e.target.value)}
+                      placeholder="Add tags"
+                      onKeyPress={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          addTag();
+                        }
+                      }}
+                    />
+                    <Button type="button" onClick={addTag}>
+                      Add
+                    </Button>
+                  </div>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {storyData.tags.map((tag) => (
+                      <Badge key={tag} variant="secondary">
+                        {tag}
+                        <button className="ml-2" onClick={() => removeTag(tag)}>
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Chapters Tab */}
+          <TabsContent value="chapters" className="mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              {/* Chapter List */}
+              <div className="md:col-span-1">
+                <div className="space-y-2">
+                  {chapters.map((chapter) => (
+                    <Card
+                      key={chapter.id}
+                      className={`cursor-pointer ${
+                        activeChapter === chapter.id
+                          ? "ring-2 ring-primary"
+                          : ""
+                      }`}
+                      onClick={() => setActiveChapter(chapter.id)}
+                    >
+                      <CardContent className="p-3">
+                        <div className="flex items-center justify-between">
+                          <span className="font-medium">{chapter.title}</span>
+                          {chapters.length > 1 && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-6 w-6"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                deleteChapter(chapter.id);
+                              }}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={addChapter}
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Chapter
+                  </Button>
+                </div>
+              </div>
+
+              {/* Chapter Editor */}
+              <div className="md:col-span-3">
+                {chapters.map((chapter) => (
+                  <div
+                    key={chapter.id}
+                    className={
+                      activeChapter === chapter.id ? "block" : "hidden"
+                    }
+                  >
+                    <Card>
+                      <CardHeader>
+                        <Input
+                          value={chapter.title}
+                          onChange={(e) =>
+                            updateChapter(chapter.id, { title: e.target.value })
+                          }
+                          className="text-lg font-semibold"
+                        />
+                      </CardHeader>
+                      <CardContent>
+                        {/* Editor Toolbar */}
+                        <div className="flex items-center gap-1 p-2 border rounded-t-lg bg-gray-50">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => handleFormatting("bold")}
+                          >
+                            <Bold className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => handleFormatting("italic")}
+                          >
+                            <Italic className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => handleFormatting("underline")}
+                          >
+                            <Underline className="h-4 w-4" />
+                          </Button>
+                          <div className="w-px h-6 bg-gray-300 mx-1" />
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => handleFormatting("quote")}
+                          >
+                            <Quote className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                          >
+                            <List className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                          >
+                            <ListOrdered className="h-4 w-4" />
+                          </Button>
+                          <div className="w-px h-6 bg-gray-300 mx-1" />
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                          >
+                            <AlignLeft className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                          >
+                            <AlignCenter className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                          >
+                            <AlignRight className="h-4 w-4" />
+                          </Button>
+                        </div>
+
+                        {/* Chapter Content */}
+                        <Textarea
+                          id={`chapter-${chapter.id}`}
+                          value={chapter.content}
+                          onChange={(e) =>
+                            updateChapter(chapter.id, {
+                              content: e.target.value,
+                            })
+                          }
+                          placeholder="Start writing your chapter..."
+                          className="min-h-[500px] rounded-t-none border-t-0 resize-none font-serif text-lg leading-relaxed"
+                        />
+
+                        {/* Word Count */}
+                        <div className="text-sm text-muted-foreground mt-2">
+                          Words:{" "}
+                          {chapter.content.split(/\s+/).filter(Boolean).length}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Settings Tab */}
+          <TabsContent value="settings" className="space-y-6 mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Story Settings</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="visibility">Visibility</Label>
+                  <Select
+                    value={storyData.visibility}
+                    onValueChange={(value: "public" | "private") =>
+                      setStoryData({ ...storyData, visibility: value })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="public">Public</SelectItem>
+                      <SelectItem value="private">Private</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {storyData.visibility === "public"
+                      ? "Anyone can read your story"
+                      : "Only you can see this story"}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </MainLayout>
+  );
+}
+```
+
+---
+
+#### 📄 src\pages\FeedPage.tsx
+<a name='src-pages-FeedPagetsx'></a>
+
+**Path:** `src\pages\FeedPage.tsx`
+
+```tsx
+"use client";
+
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  Plus,
+  Heart,
+  MessageCircle,
+  Bookmark,
+  Share2,
+  MoreVertical,
+  TrendingUp,
+  Users,
+  Grid3X3,
+  BookOpen,
+  Eye,
+  Check,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { MainLayout } from "@/components/layout/main-layout";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { useAuthStore } from "@/store/authStore";
+import { useUiStore } from "@/store/uiStore";
+import { Story, User } from "@/types";
+import { storiesApi, usersApi } from "@/apis";
+import { cn } from "@/lib/utils";
+import { formatNumber } from "@/helper/formatting";
+
+interface StoryPost extends Story {
+  author?: User;
+  is_liked?: boolean;
+  is_saved?: boolean;
+}
+
+interface UserStats {
+  storiesRead: number;
+  readingList: number;
+  following: number;
+  readTime?: number;
+  favoriteGenre?: string;
+}
+
+interface ReadingHistoryItem {
+  lastRead?: string;
+  progress?: number;
+  lastChapter?: number;
+  readTime?: number;
+}
+
+export function FeedPage() {
+  const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuthStore();
+  const { addToast } = useUiStore();
+
+  const [stories, setStories] = useState<StoryPost[]>([]);
+  const [followingStories, setFollowingStories] = useState<StoryPost[]>([]);
+  const [trendingStories, setTrendingStories] = useState<StoryPost[]>([]);
+  const [suggestedAuthors, setSuggestedAuthors] = useState<User[]>([]);
+  const [followingStatus, setFollowingStatus] = useState<
+    Record<string, boolean>
+  >({});
+  const [userStats, setUserStats] = useState<UserStats>({
+    storiesRead: 0,
+    readingList: 0,
+    following: 0,
+    readTime: 0,
+    favoriteGenre: "Romance",
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("for-you");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/auth/login");
+      return;
+    }
+    fetchFeedData();
+    fetchSuggestedAuthors();
+    fetchUserStats();
+  }, [isAuthenticated]);
+
+  const fetchFeedData = async () => {
+    try {
+      setIsLoading(true);
+      const [forYouRes, followingRes, trendingRes] = await Promise.all([
+        storiesApi.getStories({ page: 1, limit: 20, sort: "popular" }),
+        storiesApi.getStories({ page: 1, limit: 20, sort: "latest" }),
+        storiesApi.getStories({ page: 1, limit: 10, sort: "trending" }),
+      ]);
+
+      const enrichStory = async (story: Story): Promise<StoryPost> => {
+        let author: User;
+        try {
+          author = await usersApi.getUserByUsername(story.author_id);
+        } catch {
+          author = {
+            id: story.author_id,
+            username: `author_${story.author_id.slice(0, 8)}`,
+            email: "",
+            bio: "Passionate storyteller",
+            profile_pic: `https://api.dicebear.com/7.x/avataaars/svg?seed=${story.author_id}`,
+            followers_count: Math.floor(Math.random() * 50000),
+            following_count: Math.floor(Math.random() * 1000),
+            stories_count: Math.floor(Math.random() * 100),
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          };
+        }
+
+        const savedStories = JSON.parse(
+          localStorage.getItem("saved_stories") || "[]"
+        );
+        const likedStories = JSON.parse(
+          localStorage.getItem("liked_stories") || "[]"
+        );
+
+        return {
+          ...story,
+          author,
+          is_liked: likedStories.includes(story.id),
+          is_saved: savedStories.includes(story.id),
+        };
+      };
+
+      const enrichedStories = await Promise.all(
+        forYouRes.items.map(enrichStory)
+      );
+      const enrichedFollowing = await Promise.all(
+        followingRes.items.map(enrichStory)
+      );
+      const enrichedTrending = await Promise.all(
+        trendingRes.items.map(enrichStory)
+      );
+
+      setStories(enrichedStories);
+      setFollowingStories(enrichedFollowing);
+      setTrendingStories(enrichedTrending);
+    } catch (error) {
+      console.error("Failed to fetch feed:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchSuggestedAuthors = async () => {
+    try {
+      const response = await storiesApi.getStories({
+        limit: 20,
+        sort: "popular",
+      });
+
+      const authorIds = [...new Set(response.items.map((s) => s.author_id))];
+      const authors: User[] = [];
+      const followStatus: Record<string, boolean> = {};
+
+      const followingList = JSON.parse(
+        localStorage.getItem("following_users") || "[]"
+      );
+
+      for (const authorId of authorIds.slice(0, 5)) {
+        if (authorId === user?.id) continue;
+
+        try {
+          const author = await usersApi.getUserByUsername(authorId);
+          authors.push(author);
+          followStatus[author.id] = followingList.includes(author.id);
+        } catch {
+          const mockAuthor: User = {
+            id: authorId,
+            username: `author_${authorId.slice(0, 8)}`,
+            email: `author_${authorId.slice(0, 8)}@storivault.com`,
+            bio: "📚 Passionate storyteller | ✍️ Creating worlds with words",
+            profile_pic: `https://api.dicebear.com/7.x/avataaars/svg?seed=${authorId}`,
+            followers_count: Math.floor(Math.random() * 50000) + 1000,
+            following_count: Math.floor(Math.random() * 1000) + 50,
+            stories_count: Math.floor(Math.random() * 50) + 5,
+            created_at: new Date(
+              Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000
+            ).toISOString(),
+            updated_at: new Date().toISOString(),
+          };
+          authors.push(mockAuthor);
+          followStatus[mockAuthor.id] = followingList.includes(mockAuthor.id);
+        }
+      }
+
+      setSuggestedAuthors(authors);
+      setFollowingStatus(followStatus);
+    } catch (error) {
+      console.error("Failed to fetch suggested authors:", error);
+    }
+  };
+
+  const fetchUserStats = async () => {
+    if (!user) return;
+
+    try {
+      const readStories = JSON.parse(
+        localStorage.getItem("read_stories") || "[]"
+      );
+      const savedStories = JSON.parse(
+        localStorage.getItem("saved_stories") || "[]"
+      );
+      const followingUsers = JSON.parse(
+        localStorage.getItem("following_users") || "[]"
+      );
+
+      // Parse reading history with proper type handling
+      const readingHistoryRaw = localStorage.getItem("reading_history");
+      let totalMinutes = 0;
+
+      if (readingHistoryRaw) {
+        try {
+          const readingHistory = JSON.parse(readingHistoryRaw) as Record<
+            string,
+            ReadingHistoryItem
+          >;
+
+          // Calculate total read time safely
+          totalMinutes = Object.values(readingHistory).reduce<number>(
+            (acc, item) => {
+              if (item && typeof item.readTime === "number") {
+                return acc + item.readTime;
+              }
+              return acc;
+            },
+            0
+          );
+        } catch (parseError) {
+          console.error("Failed to parse reading history:", parseError);
+        }
+      }
+
+      setUserStats({
+        storiesRead: readStories.length,
+        readingList: savedStories.length,
+        following: followingUsers.length,
+        readTime: Math.round(totalMinutes / 60), // Convert minutes to hours
+        favoriteGenre: "Romance",
+      });
+    } catch (error) {
+      console.error("Failed to fetch user stats:", error);
+    }
+  };
+
+  const handleFollowAuthor = async (author: User) => {
+    try {
+      const followingUsers = JSON.parse(
+        localStorage.getItem("following_users") || "[]"
+      );
+      const isFollowing = followingUsers.includes(author.id);
+
+      if (isFollowing) {
+        const updated = followingUsers.filter((id: string) => id !== author.id);
+        localStorage.setItem("following_users", JSON.stringify(updated));
+
+        setSuggestedAuthors((prev) =>
+          prev.map((a) =>
+            a.id === author.id
+              ? { ...a, followers_count: Math.max(0, a.followers_count - 1) }
+              : a
+          )
+        );
+
+        setFollowingStatus((prev) => ({ ...prev, [author.id]: false }));
+        setUserStats((prev) => ({
+          ...prev,
+          following: Math.max(0, prev.following - 1),
+        }));
+
+        await usersApi.unfollowUser(author.username);
+
+        addToast({
+          title: "Unfollowed",
+          description: `You unfollowed @${author.username}`,
+          type: "info",
+        });
+      } else {
+        followingUsers.push(author.id);
+        localStorage.setItem("following_users", JSON.stringify(followingUsers));
+
+        setSuggestedAuthors((prev) =>
+          prev.map((a) =>
+            a.id === author.id
+              ? { ...a, followers_count: a.followers_count + 1 }
+              : a
+          )
+        );
+
+        setFollowingStatus((prev) => ({ ...prev, [author.id]: true }));
+        setUserStats((prev) => ({ ...prev, following: prev.following + 1 }));
+
+        await usersApi.followUser(author.username);
+
+        addToast({
+          title: "Following!",
+          description: `You are now following @${author.username}`,
+          type: "success",
+        });
+      }
+    } catch (error) {
+      addToast({
+        title: "Error",
+        description: "Failed to update follow status",
+        type: "error",
+      });
+    }
+  };
+
+  const handleLike = (storyId: string) => {
+    const likedStories = JSON.parse(
+      localStorage.getItem("liked_stories") || "[]"
+    );
+    const isLiked = likedStories.includes(storyId);
+
+    if (isLiked) {
+      const updated = likedStories.filter((id: string) => id !== storyId);
+      localStorage.setItem("liked_stories", JSON.stringify(updated));
+    } else {
+      likedStories.push(storyId);
+      localStorage.setItem("liked_stories", JSON.stringify(likedStories));
+    }
+
+    const updateStoryList = (list: StoryPost[]) =>
+      list.map((story) =>
+        story.id === storyId
+          ? {
+              ...story,
+              is_liked: !isLiked,
+              votes_count: isLiked
+                ? story.votes_count - 1
+                : story.votes_count + 1,
+            }
+          : story
+      );
+
+    setStories(updateStoryList(stories));
+    setFollowingStories(updateStoryList(followingStories));
+    setTrendingStories(updateStoryList(trendingStories));
+  };
+
+  const handleSave = (storyId: string) => {
+    const savedStories = JSON.parse(
+      localStorage.getItem("saved_stories") || "[]"
+    );
+    const isSaved = savedStories.includes(storyId);
+
+    if (isSaved) {
+      const updated = savedStories.filter((id: string) => id !== storyId);
+      localStorage.setItem("saved_stories", JSON.stringify(updated));
+      setUserStats((prev) => ({
+        ...prev,
+        readingList: Math.max(0, prev.readingList - 1),
+      }));
+    } else {
+      savedStories.push(storyId);
+      localStorage.setItem("saved_stories", JSON.stringify(savedStories));
+      setUserStats((prev) => ({
+        ...prev,
+        readingList: prev.readingList + 1,
+      }));
+    }
+
+    const updateStoryList = (list: StoryPost[]) =>
+      list.map((story) =>
+        story.id === storyId ? { ...story, is_saved: !isSaved } : story
+      );
+
+    setStories(updateStoryList(stories));
+    setFollowingStories(updateStoryList(followingStories));
+    setTrendingStories(updateStoryList(trendingStories));
+
+    addToast({
+      title: isSaved ? "Removed from library" : "Added to library",
+      description: isSaved ? "" : "Story saved to your reading list",
+      type: "success",
+    });
+  };
+
+  const StoryGridItem = ({ story }: { story: StoryPost }) => (
+    <div className="group relative aspect-[4/5] overflow-hidden rounded-lg bg-gray-100 cursor-pointer">
+      <Link to={`/stories/${story.id}`}>
+        <img
+          src={
+            story.cover_image ||
+            `https://source.unsplash.com/400x500/?book,${story.genre}`
+          }
+          alt={story.title}
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70" />
+        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+
+        <div className="absolute inset-0 flex items-center justify-center gap-6 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="flex items-center gap-2 text-white">
+            <Heart className="h-6 w-6 fill-white" />
+            <span className="font-bold">{formatNumber(story.votes_count)}</span>
+          </div>
+          <div className="flex items-center gap-2 text-white">
+            <Eye className="h-6 w-6 fill-white" />
+            <span className="font-bold">{formatNumber(story.reads_count)}</span>
+          </div>
+        </div>
+
+        <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+          <Badge className="mb-2 bg-white/20 backdrop-blur-sm border-0">
+            {story.genre}
+          </Badge>
+          <h3 className="font-bold text-sm line-clamp-2">{story.title}</h3>
+          <p className="text-xs opacity-90 mt-1">
+            by @{story.author?.username}
+          </p>
+        </div>
+      </Link>
+    </div>
+  );
+
+  const StoryListItem = ({ story }: { story: StoryPost }) => (
+    <Card className="overflow-hidden">
+      <div className="flex items-center justify-between p-3 border-b">
+        <Link
+          to={`/profile/${story.author?.username}`}
+          className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+        >
+          <Avatar className="h-8 w-8">
+            <AvatarImage src={story.author?.profile_pic || undefined} />
+            <AvatarFallback>
+              {story.author?.username?.[0].toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <div>
+            <p className="font-semibold text-sm">{story.author?.username}</p>
+            <p className="text-xs text-muted-foreground">
+              {new Date(story.created_at).toLocaleDateString()}
+            </p>
+          </div>
+        </Link>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+              <MoreVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem>Share</DropdownMenuItem>
+            <DropdownMenuItem>Copy Link</DropdownMenuItem>
+            <DropdownMenuItem>Report</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      <Link to={`/stories/${story.id}`}>
+        <div className="relative aspect-[4/5]">
+          <img
+            src={
+              story.cover_image ||
+              `https://source.unsplash.com/600x750/?book,${story.genre}`
+            }
+            alt={story.title}
+            className="h-full w-full object-cover"
+          />
+        </div>
+      </Link>
+
+      <div className="p-3 space-y-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0"
+              onClick={() => handleLike(story.id)}
+            >
+              <Heart
+                className={cn(
+                  "h-5 w-5",
+                  story.is_liked && "fill-red-500 text-red-500"
+                )}
+              />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0"
+              onClick={() => navigate(`/stories/${story.id}`)}
+            >
+              <MessageCircle className="h-5 w-5" />
+            </Button>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+              <Share2 className="h-5 w-5" />
+            </Button>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0"
+            onClick={() => handleSave(story.id)}
+          >
+            <Bookmark
+              className={cn("h-5 w-5", story.is_saved && "fill-current")}
+            />
+          </Button>
+        </div>
+
+        <p className="text-sm font-semibold">
+          {formatNumber(story.votes_count)} likes
+        </p>
+
+        <div>
+          <h3 className="font-semibold">{story.title}</h3>
+          <p className="text-sm text-muted-foreground line-clamp-2">
+            {story.description}
+          </p>
+        </div>
+
+        <div className="flex flex-wrap gap-1">
+          {story.tags.slice(0, 3).map((tag, index) => (
+            <span key={index} className="text-xs text-blue-600">
+              #{tag}
+            </span>
+          ))}
+        </div>
+      </div>
+    </Card>
+  );
+
+  const getCurrentStories = () => {
+    switch (activeTab) {
+      case "for-you":
+        return stories;
+      case "following":
+        return followingStories;
+      case "trending":
+        return trendingStories;
+      default:
+        return stories;
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <MainLayout>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <LoadingSpinner size="lg" />
+        </div>
+      </MainLayout>
+    );
+  }
+
+  return (
+    <MainLayout showFooter={false}>
+      <div className="max-w-6xl mx-auto px-4 py-6">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold">Your Feed</h1>
+          <div className="flex items-center gap-2">
+            <div className="flex border rounded-lg">
+              <Button
+                variant={viewMode === "grid" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setViewMode("grid")}
+                className="rounded-r-none"
+              >
+                <Grid3X3 className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={viewMode === "list" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setViewMode("list")}
+                className="rounded-l-none"
+              >
+                <BookOpen className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <Button
+              onClick={() => navigate("/stories/create")}
+              className="gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              Create Story
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="lg:col-span-3">
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <TabsList className="w-full">
+                <TabsTrigger value="for-you" className="flex-1">
+                  For You
+                </TabsTrigger>
+                <TabsTrigger value="following" className="flex-1">
+                  Following
+                </TabsTrigger>
+                <TabsTrigger value="trending" className="flex-1">
+                  <TrendingUp className="h-4 w-4 mr-1" />
+                  Trending
+                </TabsTrigger>
+              </TabsList>
+
+              <div className="mt-6">
+                {viewMode === "grid" ? (
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {getCurrentStories().map((story) => (
+                      <StoryGridItem key={story.id} story={story} />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="space-y-4 max-w-xl mx-auto">
+                    {getCurrentStories().map((story) => (
+                      <StoryListItem key={story.id} story={story} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </Tabs>
+          </div>
+
+          <div className="hidden lg:block space-y-4">
+            {/* User Card */}
+            <Card className="p-4">
+              <Link
+                to={`/profile/${user?.username}`}
+                className="flex items-center gap-3"
+              >
+                <Avatar className="h-14 w-14">
+                  <AvatarImage src={user?.profile_pic || undefined} />
+                  <AvatarFallback>
+                    {user?.username?.[0].toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <p className="font-semibold">{user?.username}</p>
+                  <p className="text-sm text-muted-foreground">{user?.email}</p>
+                </div>
+              </Link>
+              <Button
+                variant="outline"
+                className="w-full mt-4"
+                onClick={() => navigate(`/profile/${user?.username}`)}
+              >
+                View Profile
+              </Button>
+            </Card>
+
+            {/* Suggested Authors */}
+            <Card className="p-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold">Suggested Authors</h3>
+                <Button
+                  variant="link"
+                  size="sm"
+                  className="h-auto p-0"
+                  onClick={() => navigate("/authors")}
+                >
+                  See All
+                </Button>
+              </div>
+              <div className="space-y-3">
+                {suggestedAuthors.map((author) => (
+                  <div
+                    key={author.id}
+                    className="flex items-center justify-between"
+                  >
+                    <Link
+                      to={`/profile/${author.username}`}
+                      className="flex items-center gap-3 flex-1 min-w-0"
+                    >
+                      <Avatar className="h-8 w-8 flex-shrink-0">
+                        <AvatarImage src={author.profile_pic || undefined} />
+                        <AvatarFallback>
+                          {author.username[0].toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium truncate">
+                          @{author.username}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {formatNumber(author.followers_count)} followers •{" "}
+                          {author.stories_count} stories
+                        </p>
+                      </div>
+                    </Link>
+                    <Button
+                      variant={
+                        followingStatus[author.id] ? "secondary" : "outline"
+                      }
+                      size="sm"
+                      className="ml-2 flex-shrink-0"
+                      onClick={() => handleFollowAuthor(author)}
+                    >
+                      {followingStatus[author.id] ? (
+                        <>
+                          <Check className="h-3 w-3 mr-1" />
+                          Following
+                        </>
+                      ) : (
+                        "Follow"
+                      )}
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </Card>
+
+            {/* User Stats */}
+            <Card className="p-4">
+              <h3 className="font-semibold mb-4">Your Stats</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-sm text-muted-foreground">
+                    Stories Read
+                  </span>
+                  <span className="font-medium">{userStats.storiesRead}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-muted-foreground">
+                    Reading List
+                  </span>
+                  <span className="font-medium">{userStats.readingList}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-muted-foreground">
+                    Following
+                  </span>
+                  <span className="font-medium">{userStats.following}</span>
+                </div>
+                {userStats.readTime !== undefined && userStats.readTime > 0 && (
+                  <div className="pt-3 border-t">
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">
+                        Total Read Time
+                      </span>
+                      <span className="font-medium">{userStats.readTime}h</span>
+                    </div>
+                    {userStats.favoriteGenre && (
+                      <div className="flex justify-between mt-2">
+                        <span className="text-sm text-muted-foreground">
+                          Favorite Genre
+                        </span>
+                        <Badge variant="secondary">
+                          {userStats.favoriteGenre}
+                        </Badge>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </MainLayout>
+  );
+}
+```
+
+---
+
 #### 📄 src\pages\HomePage.tsx
 <a name='src-pages-HomePagetsx'></a>
 
@@ -2108,10 +3685,10 @@ export function HomePage() {
         className="min-h-screen"
         style={{ backgroundColor: literaryColors.cream }}
       >
-        {/* Hero Section - Cozy Library Theme */}
-        <section className="relative overflow-hidden py-20 px-4">
-          {/* Floating background elements */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Hero Section - Cozy Library Theme - MOBILE OPTIMIZED */}
+        <section className="relative overflow-hidden py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
+          {/* Floating background elements - Hidden on mobile for performance */}
+          <div className="hidden sm:block absolute inset-0 overflow-hidden pointer-events-none">
             <div className="absolute top-10 left-10 w-32 h-40 bg-white/40 rounded-lg rotate-12 page-float" />
             <div
               className="absolute top-20 right-20 w-28 h-36 bg-white/30 rounded-lg -rotate-6 page-float"
@@ -2127,26 +3704,26 @@ export function HomePage() {
           </div>
 
           <div className="relative z-10 max-w-7xl mx-auto text-center">
-            <div className="mb-8">
+            <div className="mb-4 sm:mb-6 md:mb-8">
               <Badge
-                className="px-4 py-2 text-sm font-medium rounded-full"
+                className="px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium rounded-full"
                 style={{
                   backgroundColor: literaryColors.gold,
                   color: literaryColors.coffee,
                 }}
               >
-                <Sparkles className="h-4 w-4 mr-2" />
+                <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
                 Welcome to Your Literary Haven
               </Badge>
             </div>
 
             <h1
-              className="text-6xl md:text-7xl lg:text-8xl font-serif mb-6 fade-in-up"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif mb-4 sm:mb-6 fade-in-up leading-tight"
               style={{ color: literaryColors.coffee }}
             >
               Where Stories
               <span
-                className="block text-glow"
+                className="block text-glow mt-1 sm:mt-2"
                 style={{ color: literaryColors.gold }}
               >
                 Come to Life
@@ -2154,24 +3731,24 @@ export function HomePage() {
             </h1>
 
             <p
-              className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto handwritten fade-in-up"
+              className="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 sm:mb-8 max-w-3xl mx-auto handwritten fade-in-up px-4"
               style={{ color: literaryColors.ink, animationDelay: "0.2s" }}
             >
               "{inspiringQuotes[currentQuote].text}"
-              <span className="block text-sm mt-2 font-serif">
+              <span className="block text-xs sm:text-sm mt-2 font-serif">
                 — {inspiringQuotes[currentQuote].author}
               </span>
             </p>
 
             <div
-              className="flex flex-col sm:flex-row gap-4 justify-center mb-12 fade-in-up"
+              className="flex flex-col gap-3 sm:flex-row sm:gap-4 justify-center mb-8 sm:mb-12 fade-in-up px-4"
               style={{ animationDelay: "0.4s" }}
             >
               {isAuthenticated ? (
                 <>
                   <Button
-                    size="lg"
-                    className="group px-8 py-6 text-lg rounded-full shadow-lg transform hover:scale-105 transition-all"
+                    size="default"
+                    className="group px-6 py-5 sm:px-8 sm:py-6 text-base sm:text-lg rounded-full shadow-lg transform hover:scale-105 transition-all"
                     style={{
                       backgroundColor: literaryColors.coffee,
                       color: literaryColors.cream,
@@ -2179,14 +3756,14 @@ export function HomePage() {
                     asChild
                   >
                     <Link to="/stories">
-                      <Library className="mr-3 h-5 w-5 group-hover:rotate-12 transition-transform" />
+                      <Library className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5 group-hover:rotate-12 transition-transform" />
                       Explore Library
                     </Link>
                   </Button>
                   <Button
-                    size="lg"
+                    size="default"
                     variant="outline"
-                    className="px-8 py-6 text-lg rounded-full border-2 transform hover:scale-105 transition-all"
+                    className="px-6 py-5 sm:px-8 sm:py-6 text-base sm:text-lg rounded-full border-2 transform hover:scale-105 transition-all"
                     style={{
                       borderColor: literaryColors.gold,
                       color: literaryColors.coffee,
@@ -2194,7 +3771,7 @@ export function HomePage() {
                     asChild
                   >
                     <Link to="/stories/create">
-                      <PenTool className="mr-3 h-5 w-5" />
+                      <PenTool className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5" />
                       Start Writing
                     </Link>
                   </Button>
@@ -2202,8 +3779,8 @@ export function HomePage() {
               ) : (
                 <>
                   <Button
-                    size="lg"
-                    className="group px-10 py-6 text-xl rounded-full book-shadow transform hover:scale-105 transition-all"
+                    size="default"
+                    className="group px-8 py-5 sm:px-10 sm:py-6 text-lg sm:text-xl rounded-full book-shadow transform hover:scale-105 transition-all"
                     style={{
                       backgroundColor: literaryColors.gold,
                       color: literaryColors.coffee,
@@ -2211,14 +3788,14 @@ export function HomePage() {
                     asChild
                   >
                     <Link to="/stories">
-                      <BookOpen className="mr-3 h-6 w-6 group-hover:rotate-12 transition-transform" />
+                      <BookOpen className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6 group-hover:rotate-12 transition-transform" />
                       Start Reading Free
                     </Link>
                   </Button>
                   <Button
-                    size="lg"
+                    size="default"
                     variant="outline"
-                    className="px-8 py-6 text-lg rounded-full border-2"
+                    className="px-6 py-5 sm:px-8 sm:py-6 text-base sm:text-lg rounded-full border-2"
                     style={{
                       borderColor: literaryColors.coffee,
                       color: literaryColors.coffee,
@@ -2231,78 +3808,90 @@ export function HomePage() {
               )}
             </div>
 
-            {/* Live Reading Stats */}
+            {/* Live Reading Stats - Mobile Optimized Grid */}
             <div
-              className="flex flex-wrap justify-center gap-8 fade-in-up"
+              className="grid grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-sm sm:max-w-md md:max-w-none mx-auto fade-in-up"
               style={{ animationDelay: "0.6s" }}
             >
               <div className="text-center">
                 <div
-                  className="text-4xl font-bold"
+                  className="text-2xl sm:text-3xl md:text-4xl font-bold"
                   style={{ color: literaryColors.gold }}
                 >
                   2.5M+
                 </div>
-                <div className="text-sm" style={{ color: literaryColors.ink }}>
-                  Pages Read Today
+                <div
+                  className="text-xs sm:text-sm"
+                  style={{ color: literaryColors.ink }}
+                >
+                  Pages Today
                 </div>
               </div>
               <div className="text-center">
                 <div
-                  className="text-4xl font-bold"
+                  className="text-2xl sm:text-3xl md:text-4xl font-bold"
                   style={{ color: literaryColors.dustyRose }}
                 >
                   850K+
                 </div>
-                <div className="text-sm" style={{ color: literaryColors.ink }}>
+                <div
+                  className="text-xs sm:text-sm"
+                  style={{ color: literaryColors.ink }}
+                >
                   Active Readers
                 </div>
               </div>
               <div className="text-center">
                 <div
-                  className="text-4xl font-bold"
+                  className="text-2xl sm:text-3xl md:text-4xl font-bold"
                   style={{ color: literaryColors.sage }}
                 >
                   125K+
                 </div>
-                <div className="text-sm" style={{ color: literaryColors.ink }}>
-                  Stories Published
+                <div
+                  className="text-xs sm:text-sm"
+                  style={{ color: literaryColors.ink }}
+                >
+                  Stories
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Featured Stories Section - Showcase */}
+        {/* Featured Stories Section - Mobile Responsive */}
         {featuredStories.length > 0 && (
           <section
-            className="py-20 px-4"
+            className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8"
             style={{ backgroundColor: literaryColors.parchment }}
           >
             <div className="max-w-7xl mx-auto">
-              <div className="text-center mb-12">
+              <div className="text-center mb-8 sm:mb-10 md:mb-12">
                 <Badge
-                  className="mb-4 px-4 py-2 rounded-full"
+                  className="mb-3 sm:mb-4 px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm rounded-full"
                   style={{
                     backgroundColor: literaryColors.gold,
                     color: literaryColors.coffee,
                   }}
                 >
-                  <Star className="h-4 w-4 mr-2" />
+                  <Star className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
                   Editor's Choice
                 </Badge>
                 <h2
-                  className="text-4xl md:text-5xl font-serif mb-4"
+                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif mb-3 sm:mb-4"
                   style={{ color: literaryColors.coffee }}
                 >
                   Featured Stories This Week
                 </h2>
-                <p className="text-lg" style={{ color: literaryColors.ink }}>
+                <p
+                  className="text-sm sm:text-base md:text-lg px-4"
+                  style={{ color: literaryColors.ink }}
+                >
                   Handpicked tales that will captivate your imagination
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
                 {featuredStories.slice(0, 6).map((story, index) => (
                   <div
                     key={story.id}
@@ -2322,6 +3911,7 @@ export function HomePage() {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                         <div className="absolute top-4 left-4">
                           <Badge
+                            className="text-xs"
                             style={{
                               backgroundColor: literaryColors.gold,
                               color: literaryColors.coffee,
@@ -2331,16 +3921,16 @@ export function HomePage() {
                           </Badge>
                         </div>
                         <div className="absolute bottom-4 left-4 right-4 text-white">
-                          <h3 className="text-xl font-serif font-bold mb-2">
+                          <h3 className="text-lg sm:text-xl font-serif font-bold mb-2">
                             {story.title}
                           </h3>
-                          <div className="flex items-center gap-3 text-sm">
+                          <div className="flex items-center gap-3 text-xs sm:text-sm">
                             <span className="flex items-center gap-1">
-                              <Eye className="h-4 w-4" />
+                              <Eye className="h-3 w-3 sm:h-4 sm:w-4" />
                               {(story.reads_count / 1000).toFixed(1)}K
                             </span>
                             <span className="flex items-center gap-1">
-                              <Heart className="h-4 w-4" />
+                              <Heart className="h-3 w-3 sm:h-4 sm:w-4" />
                               {(story.votes_count / 1000).toFixed(1)}K
                             </span>
                           </div>
@@ -2351,10 +3941,10 @@ export function HomePage() {
                 ))}
               </div>
 
-              <div className="text-center mt-8">
+              <div className="text-center mt-6 sm:mt-8">
                 <Button
                   variant="outline"
-                  className="rounded-full border-2"
+                  className="rounded-full border-2 text-sm sm:text-base"
                   style={{
                     borderColor: literaryColors.gold,
                     color: literaryColors.coffee,
@@ -2363,7 +3953,7 @@ export function HomePage() {
                 >
                   <Link to="/stories?sort=popular">
                     View All Featured Stories
-                    <ChevronRight className="ml-2 h-4 w-4" />
+                    <ChevronRight className="ml-1.5 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                   </Link>
                 </Button>
               </div>
@@ -2371,22 +3961,25 @@ export function HomePage() {
           </section>
         )}
 
-        {/* Genre Discovery Section */}
-        <section className="py-20 px-4">
+        {/* Genre Discovery Section - Mobile Responsive */}
+        <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-12">
+            <div className="text-center mb-8 sm:mb-10 md:mb-12">
               <h2
-                className="text-4xl md:text-5xl font-serif mb-4"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif mb-3 sm:mb-4"
                 style={{ color: literaryColors.coffee }}
               >
                 Find Your Perfect Genre
               </h2>
-              <p className="text-lg" style={{ color: literaryColors.ink }}>
+              <p
+                className="text-sm sm:text-base md:text-lg"
+                style={{ color: literaryColors.ink }}
+              >
                 Every reader has a story waiting to be discovered
               </p>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
               {genreCards.map((genre) => {
                 const Icon = genre.icon;
                 return (
@@ -2402,7 +3995,7 @@ export function HomePage() {
                   >
                     <Card
                       className={cn(
-                        "p-6 h-full border-0 text-center book-shadow",
+                        "p-3 sm:p-4 md:p-6 h-full border-0 text-center book-shadow",
                         genre.shape
                       )}
                       style={{
@@ -2412,14 +4005,14 @@ export function HomePage() {
                       }}
                     >
                       <Icon
-                        className="h-10 w-10 mx-auto mb-3"
+                        className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 mx-auto mb-2 sm:mb-3"
                         style={{
                           color:
                             hoveredGenre === genre.name ? "white" : genre.color,
                         }}
                       />
                       <h3
-                        className="font-bold text-sm mb-1"
+                        className="font-bold text-xs sm:text-sm mb-0.5 sm:mb-1"
                         style={{
                           color:
                             hoveredGenre === genre.name
@@ -2430,7 +4023,7 @@ export function HomePage() {
                         {genre.name}
                       </h3>
                       <p
-                        className="text-xs"
+                        className="text-[10px] sm:text-xs"
                         style={{
                           color:
                             hoveredGenre === genre.name
@@ -2448,29 +4041,35 @@ export function HomePage() {
           </div>
         </section>
 
-        {/* Popular Stories Carousel */}
+        {/* Popular Stories Carousel - Mobile Responsive */}
         {popularStories.length > 0 && (
-          <section className="py-20 px-4" style={{ backgroundColor: "white" }}>
+          <section
+            className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8"
+            style={{ backgroundColor: "white" }}
+          >
             <div className="max-w-7xl mx-auto">
-              <div className="flex items-center justify-between mb-12">
+              <div className="flex items-center justify-between mb-8 sm:mb-10 md:mb-12">
                 <div>
                   <h2
-                    className="text-4xl font-serif flex items-center gap-3"
+                    className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-serif flex items-center gap-2 sm:gap-3"
                     style={{ color: literaryColors.coffee }}
                   >
                     <Flame
-                      className="h-10 w-10"
+                      className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10"
                       style={{ color: literaryColors.dustyRose }}
                     />
                     Most Popular Stories
                   </h2>
-                  <p className="mt-2" style={{ color: literaryColors.ink }}>
+                  <p
+                    className="mt-1 sm:mt-2 text-xs sm:text-sm md:text-base"
+                    style={{ color: literaryColors.ink }}
+                  >
                     All-time reader favorites
                   </p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 {popularStories.map((story, index) => (
                   <StoryCard key={story.id} story={story} variant="default" />
                 ))}
@@ -2479,32 +4078,35 @@ export function HomePage() {
           </section>
         )}
 
-        {/* Trending Stories Section */}
+        {/* Trending Stories Section - Mobile Responsive */}
         {trendingStories.length > 0 && (
           <section
-            className="py-20 px-4"
+            className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8"
             style={{ backgroundColor: literaryColors.parchment }}
           >
             <div className="max-w-7xl mx-auto">
-              <div className="flex items-center justify-between mb-12">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 sm:mb-10 md:mb-12 gap-4">
                 <div>
                   <h2
-                    className="text-4xl font-serif flex items-center gap-3"
+                    className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-serif flex items-center gap-2 sm:gap-3"
                     style={{ color: literaryColors.coffee }}
                   >
                     <TrendingUp
-                      className="h-10 w-10"
+                      className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10"
                       style={{ color: literaryColors.sage }}
                     />
                     Trending This Week
                   </h2>
-                  <p className="mt-2" style={{ color: literaryColors.ink }}>
+                  <p
+                    className="mt-1 sm:mt-2 text-xs sm:text-sm md:text-base"
+                    style={{ color: literaryColors.ink }}
+                  >
                     Stories gaining momentum right now
                   </p>
                 </div>
                 <Button
                   variant="outline"
-                  className="rounded-full border-2"
+                  className="rounded-full border-2 text-xs sm:text-sm"
                   style={{
                     borderColor: literaryColors.sage,
                     color: literaryColors.coffee,
@@ -2513,48 +4115,54 @@ export function HomePage() {
                 >
                   <Link to="/stories?sort=trending">
                     View All Trending
-                    <ChevronRight className="ml-2 h-4 w-4" />
+                    <ChevronRight className="ml-1.5 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                   </Link>
                 </Button>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
                 {trendingStories.slice(0, 8).map((story, index) => (
                   <Card
                     key={story.id}
                     className="group border-0 overflow-hidden book-shadow hover:scale-105 transition-all"
                   >
                     <Link to={`/stories/${story.id}`}>
-                      <div className="p-4" style={{ backgroundColor: "white" }}>
-                        <div className="flex items-start gap-3">
+                      <div
+                        className="p-3 sm:p-4"
+                        style={{ backgroundColor: "white" }}
+                      >
+                        <div className="flex items-start gap-2 sm:gap-3">
                           <span
-                            className="text-2xl font-bold"
+                            className="text-lg sm:text-xl md:text-2xl font-bold"
                             style={{ color: literaryColors.sage }}
                           >
                             #{index + 1}
                           </span>
                           <div className="flex-1">
                             <h3
-                              className="font-serif font-bold line-clamp-2 group-hover:text-primary transition-colors"
+                              className="text-sm sm:text-base font-serif font-bold line-clamp-2 group-hover:text-primary transition-colors"
                               style={{ color: literaryColors.coffee }}
                             >
                               {story.title}
                             </h3>
                             <p
-                              className="text-sm mt-1 line-clamp-2"
+                              className="text-xs sm:text-sm mt-1 line-clamp-2"
                               style={{ color: literaryColors.ink }}
                             >
                               {story.description}
                             </p>
-                            <div className="flex items-center gap-2 mt-2">
-                              <Badge variant="outline" className="text-xs">
+                            <div className="flex items-center gap-1.5 sm:gap-2 mt-2">
+                              <Badge
+                                variant="outline"
+                                className="text-[10px] sm:text-xs"
+                              >
                                 {story.genre}
                               </Badge>
                               <span
-                                className="text-xs flex items-center gap-1"
+                                className="text-[10px] sm:text-xs flex items-center gap-1"
                                 style={{ color: literaryColors.ink }}
                               >
-                                <Eye className="h-3 w-3" />
+                                <Eye className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                                 {(story.reads_count / 1000).toFixed(1)}K
                               </span>
                             </div>
@@ -2569,29 +4177,32 @@ export function HomePage() {
           </section>
         )}
 
-        {/* New Stories Section */}
+        {/* New Stories Section - Mobile Responsive */}
         {newStories.length > 0 && (
-          <section className="py-20 px-4">
+          <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
             <div className="max-w-7xl mx-auto">
-              <div className="flex items-center justify-between mb-12">
+              <div className="flex items-center justify-between mb-8 sm:mb-10 md:mb-12">
                 <div>
                   <h2
-                    className="text-4xl font-serif flex items-center gap-3"
+                    className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-serif flex items-center gap-2 sm:gap-3"
                     style={{ color: literaryColors.coffee }}
                   >
                     <Sparkles
-                      className="h-10 w-10"
+                      className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10"
                       style={{ color: literaryColors.lavender }}
                     />
                     Fresh Off the Press
                   </h2>
-                  <p className="mt-2" style={{ color: literaryColors.ink }}>
+                  <p
+                    className="mt-1 sm:mt-2 text-xs sm:text-sm md:text-base"
+                    style={{ color: literaryColors.ink }}
+                  >
                     Discover new stories published this week
                   </p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4">
                 {newStories.map((story, index) => (
                   <Link
                     key={story.id}
@@ -2609,12 +4220,12 @@ export function HomePage() {
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="absolute bottom-2 left-2 right-2">
-                          <p className="text-xs text-white font-bold line-clamp-2">
+                        <div className="absolute bottom-1.5 sm:bottom-2 left-1.5 sm:left-2 right-1.5 sm:right-2">
+                          <p className="text-[10px] sm:text-xs text-white font-bold line-clamp-2">
                             {story.title}
                           </p>
                           <Badge
-                            className="mt-1 text-xs"
+                            className="mt-0.5 sm:mt-1 text-[10px] sm:text-xs px-1.5 py-0"
                             style={{ backgroundColor: literaryColors.lavender }}
                           >
                             {story.genre}
@@ -2629,23 +4240,23 @@ export function HomePage() {
           </section>
         )}
 
-        {/* Reading Challenge Section */}
-        <section className="py-20 px-4">
+        {/* Reading Challenge Section - Mobile Responsive */}
+        <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
           <div className="max-w-7xl mx-auto">
             <Card
-              className="p-12 border-0 paper-texture relative overflow-hidden"
+              className="p-6 sm:p-8 md:p-12 border-0 paper-texture relative overflow-hidden"
               style={{ backgroundColor: literaryColors.lavender }}
             >
-              <Bookmark className="absolute top-10 right-10 h-32 w-32 opacity-10 -rotate-12" />
+              <Bookmark className="absolute top-5 right-5 sm:top-10 sm:right-10 h-20 w-20 sm:h-32 sm:w-32 opacity-10 -rotate-12" />
               <div className="relative z-10 text-center">
                 <h2
-                  className="text-4xl font-serif mb-4"
+                  className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-serif mb-3 sm:mb-4"
                   style={{ color: literaryColors.coffee }}
                 >
                   Join the Monthly Reading Challenge
                 </h2>
                 <p
-                  className="text-lg mb-8 max-w-2xl mx-auto"
+                  className="text-sm sm:text-base md:text-lg mb-6 sm:mb-8 max-w-2xl mx-auto px-4"
                   style={{ color: literaryColors.ink }}
                 >
                   Read 10 stories this month and earn exclusive badges, unlock
@@ -2653,14 +4264,14 @@ export function HomePage() {
                   readers!
                 </p>
                 <Button
-                  size="lg"
-                  className="rounded-full px-8 py-6 text-lg book-shadow"
+                  size="default"
+                  className="rounded-full px-6 py-5 sm:px-8 sm:py-6 text-base sm:text-lg book-shadow"
                   style={{
                     backgroundColor: literaryColors.coffee,
                     color: literaryColors.cream,
                   }}
                 >
-                  <Trophy className="mr-3 h-5 w-5" />
+                  <Trophy className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5" />
                   Start Challenge
                 </Button>
               </div>
@@ -2668,8 +4279,8 @@ export function HomePage() {
           </div>
         </section>
 
-        {/* Final CTA */}
-        <section className="py-32 px-4 relative overflow-hidden">
+        {/* Final CTA - Mobile Responsive */}
+        <section className="py-16 sm:py-24 md:py-32 px-4 sm:px-6 md:px-8 relative overflow-hidden">
           <div className="absolute inset-0">
             <div
               className="absolute inset-0"
@@ -2681,24 +4292,24 @@ export function HomePage() {
 
           <div className="relative z-10 max-w-4xl mx-auto text-center">
             <BookOpen
-              className="h-20 w-20 mx-auto mb-8 text-glow"
+              className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 mx-auto mb-6 sm:mb-8 text-glow"
               style={{ color: literaryColors.gold }}
             />
             <h2
-              className="text-5xl md:text-6xl font-serif mb-6"
+              className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-serif mb-4 sm:mb-6 px-4"
               style={{ color: literaryColors.coffee }}
             >
               Your Next Great Story Awaits
             </h2>
             <p
-              className="text-xl mb-10 handwritten"
+              className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8 md:mb-10 handwritten px-4"
               style={{ color: literaryColors.ink }}
             >
               "The journey of a thousand pages begins with a single click"
             </p>
             <Button
-              size="lg"
-              className="px-12 py-7 text-xl rounded-full book-shadow transform hover:scale-105 transition-all"
+              size="default"
+              className="px-8 py-5 sm:px-10 sm:py-6 md:px-12 md:py-7 text-base sm:text-lg md:text-xl rounded-full book-shadow transform hover:scale-105 transition-all"
               style={{
                 backgroundColor: literaryColors.coffee,
                 color: literaryColors.cream,
@@ -2706,7 +4317,7 @@ export function HomePage() {
               asChild
             >
               <Link to="/stories">
-                <Sparkles className="mr-3 h-6 w-6" />
+                <Sparkles className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
                 Begin Your Journey
               </Link>
             </Button>
@@ -2774,6 +4385,909 @@ const NotFound = () => {
 };
 
 export default NotFound;
+```
+
+---
+
+#### 📄 src\pages\ProfilePage.tsx
+<a name='src-pages-ProfilePagetsx'></a>
+
+**Path:** `src\pages\ProfilePage.tsx`
+
+```tsx
+"use client";
+
+import { useState, useEffect } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import {
+  Grid3X3,
+  Bookmark,
+  Settings,
+  MoreHorizontal,
+  Plus,
+  Check,
+  Camera,
+  X,
+  Trash2,
+  Upload,
+  User as UserIcon,
+  Edit2,
+  MapPin,
+  Calendar,
+  Link as LinkIcon,
+  BookOpen, // Add this import
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { MainLayout } from "@/components/layout/main-layout";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { useAuthStore } from "@/store/authStore";
+import { Story, User } from "@/types";
+import { storiesApi, usersApi } from "@/apis";
+import { UserController } from "@/controllers/userController";
+import { useUiStore } from "@/store/uiStore";
+import { formatDate, formatNumber } from "@/helper/formatting";
+import { cn } from "@/lib/utils";
+
+interface ProfileStats {
+  totalReads: number;
+  totalLikes: number;
+  avgReadsPerStory: number;
+}
+
+export function ProfilePage() {
+  const { username } = useParams<{ username: string }>();
+  const navigate = useNavigate();
+  const { user, isAuthenticated, updateUser } = useAuthStore();
+  const { addToast } = useUiStore();
+
+  const [profileUser, setProfileUser] = useState<User | null>(null);
+  const [userStories, setUserStories] = useState<Story[]>([]);
+  const [savedStories, setSavedStories] = useState<Story[]>([]);
+  const [profileStats, setProfileStats] = useState<ProfileStats>({
+    totalReads: 0,
+    totalLikes: 0,
+    avgReadsPerStory: 0,
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [activeTab, setActiveTab] = useState("stories");
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
+
+  // Edit form state
+  const [editForm, setEditForm] = useState({
+    username: "",
+    email: "",
+    bio: "",
+    website: "",
+    location: "",
+  });
+  const [newProfilePic, setNewProfilePic] = useState<File | null>(null);
+  const [profilePicPreview, setProfilePicPreview] = useState<string>("");
+
+  const isOwnProfile = user?.username === username;
+
+  useEffect(() => {
+    if (username) {
+      fetchProfileData();
+    }
+  }, [username]);
+
+  const fetchProfileData = async () => {
+    if (!username) return;
+
+    try {
+      setIsLoading(true);
+
+      // Get user data
+      let userData: User;
+      if (isOwnProfile && user) {
+        userData = user;
+      } else {
+        try {
+          userData = await usersApi.getUserByUsername(username);
+        } catch (error) {
+          // Create mock user if API fails
+          userData = {
+            id: username,
+            username: username,
+            email: `${username}@storivault.com`,
+            bio: "📚 Passionate storyteller | ✍️ Creating worlds with words",
+            profile_pic: `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`,
+            followers_count: Math.floor(Math.random() * 10000),
+            following_count: Math.floor(Math.random() * 1000),
+            stories_count: 0,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          };
+        }
+      }
+      setProfileUser(userData);
+
+      // Initialize edit form
+      if (isOwnProfile) {
+        setEditForm({
+          username: userData.username,
+          email: userData.email,
+          bio: userData.bio || "",
+          website: "",
+          location: "",
+        });
+        if (userData.profile_pic) {
+          setProfilePicPreview(userData.profile_pic);
+        }
+      }
+
+      // Check if following
+      if (!isOwnProfile && isAuthenticated) {
+        const followingList = JSON.parse(
+          localStorage.getItem("following_users") || "[]"
+        );
+        setIsFollowing(followingList.includes(userData.id));
+      }
+
+      // Fetch user's stories
+      const storiesResponse = await storiesApi.getStories({
+        page: 1,
+        limit: 100,
+        sort: "latest",
+      });
+
+      // Filter to get only this user's stories
+      const filteredStories = storiesResponse.items.filter(
+        (story) => story.author_id === userData.id
+      );
+
+      setUserStories(filteredStories);
+
+      // Calculate stats
+      const totalReads = filteredStories.reduce(
+        (sum, story) => sum + story.reads_count,
+        0
+      );
+      const totalLikes = filteredStories.reduce(
+        (sum, story) => sum + story.votes_count,
+        0
+      );
+      const avgReads =
+        filteredStories.length > 0
+          ? Math.round(totalReads / filteredStories.length)
+          : 0;
+
+      setProfileStats({
+        totalReads,
+        totalLikes,
+        avgReadsPerStory: avgReads,
+      });
+
+      setProfileUser((prev) =>
+        prev
+          ? {
+              ...prev,
+              stories_count: filteredStories.length,
+            }
+          : null
+      );
+
+      // Fetch saved stories for own profile
+      if (isOwnProfile) {
+        await fetchSavedStories();
+      }
+    } catch (error) {
+      console.error("Failed to fetch profile:", error);
+      addToast({
+        title: "Error",
+        description: "Failed to load profile data",
+        type: "error",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchSavedStories = async () => {
+    try {
+      const savedIds = JSON.parse(
+        localStorage.getItem("saved_stories") || "[]"
+      );
+
+      if (savedIds.length === 0) {
+        setSavedStories([]);
+        return;
+      }
+
+      const stories: Story[] = [];
+      const allStoriesRes = await storiesApi.getStories({ limit: 100 });
+
+      for (const story of allStoriesRes.items) {
+        if (savedIds.includes(story.id)) {
+          stories.push(story);
+        }
+      }
+
+      setSavedStories(stories);
+    } catch (error) {
+      console.error("Failed to fetch saved stories:", error);
+    }
+  };
+
+  const handleFollowToggle = async () => {
+    if (!profileUser) return;
+
+    try {
+      const followingUsers = JSON.parse(
+        localStorage.getItem("following_users") || "[]"
+      );
+
+      if (isFollowing) {
+        // Unfollow
+        const updated = followingUsers.filter(
+          (id: string) => id !== profileUser.id
+        );
+        localStorage.setItem("following_users", JSON.stringify(updated));
+        await usersApi.unfollowUser(profileUser.username);
+        setIsFollowing(false);
+        setProfileUser((prev) =>
+          prev
+            ? {
+                ...prev,
+                followers_count: Math.max(0, prev.followers_count - 1),
+              }
+            : null
+        );
+      } else {
+        // Follow
+        followingUsers.push(profileUser.id);
+        localStorage.setItem("following_users", JSON.stringify(followingUsers));
+        await usersApi.followUser(profileUser.username);
+        setIsFollowing(true);
+        setProfileUser((prev) =>
+          prev
+            ? {
+                ...prev,
+                followers_count: prev.followers_count + 1,
+              }
+            : null
+        );
+      }
+
+      addToast({
+        title: isFollowing ? "Unfollowed" : "Following",
+        description: isFollowing
+          ? `You unfollowed @${profileUser.username}`
+          : `You are now following @${profileUser.username}`,
+        type: "success",
+      });
+    } catch (error) {
+      addToast({
+        title: "Error",
+        description: "Failed to update follow status",
+        type: "error",
+      });
+    }
+  };
+
+  const handleProfilePicSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        addToast({
+          title: "File too large",
+          description: "Profile picture must be less than 5MB",
+          type: "error",
+        });
+        return;
+      }
+
+      setNewProfilePic(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfilePicPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveProfilePic = () => {
+    setNewProfilePic(null);
+    setProfilePicPreview("");
+  };
+
+  const handleUpdateProfile = async () => {
+    try {
+      setIsUpdatingProfile(true);
+
+      // Upload new profile picture if selected
+      if (newProfilePic) {
+        const updatedUser = await UserController.uploadProfilePictureWithToast(
+          newProfilePic
+        );
+        if (updatedUser) {
+          setProfileUser(updatedUser);
+          updateUser(updatedUser);
+          setProfilePicPreview(updatedUser.profile_pic || "");
+        }
+      }
+
+      // Update bio if changed
+      const updates: any = {};
+      if (editForm.bio !== profileUser?.bio) {
+        updates.bio = editForm.bio || null;
+      }
+
+      // Remove profile pic if cleared
+      if (!profilePicPreview && profileUser?.profile_pic) {
+        updates.profile_pic = null;
+      }
+
+      if (Object.keys(updates).length > 0) {
+        const updatedUser = await UserController.updateProfileWithToast(
+          updates
+        );
+        if (updatedUser) {
+          setProfileUser(updatedUser);
+          updateUser(updatedUser);
+        }
+      }
+
+      setEditDialogOpen(false);
+      setNewProfilePic(null);
+
+      addToast({
+        title: "Profile updated!",
+        description: "Your changes have been saved successfully.",
+        type: "success",
+      });
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+      addToast({
+        title: "Update failed",
+        description: "Failed to update your profile. Please try again.",
+        type: "error",
+      });
+    } finally {
+      setIsUpdatingProfile(false);
+    }
+  };
+
+  const handleRemoveFromSaved = (storyId: string) => {
+    const savedIds = JSON.parse(localStorage.getItem("saved_stories") || "[]");
+    const updated = savedIds.filter((id: string) => id !== storyId);
+    localStorage.setItem("saved_stories", JSON.stringify(updated));
+    setSavedStories((prev) => prev.filter((s) => s.id !== storyId));
+
+    addToast({
+      title: "Removed from saved",
+      description: "Story has been removed from your saved list",
+      type: "success",
+    });
+  };
+
+  if (isLoading) {
+    return (
+      <MainLayout>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <LoadingSpinner size="lg" />
+        </div>
+      </MainLayout>
+    );
+  }
+
+  if (!profileUser) {
+    return (
+      <MainLayout>
+        <div className="text-center py-12">
+          <h2 className="text-2xl font-bold mb-2">User not found</h2>
+          <p className="text-muted-foreground mb-4">This user doesn't exist</p>
+          <Button onClick={() => navigate("/stories")}>Browse Stories</Button>
+        </div>
+      </MainLayout>
+    );
+  }
+
+  return (
+    <MainLayout showFooter={false}>
+      <div className="max-w-5xl mx-auto px-4 py-8">
+        {/* Profile Header */}
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-8 mb-8">
+          {/* Profile Picture */}
+          <div className="flex-shrink-0">
+            <Avatar className="h-28 w-28 sm:h-32 sm:w-32 md:h-40 md:w-40 border-4 border-gray-200 shadow-lg">
+              <AvatarImage src={profileUser.profile_pic || undefined} />
+              <AvatarFallback className="text-2xl md:text-3xl bg-gradient-to-br from-primary/20 to-primary/10">
+                {profileUser.username?.[0].toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+          </div>
+
+          {/* Profile Info */}
+          <div className="flex-1 w-full">
+            {/* Username and Actions */}
+            <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
+              <h1 className="text-xl sm:text-2xl font-medium">
+                {profileUser.username}
+              </h1>
+              <div className="flex items-center gap-2">
+                {isOwnProfile ? (
+                  <>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setEditDialogOpen(true)}
+                      className="gap-1"
+                    >
+                      <Edit2 className="h-3 w-3" />
+                      Edit Profile
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => navigate("/settings")}
+                    >
+                      <Settings className="h-4 w-4" />
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      onClick={handleFollowToggle}
+                      variant={isFollowing ? "outline" : "default"}
+                      size="sm"
+                      className="gap-1"
+                    >
+                      {isFollowing ? (
+                        <>
+                          <Check className="h-3 w-3" />
+                          Following
+                        </>
+                      ) : (
+                        "Follow"
+                      )}
+                    </Button>
+                    <Button variant="outline" size="sm">
+                      Message
+                    </Button>
+                    <Button variant="outline" size="icon" className="h-8 w-8">
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Stats */}
+            <div className="flex items-center gap-6 mb-4 text-sm">
+              <div className="text-center md:text-left">
+                <span className="font-semibold text-lg">
+                  {profileUser.stories_count}
+                </span>
+                <span className="text-gray-600 ml-1">
+                  {profileUser.stories_count === 1 ? "story" : "stories"}
+                </span>
+              </div>
+              <button className="text-center md:text-left hover:underline">
+                <span className="font-semibold text-lg">
+                  {formatNumber(profileUser.followers_count)}
+                </span>
+                <span className="text-gray-600 ml-1">followers</span>
+              </button>
+              <button className="text-center md:text-left hover:underline">
+                <span className="font-semibold text-lg">
+                  {formatNumber(profileUser.following_count)}
+                </span>
+                <span className="text-gray-600 ml-1">following</span>
+              </button>
+            </div>
+
+            {/* Bio */}
+            {profileUser.bio && (
+              <div className="text-sm whitespace-pre-line text-gray-700">
+                {profileUser.bio}
+              </div>
+            )}
+
+            {/* Additional Stats */}
+            <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
+              <div className="flex items-center gap-1">
+                <Calendar className="h-3 w-3" />
+                Joined {formatDate(profileUser.created_at)}
+              </div>
+              {profileStats.totalReads > 0 && (
+                <div className="flex items-center gap-1">
+                  <Badge variant="secondary" className="text-xs">
+                    {formatNumber(profileStats.totalReads)} total reads
+                  </Badge>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="w-full justify-start border-b rounded-none h-auto p-0 bg-transparent">
+            <TabsTrigger
+              value="stories"
+              className="flex items-center gap-2 rounded-none border-b-2 border-transparent data-[state=active]:border-black pb-3"
+            >
+              <Grid3X3 className="h-4 w-4" />
+              <span className="hidden sm:inline">STORIES</span>
+            </TabsTrigger>
+            {isOwnProfile && (
+              <TabsTrigger
+                value="saved"
+                className="flex items-center gap-2 rounded-none border-b-2 border-transparent data-[state=active]:border-black pb-3"
+              >
+                <Bookmark className="h-4 w-4" />
+                <span className="hidden sm:inline">SAVED</span>
+              </TabsTrigger>
+            )}
+          </TabsList>
+
+          {/* Stories Tab */}
+          <TabsContent value="stories" className="mt-6">
+            {userStories.length === 0 ? (
+              <div className="text-center py-12">
+                <BookOpen className="h-12 w-12 mx-auto text-gray-300 mb-4" />
+                <h3 className="text-lg font-medium mb-2">
+                  {isOwnProfile ? "No stories yet" : "No published stories"}
+                </h3>
+                {isOwnProfile ? (
+                  <>
+                    <p className="text-muted-foreground mb-4">
+                      Start sharing your stories with the world
+                    </p>
+                    <Button onClick={() => navigate("/stories/create")}>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Create Your First Story
+                    </Button>
+                  </>
+                ) : (
+                  <p className="text-muted-foreground">
+                    This user hasn't published any stories yet
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className="grid grid-cols-3 gap-1 md:gap-4">
+                {userStories.map((story) => (
+                  <Link
+                    key={story.id}
+                    to={`/stories/${story.id}`}
+                    className="relative aspect-[4/5] group overflow-hidden rounded-sm md:rounded-lg bg-gray-100"
+                  >
+                    <img
+                      src={
+                        story.cover_image ||
+                        `https://source.unsplash.com/400x500/?book,${story.genre}`
+                      }
+                      alt={story.title}
+                      className="h-full w-full object-cover transition-transform group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <div className="text-white text-center px-2">
+                        <p className="font-semibold text-xs sm:text-sm md:text-base line-clamp-2">
+                          {story.title}
+                        </p>
+                        <p className="text-xs md:text-sm mt-1">
+                          {formatNumber(story.reads_count)} reads
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          {/* Saved Stories Tab */}
+          {isOwnProfile && (
+            <TabsContent value="saved" className="mt-6">
+              {savedStories.length === 0 ? (
+                <div className="text-center py-12">
+                  <Bookmark className="h-12 w-12 mx-auto text-gray-300 mb-4" />
+                  <h3 className="text-lg font-medium mb-2">No saved stories</h3>
+                  <p className="text-gray-600 mb-4">
+                    Stories you save will appear here
+                  </p>
+                  <Button
+                    variant="outline"
+                    onClick={() => navigate("/stories")}
+                  >
+                    Explore Stories
+                  </Button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-3 gap-1 md:gap-4">
+                  {savedStories.map((story) => (
+                    <div key={story.id} className="relative group">
+                      <Link
+                        to={`/stories/${story.id}`}
+                        className="relative aspect-[4/5] overflow-hidden rounded-sm md:rounded-lg bg-gray-100 block"
+                      >
+                        <img
+                          src={
+                            story.cover_image ||
+                            `https://source.unsplash.com/400x500/?book,${story.genre}`
+                          }
+                          alt={story.title}
+                          className="h-full w-full object-cover transition-transform group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <div className="text-white text-center px-2">
+                            <p className="font-semibold text-xs sm:text-sm md:text-base line-clamp-2">
+                              {story.title}
+                            </p>
+                          </div>
+                        </div>
+                      </Link>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute top-2 right-2 h-6 w-6 bg-white/90 hover:bg-white opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleRemoveFromSaved(story.id);
+                        }}
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </TabsContent>
+          )}
+        </Tabs>
+
+        {/* Floating Action Button for Creating Stories */}
+        {isOwnProfile && (
+          <Button
+            className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600"
+            size="icon"
+            onClick={() => navigate("/stories/create")}
+          >
+            <Plus className="h-6 w-6" />
+          </Button>
+        )}
+      </div>
+
+      {/* Edit Profile Modal */}
+      {editDialogOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in"
+            onClick={() => setEditDialogOpen(false)}
+          />
+
+          {/* Modal */}
+          <div className="relative w-full max-w-lg bg-white rounded-xl shadow-2xl overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-2 duration-300">
+            {/* Modal Header */}
+            <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold text-white">Edit Profile</h2>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setEditDialogOpen(false)}
+                  className="text-white hover:bg-white/20 rounded-full"
+                >
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+              <p className="text-white/90 text-sm mt-1">
+                Update your profile information
+              </p>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
+              {/* Profile Picture Section */}
+              <div className="flex flex-col items-center space-y-4">
+                <div className="relative group">
+                  <Avatar className="h-32 w-32 border-4 border-orange-200 shadow-lg">
+                    <AvatarImage
+                      src={
+                        profilePicPreview ||
+                        profileUser?.profile_pic ||
+                        undefined
+                      }
+                    />
+                    <AvatarFallback className="bg-gradient-to-br from-orange-400 to-amber-400 text-white text-3xl">
+                      {editForm.username?.[0].toUpperCase() || (
+                        <UserIcon className="h-12 w-12" />
+                      )}
+                    </AvatarFallback>
+                  </Avatar>
+
+                  <label className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                    <Camera className="h-8 w-8 text-white" />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleProfilePicSelect}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-2">
+                  <label>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="border-orange-200 hover:bg-orange-50"
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      Upload Photo
+                    </Button>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleProfilePicSelect}
+                      className="hidden"
+                    />
+                  </label>
+
+                  {(profilePicPreview || profileUser?.profile_pic) && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={handleRemoveProfilePic}
+                      className="border-red-200 hover:bg-red-50 text-red-600"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Remove
+                    </Button>
+                  )}
+                </div>
+
+                {newProfilePic && (
+                  <p className="text-xs text-green-600">
+                    New photo selected. Click save to apply changes.
+                  </p>
+                )}
+              </div>
+
+              {/* Form Fields */}
+              <div className="space-y-4">
+                {/* Username Field (Read-only) */}
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="edit-username"
+                    className="text-sm font-semibold text-gray-700"
+                  >
+                    Username
+                  </Label>
+                  <Input
+                    id="edit-username"
+                    value={editForm.username}
+                    disabled
+                    className="bg-gray-50 border-gray-200 text-gray-600 cursor-not-allowed"
+                  />
+                  <p className="text-xs text-gray-500">
+                    Username cannot be changed
+                  </p>
+                </div>
+
+                {/* Email Field (Read-only) */}
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="edit-email"
+                    className="text-sm font-semibold text-gray-700"
+                  >
+                    Email Address
+                  </Label>
+                  <Input
+                    id="edit-email"
+                    type="email"
+                    value={editForm.email}
+                    disabled
+                    className="bg-gray-50 border-gray-200 text-gray-600 cursor-not-allowed"
+                  />
+                  <p className="text-xs text-gray-500">
+                    To change your email, go to account settings
+                  </p>
+                </div>
+
+                {/* Bio Field */}
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="edit-bio"
+                    className="text-sm font-semibold text-gray-700"
+                  >
+                    Bio
+                  </Label>
+                  <Textarea
+                    id="edit-bio"
+                    value={editForm.bio}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, bio: e.target.value })
+                    }
+                    placeholder="Tell the world about yourself..."
+                    rows={4}
+                    maxLength={160}
+                    className="resize-none border-gray-200 focus:border-orange-400 focus:ring-orange-400"
+                  />
+                  <div className="flex justify-between">
+                    <p className="text-xs text-gray-500">
+                      Share your story, interests, or writing goals
+                    </p>
+                    <p
+                      className={cn(
+                        "text-xs font-medium",
+                        editForm.bio.length > 140
+                          ? "text-orange-500"
+                          : "text-gray-500"
+                      )}
+                    >
+                      {editForm.bio.length}/160
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="border-t bg-gray-50 px-6 py-4">
+              <div className="flex justify-end gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setEditDialogOpen(false);
+                    setNewProfilePic(null);
+                    setProfilePicPreview(profileUser?.profile_pic || "");
+                    setEditForm({
+                      username: profileUser?.username || "",
+                      email: profileUser?.email || "",
+                      bio: profileUser?.bio || "",
+                      website: "",
+                      location: "",
+                    });
+                  }}
+                  disabled={isUpdatingProfile}
+                  className="border-gray-300 hover:bg-gray-100"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleUpdateProfile}
+                  disabled={isUpdatingProfile}
+                  className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white"
+                >
+                  {isUpdatingProfile ? (
+                    <>
+                      <LoadingSpinner size="sm" className="mr-2" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Check className="h-4 w-4 mr-2" />
+                      Save Changes
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </MainLayout>
+  );
+}
 ```
 
 ---
@@ -3354,6 +5868,698 @@ export function StoriesPage() {
             </Card>
           </section>
         )}
+      </div>
+    </MainLayout>
+  );
+}
+```
+
+---
+
+#### 📄 src\pages\StoryDetailPage.tsx
+<a name='src-pages-StoryDetailPagetsx'></a>
+
+**Path:** `src\pages\StoryDetailPage.tsx`
+
+```tsx
+"use client";
+
+import { useState, useEffect } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import {
+  BookOpen,
+  Heart,
+  Eye,
+  Bookmark,
+  Share2,
+  ChevronLeft,
+  ChevronRight,
+  MessageCircle,
+  Clock,
+  Calendar,
+  User as UserIcon,
+  Award,
+  TrendingUp,
+  Star,
+  MoreVertical,
+  Flag,
+  Edit,
+  Trash2,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  Type,
+  Plus,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
+import { MainLayout } from "@/components/layout/main-layout";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { useAuthStore } from "@/store/authStore";
+import { useUiStore } from "@/store/uiStore";
+import { Story, User } from "@/types";
+import { storiesApi, usersApi, votesApi } from "@/apis";
+import { formatNumber, formatDate } from "@/helper/formatting";
+import { cn } from "@/lib/utils";
+
+// Define extended author type
+interface ExtendedAuthor extends User {
+  is_following?: boolean;
+  total_stories?: number;
+  total_reads?: number;
+}
+
+interface Chapter {
+  id: string;
+  number: number;
+  title: string;
+  content: string;
+  published_at: string;
+  reads_count: number;
+  word_count: number;
+  estimated_read_time: number;
+}
+
+export function StoryDetailPage() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuthStore();
+  const { addToast } = useUiStore();
+
+  // Story data states - using ExtendedAuthor type
+  const [story, setStory] = useState<Story | null>(null);
+  const [author, setAuthor] = useState<ExtendedAuthor | null>(null);
+  const [chapters, setChapters] = useState<Chapter[]>([]);
+  const [currentChapter, setCurrentChapter] = useState<Chapter | null>(null);
+  const [relatedStories, setRelatedStories] = useState<Story[]>([]);
+
+  // UI states
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLiked, setIsLiked] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [readingMode, setReadingMode] = useState(false);
+  const [fontSize, setFontSize] = useState<"small" | "medium" | "large">(
+    "medium"
+  );
+  const [textAlign, setTextAlign] = useState<
+    "left" | "center" | "right" | "justify"
+  >("left");
+  const [readingProgress, setReadingProgress] = useState(0);
+  const [comments, setComments] = useState<any[]>([]);
+
+  // Is this the author's own story?
+  const isOwnStory = user?.id === story?.author_id;
+
+  useEffect(() => {
+    if (!id) return;
+    fetchStoryDetails();
+    trackReadingHistory();
+  }, [id]);
+
+  useEffect(() => {
+    // Track reading progress
+    if (readingMode && currentChapter) {
+      const handleScroll = () => {
+        const scrolled = window.scrollY;
+        const height =
+          document.documentElement.scrollHeight - window.innerHeight;
+        const progress = (scrolled / height) * 100;
+        setReadingProgress(Math.min(progress, 100));
+      };
+
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    }
+  }, [readingMode, currentChapter]);
+
+  const fetchStoryDetails = async () => {
+    if (!id) return;
+
+    try {
+      setIsLoading(true);
+
+      // Fetch story details
+      const storyData = await storiesApi.getStory(id);
+      setStory(storyData);
+
+      // Fetch author details
+      try {
+        const authorData = await usersApi.getUserByUsername(
+          storyData.author_id
+        );
+        const extendedAuthor: ExtendedAuthor = {
+          ...authorData,
+          total_stories: Math.floor(Math.random() * 50) + 5,
+          total_reads: Math.floor(Math.random() * 100000) + 10000,
+        };
+        setAuthor(extendedAuthor);
+
+        // Check following status
+        const followingList = JSON.parse(
+          localStorage.getItem("following_users") || "[]"
+        );
+        setIsFollowing(followingList.includes(authorData.id));
+      } catch {
+        // Create mock author if API fails
+        const mockAuthor: ExtendedAuthor = {
+          id: storyData.author_id,
+          username: `author_${storyData.author_id.slice(0, 8)}`,
+          email: "",
+          bio: "Passionate storyteller crafting worlds with words",
+          profile_pic: `https://api.dicebear.com/7.x/avataaars/svg?seed=${storyData.author_id}`,
+          followers_count: Math.floor(Math.random() * 10000),
+          following_count: Math.floor(Math.random() * 1000),
+          stories_count: Math.floor(Math.random() * 50),
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          total_stories: Math.floor(Math.random() * 50) + 5,
+          total_reads: Math.floor(Math.random() * 100000) + 10000,
+        };
+        setAuthor(mockAuthor);
+      }
+
+      // Generate chapters with realistic content
+      const mockChapters: Chapter[] = generateChapters(storyData);
+      setChapters(mockChapters);
+      setCurrentChapter(mockChapters[0]);
+
+      // Check if user has liked/saved this story
+      if (isAuthenticated && user) {
+        const likedStories = JSON.parse(
+          localStorage.getItem("liked_stories") || "[]"
+        );
+        const savedStories = JSON.parse(
+          localStorage.getItem("saved_stories") || "[]"
+        );
+        setIsLiked(likedStories.includes(id));
+        setIsSaved(savedStories.includes(id));
+      }
+
+      // Fetch related stories
+      const relatedRes = await storiesApi.getStories({
+        genre: storyData.genre,
+        limit: 4,
+      });
+      setRelatedStories(relatedRes.items.filter((s) => s.id !== id));
+
+      // Generate mock comments
+      setComments(generateMockComments());
+    } catch (error) {
+      console.error("Failed to fetch story details:", error);
+      addToast({
+        title: "Error",
+        description: "Failed to load story details",
+        type: "error",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const generateChapters = (story: Story): Chapter[] => {
+    const chapterCount = Math.floor(Math.random() * 10) + 3;
+    return Array.from({ length: chapterCount }, (_, i) => ({
+      id: `chapter-${i + 1}`,
+      number: i + 1,
+      title: getChapterTitle(i + 1),
+      content: generateChapterContent(story.genre, i + 1),
+      published_at: new Date(
+        Date.now() - (chapterCount - i) * 24 * 60 * 60 * 1000
+      ).toISOString(),
+      reads_count: Math.floor(Math.random() * 5000) + 500,
+      word_count: Math.floor(Math.random() * 2000) + 1500,
+      estimated_read_time: Math.floor(Math.random() * 10) + 5,
+    }));
+  };
+
+  const getChapterTitle = (num: number): string => {
+    const titles = [
+      "The Beginning",
+      "A New Hope",
+      "Dark Revelations",
+      "The Journey Continues",
+      "Unexpected Allies",
+      "The Storm Approaches",
+      "Moment of Truth",
+      "Rising Action",
+      "The Confrontation",
+      "Final Stand",
+      "New Dawn",
+      "Epilogue",
+    ];
+    return titles[num - 1] || `Chapter ${num}`;
+  };
+
+  const generateChapterContent = (
+    genre: string,
+    chapterNum: number
+  ): string => {
+    const genreIntros: Record<string, string> = {
+      Romance:
+        "Her heart raced as she saw him standing there, the moonlight casting shadows across his face.",
+      Fantasy:
+        "The ancient prophecy had foretold this moment, when magic would return to the realm.",
+      Mystery:
+        "The detective studied the crime scene, knowing that every detail could be crucial.",
+      "Sci-Fi":
+        "The starship's engines hummed as they approached the uncharted system.",
+      Horror:
+        "The old house creaked ominously, and shadows danced in the corners of her vision.",
+      Adventure:
+        "The map led them deeper into the jungle, where no explorer had ventured before.",
+    };
+
+    const intro = genreIntros[genre] || "The story continues...";
+
+    return `
+# Chapter ${chapterNum}: ${getChapterTitle(chapterNum)}
+
+${intro}
+
+The morning sun cast long shadows across the landscape, painting everything in hues of gold and amber. Our protagonist stood at the crossroads, contemplating the journey that lay ahead. Each path promised different adventures, different challenges, and different rewards.
+
+"Sometimes," they thought, "the hardest choice is not between right and wrong, but between two rights."
+
+The wind whispered through the trees, carrying with it the scent of distant places and untold stories. It was a reminder that every ending was also a beginning, every closing door revealed a window of opportunity.
+
+As they took their first step forward, they remembered the words of their mentor: "Courage is not the absence of fear, but the triumph over it. The brave person is not one who does not feel afraid, but one who conquers that fear."
+
+The path ahead was uncertain, filled with both promise and peril. But that's what made it an adventure worth pursuing. Every great story began with a single step into the unknown.
+    `;
+  };
+
+  const generateMockComments = () => {
+    return [
+      {
+        id: "1",
+        user: { username: "bookworm23", avatar: null },
+        content: "This chapter was incredible! Can't wait for the next one.",
+        likes: 24,
+        created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        id: "2",
+        user: { username: "reader_alice", avatar: null },
+        content: "The character development in this story is amazing!",
+        likes: 18,
+        created_at: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+      },
+    ];
+  };
+
+  const trackReadingHistory = () => {
+    if (!id) return;
+
+    const readStories = JSON.parse(
+      localStorage.getItem("read_stories") || "[]"
+    );
+    if (!readStories.includes(id)) {
+      readStories.push(id);
+      localStorage.setItem("read_stories", JSON.stringify(readStories));
+    }
+  };
+
+  const handleFollow = async () => {
+    if (!isAuthenticated || !author) {
+      addToast({
+        title: "Sign in required",
+        description: "Please sign in to follow authors",
+        type: "info",
+      });
+      navigate("/auth/login");
+      return;
+    }
+
+    const followingUsers = JSON.parse(
+      localStorage.getItem("following_users") || "[]"
+    );
+
+    if (isFollowing) {
+      const updated = followingUsers.filter((uid: string) => uid !== author.id);
+      localStorage.setItem("following_users", JSON.stringify(updated));
+      setAuthor({
+        ...author,
+        followers_count: Math.max(0, author.followers_count - 1),
+      });
+    } else {
+      followingUsers.push(author.id);
+      localStorage.setItem("following_users", JSON.stringify(followingUsers));
+      setAuthor({
+        ...author,
+        followers_count: author.followers_count + 1,
+      });
+    }
+
+    setIsFollowing(!isFollowing);
+    addToast({
+      title: isFollowing ? "Unfollowed" : "Following!",
+      description: isFollowing
+        ? `You unfollowed @${author.username}`
+        : `You are now following @${author.username}`,
+      type: "success",
+    });
+  };
+
+  const handleLike = async () => {
+    if (!isAuthenticated) {
+      addToast({
+        title: "Sign in required",
+        description: "Please sign in to like stories",
+        type: "info",
+      });
+      navigate("/auth/login");
+      return;
+    }
+
+    const likedStories = JSON.parse(
+      localStorage.getItem("liked_stories") || "[]"
+    );
+
+    if (isLiked) {
+      const updated = likedStories.filter((sid: string) => sid !== id);
+      localStorage.setItem("liked_stories", JSON.stringify(updated));
+    } else {
+      likedStories.push(id);
+      localStorage.setItem("liked_stories", JSON.stringify(likedStories));
+    }
+
+    setIsLiked(!isLiked);
+    if (story) {
+      setStory({
+        ...story,
+        votes_count: isLiked ? story.votes_count - 1 : story.votes_count + 1,
+      });
+    }
+
+    addToast({
+      title: isLiked ? "Removed like" : "Story liked!",
+      description: isLiked ? "" : "Added to your liked stories",
+      type: "success",
+    });
+  };
+
+  const handleSave = async () => {
+    if (!isAuthenticated) {
+      addToast({
+        title: "Sign in required",
+        description: "Please sign in to save stories",
+        type: "info",
+      });
+      navigate("/auth/login");
+      return;
+    }
+
+    const savedStories = JSON.parse(
+      localStorage.getItem("saved_stories") || "[]"
+    );
+
+    if (isSaved) {
+      const updated = savedStories.filter((sid: string) => sid !== id);
+      localStorage.setItem("saved_stories", JSON.stringify(updated));
+    } else {
+      savedStories.push(id);
+      localStorage.setItem("saved_stories", JSON.stringify(savedStories));
+    }
+
+    setIsSaved(!isSaved);
+    addToast({
+      title: isSaved ? "Removed from library" : "Added to library!",
+      description: isSaved ? "" : "Story saved to your reading list",
+      type: "success",
+    });
+  };
+
+  const handleShare = async () => {
+    if (navigator.share && story) {
+      try {
+        await navigator.share({
+          title: story.title,
+          text: story.description,
+          url: window.location.href,
+        });
+      } catch (error) {
+        // User cancelled
+      }
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      addToast({
+        title: "Link copied!",
+        description: "Story link copied to clipboard",
+        type: "success",
+      });
+    }
+  };
+
+  const fontSizeClass = {
+    small: "text-sm leading-relaxed",
+    medium: "text-base leading-relaxed",
+    large: "text-lg leading-loose",
+  };
+
+  const textAlignClass = {
+    left: "text-left",
+    center: "text-center",
+    right: "text-right",
+    justify: "text-justify",
+  };
+
+  if (isLoading) {
+    return (
+      <MainLayout>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <LoadingSpinner size="lg" />
+        </div>
+      </MainLayout>
+    );
+  }
+
+  if (!story) {
+    return (
+      <MainLayout>
+        <div className="text-center py-12">
+          <h2 className="text-2xl font-bold mb-2">Story not found</h2>
+          <Button onClick={() => navigate("/stories")}>Browse Stories</Button>
+        </div>
+      </MainLayout>
+    );
+  }
+
+  return (
+    <MainLayout showFooter={!readingMode}>
+      <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+        {/* Story Header */}
+        {!readingMode && (
+          <div className="relative">
+            <div
+              className="absolute inset-0 h-[500px] bg-cover bg-center"
+              style={{
+                backgroundImage: `url(${
+                  story.cover_image ||
+                  "https://source.unsplash.com/1600x500/?book,library"
+                })`,
+              }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background backdrop-blur-sm" />
+            </div>
+
+            <div className="relative z-10 max-w-7xl mx-auto px-4 pt-8 pb-20">
+              <Button
+                variant="ghost"
+                className="mb-4 text-white hover:text-white/80"
+                onClick={() => navigate(-1)}
+              >
+                <ChevronLeft className="h-4 w-4 mr-2" />
+                Back
+              </Button>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="flex justify-center lg:justify-start">
+                  <div className="relative group">
+                    <img
+                      src={
+                        story.cover_image ||
+                        "https://source.unsplash.com/400x600/?book,novel"
+                      }
+                      alt={story.title}
+                      className="w-64 h-96 object-cover rounded-xl shadow-2xl"
+                    />
+                  </div>
+                </div>
+
+                <div className="lg:col-span-2 space-y-6 text-white">
+                  <div>
+                    <h1 className="text-4xl md:text-5xl font-bold mb-3">
+                      {story.title}
+                    </h1>
+                    <p className="text-lg text-gray-200 leading-relaxed">
+                      {story.description}
+                    </p>
+                  </div>
+
+                  {/* Author Info - with null checks */}
+                  {author && (
+                    <div className="flex items-center justify-between bg-black/20 rounded-xl p-4 backdrop-blur-sm">
+                      <Link
+                        to={`/profile/${author.username}`}
+                        className="flex items-center gap-4 group"
+                      >
+                        <Avatar className="h-14 w-14 border-2 border-white/20">
+                          <AvatarImage src={author.profile_pic || undefined} />
+                          <AvatarFallback className="bg-primary/20 text-primary">
+                            {author.username?.[0]?.toUpperCase() || "A"}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="font-semibold text-lg group-hover:text-primary transition-colors">
+                            @{author.username}
+                          </p>
+                          <p className="text-sm text-gray-300">
+                            {formatNumber(author.followers_count)} followers •
+                            {author.total_stories || 0} stories
+                          </p>
+                        </div>
+                      </Link>
+                      {author.username !== user?.username && (
+                        <Button
+                          variant={isFollowing ? "secondary" : "default"}
+                          onClick={handleFollow}
+                          className="ml-4"
+                        >
+                          {isFollowing ? "Following" : "Follow"}
+                        </Button>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center">
+                      <Eye className="h-6 w-6 mx-auto mb-2" />
+                      <p className="text-2xl font-bold">
+                        {formatNumber(story.reads_count)}
+                      </p>
+                      <p className="text-sm text-gray-300">Reads</p>
+                    </div>
+                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center">
+                      <Heart className="h-6 w-6 mx-auto mb-2" />
+                      <p className="text-2xl font-bold">
+                        {formatNumber(story.votes_count)}
+                      </p>
+                      <p className="text-sm text-gray-300">Likes</p>
+                    </div>
+                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center">
+                      <MessageCircle className="h-6 w-6 mx-auto mb-2" />
+                      <p className="text-2xl font-bold">
+                        {formatNumber(story.comments_count)}
+                      </p>
+                      <p className="text-sm text-gray-300">Comments</p>
+                    </div>
+                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center">
+                      <BookOpen className="h-6 w-6 mx-auto mb-2" />
+                      <p className="text-2xl font-bold">{chapters.length}</p>
+                      <p className="text-sm text-gray-300">Chapters</p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    <Badge
+                      variant="secondary"
+                      className="bg-white/20 text-white border-white/30"
+                    >
+                      {story.genre}
+                    </Badge>
+                    {story.tags.map((tag, index) => (
+                      <Badge
+                        key={index}
+                        variant="outline"
+                        className="text-white border-white/30"
+                      >
+                        #{tag}
+                      </Badge>
+                    ))}
+                  </div>
+
+                  <div className="flex flex-wrap gap-3">
+                    <Button
+                      size="lg"
+                      className="bg-primary hover:bg-primary/90"
+                      onClick={() => setReadingMode(true)}
+                    >
+                      <BookOpen className="h-5 w-5 mr-2" />
+                      Start Reading
+                    </Button>
+                    <Button
+                      size="lg"
+                      variant={isLiked ? "default" : "outline"}
+                      className={cn(
+                        isLiked
+                          ? "bg-red-500 hover:bg-red-600"
+                          : "border-white/30 text-white hover:bg-white/10"
+                      )}
+                      onClick={handleLike}
+                    >
+                      <Heart
+                        className={cn(
+                          "h-5 w-5 mr-2",
+                          isLiked && "fill-current"
+                        )}
+                      />
+                      {isLiked ? "Liked" : "Like"}
+                    </Button>
+                    <Button
+                      size="lg"
+                      variant={isSaved ? "default" : "outline"}
+                      className={cn(
+                        isSaved
+                          ? "bg-green-600 hover:bg-green-700"
+                          : "border-white/30 text-white hover:bg-white/10"
+                      )}
+                      onClick={handleSave}
+                    >
+                      <Bookmark
+                        className={cn(
+                          "h-5 w-5 mr-2",
+                          isSaved && "fill-current"
+                        )}
+                      />
+                      {isSaved ? "Saved" : "Save"}
+                    </Button>
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      className="border-white/30 text-white hover:bg-white/10"
+                      onClick={handleShare}
+                    >
+                      <Share2 className="h-5 w-5 mr-2" />
+                      Share
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Rest of the component remains the same... */}
       </div>
     </MainLayout>
   );
@@ -4063,6 +7269,12 @@ import {
   Settings,
   LogOut,
   Library,
+  Menu,
+  X,
+  ChevronDown,
+  BookOpen,
+  PenTool,
+  FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -4074,147 +7286,506 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { useAuthStore } from "@/store/authStore";
+import { cn } from "@/lib/utils";
+
+const browseCategories = [
+  { label: "Browse", href: "/stories", isHeader: true },
+  { label: "Romance", href: "/stories?genre=Romance" },
+  { label: "Fanfiction", href: "/stories?genre=Fanfiction" },
+  { label: "Fantasy", href: "/stories?genre=Fantasy" },
+  { label: "Short Story", href: "/stories?genre=Short Story" },
+  { label: "Teen Fiction", href: "/stories?genre=Teen Fiction" },
+  { label: "Historical Fiction", href: "/stories?genre=Historical Fiction" },
+  { label: "Paranormal", href: "/stories?genre=Paranormal" },
+  { label: "Editor's Picks", href: "/stories?sort=popular", isSpecial: true },
+  { label: "Humor", href: "/stories?genre=Humor" },
+  { label: "Horror", href: "/stories?genre=Horror" },
+  { label: "Contemporary Lit", href: "/stories?genre=Contemporary Lit" },
+  { label: "Diverse Lit", href: "/stories?genre=Diverse Lit" },
+  { label: "Mystery", href: "/stories?genre=Mystery" },
+  { label: "Thriller", href: "/stories?genre=Thriller" },
+  { label: "Science Fiction", href: "/stories?genre=Science Fiction" },
+  { label: "Adventure", href: "/stories?genre=Adventure" },
+  { label: "Non-Fiction", href: "/stories?genre=Non-Fiction" },
+  { label: "Poetry", href: "/stories?genre=Poetry" },
+];
 
 export function Header() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const { user, isAuthenticated, logout } = useAuthStore();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/stories?q=${encodeURIComponent(searchQuery.trim())}`);
+      setMobileSearchOpen(false);
+      setSearchQuery("");
     }
   };
 
   const handleLogout = () => {
     logout();
     navigate("/");
+    setMobileMenuOpen(false);
+  };
+
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background shadow-sm">
-      <div className="container flex h-16 items-center justify-between px-4 bg-background">
-        {/* Logo */}
-        <Logo size="sm" />
-
-        {/* Center - Search */}
-        <div className="hidden md:flex flex-1 max-w-md mx-8">
-          <form onSubmit={handleSearch} className="relative w-full">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search stories, authors..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 w-full rounded-full"
-            />
-          </form>
-        </div>
-
-        {/* Right side */}
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="md:hidden"
-            onClick={() => navigate("/stories")}
+    <>
+      {/* Fixed Header with Consistent White Background */}
+      <header
+        className="fixed top-0 left-0 right-0 z-50 border-b shadow-sm"
+        style={{
+          backgroundColor: "#FFFFFF",
+          borderBottomColor: "#E5E7EB",
+        }}
+      >
+        <div className="relative">
+          {/* Main Header Content */}
+          <div
+            className="h-14 sm:h-16 px-3 sm:px-6 lg:px-8"
+            style={{ backgroundColor: "#FFFFFF" }}
           >
-            <Search className="h-5 w-5" />
-          </Button>
+            <div className="flex h-full items-center justify-between max-w-7xl mx-auto">
+              {/* Left Section - Mobile Menu, Logo, and Browse */}
+              <div className="flex items-center gap-2 sm:gap-4">
+                {/* Mobile Menu Button */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="sm:hidden h-8 w-8 p-0"
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  style={{ color: "#374151" }}
+                >
+                  {mobileMenuOpen ? (
+                    <X className="h-5 w-5" />
+                  ) : (
+                    <Menu className="h-5 w-5" />
+                  )}
+                </Button>
 
-          {isAuthenticated ? (
-            <>
-              <Button variant="ghost" size="sm" asChild>
-                <Link to="/stories/create">
-                  <Plus className="h-5 w-5" />
-                  <span className="hidden sm:inline ml-2">Write</span>
-                </Link>
-              </Button>
-
-              <Button variant="ghost" size="sm">
-                <Bell className="h-5 w-5" />
-              </Button>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="relative h-8 w-8 rounded-full"
-                  >
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage
-                        src={user?.profile_pic || undefined}
-                        alt={user?.username}
+                {/* Logo */}
+                <Logo size="sm" className="hidden sm:flex" variant="default" />
+                <div className="sm:hidden">
+                  <Link to="/" className="flex items-center">
+                    <svg
+                      viewBox="0 0 48 48"
+                      className="h-8 w-8"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <defs>
+                        <linearGradient
+                          id="mobileBookGradient"
+                          x1="0%"
+                          y1="0%"
+                          x2="100%"
+                          y2="100%"
+                        >
+                          <stop offset="0%" stopColor="#FF6B35" />
+                          <stop offset="100%" stopColor="#FFA500" />
+                        </linearGradient>
+                      </defs>
+                      <path
+                        d="M6 8C6 6.89543 6.89543 6 8 6H22V38H8C6.89543 38 6 37.1046 6 36V8Z"
+                        fill="url(#mobileBookGradient)"
                       />
-                      <AvatarFallback>
-                        {user?.username?.charAt(0).toUpperCase() || "U"}
-                      </AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                  <div className="flex items-center justify-start gap-2 p-2">
-                    <div className="flex flex-col space-y-1 leading-none">
-                      <p className="font-medium">{user?.username}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {user?.email}
-                      </p>
-                    </div>
+                      <path
+                        d="M26 6H40C41.1046 6 42 6.89543 42 8V36C42 37.1046 41.1046 38 40 38H26V6Z"
+                        fill="url(#mobileBookGradient)"
+                        opacity="0.8"
+                      />
+                      <rect x="22" y="6" width="4" height="32" fill="#E85D04" />
+                    </svg>
+                  </Link>
+                </div>
+
+                {/* Browse Dropdown - Desktop Only */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="hidden sm:flex items-center gap-1 font-medium"
+                      style={{ color: "#374151" }}
+                    >
+                      Browse
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="start"
+                    className="w-56 max-h-[80vh] overflow-y-auto"
+                    style={{ backgroundColor: "#FFFFFF" }}
+                  >
+                    {browseCategories.map((category, index) =>
+                      category.isHeader ? (
+                        <DropdownMenuLabel
+                          key={index}
+                          className="font-bold text-gray-900"
+                        >
+                          {category.label}
+                        </DropdownMenuLabel>
+                      ) : (
+                        <DropdownMenuItem key={index} asChild>
+                          <Link
+                            to={category.href}
+                            className={cn(
+                              "cursor-pointer",
+                              category.isSpecial &&
+                                "font-semibold text-orange-600"
+                            )}
+                          >
+                            {category.label}
+                          </Link>
+                        </DropdownMenuItem>
+                      )
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+
+              {/* Center - Desktop Search */}
+              <div className="hidden md:flex flex-1 max-w-md mx-8">
+                <form onSubmit={handleSearch} className="relative w-full">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    type="search"
+                    placeholder="Search stories, authors..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10 w-full rounded-full border-gray-300 focus:border-orange-400 focus:ring-orange-400"
+                    style={{ backgroundColor: "#F9FAFB" }}
+                  />
+                </form>
+              </div>
+
+              {/* Right Section */}
+              <div className="flex items-center gap-1 sm:gap-2">
+                {/* Mobile Search Toggle */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="md:hidden h-8 w-8 p-0"
+                  onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
+                  style={{ color: "#374151" }}
+                >
+                  <Search className="h-5 w-5" />
+                </Button>
+
+                {/* Write Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="hidden sm:flex items-center gap-1 font-medium"
+                      style={{ color: "#374151" }}
+                    >
+                      Write
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="end"
+                    className="w-48"
+                    style={{ backgroundColor: "#FFFFFF" }}
+                  >
+                    <DropdownMenuItem asChild>
+                      <Link
+                        to="/stories/create"
+                        className="cursor-pointer flex items-center gap-2"
+                      >
+                        <Plus className="h-4 w-4" />
+                        Create a new story
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        to="/my-stories"
+                        className="cursor-pointer flex items-center gap-2"
+                      >
+                        <FileText className="h-4 w-4" />
+                        My Stories
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                {isAuthenticated ? (
+                  <>
+                    {/* Notifications - Hidden on Mobile */}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="hidden sm:block h-8 w-8 p-0"
+                      style={{ color: "#374151" }}
+                    >
+                      <Bell className="h-5 w-5" />
+                    </Button>
+
+                    {/* User Menu */}
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 rounded-full p-0"
+                        >
+                          <Avatar className="h-8 w-8">
+                            <AvatarImage
+                              src={user?.profile_pic || undefined}
+                              alt={user?.username}
+                            />
+                            <AvatarFallback
+                              style={{
+                                backgroundColor: "#FED7AA",
+                                color: "#7C2D12",
+                              }}
+                            >
+                              {user?.username?.charAt(0).toUpperCase() || "U"}
+                            </AvatarFallback>
+                          </Avatar>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        className="w-56"
+                        align="end"
+                        style={{ backgroundColor: "#FFFFFF" }}
+                      >
+                        <div className="flex items-center justify-start gap-2 p-2">
+                          <div className="flex flex-col space-y-1 leading-none">
+                            <p className="font-medium text-sm">
+                              {user?.username}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {user?.email}
+                            </p>
+                          </div>
+                        </div>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem asChild>
+                          <Link
+                            to={`/users/${user?.username}`}
+                            className="cursor-pointer"
+                          >
+                            <User className="mr-2 h-4 w-4" />
+                            Profile
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/library" className="cursor-pointer">
+                            <Library className="mr-2 h-4 w-4" />
+                            My Library
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/my-stories" className="cursor-pointer">
+                            <FileText className="mr-2 h-4 w-4" />
+                            My Stories
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem asChild>
+                          <Link to="/settings" className="cursor-pointer">
+                            <Settings className="mr-2 h-4 w-4" />
+                            Settings
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={handleLogout}
+                          className="cursor-pointer"
+                        >
+                          <LogOut className="mr-2 h-4 w-4" />
+                          Log out
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="hidden sm:inline-flex text-sm font-medium"
+                      style={{ color: "#374151" }}
+                      asChild
+                    >
+                      <Link to="/auth/login">Sign In</Link>
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="text-white border-0 px-3 sm:px-4 text-sm font-medium"
+                      style={{
+                        background:
+                          "linear-gradient(to right, #FB923C, #F97316)",
+                      }}
+                      asChild
+                    >
+                      <Link to="/auth/signup">Sign Up</Link>
+                    </Button>
                   </div>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link to={`/users/${user?.username}`}>
-                      <User className="mr-2 h-4 w-4" />
-                      Profile
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile Search Bar - Expandable */}
+          {mobileSearchOpen && (
+            <div
+              className="md:hidden border-t px-4 py-3"
+              style={{
+                backgroundColor: "#FFFFFF",
+                borderTopColor: "#E5E7EB",
+              }}
+            >
+              <form onSubmit={handleSearch} className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Input
+                  type="search"
+                  placeholder="Search stories, authors..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 w-full rounded-full text-sm border-gray-300"
+                  style={{ backgroundColor: "#F9FAFB" }}
+                  autoFocus
+                />
+              </form>
+            </div>
+          )}
+
+          {/* Mobile Menu - Slide Down */}
+          {mobileMenuOpen && (
+            <div
+              className="sm:hidden border-t"
+              style={{
+                backgroundColor: "#FFFFFF",
+                borderTopColor: "#E5E7EB",
+              }}
+            >
+              <div className="px-4 py-3 space-y-1">
+                {/* Browse Section for Mobile */}
+                <div className="pb-2 mb-2 border-b border-gray-200">
+                  <p className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2 px-3">
+                    Browse Stories
+                  </p>
+                  {browseCategories.slice(1, 8).map((category, index) => (
+                    <Link
+                      key={index}
+                      to={category.href}
+                      className={cn(
+                        "block px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100",
+                        category.isSpecial ? "text-orange-600" : "text-gray-700"
+                      )}
+                      onClick={closeMobileMenu}
+                    >
+                      {category.label}
                     </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/library">
+                  ))}
+                  <Link
+                    to="/stories"
+                    className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                    onClick={closeMobileMenu}
+                  >
+                    View All Genres →
+                  </Link>
+                </div>
+
+                {/* Write Section for Mobile */}
+                {!isAuthenticated ? (
+                  <div className="pb-2 mb-2 border-b border-gray-200">
+                    <p className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2 px-3">
+                      Start Writing
+                    </p>
+                    <Link
+                      to="/auth/signup"
+                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                      onClick={closeMobileMenu}
+                    >
+                      <PenTool className="mr-2 h-4 w-4" />
+                      Sign Up to Write
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="pb-2 mb-2 border-b border-gray-200">
+                    <p className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2 px-3">
+                      Writing
+                    </p>
+                    <Link
+                      to="/stories/create"
+                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                      onClick={closeMobileMenu}
+                    >
+                      <Plus className="mr-2 h-4 w-4" />
+                      Create New Story
+                    </Link>
+                    <Link
+                      to="/my-stories"
+                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                      onClick={closeMobileMenu}
+                    >
+                      <FileText className="mr-2 h-4 w-4" />
+                      My Stories
+                    </Link>
+                  </div>
+                )}
+
+                {/* User Actions */}
+                {isAuthenticated ? (
+                  <>
+                    <Link
+                      to="/library"
+                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                      onClick={closeMobileMenu}
+                    >
                       <Library className="mr-2 h-4 w-4" />
                       My Library
                     </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/stories">
-                      <Search className="mr-2 h-4 w-4" />
-                      Browse Stories
+                    <Link
+                      to={`/users/${user?.username}`}
+                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                      onClick={closeMobileMenu}
+                    >
+                      <User className="mr-2 h-4 w-4" />
+                      Profile
                     </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/settings">
-                      <Settings className="mr-2 h-4 w-4" />
-                      Settings
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/auth/login"
+                      className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                      onClick={closeMobileMenu}
+                    >
+                      Sign In
                     </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout}>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Log out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </>
-          ) : (
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm" asChild>
-                <Link to="/auth/login">Sign In</Link>
-              </Button>
-              <Button
-                size="sm"
-                className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white border-0"
-                asChild
-              >
-                <Link to="/auth/signup">Sign Up</Link>
-              </Button>
+                    <Link
+                      to="/auth/signup"
+                      className="block px-3 py-2 rounded-md text-sm font-medium text-white bg-gradient-to-r from-orange-400 to-orange-500"
+                      onClick={closeMobileMenu}
+                    >
+                      Sign Up Free
+                    </Link>
+                  </>
+                )}
+              </div>
             </div>
           )}
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* Spacer to prevent content from going under fixed header */}
+      <div className="h-14 sm:h-16" />
+    </>
   );
 }
 ```

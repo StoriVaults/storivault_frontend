@@ -14,6 +14,11 @@ import {
   Trash2,
   Upload,
   User as UserIcon,
+  Edit2,
+  MapPin,
+  Calendar,
+  Link as LinkIcon,
+  BookOpen, // Add this import
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -22,6 +27,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { MainLayout } from "@/components/layout/main-layout";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useAuthStore } from "@/store/authStore";
@@ -29,7 +36,14 @@ import { Story, User } from "@/types";
 import { storiesApi, usersApi } from "@/apis";
 import { UserController } from "@/controllers/userController";
 import { useUiStore } from "@/store/uiStore";
+import { formatDate, formatNumber } from "@/helper/formatting";
 import { cn } from "@/lib/utils";
+
+interface ProfileStats {
+  totalReads: number;
+  totalLikes: number;
+  avgReadsPerStory: number;
+}
 
 export function ProfilePage() {
   const { username } = useParams<{ username: string }>();
@@ -40,6 +54,11 @@ export function ProfilePage() {
   const [profileUser, setProfileUser] = useState<User | null>(null);
   const [userStories, setUserStories] = useState<Story[]>([]);
   const [savedStories, setSavedStories] = useState<Story[]>([]);
+  const [profileStats, setProfileStats] = useState<ProfileStats>({
+    totalReads: 0,
+    totalLikes: 0,
+    avgReadsPerStory: 0,
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [isFollowing, setIsFollowing] = useState(false);
   const [activeTab, setActiveTab] = useState("stories");
@@ -51,6 +70,8 @@ export function ProfilePage() {
     username: "",
     email: "",
     bio: "",
+    website: "",
+    location: "",
   });
   const [newProfilePic, setNewProfilePic] = useState<File | null>(null);
   const [profilePicPreview, setProfilePicPreview] = useState<string>("");
@@ -58,7 +79,9 @@ export function ProfilePage() {
   const isOwnProfile = user?.username === username;
 
   useEffect(() => {
-    fetchProfileData();
+    if (username) {
+      fetchProfileData();
+    }
   }, [username]);
 
   const fetchProfileData = async () => {
@@ -67,6 +90,7 @@ export function ProfilePage() {
     try {
       setIsLoading(true);
 
+      // Get user data
       let userData: User;
       if (isOwnProfile && user) {
         userData = user;
@@ -74,6 +98,7 @@ export function ProfilePage() {
         try {
           userData = await usersApi.getUserByUsername(username);
         } catch (error) {
+          // Create mock user if API fails
           userData = {
             id: username,
             username: username,
@@ -90,28 +115,62 @@ export function ProfilePage() {
       }
       setProfileUser(userData);
 
+      // Initialize edit form
       if (isOwnProfile) {
         setEditForm({
           username: userData.username,
           email: userData.email,
           bio: userData.bio || "",
+          website: "",
+          location: "",
         });
         if (userData.profile_pic) {
           setProfilePicPreview(userData.profile_pic);
         }
       }
 
+      // Check if following
+      if (!isOwnProfile && isAuthenticated) {
+        const followingList = JSON.parse(
+          localStorage.getItem("following_users") || "[]"
+        );
+        setIsFollowing(followingList.includes(userData.id));
+      }
+
+      // Fetch user's stories
       const storiesResponse = await storiesApi.getStories({
         page: 1,
         limit: 100,
         sort: "latest",
       });
 
+      // Filter to get only this user's stories
       const filteredStories = storiesResponse.items.filter(
         (story) => story.author_id === userData.id
       );
 
       setUserStories(filteredStories);
+
+      // Calculate stats
+      const totalReads = filteredStories.reduce(
+        (sum, story) => sum + story.reads_count,
+        0
+      );
+      const totalLikes = filteredStories.reduce(
+        (sum, story) => sum + story.votes_count,
+        0
+      );
+      const avgReads =
+        filteredStories.length > 0
+          ? Math.round(totalReads / filteredStories.length)
+          : 0;
+
+      setProfileStats({
+        totalReads,
+        totalLikes,
+        avgReadsPerStory: avgReads,
+      });
+
       setProfileUser((prev) =>
         prev
           ? {
@@ -121,13 +180,9 @@ export function ProfilePage() {
           : null
       );
 
+      // Fetch saved stories for own profile
       if (isOwnProfile) {
-        const savedResponse = await storiesApi.getStories({
-          page: 1,
-          limit: 12,
-          sort: "popular",
-        });
-        setSavedStories(savedResponse.items.slice(0, 6));
+        await fetchSavedStories();
       }
     } catch (error) {
       console.error("Failed to fetch profile:", error);
@@ -141,27 +196,71 @@ export function ProfilePage() {
     }
   };
 
+  const fetchSavedStories = async () => {
+    try {
+      const savedIds = JSON.parse(
+        localStorage.getItem("saved_stories") || "[]"
+      );
+
+      if (savedIds.length === 0) {
+        setSavedStories([]);
+        return;
+      }
+
+      const stories: Story[] = [];
+      const allStoriesRes = await storiesApi.getStories({ limit: 100 });
+
+      for (const story of allStoriesRes.items) {
+        if (savedIds.includes(story.id)) {
+          stories.push(story);
+        }
+      }
+
+      setSavedStories(stories);
+    } catch (error) {
+      console.error("Failed to fetch saved stories:", error);
+    }
+  };
+
   const handleFollowToggle = async () => {
     if (!profileUser) return;
 
     try {
-      if (isFollowing) {
-        await usersApi.unfollowUser(profileUser.username);
-      } else {
-        await usersApi.followUser(profileUser.username);
-      }
-
-      setIsFollowing(!isFollowing);
-      setProfileUser((prev) =>
-        prev
-          ? {
-              ...prev,
-              followers_count: isFollowing
-                ? prev.followers_count - 1
-                : prev.followers_count + 1,
-            }
-          : null
+      const followingUsers = JSON.parse(
+        localStorage.getItem("following_users") || "[]"
       );
+
+      if (isFollowing) {
+        // Unfollow
+        const updated = followingUsers.filter(
+          (id: string) => id !== profileUser.id
+        );
+        localStorage.setItem("following_users", JSON.stringify(updated));
+        await usersApi.unfollowUser(profileUser.username);
+        setIsFollowing(false);
+        setProfileUser((prev) =>
+          prev
+            ? {
+                ...prev,
+                followers_count: Math.max(0, prev.followers_count - 1),
+              }
+            : null
+        );
+      } else {
+        // Follow
+        followingUsers.push(profileUser.id);
+        localStorage.setItem("following_users", JSON.stringify(followingUsers));
+        await usersApi.followUser(profileUser.username);
+        setIsFollowing(true);
+        setProfileUser((prev) =>
+          prev
+            ? {
+                ...prev,
+                followers_count: prev.followers_count + 1,
+              }
+            : null
+        );
+      }
 
       addToast({
         title: isFollowing ? "Unfollowed" : "Following",
@@ -209,6 +308,7 @@ export function ProfilePage() {
     try {
       setIsUpdatingProfile(true);
 
+      // Upload new profile picture if selected
       if (newProfilePic) {
         const updatedUser = await UserController.uploadProfilePictureWithToast(
           newProfilePic
@@ -216,15 +316,17 @@ export function ProfilePage() {
         if (updatedUser) {
           setProfileUser(updatedUser);
           updateUser(updatedUser);
+          setProfilePicPreview(updatedUser.profile_pic || "");
         }
       }
 
+      // Update bio if changed
       const updates: any = {};
       if (editForm.bio !== profileUser?.bio) {
         updates.bio = editForm.bio || null;
       }
 
-      // If removing profile pic
+      // Remove profile pic if cleared
       if (!profilePicPreview && profileUser?.profile_pic) {
         updates.profile_pic = null;
       }
@@ -244,20 +346,32 @@ export function ProfilePage() {
 
       addToast({
         title: "Profile updated!",
-        description: "Your profile has been successfully updated.",
+        description: "Your changes have been saved successfully.",
         type: "success",
       });
     } catch (error) {
       console.error("Failed to update profile:", error);
+      addToast({
+        title: "Update failed",
+        description: "Failed to update your profile. Please try again.",
+        type: "error",
+      });
     } finally {
       setIsUpdatingProfile(false);
     }
   };
 
-  const formatCount = (count: number) => {
-    if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M`;
-    if (count >= 1000) return `${(count / 1000).toFixed(1)}K`;
-    return count.toString();
+  const handleRemoveFromSaved = (storyId: string) => {
+    const savedIds = JSON.parse(localStorage.getItem("saved_stories") || "[]");
+    const updated = savedIds.filter((id: string) => id !== storyId);
+    localStorage.setItem("saved_stories", JSON.stringify(updated));
+    setSavedStories((prev) => prev.filter((s) => s.id !== storyId));
+
+    addToast({
+      title: "Removed from saved",
+      description: "Story has been removed from your saved list",
+      type: "success",
+    });
   };
 
   if (isLoading) {
@@ -275,7 +389,8 @@ export function ProfilePage() {
       <MainLayout>
         <div className="text-center py-12">
           <h2 className="text-2xl font-bold mb-2">User not found</h2>
-          <p className="text-muted-foreground">This user doesn't exist</p>
+          <p className="text-muted-foreground mb-4">This user doesn't exist</p>
+          <Button onClick={() => navigate("/stories")}>Browse Stories</Button>
         </div>
       </MainLayout>
     );
@@ -285,31 +400,40 @@ export function ProfilePage() {
     <MainLayout showFooter={false}>
       <div className="max-w-5xl mx-auto px-4 py-8">
         {/* Profile Header */}
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-8 mb-8">
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-8 mb-8">
+          {/* Profile Picture */}
           <div className="flex-shrink-0">
-            <Avatar className="h-32 w-32 md:h-40 md:w-40 border-4 border-gray-200">
+            <Avatar className="h-28 w-28 sm:h-32 sm:w-32 md:h-40 md:w-40 border-4 border-gray-200 shadow-lg">
               <AvatarImage src={profileUser.profile_pic || undefined} />
-              <AvatarFallback className="text-3xl">
+              <AvatarFallback className="text-2xl md:text-3xl bg-gradient-to-br from-primary/20 to-primary/10">
                 {profileUser.username?.[0].toUpperCase()}
               </AvatarFallback>
             </Avatar>
           </div>
 
+          {/* Profile Info */}
           <div className="flex-1 w-full">
+            {/* Username and Actions */}
             <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
-              <h1 className="text-2xl font-medium">{profileUser.username}</h1>
+              <h1 className="text-xl sm:text-2xl font-medium">
+                {profileUser.username}
+              </h1>
               <div className="flex items-center gap-2">
                 {isOwnProfile ? (
                   <>
                     <Button
                       variant="outline"
+                      size="sm"
                       onClick={() => setEditDialogOpen(true)}
+                      className="gap-1"
                     >
+                      <Edit2 className="h-3 w-3" />
                       Edit Profile
                     </Button>
                     <Button
                       variant="outline"
                       size="icon"
+                      className="h-8 w-8"
                       onClick={() => navigate("/settings")}
                     >
                       <Settings className="h-4 w-4" />
@@ -320,18 +444,22 @@ export function ProfilePage() {
                     <Button
                       onClick={handleFollowToggle}
                       variant={isFollowing ? "outline" : "default"}
+                      size="sm"
+                      className="gap-1"
                     >
                       {isFollowing ? (
                         <>
-                          <Check className="h-4 w-4 mr-2" />
+                          <Check className="h-3 w-3" />
                           Following
                         </>
                       ) : (
                         "Follow"
                       )}
                     </Button>
-                    <Button variant="outline">Message</Button>
-                    <Button variant="outline" size="icon">
+                    <Button variant="outline" size="sm">
+                      Message
+                    </Button>
+                    <Button variant="outline" size="icon" className="h-8 w-8">
                       <MoreHorizontal className="h-4 w-4" />
                     </Button>
                   </>
@@ -339,9 +467,10 @@ export function ProfilePage() {
               </div>
             </div>
 
-            <div className="flex items-center gap-8 mb-4">
+            {/* Stats */}
+            <div className="flex items-center gap-6 mb-4 text-sm">
               <div className="text-center md:text-left">
-                <span className="font-semibold">
+                <span className="font-semibold text-lg">
                   {profileUser.stories_count}
                 </span>
                 <span className="text-gray-600 ml-1">
@@ -349,24 +478,40 @@ export function ProfilePage() {
                 </span>
               </div>
               <button className="text-center md:text-left hover:underline">
-                <span className="font-semibold">
-                  {formatCount(profileUser.followers_count)}
+                <span className="font-semibold text-lg">
+                  {formatNumber(profileUser.followers_count)}
                 </span>
                 <span className="text-gray-600 ml-1">followers</span>
               </button>
               <button className="text-center md:text-left hover:underline">
-                <span className="font-semibold">
-                  {formatCount(profileUser.following_count)}
+                <span className="font-semibold text-lg">
+                  {formatNumber(profileUser.following_count)}
                 </span>
                 <span className="text-gray-600 ml-1">following</span>
               </button>
             </div>
 
+            {/* Bio */}
             {profileUser.bio && (
-              <div className="text-sm whitespace-pre-line">
+              <div className="text-sm whitespace-pre-line text-gray-700">
                 {profileUser.bio}
               </div>
             )}
+
+            {/* Additional Stats */}
+            <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
+              <div className="flex items-center gap-1">
+                <Calendar className="h-3 w-3" />
+                Joined {formatDate(profileUser.created_at)}
+              </div>
+              {profileStats.totalReads > 0 && (
+                <div className="flex items-center gap-1">
+                  <Badge variant="secondary" className="text-xs">
+                    {formatNumber(profileStats.totalReads)} total reads
+                  </Badge>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -378,7 +523,7 @@ export function ProfilePage() {
               className="flex items-center gap-2 rounded-none border-b-2 border-transparent data-[state=active]:border-black pb-3"
             >
               <Grid3X3 className="h-4 w-4" />
-              STORIES
+              <span className="hidden sm:inline">STORIES</span>
             </TabsTrigger>
             {isOwnProfile && (
               <TabsTrigger
@@ -386,16 +531,18 @@ export function ProfilePage() {
                 className="flex items-center gap-2 rounded-none border-b-2 border-transparent data-[state=active]:border-black pb-3"
               >
                 <Bookmark className="h-4 w-4" />
-                SAVED
+                <span className="hidden sm:inline">SAVED</span>
               </TabsTrigger>
             )}
           </TabsList>
 
+          {/* Stories Tab */}
           <TabsContent value="stories" className="mt-6">
             {userStories.length === 0 ? (
               <div className="text-center py-12">
+                <BookOpen className="h-12 w-12 mx-auto text-gray-300 mb-4" />
                 <h3 className="text-lg font-medium mb-2">
-                  {isOwnProfile ? "No stories yet" : "No stories published"}
+                  {isOwnProfile ? "No stories yet" : "No published stories"}
                 </h3>
                 {isOwnProfile ? (
                   <>
@@ -416,9 +563,9 @@ export function ProfilePage() {
             ) : (
               <div className="grid grid-cols-3 gap-1 md:gap-4">
                 {userStories.map((story) => (
-                  <button
+                  <Link
                     key={story.id}
-                    onClick={() => navigate(`/stories/${story.id}`)}
+                    to={`/stories/${story.id}`}
                     className="relative aspect-[4/5] group overflow-hidden rounded-sm md:rounded-lg bg-gray-100"
                   >
                     <img
@@ -431,31 +578,32 @@ export function ProfilePage() {
                     />
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <div className="text-white text-center px-2">
-                        <p className="font-semibold text-sm md:text-base line-clamp-2">
+                        <p className="font-semibold text-xs sm:text-sm md:text-base line-clamp-2">
                           {story.title}
                         </p>
                         <p className="text-xs md:text-sm mt-1">
-                          {formatCount(story.reads_count)} reads
+                          {formatNumber(story.reads_count)} reads
                         </p>
                       </div>
                     </div>
-                  </button>
+                  </Link>
                 ))}
               </div>
             )}
           </TabsContent>
 
+          {/* Saved Stories Tab */}
           {isOwnProfile && (
             <TabsContent value="saved" className="mt-6">
               {savedStories.length === 0 ? (
                 <div className="text-center py-12">
+                  <Bookmark className="h-12 w-12 mx-auto text-gray-300 mb-4" />
                   <h3 className="text-lg font-medium mb-2">No saved stories</h3>
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 mb-4">
                     Stories you save will appear here
                   </p>
                   <Button
                     variant="outline"
-                    className="mt-4"
                     onClick={() => navigate("/stories")}
                   >
                     Explore Stories
@@ -464,27 +612,39 @@ export function ProfilePage() {
               ) : (
                 <div className="grid grid-cols-3 gap-1 md:gap-4">
                   {savedStories.map((story) => (
-                    <button
-                      key={story.id}
-                      onClick={() => navigate(`/stories/${story.id}`)}
-                      className="relative aspect-[4/5] group overflow-hidden rounded-sm md:rounded-lg bg-gray-100"
-                    >
-                      <img
-                        src={
-                          story.cover_image ||
-                          `https://source.unsplash.com/400x500/?book,${story.genre}`
-                        }
-                        alt={story.title}
-                        className="h-full w-full object-cover transition-transform group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <div className="text-white text-center px-2">
-                          <p className="font-semibold text-sm md:text-base line-clamp-2">
-                            {story.title}
-                          </p>
+                    <div key={story.id} className="relative group">
+                      <Link
+                        to={`/stories/${story.id}`}
+                        className="relative aspect-[4/5] overflow-hidden rounded-sm md:rounded-lg bg-gray-100 block"
+                      >
+                        <img
+                          src={
+                            story.cover_image ||
+                            `https://source.unsplash.com/400x500/?book,${story.genre}`
+                          }
+                          alt={story.title}
+                          className="h-full w-full object-cover transition-transform group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <div className="text-white text-center px-2">
+                            <p className="font-semibold text-xs sm:text-sm md:text-base line-clamp-2">
+                              {story.title}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    </button>
+                      </Link>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute top-2 right-2 h-6 w-6 bg-white/90 hover:bg-white opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleRemoveFromSaved(story.id);
+                        }}
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </div>
                   ))}
                 </div>
               )}
@@ -492,9 +652,10 @@ export function ProfilePage() {
           )}
         </Tabs>
 
+        {/* Floating Action Button for Creating Stories */}
         {isOwnProfile && (
           <Button
-            className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg"
+            className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600"
             size="icon"
             onClick={() => navigate("/stories/create")}
           >
@@ -503,17 +664,17 @@ export function ProfilePage() {
         )}
       </div>
 
-      {/* Enhanced Edit Profile Modal */}
+      {/* Edit Profile Modal */}
       {editDialogOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in"
             onClick={() => setEditDialogOpen(false)}
           />
 
           {/* Modal */}
-          <div className="relative w-full max-w-lg bg-white rounded-xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+          <div className="relative w-full max-w-lg bg-white rounded-xl shadow-2xl overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-2 duration-300">
             {/* Modal Header */}
             <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-4">
               <div className="flex items-center justify-between">
@@ -522,13 +683,13 @@ export function ProfilePage() {
                   variant="ghost"
                   size="icon"
                   onClick={() => setEditDialogOpen(false)}
-                  className="text-white hover:bg-white/20"
+                  className="text-white hover:bg-white/20 rounded-full"
                 >
                   <X className="h-5 w-5" />
                 </Button>
               </div>
               <p className="text-white/90 text-sm mt-1">
-                Update your profile information and picture
+                Update your profile information
               </p>
             </div>
 
@@ -552,7 +713,6 @@ export function ProfilePage() {
                     </AvatarFallback>
                   </Avatar>
 
-                  {/* Upload Overlay */}
                   <label className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
                     <Camera className="h-8 w-8 text-white" />
                     <input
@@ -566,7 +726,7 @@ export function ProfilePage() {
 
                 {/* Action Buttons */}
                 <div className="flex gap-2">
-                  <label className="inline-flex">
+                  <label>
                     <Button
                       type="button"
                       variant="outline"
@@ -597,11 +757,17 @@ export function ProfilePage() {
                     </Button>
                   )}
                 </div>
+
+                {newProfilePic && (
+                  <p className="text-xs text-green-600">
+                    New photo selected. Click save to apply changes.
+                  </p>
+                )}
               </div>
 
               {/* Form Fields */}
               <div className="space-y-4">
-                {/* Username Field */}
+                {/* Username Field (Read-only) */}
                 <div className="space-y-2">
                   <Label
                     htmlFor="edit-username"
@@ -620,7 +786,7 @@ export function ProfilePage() {
                   </p>
                 </div>
 
-                {/* Email Field */}
+                {/* Email Field (Read-only) */}
                 <div className="space-y-2">
                   <Label
                     htmlFor="edit-email"
@@ -691,10 +857,12 @@ export function ProfilePage() {
                       username: profileUser?.username || "",
                       email: profileUser?.email || "",
                       bio: profileUser?.bio || "",
+                      website: "",
+                      location: "",
                     });
                   }}
                   disabled={isUpdatingProfile}
-                  className="border-gray-300"
+                  className="border-gray-300 hover:bg-gray-100"
                 >
                   Cancel
                 </Button>
