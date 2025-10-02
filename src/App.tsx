@@ -15,7 +15,7 @@ import { StoriesPage } from "./pages/StoriesPage";
 import { FeedPage } from "./pages/FeedPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { CreateStoryPage } from "./pages/CreateStoryPage";
-import { StoryDetailPage } from "./pages/StoryDetailPage";
+import { StoryDetailPage } from "./pages/StoryDetailPage"; // Add this import
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient({

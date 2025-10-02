@@ -9,36 +9,26 @@ import {
   Bookmark,
   Share2,
   ChevronLeft,
-  ChevronRight,
   MessageCircle,
-  Clock,
   Calendar,
-  User as UserIcon,
-  Award,
-  TrendingUp,
-  Star,
-  MoreVertical,
-  Flag,
   Edit,
   Trash2,
-  AlignLeft,
-  AlignCenter,
-  AlignRight,
-  Type,
-  Plus,
+  Lock,
+  Globe,
+  Upload,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -47,32 +37,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
 import { MainLayout } from "@/components/layout/main-layout";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useAuthStore } from "@/store/authStore";
 import { useUiStore } from "@/store/uiStore";
 import { Story, User } from "@/types";
-import { storiesApi, usersApi, votesApi } from "@/apis";
+import { storiesApi, usersApi } from "@/apis";
 import { formatNumber, formatDate } from "@/helper/formatting";
 import { cn } from "@/lib/utils";
+import { FileDropzone } from "@/components/ui/file-dropzone";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
-// Define extended author type
 interface ExtendedAuthor extends User {
   is_following?: boolean;
   total_stories?: number;
   total_reads?: number;
-}
-
-interface Chapter {
-  id: string;
-  number: number;
-  title: string;
-  content: string;
-  published_at: string;
-  reads_count: number;
-  word_count: number;
-  estimated_read_time: number;
 }
 
 export function StoryDetailPage() {
@@ -81,11 +62,9 @@ export function StoryDetailPage() {
   const { user, isAuthenticated } = useAuthStore();
   const { addToast } = useUiStore();
 
-  // Story data states - using ExtendedAuthor type
+  // Story data states
   const [story, setStory] = useState<Story | null>(null);
   const [author, setAuthor] = useState<ExtendedAuthor | null>(null);
-  const [chapters, setChapters] = useState<Chapter[]>([]);
-  const [currentChapter, setCurrentChapter] = useState<Chapter | null>(null);
   const [relatedStories, setRelatedStories] = useState<Story[]>([]);
 
   // UI states
@@ -93,15 +72,19 @@ export function StoryDetailPage() {
   const [isLiked, setIsLiked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
-  const [readingMode, setReadingMode] = useState(false);
-  const [fontSize, setFontSize] = useState<"small" | "medium" | "large">(
-    "medium"
-  );
-  const [textAlign, setTextAlign] = useState<
-    "left" | "center" | "right" | "justify"
-  >("left");
-  const [readingProgress, setReadingProgress] = useState(0);
-  const [comments, setComments] = useState<any[]>([]);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  // Edit form state
+  const [editForm, setEditForm] = useState({
+    title: "",
+    description: "",
+    genre: "",
+    tags: [] as string[],
+    visibility: "public" as "public" | "private",
+  });
+  const [newCoverImage, setNewCoverImage] = useState<File | null>(null);
+  const [coverPreview, setCoverPreview] = useState<string>("");
 
   // Is this the author's own story?
   const isOwnStory = user?.id === story?.author_id;
@@ -112,22 +95,6 @@ export function StoryDetailPage() {
     trackReadingHistory();
   }, [id]);
 
-  useEffect(() => {
-    // Track reading progress
-    if (readingMode && currentChapter) {
-      const handleScroll = () => {
-        const scrolled = window.scrollY;
-        const height =
-          document.documentElement.scrollHeight - window.innerHeight;
-        const progress = (scrolled / height) * 100;
-        setReadingProgress(Math.min(progress, 100));
-      };
-
-      window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
-    }
-  }, [readingMode, currentChapter]);
-
   const fetchStoryDetails = async () => {
     if (!id) return;
 
@@ -137,6 +104,18 @@ export function StoryDetailPage() {
       // Fetch story details
       const storyData = await storiesApi.getStory(id);
       setStory(storyData);
+
+      // Initialize edit form
+      setEditForm({
+        title: storyData.title,
+        description: storyData.description,
+        genre: storyData.genre,
+        tags: storyData.tags,
+        visibility: storyData.visibility,
+      });
+      if (storyData.cover_image) {
+        setCoverPreview(storyData.cover_image);
+      }
 
       // Fetch author details
       try {
@@ -156,28 +135,23 @@ export function StoryDetailPage() {
         );
         setIsFollowing(followingList.includes(authorData.id));
       } catch {
-        // Create mock author if API fails
-        const mockAuthor: ExtendedAuthor = {
+        // Create fallback author if API fails
+        const fallbackAuthor: ExtendedAuthor = {
           id: storyData.author_id,
           username: `author_${storyData.author_id.slice(0, 8)}`,
           email: "",
-          bio: "Passionate storyteller crafting worlds with words",
+          bio: "Storyteller",
           profile_pic: `https://api.dicebear.com/7.x/avataaars/svg?seed=${storyData.author_id}`,
-          followers_count: Math.floor(Math.random() * 10000),
-          following_count: Math.floor(Math.random() * 1000),
-          stories_count: Math.floor(Math.random() * 50),
+          followers_count: 0,
+          following_count: 0,
+          stories_count: 1,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
-          total_stories: Math.floor(Math.random() * 50) + 5,
-          total_reads: Math.floor(Math.random() * 100000) + 10000,
+          total_stories: 1,
+          total_reads: storyData.reads_count,
         };
-        setAuthor(mockAuthor);
+        setAuthor(fallbackAuthor);
       }
-
-      // Generate chapters with realistic content
-      const mockChapters: Chapter[] = generateChapters(storyData);
-      setChapters(mockChapters);
-      setCurrentChapter(mockChapters[0]);
 
       // Check if user has liked/saved this story
       if (isAuthenticated && user) {
@@ -197,9 +171,6 @@ export function StoryDetailPage() {
         limit: 4,
       });
       setRelatedStories(relatedRes.items.filter((s) => s.id !== id));
-
-      // Generate mock comments
-      setComments(generateMockComments());
     } catch (error) {
       console.error("Failed to fetch story details:", error);
       addToast({
@@ -210,97 +181,6 @@ export function StoryDetailPage() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const generateChapters = (story: Story): Chapter[] => {
-    const chapterCount = Math.floor(Math.random() * 10) + 3;
-    return Array.from({ length: chapterCount }, (_, i) => ({
-      id: `chapter-${i + 1}`,
-      number: i + 1,
-      title: getChapterTitle(i + 1),
-      content: generateChapterContent(story.genre, i + 1),
-      published_at: new Date(
-        Date.now() - (chapterCount - i) * 24 * 60 * 60 * 1000
-      ).toISOString(),
-      reads_count: Math.floor(Math.random() * 5000) + 500,
-      word_count: Math.floor(Math.random() * 2000) + 1500,
-      estimated_read_time: Math.floor(Math.random() * 10) + 5,
-    }));
-  };
-
-  const getChapterTitle = (num: number): string => {
-    const titles = [
-      "The Beginning",
-      "A New Hope",
-      "Dark Revelations",
-      "The Journey Continues",
-      "Unexpected Allies",
-      "The Storm Approaches",
-      "Moment of Truth",
-      "Rising Action",
-      "The Confrontation",
-      "Final Stand",
-      "New Dawn",
-      "Epilogue",
-    ];
-    return titles[num - 1] || `Chapter ${num}`;
-  };
-
-  const generateChapterContent = (
-    genre: string,
-    chapterNum: number
-  ): string => {
-    const genreIntros: Record<string, string> = {
-      Romance:
-        "Her heart raced as she saw him standing there, the moonlight casting shadows across his face.",
-      Fantasy:
-        "The ancient prophecy had foretold this moment, when magic would return to the realm.",
-      Mystery:
-        "The detective studied the crime scene, knowing that every detail could be crucial.",
-      "Sci-Fi":
-        "The starship's engines hummed as they approached the uncharted system.",
-      Horror:
-        "The old house creaked ominously, and shadows danced in the corners of her vision.",
-      Adventure:
-        "The map led them deeper into the jungle, where no explorer had ventured before.",
-    };
-
-    const intro = genreIntros[genre] || "The story continues...";
-
-    return `
-# Chapter ${chapterNum}: ${getChapterTitle(chapterNum)}
-
-${intro}
-
-The morning sun cast long shadows across the landscape, painting everything in hues of gold and amber. Our protagonist stood at the crossroads, contemplating the journey that lay ahead. Each path promised different adventures, different challenges, and different rewards.
-
-"Sometimes," they thought, "the hardest choice is not between right and wrong, but between two rights."
-
-The wind whispered through the trees, carrying with it the scent of distant places and untold stories. It was a reminder that every ending was also a beginning, every closing door revealed a window of opportunity.
-
-As they took their first step forward, they remembered the words of their mentor: "Courage is not the absence of fear, but the triumph over it. The brave person is not one who does not feel afraid, but one who conquers that fear."
-
-The path ahead was uncertain, filled with both promise and peril. But that's what made it an adventure worth pursuing. Every great story began with a single step into the unknown.
-    `;
-  };
-
-  const generateMockComments = () => {
-    return [
-      {
-        id: "1",
-        user: { username: "bookworm23", avatar: null },
-        content: "This chapter was incredible! Can't wait for the next one.",
-        likes: 24,
-        created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-      },
-      {
-        id: "2",
-        user: { username: "reader_alice", avatar: null },
-        content: "The character development in this story is amazing!",
-        likes: 18,
-        created_at: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
-      },
-    ];
   };
 
   const trackReadingHistory = () => {
@@ -317,11 +197,6 @@ The path ahead was uncertain, filled with both promise and peril. But that's wha
 
   const handleFollow = async () => {
     if (!isAuthenticated || !author) {
-      addToast({
-        title: "Sign in required",
-        description: "Please sign in to follow authors",
-        type: "info",
-      });
       navigate("/auth/login");
       return;
     }
@@ -347,22 +222,10 @@ The path ahead was uncertain, filled with both promise and peril. But that's wha
     }
 
     setIsFollowing(!isFollowing);
-    addToast({
-      title: isFollowing ? "Unfollowed" : "Following!",
-      description: isFollowing
-        ? `You unfollowed @${author.username}`
-        : `You are now following @${author.username}`,
-      type: "success",
-    });
   };
 
   const handleLike = async () => {
     if (!isAuthenticated) {
-      addToast({
-        title: "Sign in required",
-        description: "Please sign in to like stories",
-        type: "info",
-      });
       navigate("/auth/login");
       return;
     }
@@ -386,21 +249,10 @@ The path ahead was uncertain, filled with both promise and peril. But that's wha
         votes_count: isLiked ? story.votes_count - 1 : story.votes_count + 1,
       });
     }
-
-    addToast({
-      title: isLiked ? "Removed like" : "Story liked!",
-      description: isLiked ? "" : "Added to your liked stories",
-      type: "success",
-    });
   };
 
   const handleSave = async () => {
     if (!isAuthenticated) {
-      addToast({
-        title: "Sign in required",
-        description: "Please sign in to save stories",
-        type: "info",
-      });
       navigate("/auth/login");
       return;
     }
@@ -418,11 +270,6 @@ The path ahead was uncertain, filled with both promise and peril. But that's wha
     }
 
     setIsSaved(!isSaved);
-    addToast({
-      title: isSaved ? "Removed from library" : "Added to library!",
-      description: isSaved ? "" : "Story saved to your reading list",
-      type: "success",
-    });
   };
 
   const handleShare = async () => {
@@ -446,17 +293,81 @@ The path ahead was uncertain, filled with both promise and peril. But that's wha
     }
   };
 
-  const fontSizeClass = {
-    small: "text-sm leading-relaxed",
-    medium: "text-base leading-relaxed",
-    large: "text-lg leading-loose",
+  const handleCoverSelect = (file: File) => {
+    setNewCoverImage(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setCoverPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
   };
 
-  const textAlignClass = {
-    left: "text-left",
-    center: "text-center",
-    right: "text-right",
-    justify: "text-justify",
+  const handleUpdateStory = async () => {
+    if (!story || !id) return;
+
+    try {
+      setIsUpdating(true);
+
+      // Update story details
+      const updatedStory = await storiesApi.updateStory(id, {
+        title: editForm.title,
+        description: editForm.description,
+        genre: editForm.genre,
+        tags: editForm.tags,
+        visibility: editForm.visibility,
+      });
+
+      // Update cover if changed
+      if (newCoverImage) {
+        await storiesApi.updateStoryCover(id, newCoverImage);
+      }
+
+      setStory(updatedStory);
+      setEditDialogOpen(false);
+      setNewCoverImage(null);
+
+      addToast({
+        title: "Story updated!",
+        description: "Your changes have been saved successfully.",
+        type: "success",
+      });
+    } catch (error) {
+      console.error("Failed to update story:", error);
+      addToast({
+        title: "Update failed",
+        description: "Failed to update your story. Please try again.",
+        type: "error",
+      });
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleDeleteStory = async () => {
+    if (!story || !id) return;
+
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this story? This action cannot be undone."
+    );
+
+    if (!confirmed) return;
+
+    try {
+      await storiesApi.deleteStory(id);
+      addToast({
+        title: "Story deleted",
+        description: "Your story has been deleted successfully.",
+        type: "success",
+      });
+      navigate("/profile/" + user?.username);
+    } catch (error) {
+      console.error("Failed to delete story:", error);
+      addToast({
+        title: "Delete failed",
+        description: "Failed to delete your story. Please try again.",
+        type: "error",
+      });
+    }
   };
 
   if (isLoading) {
@@ -480,203 +391,603 @@ The path ahead was uncertain, filled with both promise and peril. But that's wha
     );
   }
 
+  // Don't show private stories to non-owners
+  if (story.visibility === "private" && !isOwnStory) {
+    return (
+      <MainLayout>
+        <div className="text-center py-12">
+          <Lock className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+          <h2 className="text-2xl font-bold mb-2">Private Story</h2>
+          <p className="text-gray-600 mb-4">
+            This story is private and only visible to the author.
+          </p>
+          <Button onClick={() => navigate("/stories")}>Browse Stories</Button>
+        </div>
+      </MainLayout>
+    );
+  }
+
   return (
-    <MainLayout showFooter={!readingMode}>
+    <MainLayout>
       <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
         {/* Story Header */}
-        {!readingMode && (
-          <div className="relative">
-            <div
-              className="absolute inset-0 h-[500px] bg-cover bg-center"
-              style={{
-                backgroundImage: `url(${
-                  story.cover_image ||
-                  "https://source.unsplash.com/1600x500/?book,library"
-                })`,
-              }}
+        <div className="relative">
+          <div
+            className="absolute inset-0 h-[500px] bg-cover bg-center"
+            style={{
+              backgroundImage: `url(${
+                story.cover_image ||
+                "https://source.unsplash.com/1600x500/?book,library"
+              })`,
+            }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background" />
+          </div>
+
+          <div className="relative z-10 max-w-7xl mx-auto px-4 pt-8 pb-20">
+            <Button
+              variant="ghost"
+              className="mb-4 text-white hover:bg-white/10"
+              onClick={() => navigate(-1)}
             >
-              <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background backdrop-blur-sm" />
-            </div>
+              <ChevronLeft className="h-4 w-4 mr-2" />
+              Back
+            </Button>
 
-            <div className="relative z-10 max-w-7xl mx-auto px-4 pt-8 pb-20">
-              <Button
-                variant="ghost"
-                className="mb-4 text-white hover:text-white/80"
-                onClick={() => navigate(-1)}
-              >
-                <ChevronLeft className="h-4 w-4 mr-2" />
-                Back
-              </Button>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="flex justify-center lg:justify-start">
+                <div className="relative group">
+                  <img
+                    src={
+                      story.cover_image ||
+                      "https://source.unsplash.com/400x600/?book,novel"
+                    }
+                    alt={story.title}
+                    className="w-64 h-96 object-cover rounded-xl shadow-2xl"
+                  />
+                  {story.visibility === "private" && (
+                    <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-sm rounded px-3 py-1">
+                      <Lock className="h-4 w-4 text-white inline mr-1" />
+                      <span className="text-sm text-white">Private</span>
+                    </div>
+                  )}
+                </div>
+              </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="flex justify-center lg:justify-start">
-                  <div className="relative group">
-                    <img
-                      src={
-                        story.cover_image ||
-                        "https://source.unsplash.com/400x600/?book,novel"
-                      }
-                      alt={story.title}
-                      className="w-64 h-96 object-cover rounded-xl shadow-2xl"
-                    />
+              <div className="lg:col-span-2 space-y-6">
+                <div>
+                  <h1 className="text-4xl md:text-5xl font-bold mb-3 text-white">
+                    {story.title}
+                  </h1>
+                  <p className="text-lg text-gray-200 leading-relaxed">
+                    {story.description}
+                  </p>
+                </div>
+
+                {/* Author Info */}
+                {author && (
+                  <div className="flex items-center justify-between bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                    <Link
+                      to={`/profile/${author.username}`}
+                      className="flex items-center gap-4 group"
+                    >
+                      <Avatar className="h-14 w-14 border-2 border-white/20">
+                        <AvatarImage src={author.profile_pic || undefined} />
+                        <AvatarFallback className="bg-primary/20 text-white">
+                          {author.username?.[0]?.toUpperCase() || "A"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-semibold text-lg text-white group-hover:text-primary-light transition-colors">
+                          @{author.username}
+                        </p>
+                        <p className="text-sm text-gray-300">
+                          {formatNumber(author.followers_count)} followers •{" "}
+                          {author.total_stories || 0} stories
+                        </p>
+                      </div>
+                    </Link>
+                    {author.username !== user?.username && (
+                      <Button
+                        variant={isFollowing ? "secondary" : "default"}
+                        onClick={handleFollow}
+                        className={cn(
+                          "ml-4",
+                          isFollowing
+                            ? "bg-gray-200 hover:bg-gray-300 text-gray-800"
+                            : "bg-white hover:bg-gray-100 text-gray-900"
+                        )}
+                      >
+                        {isFollowing ? "Following" : "Follow"}
+                      </Button>
+                    )}
+                  </div>
+                )}
+
+                {/* Stats Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="bg-gray-800/90 backdrop-blur-sm rounded-lg p-4 text-center border border-gray-700">
+                    <Eye className="h-6 w-6 mx-auto mb-2 text-white" />
+                    <p className="text-2xl font-bold text-white">
+                      {formatNumber(story.reads_count)}
+                    </p>
+                    <p className="text-sm text-gray-300">Reads</p>
+                  </div>
+                  <div className="bg-gray-800/90 backdrop-blur-sm rounded-lg p-4 text-center border border-gray-700">
+                    <Heart className="h-6 w-6 mx-auto mb-2 text-white" />
+                    <p className="text-2xl font-bold text-white">
+                      {formatNumber(story.votes_count)}
+                    </p>
+                    <p className="text-sm text-gray-300">Likes</p>
+                  </div>
+                  <div className="bg-gray-800/90 backdrop-blur-sm rounded-lg p-4 text-center border border-gray-700">
+                    <MessageCircle className="h-6 w-6 mx-auto mb-2 text-white" />
+                    <p className="text-2xl font-bold text-white">
+                      {formatNumber(story.comments_count)}
+                    </p>
+                    <p className="text-sm text-gray-300">Comments</p>
+                  </div>
+                  <div className="bg-gray-800/90 backdrop-blur-sm rounded-lg p-4 text-center border border-gray-700">
+                    <Calendar className="h-6 w-6 mx-auto mb-2 text-white" />
+                    <p className="text-sm font-bold text-white">
+                      {formatDate(story.created_at)}
+                    </p>
+                    <p className="text-sm text-gray-300">Published</p>
                   </div>
                 </div>
 
-                <div className="lg:col-span-2 space-y-6 text-white">
-                  <div>
-                    <h1 className="text-4xl md:text-5xl font-bold mb-3">
-                      {story.title}
-                    </h1>
-                    <p className="text-lg text-gray-200 leading-relaxed">
-                      {story.description}
-                    </p>
-                  </div>
-
-                  {/* Author Info - with null checks */}
-                  {author && (
-                    <div className="flex items-center justify-between bg-black/20 rounded-xl p-4 backdrop-blur-sm">
-                      <Link
-                        to={`/profile/${author.username}`}
-                        className="flex items-center gap-4 group"
-                      >
-                        <Avatar className="h-14 w-14 border-2 border-white/20">
-                          <AvatarImage src={author.profile_pic || undefined} />
-                          <AvatarFallback className="bg-primary/20 text-primary">
-                            {author.username?.[0]?.toUpperCase() || "A"}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-semibold text-lg group-hover:text-primary transition-colors">
-                            @{author.username}
-                          </p>
-                          <p className="text-sm text-gray-300">
-                            {formatNumber(author.followers_count)} followers •
-                            {author.total_stories || 0} stories
-                          </p>
-                        </div>
-                      </Link>
-                      {author.username !== user?.username && (
-                        <Button
-                          variant={isFollowing ? "secondary" : "default"}
-                          onClick={handleFollow}
-                          className="ml-4"
-                        >
-                          {isFollowing ? "Following" : "Follow"}
-                        </Button>
-                      )}
-                    </div>
-                  )}
-
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center">
-                      <Eye className="h-6 w-6 mx-auto mb-2" />
-                      <p className="text-2xl font-bold">
-                        {formatNumber(story.reads_count)}
-                      </p>
-                      <p className="text-sm text-gray-300">Reads</p>
-                    </div>
-                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center">
-                      <Heart className="h-6 w-6 mx-auto mb-2" />
-                      <p className="text-2xl font-bold">
-                        {formatNumber(story.votes_count)}
-                      </p>
-                      <p className="text-sm text-gray-300">Likes</p>
-                    </div>
-                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center">
-                      <MessageCircle className="h-6 w-6 mx-auto mb-2" />
-                      <p className="text-2xl font-bold">
-                        {formatNumber(story.comments_count)}
-                      </p>
-                      <p className="text-sm text-gray-300">Comments</p>
-                    </div>
-                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center">
-                      <BookOpen className="h-6 w-6 mx-auto mb-2" />
-                      <p className="text-2xl font-bold">{chapters.length}</p>
-                      <p className="text-sm text-gray-300">Chapters</p>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2">
+                {/* Tags */}
+                <div className="flex flex-wrap gap-2">
+                  <Badge
+                    variant="secondary"
+                    className="bg-white/20 text-white border-white/30"
+                  >
+                    {story.genre}
+                  </Badge>
+                  {story.tags.map((tag, index) => (
                     <Badge
-                      variant="secondary"
-                      className="bg-white/20 text-white border-white/30"
-                    >
-                      {story.genre}
-                    </Badge>
-                    {story.tags.map((tag, index) => (
-                      <Badge
-                        key={index}
-                        variant="outline"
-                        className="text-white border-white/30"
-                      >
-                        #{tag}
-                      </Badge>
-                    ))}
-                  </div>
-
-                  <div className="flex flex-wrap gap-3">
-                    <Button
-                      size="lg"
-                      className="bg-primary hover:bg-primary/90"
-                      onClick={() => setReadingMode(true)}
-                    >
-                      <BookOpen className="h-5 w-5 mr-2" />
-                      Start Reading
-                    </Button>
-                    <Button
-                      size="lg"
-                      variant={isLiked ? "default" : "outline"}
-                      className={cn(
-                        isLiked
-                          ? "bg-red-500 hover:bg-red-600"
-                          : "border-white/30 text-white hover:bg-white/10"
-                      )}
-                      onClick={handleLike}
-                    >
-                      <Heart
-                        className={cn(
-                          "h-5 w-5 mr-2",
-                          isLiked && "fill-current"
-                        )}
-                      />
-                      {isLiked ? "Liked" : "Like"}
-                    </Button>
-                    <Button
-                      size="lg"
-                      variant={isSaved ? "default" : "outline"}
-                      className={cn(
-                        isSaved
-                          ? "bg-green-600 hover:bg-green-700"
-                          : "border-white/30 text-white hover:bg-white/10"
-                      )}
-                      onClick={handleSave}
-                    >
-                      <Bookmark
-                        className={cn(
-                          "h-5 w-5 mr-2",
-                          isSaved && "fill-current"
-                        )}
-                      />
-                      {isSaved ? "Saved" : "Save"}
-                    </Button>
-                    <Button
-                      size="lg"
+                      key={index}
                       variant="outline"
-                      className="border-white/30 text-white hover:bg-white/10"
-                      onClick={handleShare}
+                      className="text-white border-white/30 bg-white/10"
                     >
-                      <Share2 className="h-5 w-5 mr-2" />
-                      Share
-                    </Button>
-                  </div>
+                      #{tag}
+                    </Badge>
+                  ))}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-3">
+                  {isOwnStory ? (
+                    <>
+                      <Button
+                        size="lg"
+                        className="bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
+                        onClick={() => setEditDialogOpen(true)}
+                      >
+                        <Edit className="h-5 w-5 mr-2" />
+                        Edit Story
+                      </Button>
+                      <Button
+                        size="lg"
+                        variant="secondary"
+                        className="bg-white hover:bg-gray-100 text-gray-800 shadow-lg"
+                        onClick={handleShare}
+                      >
+                        <Share2 className="h-5 w-5 mr-2" />
+                        Share
+                      </Button>
+                      <Button
+                        size="lg"
+                        variant="destructive"
+                        className="bg-red-500 hover:bg-red-600 text-white shadow-lg"
+                        onClick={handleDeleteStory}
+                      >
+                        <Trash2 className="h-5 w-5 mr-2" />
+                        Delete
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        size="lg"
+                        className="bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
+                        onClick={() =>
+                          addToast({
+                            title: "Coming Soon",
+                            description:
+                              "Reading feature will be available soon",
+                            type: "info",
+                          })
+                        }
+                      >
+                        <BookOpen className="h-5 w-5 mr-2" />
+                        Start Reading
+                      </Button>
+
+                      <Button
+                        size="lg"
+                        variant={isLiked ? "default" : "secondary"}
+                        className={cn(
+                          "shadow-lg",
+                          isLiked
+                            ? "bg-red-500 hover:bg-red-600 text-white"
+                            : "bg-white hover:bg-gray-100 text-gray-800"
+                        )}
+                        onClick={handleLike}
+                      >
+                        <Heart
+                          className={cn(
+                            "h-5 w-5 mr-2",
+                            isLiked ? "fill-current" : ""
+                          )}
+                        />
+                        {isLiked ? "Liked" : "Like"}
+                      </Button>
+
+                      <Button
+                        size="lg"
+                        variant={isSaved ? "default" : "secondary"}
+                        className={cn(
+                          "shadow-lg",
+                          isSaved
+                            ? "bg-green-600 hover:bg-green-700 text-white"
+                            : "bg-white hover:bg-gray-100 text-gray-800"
+                        )}
+                        onClick={handleSave}
+                      >
+                        <Bookmark
+                          className={cn(
+                            "h-5 w-5 mr-2",
+                            isSaved ? "fill-current" : ""
+                          )}
+                        />
+                        {isSaved ? "Saved" : "Save"}
+                      </Button>
+
+                      <Button
+                        size="lg"
+                        variant="secondary"
+                        className="bg-white hover:bg-gray-100 text-gray-800 shadow-lg"
+                        onClick={handleShare}
+                      >
+                        <Share2 className="h-5 w-5 mr-2" />
+                        Share
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
           </div>
-        )}
+        </div>
 
-        {/* Rest of the component remains the same... */}
+        {/* Main Content Area */}
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <Tabs defaultValue="about" className="space-y-6">
+            <TabsList className="bg-white border">
+              <TabsTrigger value="about">About</TabsTrigger>
+              <TabsTrigger value="details">Details</TabsTrigger>
+            </TabsList>
+
+            {/* About Tab */}
+            <TabsContent value="about" className="space-y-6">
+              <Card className="bg-white">
+                <CardContent className="p-6">
+                  <h3 className="text-lg font-semibold mb-4">Story Summary</h3>
+                  <p className="text-gray-700 whitespace-pre-line">
+                    {story.description || "No description available."}
+                  </p>
+                </CardContent>
+              </Card>
+
+              {author && (
+                <Card className="bg-white">
+                  <CardContent className="p-6">
+                    <h3 className="text-lg font-semibold mb-4">
+                      About the Author
+                    </h3>
+                    <div className="flex items-start gap-4">
+                      <Avatar className="h-16 w-16">
+                        <AvatarImage src={author.profile_pic || undefined} />
+                        <AvatarFallback>
+                          {author.username?.[0]?.toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <h4 className="font-semibold">@{author.username}</h4>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {author.bio || "No bio available"}
+                        </p>
+                        <div className="flex gap-4 mt-3 text-sm">
+                          <span>
+                            <strong>
+                              {formatNumber(author.followers_count)}
+                            </strong>{" "}
+                            followers
+                          </span>
+                          <span>
+                            <strong>{author.total_stories}</strong> stories
+                          </span>
+                          <span>
+                            <strong>
+                              {formatNumber(author.total_reads || 0)}
+                            </strong>{" "}
+                            total reads
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </TabsContent>
+
+            {/* Details Tab */}
+            <TabsContent value="details" className="space-y-6">
+              <Card className="bg-white">
+                <CardContent className="p-6">
+                  <h3 className="text-lg font-semibold mb-4">Story Details</h3>
+                  <div className="space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Genre</span>
+                      <span>{story.genre}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Published</span>
+                      <span>{formatDate(story.created_at)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">
+                        Last Updated
+                      </span>
+                      <span>{formatDate(story.updated_at)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Visibility</span>
+                      <Badge
+                        variant={
+                          story.visibility === "private"
+                            ? "secondary"
+                            : "default"
+                        }
+                      >
+                        {story.visibility === "private" ? (
+                          <>
+                            <Lock className="h-3 w-3 mr-1" />
+                            Private
+                          </>
+                        ) : (
+                          <>
+                            <Globe className="h-3 w-3 mr-1" />
+                            Public
+                          </>
+                        )}
+                      </Badge>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Total Reads</span>
+                      <span>{formatNumber(story.reads_count)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Total Likes</span>
+                      <span>{formatNumber(story.votes_count)}</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+
+          {/* Related Stories */}
+          {relatedStories.length > 0 && (
+            <div className="mt-12">
+              <h2 className="text-2xl font-bold mb-6">More Like This</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {relatedStories.map((relatedStory) => (
+                  <Link
+                    key={relatedStory.id}
+                    to={`/stories/${relatedStory.id}`}
+                    className="group"
+                  >
+                    <Card className="overflow-hidden hover:shadow-lg transition-all bg-white">
+                      <div className="aspect-[2/3] relative">
+                        <img
+                          src={
+                            relatedStory.cover_image ||
+                            `https://source.unsplash.com/400x600/?book,${relatedStory.genre}`
+                          }
+                          alt={relatedStory.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                        />
+                      </div>
+                      <CardContent className="p-4">
+                        <h3 className="font-semibold line-clamp-2">
+                          {relatedStory.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {formatNumber(relatedStory.reads_count)} reads
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* Edit Story Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Story</DialogTitle>
+            <DialogDescription>
+              Update your story details and settings
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6 mt-4">
+            {/* Cover Image */}
+            <div>
+              <Label>Cover Image</Label>
+              {coverPreview ? (
+                <div className="relative aspect-[2/3] w-48 mx-auto rounded-lg overflow-hidden bg-gray-100 mt-2">
+                  <img
+                    src={coverPreview}
+                    alt="Cover preview"
+                    className="h-full w-full object-cover"
+                  />
+                  <Button
+                    variant="destructive"
+                    size="icon"
+                    className="absolute top-2 right-2"
+                    onClick={() => {
+                      setNewCoverImage(null);
+                      setCoverPreview(story?.cover_image || "");
+                    }}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ) : (
+                <FileDropzone
+                  onFileSelect={handleCoverSelect}
+                  accept="image/*"
+                  className="mt-2"
+                />
+              )}
+            </div>
+
+            {/* Title */}
+            <div>
+              <Label htmlFor="edit-title">Title</Label>
+              <Input
+                id="edit-title"
+                value={editForm.title}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, title: e.target.value })
+                }
+                className="mt-1"
+              />
+            </div>
+
+            {/* Description */}
+            <div>
+              <Label htmlFor="edit-description">Description</Label>
+              <Textarea
+                id="edit-description"
+                value={editForm.description}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, description: e.target.value })
+                }
+                rows={4}
+                className="mt-1"
+              />
+            </div>
+
+            {/* Genre */}
+            <div>
+              <Label htmlFor="edit-genre">Genre</Label>
+              <Select
+                value={editForm.genre}
+                onValueChange={(value) =>
+                  setEditForm({ ...editForm, genre: value })
+                }
+              >
+                <SelectTrigger className="mt-1">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {[
+                    "Romance",
+                    "Fantasy",
+                    "Mystery",
+                    "Sci-Fi",
+                    "Horror",
+                    "Adventure",
+                    "Drama",
+                    "Comedy",
+                    "Thriller",
+                    "Historical",
+                  ].map((genre) => (
+                    <SelectItem key={genre} value={genre}>
+                      {genre}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Visibility */}
+            <div>
+              <Label htmlFor="edit-visibility">Visibility</Label>
+              <Select
+                value={editForm.visibility}
+                onValueChange={(value: "public" | "private") =>
+                  setEditForm({ ...editForm, visibility: value })
+                }
+              >
+                <SelectTrigger className="mt-1">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="public">
+                    <div className="flex items-center">
+                      <Globe className="h-4 w-4 mr-2" />
+                      Public - Anyone can read
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="private">
+                    <div className="flex items-center">
+                      <Lock className="h-4 w-4 mr-2" />
+                      Private - Only you can see
+                    </div>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Actions */}
+            <div className="flex justify-end gap-3 pt-4 border-t">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setEditDialogOpen(false);
+                  setNewCoverImage(null);
+                  if (story) {
+                    setCoverPreview(story.cover_image || "");
+                    setEditForm({
+                      title: story.title,
+                      description: story.description,
+                      genre: story.genre,
+                      tags: story.tags,
+                      visibility: story.visibility,
+                    });
+                  }
+                }}
+                disabled={isUpdating}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleUpdateStory}
+                disabled={isUpdating}
+                className="bg-orange-500 hover:bg-orange-600"
+              >
+                {isUpdating ? (
+                  <>
+                    <LoadingSpinner size="sm" className="mr-2" />
+                    Saving...
+                  </>
+                ) : (
+                  "Save Changes"
+                )}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </MainLayout>
   );
 }

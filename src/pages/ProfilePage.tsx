@@ -18,7 +18,8 @@ import {
   MapPin,
   Calendar,
   Link as LinkIcon,
-  BookOpen, // Add this import
+  BookOpen,
+  Lock, // Add Lock icon for private stories
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -144,25 +145,40 @@ export function ProfilePage() {
         sort: "latest",
       });
 
-      // Filter to get only this user's stories
-      const filteredStories = storiesResponse.items.filter(
-        (story) => story.author_id === userData.id
-      );
+      // Filter stories - FIXED to show private stories to owner
+      const filteredStories = storiesResponse.items.filter((story) => {
+        // Check if this is the user's story
+        if (story.author_id !== userData.id) {
+          return false;
+        }
+
+        // If it's the owner viewing their own profile, show all stories
+        if (isOwnProfile) {
+          return true;
+        }
+
+        // For other viewers, only show public stories
+        return story.visibility === "public";
+      });
 
       setUserStories(filteredStories);
 
-      // Calculate stats
-      const totalReads = filteredStories.reduce(
+      // Calculate stats (only for public stories if not own profile)
+      const statsStories = isOwnProfile
+        ? filteredStories
+        : filteredStories.filter((s) => s.visibility === "public");
+
+      const totalReads = statsStories.reduce(
         (sum, story) => sum + story.reads_count,
         0
       );
-      const totalLikes = filteredStories.reduce(
+      const totalLikes = statsStories.reduce(
         (sum, story) => sum + story.votes_count,
         0
       );
       const avgReads =
-        filteredStories.length > 0
-          ? Math.round(totalReads / filteredStories.length)
+        statsStories.length > 0
+          ? Math.round(totalReads / statsStories.length)
           : 0;
 
       setProfileStats({
@@ -175,7 +191,9 @@ export function ProfilePage() {
         prev
           ? {
               ...prev,
-              stories_count: filteredStories.length,
+              stories_count: filteredStories.filter(
+                (s) => s.visibility === "public"
+              ).length,
             }
           : null
       );
@@ -396,6 +414,10 @@ export function ProfilePage() {
     );
   }
 
+  // Count public and private stories
+  const publicStories = userStories.filter((s) => s.visibility === "public");
+  const privateStories = userStories.filter((s) => s.visibility === "private");
+
   return (
     <MainLayout showFooter={false}>
       <div className="max-w-5xl mx-auto px-4 py-8">
@@ -471,11 +493,16 @@ export function ProfilePage() {
             <div className="flex items-center gap-6 mb-4 text-sm">
               <div className="text-center md:text-left">
                 <span className="font-semibold text-lg">
-                  {profileUser.stories_count}
+                  {publicStories.length}
                 </span>
                 <span className="text-gray-600 ml-1">
-                  {profileUser.stories_count === 1 ? "story" : "stories"}
+                  {publicStories.length === 1 ? "story" : "stories"}
                 </span>
+                {isOwnProfile && privateStories.length > 0 && (
+                  <span className="text-gray-500 ml-2">
+                    (+{privateStories.length} private)
+                  </span>
+                )}
               </div>
               <button className="text-center md:text-left hover:underline">
                 <span className="font-semibold text-lg">
@@ -524,6 +551,11 @@ export function ProfilePage() {
             >
               <Grid3X3 className="h-4 w-4" />
               <span className="hidden sm:inline">STORIES</span>
+              {isOwnProfile && privateStories.length > 0 && (
+                <Badge variant="secondary" className="ml-1 text-xs">
+                  {userStories.length}
+                </Badge>
+              )}
             </TabsTrigger>
             {isOwnProfile && (
               <TabsTrigger
@@ -532,6 +564,11 @@ export function ProfilePage() {
               >
                 <Bookmark className="h-4 w-4" />
                 <span className="hidden sm:inline">SAVED</span>
+                {savedStories.length > 0 && (
+                  <Badge variant="secondary" className="ml-1 text-xs">
+                    {savedStories.length}
+                  </Badge>
+                )}
               </TabsTrigger>
             )}
           </TabsList>
@@ -556,7 +593,7 @@ export function ProfilePage() {
                   </>
                 ) : (
                   <p className="text-muted-foreground">
-                    This user hasn't published any stories yet
+                    This user hasn't published any public stories yet
                   </p>
                 )}
               </div>
@@ -576,13 +613,22 @@ export function ProfilePage() {
                       alt={story.title}
                       className="h-full w-full object-cover transition-transform group-hover:scale-110"
                     />
+                    {/* Private indicator */}
+                    {story.visibility === "private" && (
+                      <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-sm rounded px-2 py-1">
+                        <Lock className="h-3 w-3 text-white inline mr-1" />
+                        <span className="text-xs text-white">Private</span>
+                      </div>
+                    )}
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <div className="text-white text-center px-2">
                         <p className="font-semibold text-xs sm:text-sm md:text-base line-clamp-2">
                           {story.title}
                         </p>
                         <p className="text-xs md:text-sm mt-1">
-                          {formatNumber(story.reads_count)} reads
+                          {story.visibility === "private"
+                            ? "Private Story"
+                            : `${formatNumber(story.reads_count)} reads`}
                         </p>
                       </div>
                     </div>
@@ -664,7 +710,7 @@ export function ProfilePage() {
         )}
       </div>
 
-      {/* Edit Profile Modal */}
+      {/* Edit Profile Modal (unchanged) */}
       {editDialogOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           {/* Backdrop */}
