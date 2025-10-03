@@ -379,8 +379,8 @@ export function EditStoryPage() {
                 throw err;
               })
             );
-          } else if (chapter.isNew && !chapter.isDeleted && chapter.content.trim()) {
-            // Create new chapter with content
+          } else if (chapter.isNew && !chapter.isDeleted) {
+            // Create new chapter (even if empty)
             const chapterData = {
               story_id: id!,
               title: chapter.title,
