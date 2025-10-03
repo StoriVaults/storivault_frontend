@@ -61,8 +61,8 @@ import { FileDropzone } from "@/components/ui/file-dropzone";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useAuthStore } from "@/store/authStore";
 import { useUiStore } from "@/store/uiStore";
-import { storiesApi } from "@/apis";
-import { Story } from "@/types";
+import { storiesApi, chaptersApi } from "@/apis";
+import { Story, Chapter as ApiChapter } from "@/types";
 import { GENRES } from "@/helper/constants";
 import { cn } from "@/lib/utils";
 
@@ -73,6 +73,8 @@ interface Chapter {
   order: number;
   isPublished: boolean;
   publishedAt?: string;
+  isNew?: boolean; // Track if chapter is newly created locally
+  isDeleted?: boolean; // Track if chapter should be deleted on save
 }
 
 export function EditStoryPage() {
@@ -166,14 +168,47 @@ export function EditStoryPage() {
         setCoverPreview(storyResponse.cover_image);
       }
 
-      // Initialize with at least one chapter
-      if (chapters.length === 0) {
+      // Fetch existing chapters from backend
+      try {
+        const existingChapters = await chaptersApi.getChaptersByStory(id, false); // Get all chapters including unpublished
+
+        if (existingChapters.length > 0) {
+          const mappedChapters: Chapter[] = existingChapters
+            .sort((a, b) => a.order - b.order)
+            .map((ch) => ({
+              id: ch.id,
+              title: ch.title,
+              content: ch.content || "",
+              order: ch.order,
+              isPublished: ch.published,
+              publishedAt: ch.published ? ch.updated_at : undefined,
+              isNew: false,
+            }));
+          setChapters(mappedChapters);
+          setActiveChapter(mappedChapters[0].id);
+        } else {
+          // Initialize with one empty chapter if no chapters exist
+          const initialChapter: Chapter = {
+            id: `new-chapter-${Date.now()}`,
+            title: "Chapter 1",
+            content: "",
+            order: 1,
+            isPublished: false,
+            isNew: true,
+          };
+          setChapters([initialChapter]);
+          setActiveChapter(initialChapter.id);
+        }
+      } catch (error) {
+        console.error("Failed to fetch chapters:", error);
+        // Initialize with one empty chapter if fetch fails
         const initialChapter: Chapter = {
-          id: "chapter-1",
+          id: `new-chapter-${Date.now()}`,
           title: "Chapter 1",
           content: "",
           order: 1,
           isPublished: false,
+          isNew: true,
         };
         setChapters([initialChapter]);
         setActiveChapter(initialChapter.id);
@@ -221,11 +256,12 @@ export function EditStoryPage() {
 
   const addChapter = () => {
     const newChapter: Chapter = {
-      id: `chapter-${Date.now()}`,
+      id: `new-chapter-${Date.now()}`,
       title: `Chapter ${chapters.length + 1}`,
       content: "",
       order: chapters.length + 1,
       isPublished: false,
+      isNew: true, // Mark as new so it will be created on save
     };
     setChapters([...chapters, newChapter]);
     setActiveChapter(newChapter.id);
@@ -239,12 +275,25 @@ export function EditStoryPage() {
     setHasUnsavedChanges(true);
   };
 
-  const deleteChapter = (id: string) => {
+  const deleteChapter = (chapterId: string) => {
     if (chapters.length > 1) {
-      const updatedChapters = chapters.filter((ch) => ch.id !== id);
-      setChapters(updatedChapters);
-      if (activeChapter === id) {
-        setActiveChapter(updatedChapters[0].id);
+      const chapter = chapters.find((ch) => ch.id === chapterId);
+
+      // If it's a new chapter (not saved), just remove from state
+      if (chapter?.isNew) {
+        const updatedChapters = chapters.filter((ch) => ch.id !== chapterId);
+        setChapters(updatedChapters);
+        if (activeChapter === chapterId) {
+          setActiveChapter(updatedChapters[0].id);
+        }
+      } else {
+        // Mark existing chapter as deleted to be removed on save
+        updateChapter(chapterId, { isDeleted: true });
+        // Switch to another chapter
+        const remainingChapters = chapters.filter((ch) => ch.id !== chapterId);
+        if (activeChapter === chapterId && remainingChapters.length > 0) {
+          setActiveChapter(remainingChapters[0].id);
+        }
       }
       setHasUnsavedChanges(true);
     } else {
@@ -299,7 +348,7 @@ export function EditStoryPage() {
 
     setIsSaving(true);
     try {
-      // Update story
+      // Step 1: Update story metadata
       await storiesApi.updateStory(id!, {
         title: storyData.title,
         description: storyData.description,
@@ -308,21 +357,105 @@ export function EditStoryPage() {
         visibility: storyData.visibility,
       });
 
-      // Update cover if changed
+      // Step 2: Update cover if changed
       if (coverImage) {
         await storiesApi.updateStoryCover(id!, coverImage);
       }
 
+      // Step 3: Save chapters
+      const chapterPromises = [];
+
+      // Filter out deleted chapters from the list for display
+      const visibleChapters = chapters.filter((ch) => !ch.isDeleted);
+
+      for (const chapter of chapters) {
+        try {
+          if (chapter.isDeleted && !chapter.isNew) {
+            // Delete existing chapter from backend
+            console.log(`Deleting chapter: ${chapter.id}`);
+            chapterPromises.push(
+              chaptersApi.deleteChapter(chapter.id).catch((err) => {
+                console.error(`Failed to delete chapter ${chapter.id}:`, err);
+                throw err;
+              })
+            );
+          } else if (chapter.isNew && !chapter.isDeleted && chapter.content.trim()) {
+            // Create new chapter with content
+            const chapterData = {
+              story_id: id!,
+              title: chapter.title,
+              content: chapter.content,
+              order: chapter.order,
+              published: chapter.isPublished,
+            };
+            console.log(`Creating new chapter:`, chapterData);
+            chapterPromises.push(
+              chaptersApi.createChapter(chapterData).catch((err) => {
+                console.error(`Failed to create chapter "${chapter.title}":`, err);
+                console.error('Chapter data was:', chapterData);
+                throw err;
+              })
+            );
+          } else if (!chapter.isNew && !chapter.isDeleted) {
+            // Update existing chapter (only if ID is valid - not starting with "new-")
+            if (!chapter.id.startsWith('new-')) {
+              const updateData = {
+                title: chapter.title,
+                content: chapter.content,
+                order: chapter.order,
+                published: chapter.isPublished,
+              };
+              console.log(`Updating chapter ${chapter.id}:`, updateData);
+              chapterPromises.push(
+                chaptersApi.updateChapter(chapter.id, updateData).catch((err) => {
+                  console.error(`Failed to update chapter ${chapter.id}:`, err);
+                  console.error('Update data was:', updateData);
+                  throw err;
+                })
+              );
+            } else {
+              console.warn(`Skipping update for chapter with invalid ID: ${chapter.id}`);
+            }
+          }
+        } catch (err) {
+          console.error('Error processing chapter:', chapter, err);
+          throw err;
+        }
+      }
+
+      console.log(`Total chapter operations queued: ${chapterPromises.length}`);
+
+      await Promise.all(chapterPromises);
+
+      // Update local state to reflect the save
+      setChapters(visibleChapters.map((ch) => ({ ...ch, isNew: false })));
+
       setHasUnsavedChanges(false);
       addToast({
         title: "Story Updated!",
-        description: "Your changes have been saved successfully",
+        description: "Your story and chapters have been saved successfully",
         type: "success",
       });
-    } catch (error) {
+
+      // Refresh to get updated IDs for new chapters
+      await fetchStoryDetails();
+    } catch (error: any) {
+      console.error("Failed to save story:", error);
+
+      // Get detailed error message
+      let errorMessage = "Failed to save changes. Please try again.";
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        errorMessage = error.response.data?.message ||
+                      error.response.data?.detail ||
+                      `Server error: ${error.response.status}`;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
       addToast({
         title: "Error",
-        description: "Failed to save changes. Please try again.",
+        description: errorMessage,
         type: "error",
       });
     } finally {
@@ -349,15 +482,28 @@ export function EditStoryPage() {
     setDeleteDialogOpen(false);
   };
 
-  const handlePublishChapter = (chapterId: string) => {
+  const handlePublishChapter = async (chapterId: string) => {
+    const chapter = chapters.find((ch) => ch.id === chapterId);
+    if (!chapter) return;
+
+    if (!chapter.content.trim()) {
+      addToast({
+        title: "No Content",
+        description: "Please add content to the chapter before publishing",
+        type: "error",
+      });
+      return;
+    }
+
     updateChapter(chapterId, {
       isPublished: true,
       publishedAt: new Date().toISOString(),
     });
+
     addToast({
-      title: "Chapter Published!",
-      description: "Your chapter is now live for readers",
-      type: "success",
+      title: "Chapter Marked for Publishing",
+      description: "Click 'Save Changes' to publish this chapter",
+      type: "info",
     });
   };
 
@@ -722,7 +868,7 @@ export function EditStoryPage() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-2">
-                      {chapters.map((chapter, index) => (
+                      {chapters.filter((ch) => !ch.isDeleted).map((chapter, index) => (
                         <div
                           key={chapter.id}
                           className={cn(
@@ -805,7 +951,7 @@ export function EditStoryPage() {
 
                 {/* Chapter Editor */}
                 <div className="lg:col-span-3">
-                  {chapters.map((chapter) => (
+                  {chapters.filter((ch) => !ch.isDeleted).map((chapter) => (
                     <div
                       key={chapter.id}
                       className={

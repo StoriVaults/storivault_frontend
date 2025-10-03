@@ -37,7 +37,7 @@ import { MainLayout } from "@/components/layout/main-layout";
 import { FileDropzone } from "@/components/ui/file-dropzone";
 import { useAuthStore } from "@/store/authStore";
 import { useUiStore } from "@/store/uiStore";
-import { storiesApi } from "@/apis";
+import { storiesApi, chaptersApi } from "@/apis";
 import { GENRES } from "@/helper/constants";
 
 interface Chapter {
@@ -180,9 +180,20 @@ export function CreateStoryPage() {
       return;
     }
 
+    // Validate that at least one chapter has content
+    const hasContent = chapters.some((ch) => ch.content.trim().length > 0);
+    if (!hasContent) {
+      addToast({
+        title: "Content Required",
+        description: "Please write content for at least one chapter",
+        type: "error",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      // Create story with cover image
+      // Step 1: Create story with cover image
       const story = await storiesApi.createStoryMultipart({
         title: storyData.title,
         description: storyData.description,
@@ -192,17 +203,45 @@ export function CreateStoryPage() {
         cover: coverImage || undefined,
       });
 
+      // Step 2: Create chapters for the story
+      const chapterPromises = chapters
+        .filter((ch) => ch.content.trim().length > 0) // Only save chapters with content
+        .map((chapter) =>
+          chaptersApi.createChapter({
+            story_id: story.id,
+            title: chapter.title,
+            content: chapter.content,
+            order: chapter.order,
+            published: true, // Auto-publish chapters when story is published
+          })
+        );
+
+      await Promise.all(chapterPromises);
+
       addToast({
         title: "Story Created!",
-        description: "Your story has been published successfully",
+        description: `Your story has been published with ${chapterPromises.length} chapter(s)`,
         type: "success",
       });
 
       navigate(`/stories/${story.id}`);
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Failed to create story:", error);
+
+      // Get detailed error message
+      let errorMessage = "Failed to create story. Please try again.";
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        errorMessage = error.response.data?.message ||
+                      error.response.data?.detail ||
+                      `Server error: ${error.response.status}`;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
       addToast({
         title: "Error",
-        description: "Failed to create story. Please try again.",
+        description: errorMessage,
         type: "error",
       });
     } finally {

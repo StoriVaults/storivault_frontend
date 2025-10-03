@@ -57,11 +57,19 @@ apiClient.interceptors.response.use(
   (error: AxiosError) => {
     // Handle network errors and HTTP error responses
     const apiError: ApiError = new Error() as ApiError;
-    
+
     if (error.response) {
       // Server responded with error status
       const data = error.response.data as any;
-      
+
+      // Log full error response for debugging
+      console.error('API Error Response:', {
+        status: error.response.status,
+        data: error.response.data,
+        url: error.config?.url,
+        method: error.config?.method,
+      });
+
       if (data && typeof data === 'object') {
         if (data.success === false) {
           // Envelope error
@@ -69,16 +77,16 @@ apiClient.interceptors.response.use(
           apiError.details = data.error?.details;
         } else if (data.detail) {
           // FastAPI validation error
-          apiError.message = Array.isArray(data.detail) 
+          apiError.message = Array.isArray(data.detail)
             ? data.detail.map((d: any) => d.msg).join(', ')
             : data.detail;
         } else {
-          apiError.message = error.message;
+          apiError.message = error.message || `HTTP ${error.response.status} Error`;
         }
       } else {
-        apiError.message = error.message;
+        apiError.message = error.message || `HTTP ${error.response.status} Error`;
       }
-      
+
       apiError.status = error.response.status;
       
       // Handle 401 errors - logout user

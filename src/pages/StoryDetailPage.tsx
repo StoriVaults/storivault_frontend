@@ -461,14 +461,7 @@ export function StoryDetailPage() {
                       <Button
                         size="lg"
                         className="bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
-                        onClick={() =>
-                          addToast({
-                            title: "Coming Soon",
-                            description:
-                              "Reading feature will be available soon",
-                            type: "info",
-                          })
-                        }
+                        onClick={() => navigate(`/stories/${id}/read`)}
                       >
                         <BookOpen className="h-5 w-5 mr-2" />
                         Start Reading

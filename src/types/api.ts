@@ -141,6 +141,35 @@ export interface GetUrlResponse {
   expires_in: number;
 }
 
+// Chapter Types
+export interface Chapter {
+  id: string;
+  story_id: string;
+  title: string;
+  content: string | null;
+  order: number;
+  published: boolean;
+  votes_count: number;
+  reads_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateChapterRequest {
+  story_id: string;
+  title: string;
+  content: string;
+  order: number;
+  published?: boolean;
+}
+
+export interface UpdateChapterRequest {
+  title?: string;
+  content?: string;
+  order?: number;
+  published?: boolean;
+}
+
 // Vote Types
 export interface VoteRequest {
   chapter_id: string; // 24-hex ObjectId

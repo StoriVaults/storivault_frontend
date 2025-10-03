@@ -67,6 +67,7 @@ Generated from: `.`
 
 ### 📁 src\pages
 - [CreateStoryPage.tsx](#src-pages-CreateStoryPagetsx)
+- [EditStoryPage.tsx](#src-pages-EditStoryPagetsx)
 - [FeedPage.tsx](#src-pages-FeedPagetsx)
 - [HomePage.tsx](#src-pages-HomePagetsx)
 - [Index.tsx](#src-pages-Indextsx)
@@ -539,6 +540,8 @@ import { StoriesPage } from "./pages/StoriesPage";
 import { FeedPage } from "./pages/FeedPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { CreateStoryPage } from "./pages/CreateStoryPage";
+import { StoryDetailPage } from "./pages/StoryDetailPage";
+import { EditStoryPage } from "./pages/EditStoryPage"; // Add this import
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient({
@@ -623,10 +626,7 @@ const App = () => {
             {/* Public Routes - Accessible by everyone */}
             <Route path="/stories" element={<StoriesPage />} />
             <Route path="/stories/search" element={<StoriesPage />} />
-            <Route
-              path="/stories/:id"
-              element={<div>Story Detail Page (To be implemented)</div>}
-            />
+            <Route path="/stories/:id" element={<StoryDetailPage />} />
 
             {/* Protected Routes - Require authentication */}
             <Route
@@ -649,7 +649,7 @@ const App = () => {
               path="/stories/:id/edit"
               element={
                 <ProtectedRoute>
-                  <div>Edit Story Page (To be implemented)</div>
+                  <EditStoryPage />
                 </ProtectedRoute>
               }
             />
@@ -2577,6 +2577,1067 @@ export function CreateStoryPage() {
 
 ---
 
+#### 📄 src\pages\EditStoryPage.tsx
+<a name='src-pages-EditStoryPagetsx'></a>
+
+**Path:** `src\pages\EditStoryPage.tsx`
+
+```tsx
+"use client";
+
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  Save,
+  Eye,
+  Upload,
+  Bold,
+  Italic,
+  Underline,
+  List,
+  ListOrdered,
+  Quote,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  Plus,
+  X,
+  ChevronLeft,
+  Settings,
+  FileText,
+  Lock,
+  Globe,
+  Trash2,
+  Edit2,
+  Image as ImageIcon,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+import { MainLayout } from "@/components/layout/main-layout";
+import { FileDropzone } from "@/components/ui/file-dropzone";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { useAuthStore } from "@/store/authStore";
+import { useUiStore } from "@/store/uiStore";
+import { storiesApi } from "@/apis";
+import { Story } from "@/types";
+import { GENRES } from "@/helper/constants";
+import { cn } from "@/lib/utils";
+
+interface Chapter {
+  id: string;
+  title: string;
+  content: string;
+  order: number;
+  isPublished: boolean;
+  publishedAt?: string;
+}
+
+export function EditStoryPage() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuthStore();
+  const { addToast } = useUiStore();
+
+  const [story, setStory] = useState<Story | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("details");
+
+  // Story data
+  const [storyData, setStoryData] = useState({
+    title: "",
+    description: "",
+    genre: "",
+    tags: [] as string[],
+    visibility: "public" as "public" | "private",
+  });
+
+  const [coverImage, setCoverImage] = useState<File | null>(null);
+  const [coverPreview, setCoverPreview] = useState<string>("");
+
+  // Chapters
+  const [chapters, setChapters] = useState<Chapter[]>([]);
+  const [activeChapter, setActiveChapter] = useState<string | null>(null);
+  const [currentTag, setCurrentTag] = useState("");
+
+  // Settings
+  const [storySettings, setStorySettings] = useState({
+    allowComments: true,
+    matureContent: false,
+    completionStatus: "ongoing" as "ongoing" | "completed",
+    language: "English",
+    copyright: "All Rights Reserved",
+  });
+
+  useEffect(() => {
+    if (!id || !isAuthenticated) {
+      navigate("/stories");
+      return;
+    }
+    fetchStoryDetails();
+  }, [id, isAuthenticated]);
+
+  // Warn about unsaved changes
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [hasUnsavedChanges]);
+
+  const fetchStoryDetails = async () => {
+    if (!id) return;
+
+    try {
+      setIsLoading(true);
+      const storyResponse = await storiesApi.getStory(id);
+
+      // Check if user is the author
+      if (storyResponse.author_id !== user?.id) {
+        addToast({
+          title: "Unauthorized",
+          description: "You can only edit your own stories",
+          type: "error",
+        });
+        navigate(`/stories/${id}`);
+        return;
+      }
+
+      setStory(storyResponse);
+      setStoryData({
+        title: storyResponse.title,
+        description: storyResponse.description,
+        genre: storyResponse.genre,
+        tags: storyResponse.tags,
+        visibility: storyResponse.visibility,
+      });
+
+      if (storyResponse.cover_image) {
+        setCoverPreview(storyResponse.cover_image);
+      }
+
+      // Initialize with at least one chapter
+      if (chapters.length === 0) {
+        const initialChapter: Chapter = {
+          id: "chapter-1",
+          title: "Chapter 1",
+          content: "",
+          order: 1,
+          isPublished: false,
+        };
+        setChapters([initialChapter]);
+        setActiveChapter(initialChapter.id);
+      }
+    } catch (error) {
+      addToast({
+        title: "Error",
+        description: "Failed to load story details",
+        type: "error",
+      });
+      navigate("/stories");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCoverSelect = (file: File) => {
+    setCoverImage(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setCoverPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+    setHasUnsavedChanges(true);
+  };
+
+  const addTag = () => {
+    if (currentTag.trim() && !storyData.tags.includes(currentTag.trim())) {
+      setStoryData({
+        ...storyData,
+        tags: [...storyData.tags, currentTag.trim()],
+      });
+      setCurrentTag("");
+      setHasUnsavedChanges(true);
+    }
+  };
+
+  const removeTag = (tag: string) => {
+    setStoryData({
+      ...storyData,
+      tags: storyData.tags.filter((t) => t !== tag),
+    });
+    setHasUnsavedChanges(true);
+  };
+
+  const addChapter = () => {
+    const newChapter: Chapter = {
+      id: `chapter-${Date.now()}`,
+      title: `Chapter ${chapters.length + 1}`,
+      content: "",
+      order: chapters.length + 1,
+      isPublished: false,
+    };
+    setChapters([...chapters, newChapter]);
+    setActiveChapter(newChapter.id);
+    setHasUnsavedChanges(true);
+  };
+
+  const updateChapter = (id: string, updates: Partial<Chapter>) => {
+    setChapters(
+      chapters.map((ch) => (ch.id === id ? { ...ch, ...updates } : ch))
+    );
+    setHasUnsavedChanges(true);
+  };
+
+  const deleteChapter = (id: string) => {
+    if (chapters.length > 1) {
+      const updatedChapters = chapters.filter((ch) => ch.id !== id);
+      setChapters(updatedChapters);
+      if (activeChapter === id) {
+        setActiveChapter(updatedChapters[0].id);
+      }
+      setHasUnsavedChanges(true);
+    } else {
+      addToast({
+        title: "Cannot delete",
+        description: "You must have at least one chapter",
+        type: "error",
+      });
+    }
+  };
+
+  const reorderChapter = (id: string, direction: "up" | "down") => {
+    const index = chapters.findIndex((ch) => ch.id === id);
+    if (
+      (direction === "up" && index > 0) ||
+      (direction === "down" && index < chapters.length - 1)
+    ) {
+      const newChapters = [...chapters];
+      const swapIndex = direction === "up" ? index - 1 : index + 1;
+      [newChapters[index], newChapters[swapIndex]] = [
+        newChapters[swapIndex],
+        newChapters[index],
+      ];
+      // Update order numbers
+      newChapters.forEach((ch, i) => {
+        ch.order = i + 1;
+      });
+      setChapters(newChapters);
+      setHasUnsavedChanges(true);
+    }
+  };
+
+  const handleSave = async () => {
+    // Validation
+    if (!storyData.title.trim()) {
+      addToast({
+        title: "Title Required",
+        description: "Please enter a title for your story",
+        type: "error",
+      });
+      return;
+    }
+
+    if (!storyData.genre) {
+      addToast({
+        title: "Genre Required",
+        description: "Please select a genre for your story",
+        type: "error",
+      });
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      // Update story
+      await storiesApi.updateStory(id!, {
+        title: storyData.title,
+        description: storyData.description,
+        genre: storyData.genre,
+        tags: storyData.tags,
+        visibility: storyData.visibility,
+      });
+
+      // Update cover if changed
+      if (coverImage) {
+        await storiesApi.updateStoryCover(id!, coverImage);
+      }
+
+      setHasUnsavedChanges(false);
+      addToast({
+        title: "Story Updated!",
+        description: "Your changes have been saved successfully",
+        type: "success",
+      });
+    } catch (error) {
+      addToast({
+        title: "Error",
+        description: "Failed to save changes. Please try again.",
+        type: "error",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await storiesApi.deleteStory(id!);
+      addToast({
+        title: "Story Deleted",
+        description: "Your story has been permanently deleted",
+        type: "success",
+      });
+      navigate(`/profile/${user?.username}`);
+    } catch (error) {
+      addToast({
+        title: "Error",
+        description: "Failed to delete story. Please try again.",
+        type: "error",
+      });
+    }
+    setDeleteDialogOpen(false);
+  };
+
+  const handlePublishChapter = (chapterId: string) => {
+    updateChapter(chapterId, {
+      isPublished: true,
+      publishedAt: new Date().toISOString(),
+    });
+    addToast({
+      title: "Chapter Published!",
+      description: "Your chapter is now live for readers",
+      type: "success",
+    });
+  };
+
+  if (isLoading) {
+    return (
+      <MainLayout>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <LoadingSpinner size="lg" />
+        </div>
+      </MainLayout>
+    );
+  }
+
+  return (
+    <MainLayout showFooter={false}>
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <div className="bg-white border-b sticky top-0 z-40">
+          <div className="max-w-7xl mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    if (hasUnsavedChanges) {
+                      if (
+                        confirm(
+                          "You have unsaved changes. Are you sure you want to leave?"
+                        )
+                      ) {
+                        navigate(`/stories/${id}`);
+                      }
+                    } else {
+                      navigate(`/stories/${id}`);
+                    }
+                  }}
+                >
+                  <ChevronLeft className="h-4 w-4 mr-2" />
+                  Back to Story
+                </Button>
+                <Separator orientation="vertical" className="h-8" />
+                <div>
+                  <h1 className="text-xl font-bold">Edit Story</h1>
+                  {hasUnsavedChanges && (
+                    <p className="text-xs text-orange-600">Unsaved changes</p>
+                  )}
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => navigate(`/stories/${id}`)}
+                >
+                  <Eye className="h-4 w-4 mr-2" />
+                  Preview
+                </Button>
+                <Button
+                  onClick={handleSave}
+                  disabled={isSaving || !hasUnsavedChanges}
+                  className="bg-green-600 hover:bg-green-700"
+                >
+                  {isSaving ? (
+                    <>
+                      <LoadingSpinner size="sm" className="mr-2" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4 mr-2" />
+                      Save Changes
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="mb-6 bg-white">
+              <TabsTrigger value="details" className="gap-2">
+                <FileText className="h-4 w-4" />
+                Story Details
+              </TabsTrigger>
+              <TabsTrigger value="chapters" className="gap-2">
+                <Edit2 className="h-4 w-4" />
+                Chapters
+              </TabsTrigger>
+              <TabsTrigger value="settings" className="gap-2">
+                <Settings className="h-4 w-4" />
+                Settings
+              </TabsTrigger>
+            </TabsList>
+
+            {/* Story Details Tab */}
+            <TabsContent value="details" className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Cover Image */}
+                <Card className="lg:col-span-1 bg-white">
+                  <CardHeader>
+                    <CardTitle>Cover Image</CardTitle>
+                    <CardDescription>
+                      Upload an eye-catching cover for your story
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {coverPreview ? (
+                      <div className="relative aspect-[2/3] rounded-lg overflow-hidden bg-gray-100">
+                        <img
+                          src={coverPreview}
+                          alt="Cover preview"
+                          className="h-full w-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                          <label>
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              className="cursor-pointer"
+                              asChild
+                            >
+                              <span>
+                                <Upload className="h-4 w-4 mr-2" />
+                                Replace
+                              </span>
+                            </Button>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) handleCoverSelect(file);
+                              }}
+                              className="hidden"
+                            />
+                          </label>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => {
+                              setCoverImage(null);
+                              setCoverPreview("");
+                              setHasUnsavedChanges(true);
+                            }}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <FileDropzone
+                        onFileSelect={handleCoverSelect}
+                        accept="image/*"
+                        className="aspect-[2/3]"
+                      />
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Story Info */}
+                <div className="lg:col-span-2 space-y-6">
+                  <Card className="bg-white">
+                    <CardHeader>
+                      <CardTitle>Basic Information</CardTitle>
+                      <CardDescription>
+                        Update your story's title, description, and genre
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div>
+                        <Label htmlFor="title">Title</Label>
+                        <Input
+                          id="title"
+                          value={storyData.title}
+                          onChange={(e) => {
+                            setStoryData({
+                              ...storyData,
+                              title: e.target.value,
+                            });
+                            setHasUnsavedChanges(true);
+                          }}
+                          placeholder="Enter your story title"
+                          className="mt-1"
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="description">Description</Label>
+                        <Textarea
+                          id="description"
+                          value={storyData.description}
+                          onChange={(e) => {
+                            setStoryData({
+                              ...storyData,
+                              description: e.target.value,
+                            });
+                            setHasUnsavedChanges(true);
+                          }}
+                          placeholder="Write a compelling description of your story"
+                          rows={5}
+                          className="mt-1"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          {storyData.description.length}/2000 characters
+                        </p>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="genre">Genre</Label>
+                        <Select
+                          value={storyData.genre}
+                          onValueChange={(value) => {
+                            setStoryData({ ...storyData, genre: value });
+                            setHasUnsavedChanges(true);
+                          }}
+                        >
+                          <SelectTrigger className="mt-1">
+                            <SelectValue placeholder="Select a genre" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white">
+                            {GENRES.map((genre) => (
+                              <SelectItem key={genre} value={genre}>
+                                {genre}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="tags">Tags</Label>
+                        <div className="flex gap-2 mt-1">
+                          <Input
+                            id="tags"
+                            value={currentTag}
+                            onChange={(e) => setCurrentTag(e.target.value)}
+                            placeholder="Add tags to help readers find your story"
+                            onKeyPress={(e) => {
+                              if (e.key === "Enter") {
+                                e.preventDefault();
+                                addTag();
+                              }
+                            }}
+                          />
+                          <Button
+                            type="button"
+                            onClick={addTag}
+                            variant="secondary"
+                          >
+                            Add
+                          </Button>
+                        </div>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {storyData.tags.map((tag) => (
+                            <Badge key={tag} variant="secondary">
+                              {tag}
+                              <button
+                                className="ml-2 hover:text-destructive"
+                                onClick={() => removeTag(tag)}
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-white">
+                    <CardHeader>
+                      <CardTitle>Visibility</CardTitle>
+                      <CardDescription>
+                        Control who can see your story
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div
+                          className={cn(
+                            "flex items-start gap-4 p-4 rounded-lg border-2 cursor-pointer transition-colors",
+                            storyData.visibility === "public"
+                              ? "border-orange-500 bg-orange-50"
+                              : "border-gray-200 hover:border-gray-300"
+                          )}
+                          onClick={() => {
+                            setStoryData({
+                              ...storyData,
+                              visibility: "public",
+                            });
+                            setHasUnsavedChanges(true);
+                          }}
+                        >
+                          <div className="pt-1">
+                            <Globe className="h-5 w-5 text-gray-600" />
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="font-semibold">Public</h4>
+                            <p className="text-sm text-gray-600 mt-1">
+                              Anyone can find and read your story
+                            </p>
+                          </div>
+                          <input
+                            type="radio"
+                            checked={storyData.visibility === "public"}
+                            onChange={() => {}}
+                            className="mt-1"
+                          />
+                        </div>
+
+                        <div
+                          className={cn(
+                            "flex items-start gap-4 p-4 rounded-lg border-2 cursor-pointer transition-colors",
+                            storyData.visibility === "private"
+                              ? "border-orange-500 bg-orange-50"
+                              : "border-gray-200 hover:border-gray-300"
+                          )}
+                          onClick={() => {
+                            setStoryData({
+                              ...storyData,
+                              visibility: "private",
+                            });
+                            setHasUnsavedChanges(true);
+                          }}
+                        >
+                          <div className="pt-1">
+                            <Lock className="h-5 w-5 text-gray-600" />
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="font-semibold">Private</h4>
+                            <p className="text-sm text-gray-600 mt-1">
+                              Only you can see this story
+                            </p>
+                          </div>
+                          <input
+                            type="radio"
+                            checked={storyData.visibility === "private"}
+                            onChange={() => {}}
+                            className="mt-1"
+                          />
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            </TabsContent>
+
+            {/* Chapters Tab */}
+            <TabsContent value="chapters" className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                {/* Chapter List */}
+                <div className="lg:col-span-1">
+                  <Card className="bg-white">
+                    <CardHeader>
+                      <CardTitle className="text-lg">Chapters</CardTitle>
+                      <CardDescription>
+                        Organize your story into chapters
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      {chapters.map((chapter, index) => (
+                        <div
+                          key={chapter.id}
+                          className={cn(
+                            "group relative p-3 rounded-lg border cursor-pointer transition-colors",
+                            activeChapter === chapter.id
+                              ? "border-orange-500 bg-orange-50"
+                              : "border-gray-200 hover:border-gray-300"
+                          )}
+                          onClick={() => setActiveChapter(chapter.id)}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1">
+                              <p className="font-medium text-sm">
+                                {chapter.title}
+                              </p>
+                              {chapter.isPublished && (
+                                <Badge
+                                  variant="secondary"
+                                  className="mt-1 text-xs"
+                                >
+                                  Published
+                                </Badge>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                              {index > 0 && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-6 w-6"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    reorderChapter(chapter.id, "up");
+                                  }}
+                                >
+                                  <ChevronLeft className="h-3 w-3 rotate-90" />
+                                </Button>
+                              )}
+                              {index < chapters.length - 1 && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-6 w-6"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    reorderChapter(chapter.id, "down");
+                                  }}
+                                >
+                                  <ChevronLeft className="h-3 w-3 -rotate-90" />
+                                </Button>
+                              )}
+                              {chapters.length > 1 && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-6 w-6"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    deleteChapter(chapter.id);
+                                  }}
+                                >
+                                  <X className="h-3 w-3" />
+                                </Button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      <Button
+                        variant="outline"
+                        className="w-full"
+                        onClick={addChapter}
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Chapter
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Chapter Editor */}
+                <div className="lg:col-span-3">
+                  {chapters.map((chapter) => (
+                    <div
+                      key={chapter.id}
+                      className={
+                        activeChapter === chapter.id ? "block" : "hidden"
+                      }
+                    >
+                      <Card className="bg-white">
+                        <CardHeader>
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1">
+                              <Input
+                                value={chapter.title}
+                                onChange={(e) =>
+                                  updateChapter(chapter.id, {
+                                    title: e.target.value,
+                                  })
+                                }
+                                className="text-xl font-semibold"
+                                placeholder="Chapter Title"
+                              />
+                            </div>
+                            {!chapter.isPublished && (
+                              <Button
+                                variant="outline"
+                                onClick={() => handlePublishChapter(chapter.id)}
+                              >
+                                Publish Chapter
+                              </Button>
+                            )}
+                          </div>
+                        </CardHeader>
+                        <CardContent>
+                          <Textarea
+                            value={chapter.content}
+                            onChange={(e) =>
+                              updateChapter(chapter.id, {
+                                content: e.target.value,
+                              })
+                            }
+                            placeholder="Start writing your chapter..."
+                            className="min-h-[500px] font-serif text-lg leading-relaxed"
+                          />
+                          <div className="flex items-center justify-between mt-4 text-sm text-gray-500">
+                            <div>
+                              Words:{" "}
+                              {
+                                chapter.content.split(/\s+/).filter(Boolean)
+                                  .length
+                              }
+                            </div>
+                            {chapter.isPublished && chapter.publishedAt && (
+                              <div>
+                                Published:{" "}
+                                {new Date(
+                                  chapter.publishedAt
+                                ).toLocaleDateString()}
+                              </div>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </TabsContent>
+
+            {/* Settings Tab */}
+            <TabsContent value="settings" className="space-y-6">
+              <Card className="bg-white">
+                <CardHeader>
+                  <CardTitle>Story Settings</CardTitle>
+                  <CardDescription>
+                    Configure advanced settings for your story
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label htmlFor="comments">Allow Comments</Label>
+                      <p className="text-sm text-gray-600">
+                        Let readers comment on your chapters
+                      </p>
+                    </div>
+                    <Switch
+                      id="comments"
+                      checked={storySettings.allowComments}
+                      onCheckedChange={(checked) => {
+                        setStorySettings({
+                          ...storySettings,
+                          allowComments: checked,
+                        });
+                        setHasUnsavedChanges(true);
+                      }}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label htmlFor="mature">Mature Content</Label>
+                      <p className="text-sm text-gray-600">
+                        Mark if your story contains mature themes
+                      </p>
+                    </div>
+                    <Switch
+                      id="mature"
+                      checked={storySettings.matureContent}
+                      onCheckedChange={(checked) => {
+                        setStorySettings({
+                          ...storySettings,
+                          matureContent: checked,
+                        });
+                        setHasUnsavedChanges(true);
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="status">Completion Status</Label>
+                    <Select
+                      value={storySettings.completionStatus}
+                      onValueChange={(value: "ongoing" | "completed") => {
+                        setStorySettings({
+                          ...storySettings,
+                          completionStatus: value,
+                        });
+                        setHasUnsavedChanges(true);
+                      }}
+                    >
+                      <SelectTrigger className="mt-1">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white">
+                        <SelectItem value="ongoing">Ongoing</SelectItem>
+                        <SelectItem value="completed">Completed</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="language">Language</Label>
+                    <Select
+                      value={storySettings.language}
+                      onValueChange={(value) => {
+                        setStorySettings({ ...storySettings, language: value });
+                        setHasUnsavedChanges(true);
+                      }}
+                    >
+                      <SelectTrigger className="mt-1">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white">
+                        <SelectItem value="English">English</SelectItem>
+                        <SelectItem value="Spanish">Spanish</SelectItem>
+                        <SelectItem value="French">French</SelectItem>
+                        <SelectItem value="German">German</SelectItem>
+                        <SelectItem value="Italian">Italian</SelectItem>
+                        <SelectItem value="Portuguese">Portuguese</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="copyright">Copyright</Label>
+                    <Select
+                      value={storySettings.copyright}
+                      onValueChange={(value) => {
+                        setStorySettings({
+                          ...storySettings,
+                          copyright: value,
+                        });
+                        setHasUnsavedChanges(true);
+                      }}
+                    >
+                      <SelectTrigger className="mt-1">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white">
+                        <SelectItem value="All Rights Reserved">
+                          All Rights Reserved
+                        </SelectItem>
+                        <SelectItem value="Creative Commons">
+                          Creative Commons
+                        </SelectItem>
+                        <SelectItem value="Public Domain">
+                          Public Domain
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-white border-red-200">
+                <CardHeader>
+                  <CardTitle className="text-red-600">Danger Zone</CardTitle>
+                  <CardDescription>
+                    Irreversible actions for your story
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button
+                    variant="destructive"
+                    onClick={() => setDeleteDialogOpen(true)}
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete Story
+                  </Button>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent className="bg-white">
+          <DialogHeader>
+            <DialogTitle>Delete Story</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete "{story?.title}"? This action
+              cannot be undone and will permanently delete your story and all
+              its chapters.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setDeleteDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDelete}>
+              Delete Story
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </MainLayout>
+  );
+}
+```
+
+---
+
 #### 📄 src\pages\FeedPage.tsx
 <a name='src-pages-FeedPagetsx'></a>
 
@@ -4415,7 +5476,8 @@ import {
   MapPin,
   Calendar,
   Link as LinkIcon,
-  BookOpen, // Add this import
+  BookOpen,
+  Lock, // Add Lock icon for private stories
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -4541,25 +5603,40 @@ export function ProfilePage() {
         sort: "latest",
       });
 
-      // Filter to get only this user's stories
-      const filteredStories = storiesResponse.items.filter(
-        (story) => story.author_id === userData.id
-      );
+      // Filter stories - FIXED to show private stories to owner
+      const filteredStories = storiesResponse.items.filter((story) => {
+        // Check if this is the user's story
+        if (story.author_id !== userData.id) {
+          return false;
+        }
+
+        // If it's the owner viewing their own profile, show all stories
+        if (isOwnProfile) {
+          return true;
+        }
+
+        // For other viewers, only show public stories
+        return story.visibility === "public";
+      });
 
       setUserStories(filteredStories);
 
-      // Calculate stats
-      const totalReads = filteredStories.reduce(
+      // Calculate stats (only for public stories if not own profile)
+      const statsStories = isOwnProfile
+        ? filteredStories
+        : filteredStories.filter((s) => s.visibility === "public");
+
+      const totalReads = statsStories.reduce(
         (sum, story) => sum + story.reads_count,
         0
       );
-      const totalLikes = filteredStories.reduce(
+      const totalLikes = statsStories.reduce(
         (sum, story) => sum + story.votes_count,
         0
       );
       const avgReads =
-        filteredStories.length > 0
-          ? Math.round(totalReads / filteredStories.length)
+        statsStories.length > 0
+          ? Math.round(totalReads / statsStories.length)
           : 0;
 
       setProfileStats({
@@ -4572,7 +5649,9 @@ export function ProfilePage() {
         prev
           ? {
               ...prev,
-              stories_count: filteredStories.length,
+              stories_count: filteredStories.filter(
+                (s) => s.visibility === "public"
+              ).length,
             }
           : null
       );
@@ -4793,6 +5872,10 @@ export function ProfilePage() {
     );
   }
 
+  // Count public and private stories
+  const publicStories = userStories.filter((s) => s.visibility === "public");
+  const privateStories = userStories.filter((s) => s.visibility === "private");
+
   return (
     <MainLayout showFooter={false}>
       <div className="max-w-5xl mx-auto px-4 py-8">
@@ -4868,11 +5951,16 @@ export function ProfilePage() {
             <div className="flex items-center gap-6 mb-4 text-sm">
               <div className="text-center md:text-left">
                 <span className="font-semibold text-lg">
-                  {profileUser.stories_count}
+                  {publicStories.length}
                 </span>
                 <span className="text-gray-600 ml-1">
-                  {profileUser.stories_count === 1 ? "story" : "stories"}
+                  {publicStories.length === 1 ? "story" : "stories"}
                 </span>
+                {isOwnProfile && privateStories.length > 0 && (
+                  <span className="text-gray-500 ml-2">
+                    (+{privateStories.length} private)
+                  </span>
+                )}
               </div>
               <button className="text-center md:text-left hover:underline">
                 <span className="font-semibold text-lg">
@@ -4921,6 +6009,11 @@ export function ProfilePage() {
             >
               <Grid3X3 className="h-4 w-4" />
               <span className="hidden sm:inline">STORIES</span>
+              {isOwnProfile && privateStories.length > 0 && (
+                <Badge variant="secondary" className="ml-1 text-xs">
+                  {userStories.length}
+                </Badge>
+              )}
             </TabsTrigger>
             {isOwnProfile && (
               <TabsTrigger
@@ -4929,6 +6022,11 @@ export function ProfilePage() {
               >
                 <Bookmark className="h-4 w-4" />
                 <span className="hidden sm:inline">SAVED</span>
+                {savedStories.length > 0 && (
+                  <Badge variant="secondary" className="ml-1 text-xs">
+                    {savedStories.length}
+                  </Badge>
+                )}
               </TabsTrigger>
             )}
           </TabsList>
@@ -4953,7 +6051,7 @@ export function ProfilePage() {
                   </>
                 ) : (
                   <p className="text-muted-foreground">
-                    This user hasn't published any stories yet
+                    This user hasn't published any public stories yet
                   </p>
                 )}
               </div>
@@ -4973,13 +6071,22 @@ export function ProfilePage() {
                       alt={story.title}
                       className="h-full w-full object-cover transition-transform group-hover:scale-110"
                     />
+                    {/* Private indicator */}
+                    {story.visibility === "private" && (
+                      <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-sm rounded px-2 py-1">
+                        <Lock className="h-3 w-3 text-white inline mr-1" />
+                        <span className="text-xs text-white">Private</span>
+                      </div>
+                    )}
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <div className="text-white text-center px-2">
                         <p className="font-semibold text-xs sm:text-sm md:text-base line-clamp-2">
                           {story.title}
                         </p>
                         <p className="text-xs md:text-sm mt-1">
-                          {formatNumber(story.reads_count)} reads
+                          {story.visibility === "private"
+                            ? "Private Story"
+                            : `${formatNumber(story.reads_count)} reads`}
                         </p>
                       </div>
                     </div>
@@ -5061,7 +6168,7 @@ export function ProfilePage() {
         )}
       </div>
 
-      {/* Edit Profile Modal */}
+      {/* Edit Profile Modal (unchanged) */}
       {editDialogOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           {/* Backdrop */}
@@ -5893,70 +7000,30 @@ import {
   Bookmark,
   Share2,
   ChevronLeft,
-  ChevronRight,
   MessageCircle,
-  Clock,
   Calendar,
-  User as UserIcon,
-  Award,
-  TrendingUp,
-  Star,
-  MoreVertical,
-  Flag,
   Edit,
-  Trash2,
-  AlignLeft,
-  AlignCenter,
-  AlignRight,
-  Type,
-  Plus,
+  Lock,
+  Globe,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
 import { MainLayout } from "@/components/layout/main-layout";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useAuthStore } from "@/store/authStore";
 import { useUiStore } from "@/store/uiStore";
 import { Story, User } from "@/types";
-import { storiesApi, usersApi, votesApi } from "@/apis";
+import { storiesApi, usersApi } from "@/apis";
 import { formatNumber, formatDate } from "@/helper/formatting";
 import { cn } from "@/lib/utils";
 
-// Define extended author type
 interface ExtendedAuthor extends User {
   is_following?: boolean;
   total_stories?: number;
   total_reads?: number;
-}
-
-interface Chapter {
-  id: string;
-  number: number;
-  title: string;
-  content: string;
-  published_at: string;
-  reads_count: number;
-  word_count: number;
-  estimated_read_time: number;
 }
 
 export function StoryDetailPage() {
@@ -5965,11 +7032,9 @@ export function StoryDetailPage() {
   const { user, isAuthenticated } = useAuthStore();
   const { addToast } = useUiStore();
 
-  // Story data states - using ExtendedAuthor type
+  // Story data states
   const [story, setStory] = useState<Story | null>(null);
   const [author, setAuthor] = useState<ExtendedAuthor | null>(null);
-  const [chapters, setChapters] = useState<Chapter[]>([]);
-  const [currentChapter, setCurrentChapter] = useState<Chapter | null>(null);
   const [relatedStories, setRelatedStories] = useState<Story[]>([]);
 
   // UI states
@@ -5977,15 +7042,6 @@ export function StoryDetailPage() {
   const [isLiked, setIsLiked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
-  const [readingMode, setReadingMode] = useState(false);
-  const [fontSize, setFontSize] = useState<"small" | "medium" | "large">(
-    "medium"
-  );
-  const [textAlign, setTextAlign] = useState<
-    "left" | "center" | "right" | "justify"
-  >("left");
-  const [readingProgress, setReadingProgress] = useState(0);
-  const [comments, setComments] = useState<any[]>([]);
 
   // Is this the author's own story?
   const isOwnStory = user?.id === story?.author_id;
@@ -5996,22 +7052,6 @@ export function StoryDetailPage() {
     trackReadingHistory();
   }, [id]);
 
-  useEffect(() => {
-    // Track reading progress
-    if (readingMode && currentChapter) {
-      const handleScroll = () => {
-        const scrolled = window.scrollY;
-        const height =
-          document.documentElement.scrollHeight - window.innerHeight;
-        const progress = (scrolled / height) * 100;
-        setReadingProgress(Math.min(progress, 100));
-      };
-
-      window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
-    }
-  }, [readingMode, currentChapter]);
-
   const fetchStoryDetails = async () => {
     if (!id) return;
 
@@ -6020,6 +7060,21 @@ export function StoryDetailPage() {
 
       // Fetch story details
       const storyData = await storiesApi.getStory(id);
+
+      // Check if story is private and user is not the owner
+      if (
+        storyData.visibility === "private" &&
+        storyData.author_id !== user?.id
+      ) {
+        addToast({
+          title: "Private Story",
+          description: "This story is private and cannot be accessed",
+          type: "error",
+        });
+        navigate("/stories");
+        return;
+      }
+
       setStory(storyData);
 
       // Fetch author details
@@ -6040,28 +7095,23 @@ export function StoryDetailPage() {
         );
         setIsFollowing(followingList.includes(authorData.id));
       } catch {
-        // Create mock author if API fails
-        const mockAuthor: ExtendedAuthor = {
+        // Create fallback author if API fails
+        const fallbackAuthor: ExtendedAuthor = {
           id: storyData.author_id,
           username: `author_${storyData.author_id.slice(0, 8)}`,
           email: "",
-          bio: "Passionate storyteller crafting worlds with words",
+          bio: "Storyteller",
           profile_pic: `https://api.dicebear.com/7.x/avataaars/svg?seed=${storyData.author_id}`,
-          followers_count: Math.floor(Math.random() * 10000),
-          following_count: Math.floor(Math.random() * 1000),
-          stories_count: Math.floor(Math.random() * 50),
+          followers_count: 0,
+          following_count: 0,
+          stories_count: 1,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
-          total_stories: Math.floor(Math.random() * 50) + 5,
-          total_reads: Math.floor(Math.random() * 100000) + 10000,
+          total_stories: 1,
+          total_reads: storyData.reads_count,
         };
-        setAuthor(mockAuthor);
+        setAuthor(fallbackAuthor);
       }
-
-      // Generate chapters with realistic content
-      const mockChapters: Chapter[] = generateChapters(storyData);
-      setChapters(mockChapters);
-      setCurrentChapter(mockChapters[0]);
 
       // Check if user has liked/saved this story
       if (isAuthenticated && user) {
@@ -6075,15 +7125,14 @@ export function StoryDetailPage() {
         setIsSaved(savedStories.includes(id));
       }
 
-      // Fetch related stories
+      // Fetch related stories (only public ones)
       const relatedRes = await storiesApi.getStories({
         genre: storyData.genre,
         limit: 4,
       });
-      setRelatedStories(relatedRes.items.filter((s) => s.id !== id));
-
-      // Generate mock comments
-      setComments(generateMockComments());
+      setRelatedStories(
+        relatedRes.items.filter((s) => s.id !== id && s.visibility === "public")
+      );
     } catch (error) {
       console.error("Failed to fetch story details:", error);
       addToast({
@@ -6091,100 +7140,10 @@ export function StoryDetailPage() {
         description: "Failed to load story details",
         type: "error",
       });
+      navigate("/stories");
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const generateChapters = (story: Story): Chapter[] => {
-    const chapterCount = Math.floor(Math.random() * 10) + 3;
-    return Array.from({ length: chapterCount }, (_, i) => ({
-      id: `chapter-${i + 1}`,
-      number: i + 1,
-      title: getChapterTitle(i + 1),
-      content: generateChapterContent(story.genre, i + 1),
-      published_at: new Date(
-        Date.now() - (chapterCount - i) * 24 * 60 * 60 * 1000
-      ).toISOString(),
-      reads_count: Math.floor(Math.random() * 5000) + 500,
-      word_count: Math.floor(Math.random() * 2000) + 1500,
-      estimated_read_time: Math.floor(Math.random() * 10) + 5,
-    }));
-  };
-
-  const getChapterTitle = (num: number): string => {
-    const titles = [
-      "The Beginning",
-      "A New Hope",
-      "Dark Revelations",
-      "The Journey Continues",
-      "Unexpected Allies",
-      "The Storm Approaches",
-      "Moment of Truth",
-      "Rising Action",
-      "The Confrontation",
-      "Final Stand",
-      "New Dawn",
-      "Epilogue",
-    ];
-    return titles[num - 1] || `Chapter ${num}`;
-  };
-
-  const generateChapterContent = (
-    genre: string,
-    chapterNum: number
-  ): string => {
-    const genreIntros: Record<string, string> = {
-      Romance:
-        "Her heart raced as she saw him standing there, the moonlight casting shadows across his face.",
-      Fantasy:
-        "The ancient prophecy had foretold this moment, when magic would return to the realm.",
-      Mystery:
-        "The detective studied the crime scene, knowing that every detail could be crucial.",
-      "Sci-Fi":
-        "The starship's engines hummed as they approached the uncharted system.",
-      Horror:
-        "The old house creaked ominously, and shadows danced in the corners of her vision.",
-      Adventure:
-        "The map led them deeper into the jungle, where no explorer had ventured before.",
-    };
-
-    const intro = genreIntros[genre] || "The story continues...";
-
-    return `
-# Chapter ${chapterNum}: ${getChapterTitle(chapterNum)}
-
-${intro}
-
-The morning sun cast long shadows across the landscape, painting everything in hues of gold and amber. Our protagonist stood at the crossroads, contemplating the journey that lay ahead. Each path promised different adventures, different challenges, and different rewards.
-
-"Sometimes," they thought, "the hardest choice is not between right and wrong, but between two rights."
-
-The wind whispered through the trees, carrying with it the scent of distant places and untold stories. It was a reminder that every ending was also a beginning, every closing door revealed a window of opportunity.
-
-As they took their first step forward, they remembered the words of their mentor: "Courage is not the absence of fear, but the triumph over it. The brave person is not one who does not feel afraid, but one who conquers that fear."
-
-The path ahead was uncertain, filled with both promise and peril. But that's what made it an adventure worth pursuing. Every great story began with a single step into the unknown.
-    `;
-  };
-
-  const generateMockComments = () => {
-    return [
-      {
-        id: "1",
-        user: { username: "bookworm23", avatar: null },
-        content: "This chapter was incredible! Can't wait for the next one.",
-        likes: 24,
-        created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-      },
-      {
-        id: "2",
-        user: { username: "reader_alice", avatar: null },
-        content: "The character development in this story is amazing!",
-        likes: 18,
-        created_at: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
-      },
-    ];
   };
 
   const trackReadingHistory = () => {
@@ -6201,11 +7160,6 @@ The path ahead was uncertain, filled with both promise and peril. But that's wha
 
   const handleFollow = async () => {
     if (!isAuthenticated || !author) {
-      addToast({
-        title: "Sign in required",
-        description: "Please sign in to follow authors",
-        type: "info",
-      });
       navigate("/auth/login");
       return;
     }
@@ -6231,22 +7185,10 @@ The path ahead was uncertain, filled with both promise and peril. But that's wha
     }
 
     setIsFollowing(!isFollowing);
-    addToast({
-      title: isFollowing ? "Unfollowed" : "Following!",
-      description: isFollowing
-        ? `You unfollowed @${author.username}`
-        : `You are now following @${author.username}`,
-      type: "success",
-    });
   };
 
   const handleLike = async () => {
     if (!isAuthenticated) {
-      addToast({
-        title: "Sign in required",
-        description: "Please sign in to like stories",
-        type: "info",
-      });
       navigate("/auth/login");
       return;
     }
@@ -6270,21 +7212,10 @@ The path ahead was uncertain, filled with both promise and peril. But that's wha
         votes_count: isLiked ? story.votes_count - 1 : story.votes_count + 1,
       });
     }
-
-    addToast({
-      title: isLiked ? "Removed like" : "Story liked!",
-      description: isLiked ? "" : "Added to your liked stories",
-      type: "success",
-    });
   };
 
   const handleSave = async () => {
     if (!isAuthenticated) {
-      addToast({
-        title: "Sign in required",
-        description: "Please sign in to save stories",
-        type: "info",
-      });
       navigate("/auth/login");
       return;
     }
@@ -6302,11 +7233,6 @@ The path ahead was uncertain, filled with both promise and peril. But that's wha
     }
 
     setIsSaved(!isSaved);
-    addToast({
-      title: isSaved ? "Removed from library" : "Added to library!",
-      description: isSaved ? "" : "Story saved to your reading list",
-      type: "success",
-    });
   };
 
   const handleShare = async () => {
@@ -6328,19 +7254,6 @@ The path ahead was uncertain, filled with both promise and peril. But that's wha
         type: "success",
       });
     }
-  };
-
-  const fontSizeClass = {
-    small: "text-sm leading-relaxed",
-    medium: "text-base leading-relaxed",
-    large: "text-lg leading-loose",
-  };
-
-  const textAlignClass = {
-    left: "text-left",
-    center: "text-center",
-    right: "text-right",
-    justify: "text-justify",
   };
 
   if (isLoading) {
@@ -6365,201 +7278,404 @@ The path ahead was uncertain, filled with both promise and peril. But that's wha
   }
 
   return (
-    <MainLayout showFooter={!readingMode}>
+    <MainLayout>
       <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
         {/* Story Header */}
-        {!readingMode && (
-          <div className="relative">
-            <div
-              className="absolute inset-0 h-[500px] bg-cover bg-center"
-              style={{
-                backgroundImage: `url(${
-                  story.cover_image ||
-                  "https://source.unsplash.com/1600x500/?book,library"
-                })`,
-              }}
+        <div className="relative">
+          <div
+            className="absolute inset-0 h-[500px] bg-cover bg-center"
+            style={{
+              backgroundImage: `url(${
+                story.cover_image ||
+                "https://source.unsplash.com/1600x500/?book,library"
+              })`,
+            }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background" />
+          </div>
+
+          <div className="relative z-10 max-w-7xl mx-auto px-4 pt-8 pb-20">
+            <Button
+              variant="ghost"
+              className="mb-4 text-white hover:bg-white/10"
+              onClick={() => navigate(-1)}
             >
-              <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background backdrop-blur-sm" />
-            </div>
+              <ChevronLeft className="h-4 w-4 mr-2" />
+              Back
+            </Button>
 
-            <div className="relative z-10 max-w-7xl mx-auto px-4 pt-8 pb-20">
-              <Button
-                variant="ghost"
-                className="mb-4 text-white hover:text-white/80"
-                onClick={() => navigate(-1)}
-              >
-                <ChevronLeft className="h-4 w-4 mr-2" />
-                Back
-              </Button>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="flex justify-center lg:justify-start">
+                <div className="relative group">
+                  <img
+                    src={
+                      story.cover_image ||
+                      "https://source.unsplash.com/400x600/?book,novel"
+                    }
+                    alt={story.title}
+                    className="w-64 h-96 object-cover rounded-xl shadow-2xl"
+                  />
+                  {story.visibility === "private" && (
+                    <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-sm rounded px-3 py-1">
+                      <Lock className="h-4 w-4 text-white inline mr-1" />
+                      <span className="text-sm text-white">Private</span>
+                    </div>
+                  )}
+                </div>
+              </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="flex justify-center lg:justify-start">
-                  <div className="relative group">
-                    <img
-                      src={
-                        story.cover_image ||
-                        "https://source.unsplash.com/400x600/?book,novel"
-                      }
-                      alt={story.title}
-                      className="w-64 h-96 object-cover rounded-xl shadow-2xl"
-                    />
+              <div className="lg:col-span-2 space-y-6">
+                <div>
+                  <h1 className="text-4xl md:text-5xl font-bold mb-3 text-white">
+                    {story.title}
+                  </h1>
+                  <p className="text-lg text-gray-200 leading-relaxed">
+                    {story.description}
+                  </p>
+                </div>
+
+                {/* Author Info */}
+                {author && (
+                  <div className="flex items-center justify-between bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                    <Link
+                      to={`/profile/${author.username}`}
+                      className="flex items-center gap-4 group"
+                    >
+                      <Avatar className="h-14 w-14 border-2 border-white/20">
+                        <AvatarImage src={author.profile_pic || undefined} />
+                        <AvatarFallback className="bg-primary/20 text-white">
+                          {author.username?.[0]?.toUpperCase() || "A"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-semibold text-lg text-white group-hover:text-primary-light transition-colors">
+                          @{author.username}
+                        </p>
+                        <p className="text-sm text-gray-300">
+                          {formatNumber(author.followers_count)} followers •{" "}
+                          {author.total_stories || 0} stories
+                        </p>
+                      </div>
+                    </Link>
+                    {author.username !== user?.username && (
+                      <Button
+                        variant={isFollowing ? "secondary" : "default"}
+                        onClick={handleFollow}
+                        className={cn(
+                          "ml-4",
+                          isFollowing
+                            ? "bg-gray-200 hover:bg-gray-300 text-gray-800"
+                            : "bg-white hover:bg-gray-100 text-gray-900"
+                        )}
+                      >
+                        {isFollowing ? "Following" : "Follow"}
+                      </Button>
+                    )}
+                  </div>
+                )}
+
+                {/* Stats Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="bg-gray-800/90 backdrop-blur-sm rounded-lg p-4 text-center border border-gray-700">
+                    <Eye className="h-6 w-6 mx-auto mb-2 text-white" />
+                    <p className="text-2xl font-bold text-white">
+                      {formatNumber(story.reads_count)}
+                    </p>
+                    <p className="text-sm text-gray-300">Reads</p>
+                  </div>
+                  <div className="bg-gray-800/90 backdrop-blur-sm rounded-lg p-4 text-center border border-gray-700">
+                    <Heart className="h-6 w-6 mx-auto mb-2 text-white" />
+                    <p className="text-2xl font-bold text-white">
+                      {formatNumber(story.votes_count)}
+                    </p>
+                    <p className="text-sm text-gray-300">Likes</p>
+                  </div>
+                  <div className="bg-gray-800/90 backdrop-blur-sm rounded-lg p-4 text-center border border-gray-700">
+                    <MessageCircle className="h-6 w-6 mx-auto mb-2 text-white" />
+                    <p className="text-2xl font-bold text-white">
+                      {formatNumber(story.comments_count)}
+                    </p>
+                    <p className="text-sm text-gray-300">Comments</p>
+                  </div>
+                  <div className="bg-gray-800/90 backdrop-blur-sm rounded-lg p-4 text-center border border-gray-700">
+                    <Calendar className="h-6 w-6 mx-auto mb-2 text-white" />
+                    <p className="text-sm font-bold text-white">
+                      {formatDate(story.created_at)}
+                    </p>
+                    <p className="text-sm text-gray-300">Published</p>
                   </div>
                 </div>
 
-                <div className="lg:col-span-2 space-y-6 text-white">
-                  <div>
-                    <h1 className="text-4xl md:text-5xl font-bold mb-3">
-                      {story.title}
-                    </h1>
-                    <p className="text-lg text-gray-200 leading-relaxed">
-                      {story.description}
-                    </p>
-                  </div>
-
-                  {/* Author Info - with null checks */}
-                  {author && (
-                    <div className="flex items-center justify-between bg-black/20 rounded-xl p-4 backdrop-blur-sm">
-                      <Link
-                        to={`/profile/${author.username}`}
-                        className="flex items-center gap-4 group"
-                      >
-                        <Avatar className="h-14 w-14 border-2 border-white/20">
-                          <AvatarImage src={author.profile_pic || undefined} />
-                          <AvatarFallback className="bg-primary/20 text-primary">
-                            {author.username?.[0]?.toUpperCase() || "A"}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-semibold text-lg group-hover:text-primary transition-colors">
-                            @{author.username}
-                          </p>
-                          <p className="text-sm text-gray-300">
-                            {formatNumber(author.followers_count)} followers •
-                            {author.total_stories || 0} stories
-                          </p>
-                        </div>
-                      </Link>
-                      {author.username !== user?.username && (
-                        <Button
-                          variant={isFollowing ? "secondary" : "default"}
-                          onClick={handleFollow}
-                          className="ml-4"
-                        >
-                          {isFollowing ? "Following" : "Follow"}
-                        </Button>
-                      )}
-                    </div>
-                  )}
-
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center">
-                      <Eye className="h-6 w-6 mx-auto mb-2" />
-                      <p className="text-2xl font-bold">
-                        {formatNumber(story.reads_count)}
-                      </p>
-                      <p className="text-sm text-gray-300">Reads</p>
-                    </div>
-                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center">
-                      <Heart className="h-6 w-6 mx-auto mb-2" />
-                      <p className="text-2xl font-bold">
-                        {formatNumber(story.votes_count)}
-                      </p>
-                      <p className="text-sm text-gray-300">Likes</p>
-                    </div>
-                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center">
-                      <MessageCircle className="h-6 w-6 mx-auto mb-2" />
-                      <p className="text-2xl font-bold">
-                        {formatNumber(story.comments_count)}
-                      </p>
-                      <p className="text-sm text-gray-300">Comments</p>
-                    </div>
-                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center">
-                      <BookOpen className="h-6 w-6 mx-auto mb-2" />
-                      <p className="text-2xl font-bold">{chapters.length}</p>
-                      <p className="text-sm text-gray-300">Chapters</p>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2">
+                {/* Tags */}
+                <div className="flex flex-wrap gap-2">
+                  <Badge
+                    variant="secondary"
+                    className="bg-white/20 text-white border-white/30"
+                  >
+                    {story.genre}
+                  </Badge>
+                  {story.tags.map((tag, index) => (
                     <Badge
-                      variant="secondary"
-                      className="bg-white/20 text-white border-white/30"
-                    >
-                      {story.genre}
-                    </Badge>
-                    {story.tags.map((tag, index) => (
-                      <Badge
-                        key={index}
-                        variant="outline"
-                        className="text-white border-white/30"
-                      >
-                        #{tag}
-                      </Badge>
-                    ))}
-                  </div>
-
-                  <div className="flex flex-wrap gap-3">
-                    <Button
-                      size="lg"
-                      className="bg-primary hover:bg-primary/90"
-                      onClick={() => setReadingMode(true)}
-                    >
-                      <BookOpen className="h-5 w-5 mr-2" />
-                      Start Reading
-                    </Button>
-                    <Button
-                      size="lg"
-                      variant={isLiked ? "default" : "outline"}
-                      className={cn(
-                        isLiked
-                          ? "bg-red-500 hover:bg-red-600"
-                          : "border-white/30 text-white hover:bg-white/10"
-                      )}
-                      onClick={handleLike}
-                    >
-                      <Heart
-                        className={cn(
-                          "h-5 w-5 mr-2",
-                          isLiked && "fill-current"
-                        )}
-                      />
-                      {isLiked ? "Liked" : "Like"}
-                    </Button>
-                    <Button
-                      size="lg"
-                      variant={isSaved ? "default" : "outline"}
-                      className={cn(
-                        isSaved
-                          ? "bg-green-600 hover:bg-green-700"
-                          : "border-white/30 text-white hover:bg-white/10"
-                      )}
-                      onClick={handleSave}
-                    >
-                      <Bookmark
-                        className={cn(
-                          "h-5 w-5 mr-2",
-                          isSaved && "fill-current"
-                        )}
-                      />
-                      {isSaved ? "Saved" : "Save"}
-                    </Button>
-                    <Button
-                      size="lg"
+                      key={index}
                       variant="outline"
-                      className="border-white/30 text-white hover:bg-white/10"
-                      onClick={handleShare}
+                      className="text-white border-white/30 bg-white/10"
                     >
-                      <Share2 className="h-5 w-5 mr-2" />
-                      Share
-                    </Button>
-                  </div>
+                      #{tag}
+                    </Badge>
+                  ))}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-3">
+                  {isOwnStory ? (
+                    <>
+                      <Button
+                        size="lg"
+                        className="bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
+                        onClick={() => navigate(`/stories/${id}/edit`)}
+                      >
+                        <Edit className="h-5 w-5 mr-2" />
+                        Edit Story
+                      </Button>
+                      <Button
+                        size="lg"
+                        variant="secondary"
+                        className="bg-white hover:bg-gray-100 text-gray-800 shadow-lg"
+                        onClick={handleShare}
+                      >
+                        <Share2 className="h-5 w-5 mr-2" />
+                        Share
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        size="lg"
+                        className="bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
+                        onClick={() =>
+                          addToast({
+                            title: "Coming Soon",
+                            description:
+                              "Reading feature will be available soon",
+                            type: "info",
+                          })
+                        }
+                      >
+                        <BookOpen className="h-5 w-5 mr-2" />
+                        Start Reading
+                      </Button>
+
+                      <Button
+                        size="lg"
+                        variant={isLiked ? "default" : "secondary"}
+                        className={cn(
+                          "shadow-lg",
+                          isLiked
+                            ? "bg-red-500 hover:bg-red-600 text-white"
+                            : "bg-white hover:bg-gray-100 text-gray-800"
+                        )}
+                        onClick={handleLike}
+                      >
+                        <Heart
+                          className={cn(
+                            "h-5 w-5 mr-2",
+                            isLiked ? "fill-current" : ""
+                          )}
+                        />
+                        {isLiked ? "Liked" : "Like"}
+                      </Button>
+
+                      <Button
+                        size="lg"
+                        variant={isSaved ? "default" : "secondary"}
+                        className={cn(
+                          "shadow-lg",
+                          isSaved
+                            ? "bg-green-600 hover:bg-green-700 text-white"
+                            : "bg-white hover:bg-gray-100 text-gray-800"
+                        )}
+                        onClick={handleSave}
+                      >
+                        <Bookmark
+                          className={cn(
+                            "h-5 w-5 mr-2",
+                            isSaved ? "fill-current" : ""
+                          )}
+                        />
+                        {isSaved ? "Saved" : "Save"}
+                      </Button>
+
+                      <Button
+                        size="lg"
+                        variant="secondary"
+                        className="bg-white hover:bg-gray-100 text-gray-800 shadow-lg"
+                        onClick={handleShare}
+                      >
+                        <Share2 className="h-5 w-5 mr-2" />
+                        Share
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
           </div>
-        )}
+        </div>
 
-        {/* Rest of the component remains the same... */}
+        {/* Main Content Area */}
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <Tabs defaultValue="about" className="space-y-6">
+            <TabsList className="bg-white border">
+              <TabsTrigger value="about">About</TabsTrigger>
+              <TabsTrigger value="details">Details</TabsTrigger>
+            </TabsList>
+
+            {/* About Tab */}
+            <TabsContent value="about" className="space-y-6">
+              <Card className="bg-white">
+                <CardContent className="p-6">
+                  <h3 className="text-lg font-semibold mb-4">Story Summary</h3>
+                  <p className="text-gray-700 whitespace-pre-line">
+                    {story.description || "No description available."}
+                  </p>
+                </CardContent>
+              </Card>
+
+              {author && (
+                <Card className="bg-white">
+                  <CardContent className="p-6">
+                    <h3 className="text-lg font-semibold mb-4">
+                      About the Author
+                    </h3>
+                    <div className="flex items-start gap-4">
+                      <Avatar className="h-16 w-16">
+                        <AvatarImage src={author.profile_pic || undefined} />
+                        <AvatarFallback>
+                          {author.username?.[0]?.toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <h4 className="font-semibold">@{author.username}</h4>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {author.bio || "No bio available"}
+                        </p>
+                        <div className="flex gap-4 mt-3 text-sm">
+                          <span>
+                            <strong>
+                              {formatNumber(author.followers_count)}
+                            </strong>{" "}
+                            followers
+                          </span>
+                          <span>
+                            <strong>{author.total_stories}</strong> stories
+                          </span>
+                          <span>
+                            <strong>
+                              {formatNumber(author.total_reads || 0)}
+                            </strong>{" "}
+                            total reads
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </TabsContent>
+
+            {/* Details Tab */}
+            <TabsContent value="details" className="space-y-6">
+              <Card className="bg-white">
+                <CardContent className="p-6">
+                  <h3 className="text-lg font-semibold mb-4">Story Details</h3>
+                  <div className="space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Genre</span>
+                      <span>{story.genre}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Published</span>
+                      <span>{formatDate(story.created_at)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">
+                        Last Updated
+                      </span>
+                      <span>{formatDate(story.updated_at)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Visibility</span>
+                      <Badge
+                        variant={
+                          story.visibility === "private"
+                            ? "secondary"
+                            : "default"
+                        }
+                      >
+                        {story.visibility === "private" ? (
+                          <>
+                            <Lock className="h-3 w-3 mr-1" />
+                            Private
+                          </>
+                        ) : (
+                          <>
+                            <Globe className="h-3 w-3 mr-1" />
+                            Public
+                          </>
+                        )}
+                      </Badge>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Total Reads</span>
+                      <span>{formatNumber(story.reads_count)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Total Likes</span>
+                      <span>{formatNumber(story.votes_count)}</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+
+          {/* Related Stories */}
+          {relatedStories.length > 0 && (
+            <div className="mt-12">
+              <h2 className="text-2xl font-bold mb-6">More Like This</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {relatedStories.map((relatedStory) => (
+                  <Link
+                    key={relatedStory.id}
+                    to={`/stories/${relatedStory.id}`}
+                    className="group"
+                  >
+                    <Card className="overflow-hidden hover:shadow-lg transition-all bg-white">
+                      <div className="aspect-[2/3] relative">
+                        <img
+                          src={
+                            relatedStory.cover_image ||
+                            `https://source.unsplash.com/400x600/?book,${relatedStory.genre}`
+                          }
+                          alt={relatedStory.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                        />
+                      </div>
+                      <CardContent className="p-4">
+                        <h3 className="font-semibold line-clamp-2">
+                          {relatedStory.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {formatNumber(relatedStory.reads_count)} reads
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </MainLayout>
   );
@@ -8767,76 +9883,76 @@ export {
 **Path:** `src\pages\auth\LoginPage.tsx`
 
 ```tsx
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, BookOpen, Mail, Lock } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { useAuthStore } from '@/store/authStore';
-import { useUiStore } from '@/store/uiStore';
-import { cn } from '@/lib/utils';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Eye, EyeOff, BookOpen, Mail, Lock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { useAuthStore } from "@/store/authStore";
+import { cn } from "@/lib/utils";
 
 export function LoginPage() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  
+
   const { login, isLoading, error, clearError } = useAuthStore();
-  const { addToast } = useUiStore();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
     clearError();
   };
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    
+
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
+      newErrors.email = "Please enter a valid email";
     }
-    
+
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = "Password is required";
     } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = "Password must be at least 6 characters";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     try {
       await login(formData.email, formData.password);
-      addToast({
-        title: 'Welcome back!',
-        description: 'You have successfully signed in.',
-        type: 'success'
-      });
-      navigate('/');
+      // Simply navigate without toast
+      navigate("/");
     } catch (error: any) {
       // Error handling is done in the store
       if (error.details) {
@@ -8892,7 +10008,8 @@ export function LoginPage() {
                     placeholder="Enter your email"
                     className={cn(
                       "pl-10",
-                      errors.email && "border-destructive focus-visible:ring-destructive"
+                      errors.email &&
+                        "border-destructive focus-visible:ring-destructive"
                     )}
                     disabled={isLoading}
                   />
@@ -8909,13 +10026,14 @@ export function LoginPage() {
                   <Input
                     id="password"
                     name="password"
-                    type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? "text" : "password"}
                     value={formData.password}
                     onChange={handleInputChange}
                     placeholder="Enter your password"
                     className={cn(
                       "pl-10 pr-10",
-                      errors.password && "border-destructive focus-visible:ring-destructive"
+                      errors.password &&
+                        "border-destructive focus-visible:ring-destructive"
                     )}
                     disabled={isLoading}
                   />
@@ -8939,9 +10057,9 @@ export function LoginPage() {
                 )}
               </div>
 
-              <Button 
-                type="submit" 
-                className="w-full bg-gradient-primary hover:opacity-90" 
+              <Button
+                type="submit"
+                className="w-full bg-gradient-primary hover:opacity-90"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -8950,13 +10068,15 @@ export function LoginPage() {
                     Signing in...
                   </>
                 ) : (
-                  'Sign In'
+                  "Sign In"
                 )}
               </Button>
             </form>
 
             <div className="mt-6 text-center text-sm">
-              <span className="text-muted-foreground">Don't have an account? </span>
+              <span className="text-muted-foreground">
+                Don't have an account?{" "}
+              </span>
               <Link
                 to="/auth/signup"
                 className="font-medium text-primary hover:text-primary/80 transition-colors"
@@ -8980,93 +10100,94 @@ export function LoginPage() {
 **Path:** `src\pages\auth\SignupPage.tsx`
 
 ```tsx
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, BookOpen, Mail, Lock, User } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { useAuthStore } from '@/store/authStore';
-import { useUiStore } from '@/store/uiStore';
-import { cn } from '@/lib/utils';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Eye, EyeOff, BookOpen, Mail, Lock, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { useAuthStore } from "@/store/authStore";
+import { cn } from "@/lib/utils";
 
 export function SignupPage() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  
+
   const { signup, isLoading, error, clearError } = useAuthStore();
-  const { addToast } = useUiStore();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
     clearError();
   };
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    
+
     if (!formData.username.trim()) {
-      newErrors.username = 'Username is required';
+      newErrors.username = "Username is required";
     } else if (formData.username.length < 3) {
-      newErrors.username = 'Username must be at least 3 characters';
+      newErrors.username = "Username must be at least 3 characters";
     } else if (!/^[a-zA-Z0-9_-]+$/.test(formData.username)) {
-      newErrors.username = 'Username can only contain letters, numbers, hyphens, and underscores';
+      newErrors.username =
+        "Username can only contain letters, numbers, hyphens, and underscores";
     }
-    
+
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
+      newErrors.email = "Please enter a valid email";
     }
-    
+
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = "Password is required";
     } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = "Password must be at least 6 characters";
     }
-    
+
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
+      newErrors.confirmPassword = "Please confirm your password";
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = "Passwords do not match";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     try {
       await signup(formData.username, formData.email, formData.password);
-      addToast({
-        title: 'Welcome to StoriVault!',
-        description: 'Your account has been created successfully.',
-        type: 'success'
-      });
-      navigate('/');
+      // Simply navigate without toast
+      navigate("/");
     } catch (error: any) {
       // Error handling is done in the store
       if (error.details) {
@@ -9096,7 +10217,9 @@ export function SignupPage() {
 
         <Card className="shadow-strong border-0 bg-card/50 backdrop-blur-sm">
           <CardHeader className="space-y-1 text-center">
-            <CardTitle className="text-2xl font-bold">Create your account</CardTitle>
+            <CardTitle className="text-2xl font-bold">
+              Create your account
+            </CardTitle>
             <CardDescription>
               Join thousands of readers and writers on StoriVault
             </CardDescription>
@@ -9122,7 +10245,8 @@ export function SignupPage() {
                     placeholder="Choose a username"
                     className={cn(
                       "pl-10",
-                      errors.username && "border-destructive focus-visible:ring-destructive"
+                      errors.username &&
+                        "border-destructive focus-visible:ring-destructive"
                     )}
                     disabled={isLoading}
                   />
@@ -9145,7 +10269,8 @@ export function SignupPage() {
                     placeholder="Enter your email"
                     className={cn(
                       "pl-10",
-                      errors.email && "border-destructive focus-visible:ring-destructive"
+                      errors.email &&
+                        "border-destructive focus-visible:ring-destructive"
                     )}
                     disabled={isLoading}
                   />
@@ -9162,13 +10287,14 @@ export function SignupPage() {
                   <Input
                     id="password"
                     name="password"
-                    type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? "text" : "password"}
                     value={formData.password}
                     onChange={handleInputChange}
                     placeholder="Create a password"
                     className={cn(
                       "pl-10 pr-10",
-                      errors.password && "border-destructive focus-visible:ring-destructive"
+                      errors.password &&
+                        "border-destructive focus-visible:ring-destructive"
                     )}
                     disabled={isLoading}
                   />
@@ -9199,13 +10325,14 @@ export function SignupPage() {
                   <Input
                     id="confirmPassword"
                     name="confirmPassword"
-                    type={showConfirmPassword ? 'text' : 'password'}
+                    type={showConfirmPassword ? "text" : "password"}
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
                     placeholder="Confirm your password"
                     className={cn(
                       "pl-10 pr-10",
-                      errors.confirmPassword && "border-destructive focus-visible:ring-destructive"
+                      errors.confirmPassword &&
+                        "border-destructive focus-visible:ring-destructive"
                     )}
                     disabled={isLoading}
                   />
@@ -9225,13 +10352,15 @@ export function SignupPage() {
                   </Button>
                 </div>
                 {errors.confirmPassword && (
-                  <p className="text-sm text-destructive">{errors.confirmPassword}</p>
+                  <p className="text-sm text-destructive">
+                    {errors.confirmPassword}
+                  </p>
                 )}
               </div>
 
-              <Button 
-                type="submit" 
-                className="w-full bg-gradient-primary hover:opacity-90" 
+              <Button
+                type="submit"
+                className="w-full bg-gradient-primary hover:opacity-90"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -9240,13 +10369,15 @@ export function SignupPage() {
                     Creating account...
                   </>
                 ) : (
-                  'Create Account'
+                  "Create Account"
                 )}
               </Button>
             </form>
 
             <div className="mt-6 text-center text-sm">
-              <span className="text-muted-foreground">Already have an account? </span>
+              <span className="text-muted-foreground">
+                Already have an account?{" "}
+              </span>
               <Link
                 to="/auth/login"
                 className="font-medium text-primary hover:text-primary/80 transition-colors"
