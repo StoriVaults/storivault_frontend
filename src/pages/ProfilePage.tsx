@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   Grid3X3,
@@ -19,8 +19,13 @@ import {
   Calendar,
   Link as LinkIcon,
   BookOpen,
-  Lock, // Add Lock icon for private stories
+  Lock,
+  ZoomIn,
+  ZoomOut,
+  RotateCw,
 } from "lucide-react";
+import Cropper from "react-easy-crop";
+import type { Area, Point } from "react-easy-crop";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -76,6 +81,14 @@ export function ProfilePage() {
   });
   const [newProfilePic, setNewProfilePic] = useState<File | null>(null);
   const [profilePicPreview, setProfilePicPreview] = useState<string>("");
+
+  // Cropper state
+  const [showCropper, setShowCropper] = useState(false);
+  const [imageToCrop, setImageToCrop] = useState<string>("");
+  const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [rotation, setRotation] = useState(0);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
 
   const isOwnProfile = user?.username === username;
 
@@ -296,6 +309,65 @@ export function ProfilePage() {
     }
   };
 
+  const onCropComplete = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
+
+  const createImage = (url: string): Promise<HTMLImageElement> =>
+    new Promise((resolve, reject) => {
+      const image = new Image();
+      image.addEventListener("load", () => resolve(image));
+      image.addEventListener("error", (error) => reject(error));
+      image.src = url;
+    });
+
+  const getCroppedImg = async (
+    imageSrc: string,
+    pixelCrop: Area,
+    rotation = 0
+  ): Promise<Blob> => {
+    const image = await createImage(imageSrc);
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    if (!ctx) {
+      throw new Error("No 2d context");
+    }
+
+    const maxSize = Math.max(image.width, image.height);
+    const safeArea = 2 * ((maxSize / 2) * Math.sqrt(2));
+
+    canvas.width = safeArea;
+    canvas.height = safeArea;
+
+    ctx.translate(safeArea / 2, safeArea / 2);
+    ctx.rotate((rotation * Math.PI) / 180);
+    ctx.translate(-safeArea / 2, -safeArea / 2);
+
+    ctx.drawImage(
+      image,
+      safeArea / 2 - image.width * 0.5,
+      safeArea / 2 - image.height * 0.5
+    );
+
+    const data = ctx.getImageData(0, 0, safeArea, safeArea);
+
+    canvas.width = pixelCrop.width;
+    canvas.height = pixelCrop.height;
+
+    ctx.putImageData(
+      data,
+      Math.round(0 - safeArea / 2 + image.width * 0.5 - pixelCrop.x),
+      Math.round(0 - safeArea / 2 + image.height * 0.5 - pixelCrop.y)
+    );
+
+    return new Promise((resolve) => {
+      canvas.toBlob((blob) => {
+        resolve(blob!);
+      }, "image/jpeg");
+    });
+  };
+
   const handleProfilePicSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -308,13 +380,52 @@ export function ProfilePage() {
         return;
       }
 
-      setNewProfilePic(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageToCrop(reader.result as string);
+        setShowCropper(true);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleCropSave = async () => {
+    if (!croppedAreaPixels || !imageToCrop) return;
+
+    try {
+      const croppedBlob = await getCroppedImg(imageToCrop, croppedAreaPixels, rotation);
+      const croppedFile = new File([croppedBlob], "profile.jpg", {
+        type: "image/jpeg",
+      });
+
+      setNewProfilePic(croppedFile);
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfilePicPreview(reader.result as string);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(croppedFile);
+
+      setShowCropper(false);
+      setImageToCrop("");
+      setCrop({ x: 0, y: 0 });
+      setZoom(1);
+      setRotation(0);
+    } catch (error) {
+      console.error("Error cropping image:", error);
+      addToast({
+        title: "Error",
+        description: "Failed to crop image. Please try again.",
+        type: "error",
+      });
     }
+  };
+
+  const handleCropCancel = () => {
+    setShowCropper(false);
+    setImageToCrop("");
+    setCrop({ x: 0, y: 0 });
+    setZoom(1);
+    setRotation(0);
   };
 
   const handleRemoveProfilePic = () => {
@@ -928,6 +1039,118 @@ export function ProfilePage() {
                       Save Changes
                     </>
                   )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Image Cropper Modal */}
+      {showCropper && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            onClick={handleCropCancel}
+          />
+
+          {/* Cropper Modal */}
+          <div className="relative w-full max-w-3xl bg-white rounded-xl shadow-2xl overflow-hidden">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold text-white">Crop Profile Picture</h2>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleCropCancel}
+                  className="text-white hover:bg-white/20 rounded-full"
+                >
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+              <p className="text-white/90 text-sm mt-1">
+                Adjust the image to fit perfectly in your round profile picture
+              </p>
+            </div>
+
+            {/* Cropper Area */}
+            <div className="relative h-96 bg-gray-900">
+              <Cropper
+                image={imageToCrop}
+                crop={crop}
+                zoom={zoom}
+                rotation={rotation}
+                aspect={1}
+                cropShape="round"
+                showGrid={false}
+                onCropChange={setCrop}
+                onZoomChange={setZoom}
+                onRotationChange={setRotation}
+                onCropComplete={onCropComplete}
+              />
+            </div>
+
+            {/* Controls */}
+            <div className="bg-gray-50 px-6 py-4 space-y-4">
+              {/* Zoom Control */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-semibold flex items-center gap-2">
+                    <ZoomIn className="h-4 w-4" />
+                    Zoom
+                  </Label>
+                  <span className="text-sm text-gray-600">{Math.round(zoom * 100)}%</span>
+                </div>
+                <input
+                  type="range"
+                  min={1}
+                  max={3}
+                  step={0.1}
+                  value={zoom}
+                  onChange={(e) => setZoom(Number(e.target.value))}
+                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-orange-500"
+                />
+              </div>
+
+              {/* Rotation Control */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-semibold flex items-center gap-2">
+                    <RotateCw className="h-4 w-4" />
+                    Rotation
+                  </Label>
+                  <span className="text-sm text-gray-600">{rotation}°</span>
+                </div>
+                <input
+                  type="range"
+                  min={0}
+                  max={360}
+                  step={1}
+                  value={rotation}
+                  onChange={(e) => setRotation(Number(e.target.value))}
+                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-orange-500"
+                />
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="border-t bg-white px-6 py-4">
+              <div className="flex justify-end gap-3">
+                <Button
+                  variant="outline"
+                  onClick={handleCropCancel}
+                  className="border-gray-300 hover:bg-gray-100"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleCropSave}
+                  className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white"
+                >
+                  <Check className="h-4 w-4 mr-2" />
+                  Apply Crop
                 </Button>
               </div>
             </div>
