@@ -31,7 +31,7 @@ export function MainLayout({
       <Header />
       <main className={cn("flex-1 flex flex-col", className)}>
         <div className="flex-1">{children}</div>
-        {showFooter && <Footer />}
+        {showFooter && !isAuthenticated && <Footer />}
       </main>
     </div>
   );
