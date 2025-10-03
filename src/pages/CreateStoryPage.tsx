@@ -275,7 +275,7 @@ export function CreateStoryPage() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-1 min-[450px]:grid-cols-3">
             <TabsTrigger value="details">Story Details</TabsTrigger>
             <TabsTrigger value="chapters">Chapters</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>

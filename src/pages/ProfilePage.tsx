@@ -601,8 +601,8 @@ export function ProfilePage() {
             </div>
 
             {/* Stats */}
-            <div className="flex items-center gap-6 mb-4 text-sm">
-              <div className="text-center md:text-left">
+            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 mb-4 text-sm">
+              <div className="text-center">
                 <span className="font-semibold text-lg">
                   {publicStories.length}
                 </span>
@@ -615,18 +615,20 @@ export function ProfilePage() {
                   </span>
                 )}
               </div>
-              <button className="text-center md:text-left hover:underline">
-                <span className="font-semibold text-lg">
-                  {formatNumber(profileUser.followers_count)}
-                </span>
-                <span className="text-gray-600 ml-1">followers</span>
-              </button>
-              <button className="text-center md:text-left hover:underline">
-                <span className="font-semibold text-lg">
-                  {formatNumber(profileUser.following_count)}
-                </span>
-                <span className="text-gray-600 ml-1">following</span>
-              </button>
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
+                <button className="text-center hover:underline order-1 sm:order-1">
+                  <span className="font-semibold text-base sm:text-lg">
+                    {formatNumber(profileUser.followers_count)}
+                  </span>
+                  <span className="text-gray-600 ml-1 text-sm sm:text-base">followers</span>
+                </button>
+                <button className="text-center hover:underline order-2 sm:order-2">
+                  <span className="font-semibold text-base sm:text-lg">
+                    {formatNumber(profileUser.following_count)}
+                  </span>
+                  <span className="text-gray-600 ml-1 text-sm sm:text-base">following</span>
+                </button>
+              </div>
             </div>
 
             {/* Bio */}
@@ -709,7 +711,7 @@ export function ProfilePage() {
                 )}
               </div>
             ) : (
-              <div className="grid grid-cols-3 gap-1 md:gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1 md:gap-4">
                 {userStories.map((story) => (
                   <Link
                     key={story.id}
@@ -767,7 +769,7 @@ export function ProfilePage() {
                   </Button>
                 </div>
               ) : (
-                <div className="grid grid-cols-3 gap-1 md:gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1 md:gap-4">
                   {savedStories.map((story) => (
                     <div key={story.id} className="relative group">
                       <Link
