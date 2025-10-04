@@ -38,7 +38,7 @@ import { Slider } from "@/components/ui/slider";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { ReaderSkeleton } from "@/components/ui/reader-skeleton";
 import { Badge } from "@/components/ui/badge";
 import { useAuthStore } from "@/store/authStore";
 import { useUiStore } from "@/store/uiStore";
@@ -53,24 +53,32 @@ const readingThemes = {
     background: "#ffffff",
     text: "#1a1a1a",
     secondaryText: "#666666",
+    sliderTrack: "#e5e5e5",
+    sliderThumb: "#ff6b35",
   },
   sepia: {
     name: "Sepia",
     background: "#f7f1e8",
     text: "#5c4b37",
     secondaryText: "#8b7355",
+    sliderTrack: "#e8dcc4",
+    sliderThumb: "#8b7355",
   },
   dark: {
     name: "Dark",
     background: "#1a1a1a",
     text: "#e8e6e3",
     secondaryText: "#a8a29e",
+    sliderTrack: "#404040",
+    sliderThumb: "#ff6b35",
   },
   night: {
     name: "Night",
     background: "#0d1117",
     text: "#c9d1d9",
     secondaryText: "#8b949e",
+    sliderTrack: "#30363d",
+    sliderThumb: "#58a6ff",
   },
 };
 
@@ -224,11 +232,7 @@ export function StoryReaderPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <LoadingSpinner size="lg" />
-      </div>
-    );
+    return <ReaderSkeleton />;
   }
 
   if (!story || !currentChapter) {
@@ -254,6 +258,50 @@ export function StoryReaderPage() {
         color: currentTheme.text,
       }}
     >
+      {/* Custom Slider Styles */}
+      <style>{`
+        .custom-slider {
+          position: relative;
+          display: flex;
+          align-items: center;
+          width: 100%;
+          height: 2rem;
+        }
+        
+        .custom-slider-track {
+          position: relative;
+          height: 6px;
+          width: 100%;
+          border-radius: 3px;
+          background: ${currentTheme.sliderTrack};
+        }
+        
+        .custom-slider-range {
+          position: absolute;
+          height: 100%;
+          border-radius: 3px;
+          background: ${currentTheme.sliderThumb};
+        }
+        
+        .custom-slider-thumb {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: ${currentTheme.sliderThumb};
+          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+          cursor: pointer;
+        }
+        
+        .custom-slider-thumb:hover {
+          transform: scale(1.1);
+        }
+        
+        .custom-slider-thumb:focus {
+          outline: 2px solid ${currentTheme.sliderThumb};
+          outline-offset: 2px;
+        }
+      `}</style>
+
       {/* Reader Header */}
       <header
         className="sticky top-0 z-40 border-b backdrop-blur-sm"
@@ -468,19 +516,23 @@ export function StoryReaderPage() {
         )}
       </main>
 
-      {/* Settings Dialog - Enhanced with better visibility */}
+      {/* Settings Dialog - Fixed with visible sliders */}
       <Dialog open={showSettingsDialog} onOpenChange={setShowSettingsDialog}>
         <DialogContent
-          className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900"
+          className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto"
           style={{
-            zIndex: 9999,
+            backgroundColor:
+              theme === "dark" || theme === "night" ? "#1f1f1f" : "white",
+            color: currentTheme.text,
+            borderColor:
+              theme === "dark" || theme === "night" ? "#333" : "#e5e5e5",
           }}
         >
           <DialogHeader>
-            <DialogTitle className="text-xl font-semibold">
+            <DialogTitle style={{ color: currentTheme.text }}>
               Reading Settings
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription style={{ color: currentTheme.secondaryText }}>
               Customize your reading experience
             </DialogDescription>
           </DialogHeader>
@@ -488,7 +540,12 @@ export function StoryReaderPage() {
           <div className="space-y-6 py-4">
             {/* Theme Selection */}
             <div>
-              <Label className="text-base font-medium mb-3 block">Theme</Label>
+              <Label
+                className="text-base font-medium mb-3 block"
+                style={{ color: currentTheme.text }}
+              >
+                Theme
+              </Label>
               <div className="grid grid-cols-2 gap-2">
                 {Object.entries(readingThemes).map(([key, themeOption]) => (
                   <button
@@ -503,6 +560,8 @@ export function StoryReaderPage() {
                     style={{
                       backgroundColor: themeOption.background,
                       color: themeOption.text,
+                      borderColor:
+                        theme === key ? currentTheme.sliderThumb : undefined,
                     }}
                   >
                     <div className="flex items-center justify-center gap-2">
@@ -519,11 +578,14 @@ export function StoryReaderPage() {
               </div>
             </div>
 
-            <Separator />
+            <Separator style={{ backgroundColor: currentTheme.sliderTrack }} />
 
-            {/* Font Size */}
+            {/* Font Size with Fixed Slider */}
             <div>
-              <Label className="text-base font-medium mb-3 block">
+              <Label
+                className="text-base font-medium mb-3 block"
+                style={{ color: currentTheme.text }}
+              >
                 Font Size: {fontSize}px
               </Label>
               <div className="flex items-center gap-3">
@@ -532,78 +594,162 @@ export function StoryReaderPage() {
                   size="sm"
                   onClick={() => setFontSize(Math.max(12, fontSize - 2))}
                   className="h-9 w-9 p-0"
+                  style={{
+                    borderColor: currentTheme.sliderTrack,
+                    color: currentTheme.text,
+                  }}
                 >
                   <Minus className="h-4 w-4" />
                 </Button>
-                <Slider
-                  value={[fontSize]}
-                  onValueChange={(value) => setFontSize(value[0])}
+
+                {/* Custom HTML Range Input for better visibility */}
+                <input
+                  type="range"
                   min={12}
                   max={32}
                   step={1}
+                  value={fontSize}
+                  onChange={(e) => setFontSize(Number(e.target.value))}
                   className="flex-1"
+                  style={{
+                    background: `linear-gradient(to right, ${
+                      currentTheme.sliderThumb
+                    } 0%, ${currentTheme.sliderThumb} ${
+                      ((fontSize - 12) / 20) * 100
+                    }%, ${currentTheme.sliderTrack} ${
+                      ((fontSize - 12) / 20) * 100
+                    }%, ${currentTheme.sliderTrack} 100%)`,
+                    height: "6px",
+                    borderRadius: "3px",
+                    outline: "none",
+                    WebkitAppearance: "none",
+                    cursor: "pointer",
+                  }}
                 />
+
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setFontSize(Math.min(32, fontSize + 2))}
                   className="h-9 w-9 p-0"
+                  style={{
+                    borderColor: currentTheme.sliderTrack,
+                    color: currentTheme.text,
+                  }}
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
-              <div className="mt-2 p-3 rounded-lg border bg-gray-50 dark:bg-gray-800">
+              <div
+                className="mt-2 p-3 rounded-lg border"
+                style={{
+                  backgroundColor:
+                    theme === "dark" || theme === "night"
+                      ? "#2a2a2a"
+                      : "#f9f9f9",
+                  borderColor: currentTheme.sliderTrack,
+                  color: currentTheme.text,
+                }}
+              >
                 <p style={{ fontSize: `${fontSize}px` }}>
                   Preview: The quick brown fox jumps over the lazy dog.
                 </p>
               </div>
             </div>
 
-            <Separator />
+            <Separator style={{ backgroundColor: currentTheme.sliderTrack }} />
 
-            {/* Line Height */}
+            {/* Line Height with Fixed Slider */}
             <div>
-              <Label className="text-base font-medium mb-3 block">
-                Line Height: {lineHeight}
+              <Label
+                className="text-base font-medium mb-3 block"
+                style={{ color: currentTheme.text }}
+              >
+                Line Height: {lineHeight.toFixed(1)}
               </Label>
-              <Slider
-                value={[lineHeight]}
-                onValueChange={(value) => setLineHeight(value[0])}
+
+              {/* Custom HTML Range Input */}
+              <input
+                type="range"
                 min={1.2}
                 max={2.5}
                 step={0.1}
+                value={lineHeight}
+                onChange={(e) => setLineHeight(Number(e.target.value))}
+                className="w-full"
+                style={{
+                  background: `linear-gradient(to right, ${
+                    currentTheme.sliderThumb
+                  } 0%, ${currentTheme.sliderThumb} ${
+                    ((lineHeight - 1.2) / 1.3) * 100
+                  }%, ${currentTheme.sliderTrack} ${
+                    ((lineHeight - 1.2) / 1.3) * 100
+                  }%, ${currentTheme.sliderTrack} 100%)`,
+                  height: "6px",
+                  borderRadius: "3px",
+                  outline: "none",
+                  WebkitAppearance: "none",
+                  cursor: "pointer",
+                }}
               />
             </div>
 
-            <Separator />
+            <Separator style={{ backgroundColor: currentTheme.sliderTrack }} />
 
             {/* Font Family */}
             <div>
-              <Label className="text-base font-medium mb-3 block">
+              <Label
+                className="text-base font-medium mb-3 block"
+                style={{ color: currentTheme.text }}
+              >
                 Font Family
               </Label>
               <RadioGroup value={fontFamily} onValueChange={setFontFamily}>
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="serif" id="serif" />
+                    <RadioGroupItem
+                      value="serif"
+                      id="serif"
+                      style={{
+                        borderColor: currentTheme.sliderTrack,
+                      }}
+                    />
                     <Label
                       htmlFor="serif"
                       className="font-serif cursor-pointer"
+                      style={{ color: currentTheme.text }}
                     >
                       Serif (Georgia)
                     </Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="sans-serif" id="sans-serif" />
-                    <Label htmlFor="sans-serif" className="cursor-pointer">
+                    <RadioGroupItem
+                      value="sans-serif"
+                      id="sans-serif"
+                      style={{
+                        borderColor: currentTheme.sliderTrack,
+                      }}
+                    />
+                    <Label
+                      htmlFor="sans-serif"
+                      className="cursor-pointer"
+                      style={{ color: currentTheme.text }}
+                    >
                       Sans-serif (Inter)
                     </Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="monospace" id="monospace" />
+                    <RadioGroupItem
+                      value="monospace"
+                      id="monospace"
+                      style={{
+                        borderColor: currentTheme.sliderTrack,
+                      }}
+                    />
                     <Label
                       htmlFor="monospace"
                       className="font-mono cursor-pointer"
+                      style={{ color: currentTheme.text }}
                     >
                       Monospace (Courier)
                     </Label>
@@ -612,11 +758,14 @@ export function StoryReaderPage() {
               </RadioGroup>
             </div>
 
-            <Separator />
+            <Separator style={{ backgroundColor: currentTheme.sliderTrack }} />
 
             {/* Text Alignment */}
             <div>
-              <Label className="text-base font-medium mb-3 block">
+              <Label
+                className="text-base font-medium mb-3 block"
+                style={{ color: currentTheme.text }}
+              >
                 Text Alignment
               </Label>
               <div className="grid grid-cols-3 gap-2">
@@ -625,6 +774,14 @@ export function StoryReaderPage() {
                   size="sm"
                   onClick={() => setTextAlign("left")}
                   className="w-full"
+                  style={{
+                    backgroundColor:
+                      textAlign === "left"
+                        ? currentTheme.sliderThumb
+                        : "transparent",
+                    borderColor: currentTheme.sliderTrack,
+                    color: textAlign === "left" ? "white" : currentTheme.text,
+                  }}
                 >
                   <AlignLeft className="h-4 w-4 mr-2" />
                   Left
@@ -634,6 +791,14 @@ export function StoryReaderPage() {
                   size="sm"
                   onClick={() => setTextAlign("center")}
                   className="w-full"
+                  style={{
+                    backgroundColor:
+                      textAlign === "center"
+                        ? currentTheme.sliderThumb
+                        : "transparent",
+                    borderColor: currentTheme.sliderTrack,
+                    color: textAlign === "center" ? "white" : currentTheme.text,
+                  }}
                 >
                   <AlignCenter className="h-4 w-4 mr-2" />
                   Center
@@ -643,6 +808,15 @@ export function StoryReaderPage() {
                   size="sm"
                   onClick={() => setTextAlign("justify")}
                   className="w-full"
+                  style={{
+                    backgroundColor:
+                      textAlign === "justify"
+                        ? currentTheme.sliderThumb
+                        : "transparent",
+                    borderColor: currentTheme.sliderTrack,
+                    color:
+                      textAlign === "justify" ? "white" : currentTheme.text,
+                  }}
                 >
                   <AlignJustify className="h-4 w-4 mr-2" />
                   Justify
@@ -651,11 +825,29 @@ export function StoryReaderPage() {
             </div>
           </div>
 
-          <div className="flex justify-between pt-4 border-t">
-            <Button variant="outline" onClick={resetSettings}>
+          <div
+            className="flex justify-between pt-4 border-t"
+            style={{ borderColor: currentTheme.sliderTrack }}
+          >
+            <Button
+              variant="outline"
+              onClick={resetSettings}
+              style={{
+                borderColor: currentTheme.sliderTrack,
+                color: currentTheme.text,
+              }}
+            >
               Reset to Default
             </Button>
-            <Button onClick={() => setShowSettingsDialog(false)}>Done</Button>
+            <Button
+              onClick={() => setShowSettingsDialog(false)}
+              style={{
+                backgroundColor: currentTheme.sliderThumb,
+                color: "white",
+              }}
+            >
+              Done
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
