@@ -26,6 +26,7 @@ Generated from: `.`
 
 ### 📁 src\apis
 - [auth.ts](#src-apis-authts)
+- [chapters.ts](#src-apis-chaptersts)
 - [client.ts](#src-apis-clientts)
 - [index.ts](#src-apis-indexts)
 - [stories.ts](#src-apis-storiests)
@@ -75,6 +76,7 @@ Generated from: `.`
 - [ProfilePage.tsx](#src-pages-ProfilePagetsx)
 - [StoriesPage.tsx](#src-pages-StoriesPagetsx)
 - [StoryDetailPage.tsx](#src-pages-StoryDetailPagetsx)
+- [StoryReaderPage.tsx](#src-pages-StoryReaderPagetsx)
 
 ### 📁 src\pages\auth
 - [LoginPage.tsx](#src-pages-auth-LoginPagetsx)
@@ -191,6 +193,7 @@ export default tseslint.config(
     "react": "^18.3.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",
+    "react-easy-crop": "^5.5.3",
     "react-hook-form": "^7.61.1",
     "react-resizable-panels": "^2.1.9",
     "react-router-dom": "^6.30.1",
@@ -541,7 +544,8 @@ import { FeedPage } from "./pages/FeedPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { CreateStoryPage } from "./pages/CreateStoryPage";
 import { StoryDetailPage } from "./pages/StoryDetailPage";
-import { EditStoryPage } from "./pages/EditStoryPage"; // Add this import
+import { StoryReaderPage } from "./pages/StoryReaderPage";
+import { EditStoryPage } from "./pages/EditStoryPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient({
@@ -627,6 +631,7 @@ const App = () => {
             <Route path="/stories" element={<StoriesPage />} />
             <Route path="/stories/search" element={<StoriesPage />} />
             <Route path="/stories/:id" element={<StoryDetailPage />} />
+            <Route path="/stories/:id/read" element={<StoryReaderPage />} />
 
             {/* Protected Routes - Require authentication */}
             <Route
@@ -868,6 +873,31 @@ export default App;
     color: hsl(var(--foreground));
   }
 }
+
+/* React Easy Crop styles */
+.reactEasyCrop_Container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.reactEasyCrop_Image,
+.reactEasyCrop_Video {
+  will-change: transform;
+}
+
+.reactEasyCrop_CropArea {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-sizing: border-box;
+  box-shadow: 0 0 0 9999em rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
 ```
 
 ---
@@ -953,6 +983,58 @@ export const authApi = {
 
 ---
 
+#### 📄 src\apis\chapters.ts
+<a name='src-apis-chaptersts'></a>
+
+**Path:** `src\apis\chapters.ts`
+
+```typescript
+import { apiClient } from './client';
+import { Chapter, CreateChapterRequest, UpdateChapterRequest } from '@/types/api';
+
+export const chaptersApi = {
+  // Get chapters by story ID
+  getChaptersByStory: async (storyId: string, publishedOnly: boolean = true): Promise<Chapter[]> => {
+    const response = await apiClient.get(`/chapters/by-story/${storyId}`, {
+      params: { published_only: publishedOnly }
+    });
+    return response.data;
+  },
+
+  // Get a single chapter
+  getChapter: async (chapterId: string): Promise<Chapter> => {
+    const response = await apiClient.get(`/chapters/${chapterId}`);
+    return response.data;
+  },
+
+  // Create a new chapter (requires auth)
+  createChapter: async (data: CreateChapterRequest): Promise<Chapter> => {
+    const response = await apiClient.post('/chapters', data);
+    return response.data;
+  },
+
+  // Update a chapter (requires auth)
+  updateChapter: async (chapterId: string, data: UpdateChapterRequest): Promise<Chapter> => {
+    const response = await apiClient.patch(`/chapters/${chapterId}`, data);
+    return response.data;
+  },
+
+  // Delete a chapter (requires auth)
+  deleteChapter: async (chapterId: string): Promise<void> => {
+    await apiClient.delete(`/chapters/${chapterId}`);
+  },
+
+  // Set read progress for a chapter
+  setReadProgress: async (chapterId: string, storyId: string): Promise<void> => {
+    await apiClient.post(`/chapters/${chapterId}/progress`, null, {
+      params: { story_id: storyId }
+    });
+  }
+};
+```
+
+---
+
 #### 📄 src\apis\client.ts
 <a name='src-apis-clientts'></a>
 
@@ -1018,11 +1100,19 @@ apiClient.interceptors.response.use(
   (error: AxiosError) => {
     // Handle network errors and HTTP error responses
     const apiError: ApiError = new Error() as ApiError;
-    
+
     if (error.response) {
       // Server responded with error status
       const data = error.response.data as any;
-      
+
+      // Log full error response for debugging
+      console.error('API Error Response:', {
+        status: error.response.status,
+        data: error.response.data,
+        url: error.config?.url,
+        method: error.config?.method,
+      });
+
       if (data && typeof data === 'object') {
         if (data.success === false) {
           // Envelope error
@@ -1030,16 +1120,16 @@ apiClient.interceptors.response.use(
           apiError.details = data.error?.details;
         } else if (data.detail) {
           // FastAPI validation error
-          apiError.message = Array.isArray(data.detail) 
+          apiError.message = Array.isArray(data.detail)
             ? data.detail.map((d: any) => d.msg).join(', ')
             : data.detail;
         } else {
-          apiError.message = error.message;
+          apiError.message = error.message || `HTTP ${error.response.status} Error`;
         }
       } else {
-        apiError.message = error.message;
+        apiError.message = error.message || `HTTP ${error.response.status} Error`;
       }
-      
+
       apiError.status = error.response.status;
       
       // Handle 401 errors - logout user
@@ -1099,6 +1189,7 @@ export * from './client';
 export * from './auth';
 export * from './users';
 export * from './stories';
+export * from './chapters';
 export * from './uploads';
 export * from './votes';
 ```
@@ -2042,7 +2133,7 @@ import { MainLayout } from "@/components/layout/main-layout";
 import { FileDropzone } from "@/components/ui/file-dropzone";
 import { useAuthStore } from "@/store/authStore";
 import { useUiStore } from "@/store/uiStore";
-import { storiesApi } from "@/apis";
+import { storiesApi, chaptersApi } from "@/apis";
 import { GENRES } from "@/helper/constants";
 
 interface Chapter {
@@ -2185,9 +2276,20 @@ export function CreateStoryPage() {
       return;
     }
 
+    // Validate that at least one chapter has content
+    const hasContent = chapters.some((ch) => ch.content.trim().length > 0);
+    if (!hasContent) {
+      addToast({
+        title: "Content Required",
+        description: "Please write content for at least one chapter",
+        type: "error",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      // Create story with cover image
+      // Step 1: Create story with cover image
       const story = await storiesApi.createStoryMultipart({
         title: storyData.title,
         description: storyData.description,
@@ -2197,17 +2299,45 @@ export function CreateStoryPage() {
         cover: coverImage || undefined,
       });
 
+      // Step 2: Create chapters for the story
+      const chapterPromises = chapters
+        .filter((ch) => ch.content.trim().length > 0) // Only save chapters with content
+        .map((chapter) =>
+          chaptersApi.createChapter({
+            story_id: story.id,
+            title: chapter.title,
+            content: chapter.content,
+            order: chapter.order,
+            published: true, // Auto-publish chapters when story is published
+          })
+        );
+
+      await Promise.all(chapterPromises);
+
       addToast({
         title: "Story Created!",
-        description: "Your story has been published successfully",
+        description: `Your story has been published with ${chapterPromises.length} chapter(s)`,
         type: "success",
       });
 
       navigate(`/stories/${story.id}`);
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Failed to create story:", error);
+
+      // Get detailed error message
+      let errorMessage = "Failed to create story. Please try again.";
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        errorMessage = error.response.data?.message ||
+                      error.response.data?.detail ||
+                      `Server error: ${error.response.status}`;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
       addToast({
         title: "Error",
-        description: "Failed to create story. Please try again.",
+        description: errorMessage,
         type: "error",
       });
     } finally {
@@ -2241,7 +2371,7 @@ export function CreateStoryPage() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-1 min-[450px]:grid-cols-3">
             <TabsTrigger value="details">Story Details</TabsTrigger>
             <TabsTrigger value="chapters">Chapters</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
@@ -2646,8 +2776,8 @@ import { FileDropzone } from "@/components/ui/file-dropzone";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useAuthStore } from "@/store/authStore";
 import { useUiStore } from "@/store/uiStore";
-import { storiesApi } from "@/apis";
-import { Story } from "@/types";
+import { storiesApi, chaptersApi } from "@/apis";
+import { Story, Chapter as ApiChapter } from "@/types";
 import { GENRES } from "@/helper/constants";
 import { cn } from "@/lib/utils";
 
@@ -2658,6 +2788,8 @@ interface Chapter {
   order: number;
   isPublished: boolean;
   publishedAt?: string;
+  isNew?: boolean; // Track if chapter is newly created locally
+  isDeleted?: boolean; // Track if chapter should be deleted on save
 }
 
 export function EditStoryPage() {
@@ -2751,14 +2883,47 @@ export function EditStoryPage() {
         setCoverPreview(storyResponse.cover_image);
       }
 
-      // Initialize with at least one chapter
-      if (chapters.length === 0) {
+      // Fetch existing chapters from backend
+      try {
+        const existingChapters = await chaptersApi.getChaptersByStory(id, false); // Get all chapters including unpublished
+
+        if (existingChapters.length > 0) {
+          const mappedChapters: Chapter[] = existingChapters
+            .sort((a, b) => a.order - b.order)
+            .map((ch) => ({
+              id: ch.id,
+              title: ch.title,
+              content: ch.content || "",
+              order: ch.order,
+              isPublished: ch.published,
+              publishedAt: ch.published ? ch.updated_at : undefined,
+              isNew: false,
+            }));
+          setChapters(mappedChapters);
+          setActiveChapter(mappedChapters[0].id);
+        } else {
+          // Initialize with one empty chapter if no chapters exist
+          const initialChapter: Chapter = {
+            id: `new-chapter-${Date.now()}`,
+            title: "Chapter 1",
+            content: "",
+            order: 1,
+            isPublished: false,
+            isNew: true,
+          };
+          setChapters([initialChapter]);
+          setActiveChapter(initialChapter.id);
+        }
+      } catch (error) {
+        console.error("Failed to fetch chapters:", error);
+        // Initialize with one empty chapter if fetch fails
         const initialChapter: Chapter = {
-          id: "chapter-1",
+          id: `new-chapter-${Date.now()}`,
           title: "Chapter 1",
           content: "",
           order: 1,
           isPublished: false,
+          isNew: true,
         };
         setChapters([initialChapter]);
         setActiveChapter(initialChapter.id);
@@ -2806,11 +2971,12 @@ export function EditStoryPage() {
 
   const addChapter = () => {
     const newChapter: Chapter = {
-      id: `chapter-${Date.now()}`,
+      id: `new-chapter-${Date.now()}`,
       title: `Chapter ${chapters.length + 1}`,
       content: "",
       order: chapters.length + 1,
       isPublished: false,
+      isNew: true, // Mark as new so it will be created on save
     };
     setChapters([...chapters, newChapter]);
     setActiveChapter(newChapter.id);
@@ -2824,12 +2990,25 @@ export function EditStoryPage() {
     setHasUnsavedChanges(true);
   };
 
-  const deleteChapter = (id: string) => {
+  const deleteChapter = (chapterId: string) => {
     if (chapters.length > 1) {
-      const updatedChapters = chapters.filter((ch) => ch.id !== id);
-      setChapters(updatedChapters);
-      if (activeChapter === id) {
-        setActiveChapter(updatedChapters[0].id);
+      const chapter = chapters.find((ch) => ch.id === chapterId);
+
+      // If it's a new chapter (not saved), just remove from state
+      if (chapter?.isNew) {
+        const updatedChapters = chapters.filter((ch) => ch.id !== chapterId);
+        setChapters(updatedChapters);
+        if (activeChapter === chapterId) {
+          setActiveChapter(updatedChapters[0].id);
+        }
+      } else {
+        // Mark existing chapter as deleted to be removed on save
+        updateChapter(chapterId, { isDeleted: true });
+        // Switch to another chapter
+        const remainingChapters = chapters.filter((ch) => ch.id !== chapterId);
+        if (activeChapter === chapterId && remainingChapters.length > 0) {
+          setActiveChapter(remainingChapters[0].id);
+        }
       }
       setHasUnsavedChanges(true);
     } else {
@@ -2884,7 +3063,7 @@ export function EditStoryPage() {
 
     setIsSaving(true);
     try {
-      // Update story
+      // Step 1: Update story metadata
       await storiesApi.updateStory(id!, {
         title: storyData.title,
         description: storyData.description,
@@ -2893,21 +3072,105 @@ export function EditStoryPage() {
         visibility: storyData.visibility,
       });
 
-      // Update cover if changed
+      // Step 2: Update cover if changed
       if (coverImage) {
         await storiesApi.updateStoryCover(id!, coverImage);
       }
 
+      // Step 3: Save chapters
+      const chapterPromises = [];
+
+      // Filter out deleted chapters from the list for display
+      const visibleChapters = chapters.filter((ch) => !ch.isDeleted);
+
+      for (const chapter of chapters) {
+        try {
+          if (chapter.isDeleted && !chapter.isNew) {
+            // Delete existing chapter from backend
+            console.log(`Deleting chapter: ${chapter.id}`);
+            chapterPromises.push(
+              chaptersApi.deleteChapter(chapter.id).catch((err) => {
+                console.error(`Failed to delete chapter ${chapter.id}:`, err);
+                throw err;
+              })
+            );
+          } else if (chapter.isNew && !chapter.isDeleted) {
+            // Create new chapter (even if empty)
+            const chapterData = {
+              story_id: id!,
+              title: chapter.title,
+              content: chapter.content,
+              order: chapter.order,
+              published: chapter.isPublished,
+            };
+            console.log(`Creating new chapter:`, chapterData);
+            chapterPromises.push(
+              chaptersApi.createChapter(chapterData).catch((err) => {
+                console.error(`Failed to create chapter "${chapter.title}":`, err);
+                console.error('Chapter data was:', chapterData);
+                throw err;
+              })
+            );
+          } else if (!chapter.isNew && !chapter.isDeleted) {
+            // Update existing chapter (only if ID is valid - not starting with "new-")
+            if (!chapter.id.startsWith('new-')) {
+              const updateData = {
+                title: chapter.title,
+                content: chapter.content,
+                order: chapter.order,
+                published: chapter.isPublished,
+              };
+              console.log(`Updating chapter ${chapter.id}:`, updateData);
+              chapterPromises.push(
+                chaptersApi.updateChapter(chapter.id, updateData).catch((err) => {
+                  console.error(`Failed to update chapter ${chapter.id}:`, err);
+                  console.error('Update data was:', updateData);
+                  throw err;
+                })
+              );
+            } else {
+              console.warn(`Skipping update for chapter with invalid ID: ${chapter.id}`);
+            }
+          }
+        } catch (err) {
+          console.error('Error processing chapter:', chapter, err);
+          throw err;
+        }
+      }
+
+      console.log(`Total chapter operations queued: ${chapterPromises.length}`);
+
+      await Promise.all(chapterPromises);
+
+      // Update local state to reflect the save
+      setChapters(visibleChapters.map((ch) => ({ ...ch, isNew: false })));
+
       setHasUnsavedChanges(false);
       addToast({
         title: "Story Updated!",
-        description: "Your changes have been saved successfully",
+        description: "Your story and chapters have been saved successfully",
         type: "success",
       });
-    } catch (error) {
+
+      // Refresh to get updated IDs for new chapters
+      await fetchStoryDetails();
+    } catch (error: any) {
+      console.error("Failed to save story:", error);
+
+      // Get detailed error message
+      let errorMessage = "Failed to save changes. Please try again.";
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        errorMessage = error.response.data?.message ||
+                      error.response.data?.detail ||
+                      `Server error: ${error.response.status}`;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
       addToast({
         title: "Error",
-        description: "Failed to save changes. Please try again.",
+        description: errorMessage,
         type: "error",
       });
     } finally {
@@ -2934,15 +3197,28 @@ export function EditStoryPage() {
     setDeleteDialogOpen(false);
   };
 
-  const handlePublishChapter = (chapterId: string) => {
+  const handlePublishChapter = async (chapterId: string) => {
+    const chapter = chapters.find((ch) => ch.id === chapterId);
+    if (!chapter) return;
+
+    if (!chapter.content.trim()) {
+      addToast({
+        title: "No Content",
+        description: "Please add content to the chapter before publishing",
+        type: "error",
+      });
+      return;
+    }
+
     updateChapter(chapterId, {
       isPublished: true,
       publishedAt: new Date().toISOString(),
     });
+
     addToast({
-      title: "Chapter Published!",
-      description: "Your chapter is now live for readers",
-      type: "success",
+      title: "Chapter Marked for Publishing",
+      description: "Click 'Save Changes' to publish this chapter",
+      type: "info",
     });
   };
 
@@ -3307,7 +3583,7 @@ export function EditStoryPage() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-2">
-                      {chapters.map((chapter, index) => (
+                      {chapters.filter((ch) => !ch.isDeleted).map((chapter, index) => (
                         <div
                           key={chapter.id}
                           className={cn(
@@ -3390,7 +3666,7 @@ export function EditStoryPage() {
 
                 {/* Chapter Editor */}
                 <div className="lg:col-span-3">
-                  {chapters.map((chapter) => (
+                  {chapters.filter((ch) => !ch.isDeleted).map((chapter) => (
                     <div
                       key={chapter.id}
                       className={
@@ -5458,7 +5734,7 @@ export default NotFound;
 ```tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   Grid3X3,
@@ -5477,8 +5753,13 @@ import {
   Calendar,
   Link as LinkIcon,
   BookOpen,
-  Lock, // Add Lock icon for private stories
+  Lock,
+  ZoomIn,
+  ZoomOut,
+  RotateCw,
 } from "lucide-react";
+import Cropper from "react-easy-crop";
+import type { Area, Point } from "react-easy-crop";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -5534,6 +5815,14 @@ export function ProfilePage() {
   });
   const [newProfilePic, setNewProfilePic] = useState<File | null>(null);
   const [profilePicPreview, setProfilePicPreview] = useState<string>("");
+
+  // Cropper state
+  const [showCropper, setShowCropper] = useState(false);
+  const [imageToCrop, setImageToCrop] = useState<string>("");
+  const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [rotation, setRotation] = useState(0);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
 
   const isOwnProfile = user?.username === username;
 
@@ -5754,6 +6043,65 @@ export function ProfilePage() {
     }
   };
 
+  const onCropComplete = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
+
+  const createImage = (url: string): Promise<HTMLImageElement> =>
+    new Promise((resolve, reject) => {
+      const image = new Image();
+      image.addEventListener("load", () => resolve(image));
+      image.addEventListener("error", (error) => reject(error));
+      image.src = url;
+    });
+
+  const getCroppedImg = async (
+    imageSrc: string,
+    pixelCrop: Area,
+    rotation = 0
+  ): Promise<Blob> => {
+    const image = await createImage(imageSrc);
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    if (!ctx) {
+      throw new Error("No 2d context");
+    }
+
+    const maxSize = Math.max(image.width, image.height);
+    const safeArea = 2 * ((maxSize / 2) * Math.sqrt(2));
+
+    canvas.width = safeArea;
+    canvas.height = safeArea;
+
+    ctx.translate(safeArea / 2, safeArea / 2);
+    ctx.rotate((rotation * Math.PI) / 180);
+    ctx.translate(-safeArea / 2, -safeArea / 2);
+
+    ctx.drawImage(
+      image,
+      safeArea / 2 - image.width * 0.5,
+      safeArea / 2 - image.height * 0.5
+    );
+
+    const data = ctx.getImageData(0, 0, safeArea, safeArea);
+
+    canvas.width = pixelCrop.width;
+    canvas.height = pixelCrop.height;
+
+    ctx.putImageData(
+      data,
+      Math.round(0 - safeArea / 2 + image.width * 0.5 - pixelCrop.x),
+      Math.round(0 - safeArea / 2 + image.height * 0.5 - pixelCrop.y)
+    );
+
+    return new Promise((resolve) => {
+      canvas.toBlob((blob) => {
+        resolve(blob!);
+      }, "image/jpeg");
+    });
+  };
+
   const handleProfilePicSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -5766,13 +6114,52 @@ export function ProfilePage() {
         return;
       }
 
-      setNewProfilePic(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageToCrop(reader.result as string);
+        setShowCropper(true);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleCropSave = async () => {
+    if (!croppedAreaPixels || !imageToCrop) return;
+
+    try {
+      const croppedBlob = await getCroppedImg(imageToCrop, croppedAreaPixels, rotation);
+      const croppedFile = new File([croppedBlob], "profile.jpg", {
+        type: "image/jpeg",
+      });
+
+      setNewProfilePic(croppedFile);
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfilePicPreview(reader.result as string);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(croppedFile);
+
+      setShowCropper(false);
+      setImageToCrop("");
+      setCrop({ x: 0, y: 0 });
+      setZoom(1);
+      setRotation(0);
+    } catch (error) {
+      console.error("Error cropping image:", error);
+      addToast({
+        title: "Error",
+        description: "Failed to crop image. Please try again.",
+        type: "error",
+      });
     }
+  };
+
+  const handleCropCancel = () => {
+    setShowCropper(false);
+    setImageToCrop("");
+    setCrop({ x: 0, y: 0 });
+    setZoom(1);
+    setRotation(0);
   };
 
   const handleRemoveProfilePic = () => {
@@ -5948,8 +6335,8 @@ export function ProfilePage() {
             </div>
 
             {/* Stats */}
-            <div className="flex items-center gap-6 mb-4 text-sm">
-              <div className="text-center md:text-left">
+            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 mb-4 text-sm">
+              <div className="text-center">
                 <span className="font-semibold text-lg">
                   {publicStories.length}
                 </span>
@@ -5962,18 +6349,20 @@ export function ProfilePage() {
                   </span>
                 )}
               </div>
-              <button className="text-center md:text-left hover:underline">
-                <span className="font-semibold text-lg">
-                  {formatNumber(profileUser.followers_count)}
-                </span>
-                <span className="text-gray-600 ml-1">followers</span>
-              </button>
-              <button className="text-center md:text-left hover:underline">
-                <span className="font-semibold text-lg">
-                  {formatNumber(profileUser.following_count)}
-                </span>
-                <span className="text-gray-600 ml-1">following</span>
-              </button>
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
+                <button className="text-center hover:underline order-1 sm:order-1">
+                  <span className="font-semibold text-base sm:text-lg">
+                    {formatNumber(profileUser.followers_count)}
+                  </span>
+                  <span className="text-gray-600 ml-1 text-sm sm:text-base">followers</span>
+                </button>
+                <button className="text-center hover:underline order-2 sm:order-2">
+                  <span className="font-semibold text-base sm:text-lg">
+                    {formatNumber(profileUser.following_count)}
+                  </span>
+                  <span className="text-gray-600 ml-1 text-sm sm:text-base">following</span>
+                </button>
+              </div>
             </div>
 
             {/* Bio */}
@@ -6056,7 +6445,7 @@ export function ProfilePage() {
                 )}
               </div>
             ) : (
-              <div className="grid grid-cols-3 gap-1 md:gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1 md:gap-4">
                 {userStories.map((story) => (
                   <Link
                     key={story.id}
@@ -6114,7 +6503,7 @@ export function ProfilePage() {
                   </Button>
                 </div>
               ) : (
-                <div className="grid grid-cols-3 gap-1 md:gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1 md:gap-4">
                   {savedStories.map((story) => (
                     <div key={story.id} className="relative group">
                       <Link
@@ -6386,6 +6775,118 @@ export function ProfilePage() {
                       Save Changes
                     </>
                   )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Image Cropper Modal */}
+      {showCropper && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            onClick={handleCropCancel}
+          />
+
+          {/* Cropper Modal */}
+          <div className="relative w-full max-w-3xl bg-white rounded-xl shadow-2xl overflow-hidden">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold text-white">Crop Profile Picture</h2>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleCropCancel}
+                  className="text-white hover:bg-white/20 rounded-full"
+                >
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+              <p className="text-white/90 text-sm mt-1">
+                Adjust the image to fit perfectly in your round profile picture
+              </p>
+            </div>
+
+            {/* Cropper Area */}
+            <div className="relative h-96 bg-gray-900">
+              <Cropper
+                image={imageToCrop}
+                crop={crop}
+                zoom={zoom}
+                rotation={rotation}
+                aspect={1}
+                cropShape="round"
+                showGrid={false}
+                onCropChange={setCrop}
+                onZoomChange={setZoom}
+                onRotationChange={setRotation}
+                onCropComplete={onCropComplete}
+              />
+            </div>
+
+            {/* Controls */}
+            <div className="bg-gray-50 px-6 py-4 space-y-4">
+              {/* Zoom Control */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-semibold flex items-center gap-2">
+                    <ZoomIn className="h-4 w-4" />
+                    Zoom
+                  </Label>
+                  <span className="text-sm text-gray-600">{Math.round(zoom * 100)}%</span>
+                </div>
+                <input
+                  type="range"
+                  min={1}
+                  max={3}
+                  step={0.1}
+                  value={zoom}
+                  onChange={(e) => setZoom(Number(e.target.value))}
+                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-orange-500"
+                />
+              </div>
+
+              {/* Rotation Control */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-semibold flex items-center gap-2">
+                    <RotateCw className="h-4 w-4" />
+                    Rotation
+                  </Label>
+                  <span className="text-sm text-gray-600">{rotation}°</span>
+                </div>
+                <input
+                  type="range"
+                  min={0}
+                  max={360}
+                  step={1}
+                  value={rotation}
+                  onChange={(e) => setRotation(Number(e.target.value))}
+                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-orange-500"
+                />
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="border-t bg-white px-6 py-4">
+              <div className="flex justify-end gap-3">
+                <Button
+                  variant="outline"
+                  onClick={handleCropCancel}
+                  className="border-gray-300 hover:bg-gray-100"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleCropSave}
+                  className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white"
+                >
+                  <Check className="h-4 w-4 mr-2" />
+                  Apply Crop
                 </Button>
               </div>
             </div>
@@ -6707,7 +7208,7 @@ export function StoriesPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {editorPicks.map((story, index) => (
                     <Link key={story.id} to={`/stories/${story.id}`}>
                       <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-white/60 transition-colors">
@@ -7452,14 +7953,7 @@ export function StoryDetailPage() {
                       <Button
                         size="lg"
                         className="bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
-                        onClick={() =>
-                          addToast({
-                            title: "Coming Soon",
-                            description:
-                              "Reading feature will be available soon",
-                            type: "info",
-                          })
-                        }
+                        onClick={() => navigate(`/stories/${id}/read`)}
                       >
                         <BookOpen className="h-5 w-5 mr-2" />
                         Start Reading
@@ -7678,6 +8172,389 @@ export function StoryDetailPage() {
         </div>
       </div>
     </MainLayout>
+  );
+}
+```
+
+---
+
+#### 📄 src\pages\StoryReaderPage.tsx
+<a name='src-pages-StoryReaderPagetsx'></a>
+
+**Path:** `src\pages\StoryReaderPage.tsx`
+
+```tsx
+import { useState, useEffect } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import {
+  ChevronLeft,
+  ChevronRight,
+  BookOpen,
+  List,
+  Settings,
+  Heart,
+  MessageCircle,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { Badge } from "@/components/ui/badge";
+import { useAuthStore } from "@/store/authStore";
+import { useUiStore } from "@/store/uiStore";
+import { Chapter, Story } from "@/types/api";
+import { chaptersApi, storiesApi } from "@/apis";
+import { cn } from "@/lib/utils";
+
+export function StoryReaderPage() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuthStore();
+  const { addToast } = useUiStore();
+
+  const [story, setStory] = useState<Story | null>(null);
+  const [chapters, setChapters] = useState<Chapter[]>([]);
+  const [currentChapterIndex, setCurrentChapterIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [fontSize, setFontSize] = useState(18);
+  const [fontFamily, setFontFamily] = useState("serif");
+
+  const currentChapter = chapters[currentChapterIndex];
+  const hasNextChapter = currentChapterIndex < chapters.length - 1;
+  const hasPreviousChapter = currentChapterIndex > 0;
+
+  useEffect(() => {
+    if (!id) return;
+    fetchStoryAndChapters();
+  }, [id]);
+
+  useEffect(() => {
+    if (currentChapter && isAuthenticated) {
+      // Track reading progress
+      chaptersApi.setReadProgress(currentChapter.id, id!).catch(console.error);
+    }
+  }, [currentChapter?.id, isAuthenticated, id]);
+
+  const fetchStoryAndChapters = async () => {
+    if (!id) return;
+
+    try {
+      setIsLoading(true);
+
+      // Fetch story details
+      const storyData = await storiesApi.getStory(id);
+
+      // Check if story is private and user is not the owner
+      if (
+        storyData.visibility === "private" &&
+        storyData.author_id !== user?.id
+      ) {
+        addToast({
+          title: "Private Story",
+          description: "This story is private and cannot be accessed",
+          type: "error",
+        });
+        navigate("/stories");
+        return;
+      }
+
+      setStory(storyData);
+
+      // Fetch chapters
+      const chaptersData = await chaptersApi.getChaptersByStory(id, true);
+
+      if (chaptersData.length === 0) {
+        addToast({
+          title: "No Chapters",
+          description: "This story doesn't have any published chapters yet",
+          type: "info",
+        });
+        navigate(`/stories/${id}`);
+        return;
+      }
+
+      // Sort chapters by order
+      const sortedChapters = chaptersData.sort((a, b) => a.order - b.order);
+      setChapters(sortedChapters);
+    } catch (error) {
+      console.error("Failed to fetch story and chapters:", error);
+      addToast({
+        title: "Error",
+        description: "Failed to load story content",
+        type: "error",
+      });
+      navigate("/stories");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const goToNextChapter = () => {
+    if (hasNextChapter) {
+      setCurrentChapterIndex(currentChapterIndex + 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  const goToPreviousChapter = () => {
+    if (hasPreviousChapter) {
+      setCurrentChapterIndex(currentChapterIndex - 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  const goToChapter = (index: number) => {
+    setCurrentChapterIndex(index);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const increaseFontSize = () => {
+    setFontSize((prev) => Math.min(prev + 2, 32));
+  };
+
+  const decreaseFontSize = () => {
+    setFontSize((prev) => Math.max(prev - 2, 12));
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
+
+  if (!story || !currentChapter) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Card>
+          <CardContent className="p-6">
+            <h2 className="text-xl font-bold mb-2">Story not found</h2>
+            <Button onClick={() => navigate("/stories")}>Browse Stories</Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Reader Header */}
+      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate(`/stories/${id}`)}
+              >
+                <ChevronLeft className="h-4 w-4 mr-1" />
+                Back
+              </Button>
+              <div className="hidden md:block">
+                <Link
+                  to={`/stories/${id}`}
+                  className="font-semibold hover:underline"
+                >
+                  {story.title}
+                </Link>
+                <p className="text-sm text-muted-foreground">
+                  Chapter {currentChapterIndex + 1} of {chapters.length}:{" "}
+                  {currentChapter.title}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              {/* Chapter List */}
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <List className="h-4 w-4 mr-2" />
+                    Chapters
+                  </Button>
+                </SheetTrigger>
+                <SheetContent>
+                  <SheetHeader>
+                    <SheetTitle>Chapters</SheetTitle>
+                  </SheetHeader>
+                  <div className="mt-6 space-y-2">
+                    {chapters.map((chapter, index) => (
+                      <button
+                        key={chapter.id}
+                        onClick={() => goToChapter(index)}
+                        className={cn(
+                          "w-full text-left p-3 rounded-lg transition-colors",
+                          index === currentChapterIndex
+                            ? "bg-primary text-primary-foreground"
+                            : "hover:bg-muted"
+                        )}
+                      >
+                        <div className="font-medium">
+                          Chapter {index + 1}
+                        </div>
+                        <div className="text-sm opacity-90">{chapter.title}</div>
+                      </button>
+                    ))}
+                  </div>
+                </SheetContent>
+              </Sheet>
+
+              {/* Reading Settings */}
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <Settings className="h-4 w-4" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent>
+                  <SheetHeader>
+                    <SheetTitle>Reading Settings</SheetTitle>
+                  </SheetHeader>
+                  <div className="mt-6 space-y-6">
+                    <div>
+                      <label className="text-sm font-medium">Font Size</label>
+                      <div className="flex items-center gap-2 mt-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={decreaseFontSize}
+                        >
+                          A-
+                        </Button>
+                        <span className="text-sm">{fontSize}px</span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={increaseFontSize}
+                        >
+                          A+
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-sm font-medium">Font Family</label>
+                      <div className="grid grid-cols-2 gap-2 mt-2">
+                        <Button
+                          variant={fontFamily === "serif" ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setFontFamily("serif")}
+                        >
+                          Serif
+                        </Button>
+                        <Button
+                          variant={
+                            fontFamily === "sans-serif" ? "default" : "outline"
+                          }
+                          size="sm"
+                          onClick={() => setFontFamily("sans-serif")}
+                        >
+                          Sans
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Reader Content */}
+      <main className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">
+            {currentChapter.title}
+          </h1>
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <span>
+              Chapter {currentChapterIndex + 1} of {chapters.length}
+            </span>
+            <Badge variant="secondary">
+              <BookOpen className="h-3 w-3 mr-1" />
+              {currentChapter.reads_count} reads
+            </Badge>
+          </div>
+        </div>
+
+        <Card className="mb-8">
+          <CardContent className="p-8">
+            <div
+              style={{
+                fontSize: `${fontSize}px`,
+                fontFamily: fontFamily,
+                lineHeight: 1.8,
+              }}
+              className="prose prose-lg dark:prose-invert max-w-none"
+            >
+              {currentChapter.content ? (
+                <div className="whitespace-pre-wrap">{currentChapter.content}</div>
+              ) : (
+                <p className="text-muted-foreground italic">
+                  No content available for this chapter.
+                </p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Chapter Navigation */}
+        <div className="flex items-center justify-between mb-8">
+          <Button
+            variant="outline"
+            onClick={goToPreviousChapter}
+            disabled={!hasPreviousChapter}
+          >
+            <ChevronLeft className="h-4 w-4 mr-2" />
+            Previous Chapter
+          </Button>
+
+          <span className="text-sm text-muted-foreground">
+            {currentChapterIndex + 1} / {chapters.length}
+          </span>
+
+          <Button
+            variant="outline"
+            onClick={goToNextChapter}
+            disabled={!hasNextChapter}
+          >
+            Next Chapter
+            <ChevronRight className="h-4 w-4 ml-2" />
+          </Button>
+        </div>
+
+        {/* End of Story */}
+        {!hasNextChapter && (
+          <Card className="bg-muted">
+            <CardContent className="p-6 text-center">
+              <h3 className="text-lg font-semibold mb-2">
+                You've reached the end!
+              </h3>
+              <p className="text-muted-foreground mb-4">
+                Thanks for reading {story.title}
+              </p>
+              <div className="flex justify-center gap-2">
+                <Button onClick={() => navigate(`/stories/${id}`)}>
+                  Back to Story
+                </Button>
+                <Button variant="outline" onClick={() => navigate("/stories")}>
+                  Browse More Stories
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </main>
+    </div>
   );
 }
 ```
@@ -8121,6 +8998,35 @@ export interface GetUrlResponse {
   key: string;
   signed_url: string;
   expires_in: number;
+}
+
+// Chapter Types
+export interface Chapter {
+  id: string;
+  story_id: string;
+  title: string;
+  content: string | null;
+  order: number;
+  published: boolean;
+  votes_count: number;
+  reads_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateChapterRequest {
+  story_id: string;
+  title: string;
+  content: string;
+  order: number;
+  published?: boolean;
+}
+
+export interface UpdateChapterRequest {
+  title?: string;
+  content?: string;
+  order?: number;
+  published?: boolean;
 }
 
 // Vote Types
@@ -8947,7 +9853,7 @@ export function MainLayout({
       <Header />
       <main className={cn("flex-1 flex flex-col", className)}>
         <div className="flex-1">{children}</div>
-        {showFooter && <Footer />}
+        {showFooter && !isAuthenticated && <Footer />}
       </main>
     </div>
   );

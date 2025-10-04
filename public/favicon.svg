@@ -1,26 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <defs>
-    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#FF6B35;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
-    </linearGradient>
-    <filter id="shadow">
-      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.3"/>
-    </filter>
-  </defs>
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" rx="6" fill="#FF6B35"/>
   
-  <!-- Background circle -->
-  <circle cx="32" cy="32" r="30" fill="url(#bgGradient)" filter="url(#shadow)"/>
+  <!-- Left book page -->
+  <path d="M5 6h9v20H5z" fill="white" opacity="0.9"/>
   
-  <!-- Book icon -->
-  <g transform="translate(16, 14)">
-    <!-- Left page -->
-    <path d="M4 6C4 4.9 4.9 4 6 4H16V32H6C4.9 32 4 31.1 4 30V6Z" fill="white" opacity="0.95"/>
-    <!-- Right page -->
-    <path d="M16 4H26C27.1 4 28 4.9 28 6V30C28 31.1 27.1 32 26 32H16V4Z" fill="white" opacity="0.85"/>
-    <!-- Spine -->
-    <rect x="15" y="4" width="2" height="28" fill="#E85D04" opacity="0.9"/>
-    <!-- Star on spine -->
-    <path d="M16 14 L16.5 15.5 L18 15.5 L16.75 16.5 L17.25 18 L16 17 L14.75 18 L15.25 16.5 L14 15.5 L15.5 15.5 Z" fill="#FFD700"/>
-  </g>
+  <!-- Right book page -->
+  <path d="M18 6h9v20h-9z" fill="white" opacity="0.85"/>
+  
+  <!-- Book spine -->
+  <rect x="14" y="6" width="4" height="20" fill="#E85D04"/>
+  
+  <!-- Bookmark -->
+  <path d="M16 3v10l-2-2-2 2V3h4z" fill="#FFD700"/>
 </svg>

@@ -1,3 +1,4 @@
+// src/components/layout/header.tsx
 "use client";
 
 import { useState } from "react";
@@ -35,23 +36,17 @@ import { cn } from "@/lib/utils";
 const browseCategories = [
   { label: "Browse", href: "/stories", isHeader: true },
   { label: "Romance", href: "/stories?genre=Romance" },
-  { label: "Fanfiction", href: "/stories?genre=Fanfiction" },
   { label: "Fantasy", href: "/stories?genre=Fantasy" },
-  { label: "Short Story", href: "/stories?genre=Short Story" },
-  { label: "Teen Fiction", href: "/stories?genre=Teen Fiction" },
-  { label: "Historical Fiction", href: "/stories?genre=Historical Fiction" },
-  { label: "Paranormal", href: "/stories?genre=Paranormal" },
-  { label: "Editor's Picks", href: "/stories?sort=popular", isSpecial: true },
-  { label: "Humor", href: "/stories?genre=Humor" },
-  { label: "Horror", href: "/stories?genre=Horror" },
-  { label: "Contemporary Lit", href: "/stories?genre=Contemporary Lit" },
-  { label: "Diverse Lit", href: "/stories?genre=Diverse Lit" },
   { label: "Mystery", href: "/stories?genre=Mystery" },
-  { label: "Thriller", href: "/stories?genre=Thriller" },
-  { label: "Science Fiction", href: "/stories?genre=Science Fiction" },
+  { label: "Sci-Fi", href: "/stories?genre=Sci-Fi" },
+  { label: "Horror", href: "/stories?genre=Horror" },
   { label: "Adventure", href: "/stories?genre=Adventure" },
-  { label: "Non-Fiction", href: "/stories?genre=Non-Fiction" },
+  { label: "Drama", href: "/stories?genre=Drama" },
+  { label: "Comedy", href: "/stories?genre=Comedy" },
+  { label: "Thriller", href: "/stories?genre=Thriller" },
+  { label: "Historical", href: "/stories?genre=Historical" },
   { label: "Poetry", href: "/stories?genre=Poetry" },
+  { label: "Non-Fiction", href: "/stories?genre=Non-Fiction" },
 ];
 
 export function Header() {
@@ -82,22 +77,13 @@ export function Header() {
 
   return (
     <>
-      {/* Fixed Header with Consistent White Background */}
-      <header
-        className="fixed top-0 left-0 right-0 z-50 border-b shadow-sm"
-        style={{
-          backgroundColor: "#FFFFFF",
-          borderBottomColor: "#E5E7EB",
-        }}
-      >
+      {/* Fixed Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b shadow-sm">
         <div className="relative">
           {/* Main Header Content */}
-          <div
-            className="h-14 sm:h-16 px-3 sm:px-6 lg:px-8"
-            style={{ backgroundColor: "#FFFFFF" }}
-          >
+          <div className="h-14 sm:h-16 px-3 sm:px-6 lg:px-8">
             <div className="flex h-full items-center justify-between max-w-7xl mx-auto">
-              {/* Left Section - Mobile Menu, Logo, and Browse */}
+              {/* Left Section - Mobile Menu and Logo */}
               <div className="flex items-center gap-2 sm:gap-4">
                 {/* Mobile Menu Button */}
                 <Button
@@ -105,7 +91,6 @@ export function Header() {
                   size="sm"
                   className="sm:hidden h-8 w-8 p-0"
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  style={{ color: "#374151" }}
                 >
                   {mobileMenuOpen ? (
                     <X className="h-5 w-5" />
@@ -114,10 +99,11 @@ export function Header() {
                   )}
                 </Button>
 
-                {/* Logo */}
-                <Logo size="sm" className="hidden sm:flex" variant="default" />
-                <div className="sm:hidden">
-                  <Link to="/" className="flex items-center">
+                {/* Logo with Text on Mobile, Full Logo on Desktop */}
+                <Link to="/" className="flex items-center gap-2">
+                  {/* Mobile - Show StoriVault text */}
+                  <div className="sm:hidden flex items-center gap-2">
+                    {/* Book Icon */}
                     <svg
                       viewBox="0 0 48 48"
                       className="h-8 w-8"
@@ -147,8 +133,18 @@ export function Header() {
                       />
                       <rect x="22" y="6" width="4" height="32" fill="#E85D04" />
                     </svg>
-                  </Link>
-                </div>
+                    {/* StoriVault Text */}
+                    <span className="font-bold text-lg">
+                      <span className="text-orange-500">Stori</span>
+                      <span className="text-gray-700">Vault</span>
+                    </span>
+                  </div>
+
+                  {/* Desktop - Full Logo Component */}
+                  <div className="hidden sm:block">
+                    <Logo size="sm" showText={true} />
+                  </div>
+                </Link>
 
                 {/* Browse Dropdown - Desktop Only */}
                 <DropdownMenu>
@@ -157,7 +153,6 @@ export function Header() {
                       variant="ghost"
                       size="sm"
                       className="hidden sm:flex items-center gap-1 font-medium"
-                      style={{ color: "#374151" }}
                     >
                       Browse
                       <ChevronDown className="h-4 w-4" />
@@ -165,8 +160,7 @@ export function Header() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     align="start"
-                    className="w-56 max-h-[80vh] overflow-y-auto"
-                    style={{ backgroundColor: "#FFFFFF" }}
+                    className="w-56 max-h-[80vh] overflow-y-auto bg-white"
                   >
                     {browseCategories.map((category, index) =>
                       category.isHeader ? (
@@ -178,14 +172,7 @@ export function Header() {
                         </DropdownMenuLabel>
                       ) : (
                         <DropdownMenuItem key={index} asChild>
-                          <Link
-                            to={category.href}
-                            className={cn(
-                              "cursor-pointer",
-                              category.isSpecial &&
-                                "font-semibold text-orange-600"
-                            )}
-                          >
+                          <Link to={category.href} className="cursor-pointer">
                             {category.label}
                           </Link>
                         </DropdownMenuItem>
@@ -204,8 +191,7 @@ export function Header() {
                     placeholder="Search stories, authors..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 w-full rounded-full border-gray-300 focus:border-orange-400 focus:ring-orange-400"
-                    style={{ backgroundColor: "#F9FAFB" }}
+                    className="pl-10 w-full rounded-full border-gray-300 focus:border-orange-400 focus:ring-orange-400 bg-gray-50"
                   />
                 </form>
               </div>
@@ -218,58 +204,30 @@ export function Header() {
                   size="sm"
                   className="md:hidden h-8 w-8 p-0"
                   onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
-                  style={{ color: "#374151" }}
                 >
                   <Search className="h-5 w-5" />
                 </Button>
 
-                {/* Write Dropdown */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
+                {isAuthenticated ? (
+                  <>
+                    {/* Write Button - Desktop */}
                     <Button
                       variant="ghost"
                       size="sm"
                       className="hidden sm:flex items-center gap-1 font-medium"
-                      style={{ color: "#374151" }}
+                      asChild
                     >
-                      Write
-                      <ChevronDown className="h-4 w-4" />
+                      <Link to="/stories/create">
+                        <PenTool className="h-4 w-4" />
+                        Write
+                      </Link>
                     </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    align="end"
-                    className="w-48"
-                    style={{ backgroundColor: "#FFFFFF" }}
-                  >
-                    <DropdownMenuItem asChild>
-                      <Link
-                        to="/stories/create"
-                        className="cursor-pointer flex items-center gap-2"
-                      >
-                        <Plus className="h-4 w-4" />
-                        Create a new story
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link
-                        to="/my-stories"
-                        className="cursor-pointer flex items-center gap-2"
-                      >
-                        <FileText className="h-4 w-4" />
-                        My Stories
-                      </Link>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
 
-                {isAuthenticated ? (
-                  <>
-                    {/* Notifications - Hidden on Mobile */}
+                    {/* Notifications - Desktop */}
                     <Button
                       variant="ghost"
                       size="sm"
                       className="hidden sm:block h-8 w-8 p-0"
-                      style={{ color: "#374151" }}
                     >
                       <Bell className="h-5 w-5" />
                     </Button>
@@ -287,12 +245,7 @@ export function Header() {
                               src={user?.profile_pic || undefined}
                               alt={user?.username}
                             />
-                            <AvatarFallback
-                              style={{
-                                backgroundColor: "#FED7AA",
-                                color: "#7C2D12",
-                              }}
-                            >
+                            <AvatarFallback className="bg-orange-100 text-orange-700">
                               {user?.username?.charAt(0).toUpperCase() || "U"}
                             </AvatarFallback>
                           </Avatar>
@@ -301,7 +254,7 @@ export function Header() {
                       <DropdownMenuContent
                         className="w-56"
                         align="end"
-                        style={{ backgroundColor: "#FFFFFF" }}
+                        sideOffset={5}
                       >
                         <div className="flex items-center justify-start gap-2 p-2">
                           <div className="flex flex-col space-y-1 leading-none">
@@ -316,7 +269,7 @@ export function Header() {
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild>
                           <Link
-                            to={`/users/${user?.username}`}
+                            to={`/profile/${user?.username}`}
                             className="cursor-pointer"
                           >
                             <User className="mr-2 h-4 w-4" />
@@ -335,6 +288,15 @@ export function Header() {
                             My Stories
                           </Link>
                         </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link
+                            to="/stories/create"
+                            className="cursor-pointer sm:hidden"
+                          >
+                            <PenTool className="mr-2 h-4 w-4" />
+                            Write Story
+                          </Link>
+                        </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild>
                           <Link to="/settings" className="cursor-pointer">
@@ -344,37 +306,33 @@ export function Header() {
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={handleLogout}
-                          className="cursor-pointer"
+                          className="cursor-pointer text-red-600 hover:text-red-600 hover:bg-red-50"
                         >
                           <LogOut className="mr-2 h-4 w-4" />
-                          Log out
+                          Sign Out
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </>
                 ) : (
-                  <div className="flex items-center gap-2">
+                  <>
+                    {/* Sign In and Sign Up buttons for non-authenticated users */}
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="hidden sm:inline-flex text-sm font-medium"
-                      style={{ color: "#374151" }}
+                      className="text-sm font-medium"
                       asChild
                     >
                       <Link to="/auth/login">Sign In</Link>
                     </Button>
                     <Button
                       size="sm"
-                      className="text-white border-0 px-3 sm:px-4 text-sm font-medium"
-                      style={{
-                        background:
-                          "linear-gradient(to right, #FB923C, #F97316)",
-                      }}
+                      className="hidden sm:inline-flex bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-sm font-medium"
                       asChild
                     >
                       <Link to="/auth/signup">Sign Up</Link>
                     </Button>
-                  </div>
+                  </>
                 )}
               </div>
             </div>
@@ -382,13 +340,7 @@ export function Header() {
 
           {/* Mobile Search Bar - Expandable */}
           {mobileSearchOpen && (
-            <div
-              className="md:hidden border-t px-4 py-3"
-              style={{
-                backgroundColor: "#FFFFFF",
-                borderTopColor: "#E5E7EB",
-              }}
-            >
+            <div className="md:hidden border-t bg-white px-4 py-3">
               <form onSubmit={handleSearch} className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
@@ -396,8 +348,7 @@ export function Header() {
                   placeholder="Search stories, authors..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 w-full rounded-full text-sm border-gray-300"
-                  style={{ backgroundColor: "#F9FAFB" }}
+                  className="pl-10 w-full rounded-full text-sm border-gray-300 bg-gray-50"
                   autoFocus
                 />
               </form>
@@ -406,27 +357,18 @@ export function Header() {
 
           {/* Mobile Menu - Slide Down */}
           {mobileMenuOpen && (
-            <div
-              className="sm:hidden border-t"
-              style={{
-                backgroundColor: "#FFFFFF",
-                borderTopColor: "#E5E7EB",
-              }}
-            >
+            <div className="sm:hidden border-t bg-white">
               <div className="px-4 py-3 space-y-1">
                 {/* Browse Section for Mobile */}
                 <div className="pb-2 mb-2 border-b border-gray-200">
                   <p className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2 px-3">
                     Browse Stories
                   </p>
-                  {browseCategories.slice(1, 8).map((category, index) => (
+                  {browseCategories.slice(1, 7).map((category, index) => (
                     <Link
                       key={index}
                       to={category.href}
-                      className={cn(
-                        "block px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100",
-                        category.isSpecial ? "text-orange-600" : "text-gray-700"
-                      )}
+                      className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
                       onClick={closeMobileMenu}
                     >
                       {category.label}
@@ -434,29 +376,15 @@ export function Header() {
                   ))}
                   <Link
                     to="/stories"
-                    className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                    className="block px-3 py-2 rounded-md text-sm font-medium text-orange-600 hover:bg-orange-50"
                     onClick={closeMobileMenu}
                   >
-                    View All Genres →
+                    View All Categories →
                   </Link>
                 </div>
 
                 {/* Write Section for Mobile */}
-                {!isAuthenticated ? (
-                  <div className="pb-2 mb-2 border-b border-gray-200">
-                    <p className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2 px-3">
-                      Start Writing
-                    </p>
-                    <Link
-                      to="/auth/signup"
-                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
-                      onClick={closeMobileMenu}
-                    >
-                      <PenTool className="mr-2 h-4 w-4" />
-                      Sign Up to Write
-                    </Link>
-                  </div>
-                ) : (
+                {isAuthenticated ? (
                   <div className="pb-2 mb-2 border-b border-gray-200">
                     <p className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2 px-3">
                       Writing
@@ -478,6 +406,20 @@ export function Header() {
                       My Stories
                     </Link>
                   </div>
+                ) : (
+                  <div className="pb-2 mb-2 border-b border-gray-200">
+                    <p className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2 px-3">
+                      Get Started
+                    </p>
+                    <Link
+                      to="/auth/signup"
+                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                      onClick={closeMobileMenu}
+                    >
+                      <PenTool className="mr-2 h-4 w-4" />
+                      Sign Up to Write
+                    </Link>
+                  </div>
                 )}
 
                 {/* User Actions */}
@@ -492,32 +434,30 @@ export function Header() {
                       My Library
                     </Link>
                     <Link
-                      to={`/users/${user?.username}`}
+                      to={`/profile/${user?.username}`}
                       className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
                       onClick={closeMobileMenu}
                     >
                       <User className="mr-2 h-4 w-4" />
                       Profile
                     </Link>
-                  </>
-                ) : (
-                  <>
                     <Link
-                      to="/auth/login"
-                      className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                      to="/settings"
+                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
                       onClick={closeMobileMenu}
                     >
-                      Sign In
+                      <Settings className="mr-2 h-4 w-4" />
+                      Settings
                     </Link>
-                    <Link
-                      to="/auth/signup"
-                      className="block px-3 py-2 rounded-md text-sm font-medium text-white bg-gradient-to-r from-orange-400 to-orange-500"
-                      onClick={closeMobileMenu}
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center w-full text-left px-3 py-2 rounded-md text-sm font-medium text-red-600 hover:bg-red-50"
                     >
-                      Sign Up Free
-                    </Link>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Sign Out
+                    </button>
                   </>
-                )}
+                ) : null}
               </div>
             </div>
           )}
