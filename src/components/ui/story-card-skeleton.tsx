@@ -1,4 +1,3 @@
-// src/components/ui/story-card-skeleton.tsx
 import { Skeleton } from "./skeleton";
 import { Card } from "./card";
 
@@ -19,6 +18,23 @@ export function StoryCardSkeleton({
           <Skeleton className="h-3 w-1/2" variant="text" />
         </div>
       </div>
+    );
+  }
+
+  if (variant === "featured") {
+    return (
+      <Card className="overflow-hidden">
+        <Skeleton className="aspect-[16/9] w-full" variant="rectangular" />
+        <div className="p-4 space-y-3">
+          <Skeleton className="h-6 w-20" variant="rounded" />
+          <Skeleton className="h-5 w-3/4" variant="text" />
+          <Skeleton className="h-4 w-full" variant="text" />
+          <div className="flex justify-between">
+            <Skeleton className="h-3 w-16" variant="text" />
+            <Skeleton className="h-3 w-16" variant="text" />
+          </div>
+        </div>
+      </Card>
     );
   }
 

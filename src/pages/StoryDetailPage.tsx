@@ -21,7 +21,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MainLayout } from "@/components/layout/main-layout";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { StoryDetailSkeleton } from "@/components/ui/story-detail-skeleton";
 import { useAuthStore } from "@/store/authStore";
 import { useUiStore } from "@/store/uiStore";
 import { Story, User } from "@/types";
@@ -265,12 +265,11 @@ export function StoryDetailPage() {
     }
   };
 
+  // Loading State
   if (isLoading) {
     return (
       <MainLayout>
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <LoadingSpinner size="lg" />
-        </div>
+        <StoryDetailSkeleton />
       </MainLayout>
     );
   }

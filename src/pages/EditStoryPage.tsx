@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { EditStorySkeleton } from "@/components/ui/edit-story-skeleton";
 import {
   Save,
   Eye,
@@ -170,7 +171,10 @@ export function EditStoryPage() {
 
       // Fetch existing chapters from backend
       try {
-        const existingChapters = await chaptersApi.getChaptersByStory(id, false); // Get all chapters including unpublished
+        const existingChapters = await chaptersApi.getChaptersByStory(
+          id,
+          false
+        ); // Get all chapters including unpublished
 
         if (existingChapters.length > 0) {
           const mappedChapters: Chapter[] = existingChapters
@@ -391,14 +395,17 @@ export function EditStoryPage() {
             console.log(`Creating new chapter:`, chapterData);
             chapterPromises.push(
               chaptersApi.createChapter(chapterData).catch((err) => {
-                console.error(`Failed to create chapter "${chapter.title}":`, err);
-                console.error('Chapter data was:', chapterData);
+                console.error(
+                  `Failed to create chapter "${chapter.title}":`,
+                  err
+                );
+                console.error("Chapter data was:", chapterData);
                 throw err;
               })
             );
           } else if (!chapter.isNew && !chapter.isDeleted) {
             // Update existing chapter (only if ID is valid - not starting with "new-")
-            if (!chapter.id.startsWith('new-')) {
+            if (!chapter.id.startsWith("new-")) {
               const updateData = {
                 title: chapter.title,
                 content: chapter.content,
@@ -407,18 +414,25 @@ export function EditStoryPage() {
               };
               console.log(`Updating chapter ${chapter.id}:`, updateData);
               chapterPromises.push(
-                chaptersApi.updateChapter(chapter.id, updateData).catch((err) => {
-                  console.error(`Failed to update chapter ${chapter.id}:`, err);
-                  console.error('Update data was:', updateData);
-                  throw err;
-                })
+                chaptersApi
+                  .updateChapter(chapter.id, updateData)
+                  .catch((err) => {
+                    console.error(
+                      `Failed to update chapter ${chapter.id}:`,
+                      err
+                    );
+                    console.error("Update data was:", updateData);
+                    throw err;
+                  })
               );
             } else {
-              console.warn(`Skipping update for chapter with invalid ID: ${chapter.id}`);
+              console.warn(
+                `Skipping update for chapter with invalid ID: ${chapter.id}`
+              );
             }
           }
         } catch (err) {
-          console.error('Error processing chapter:', chapter, err);
+          console.error("Error processing chapter:", chapter, err);
           throw err;
         }
       }
@@ -446,9 +460,10 @@ export function EditStoryPage() {
       let errorMessage = "Failed to save changes. Please try again.";
       if (error.response) {
         console.error("Error response:", error.response.data);
-        errorMessage = error.response.data?.message ||
-                      error.response.data?.detail ||
-                      `Server error: ${error.response.status}`;
+        errorMessage =
+          error.response.data?.message ||
+          error.response.data?.detail ||
+          `Server error: ${error.response.status}`;
       } else if (error.message) {
         errorMessage = error.message;
       }
@@ -510,9 +525,7 @@ export function EditStoryPage() {
   if (isLoading) {
     return (
       <MainLayout>
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <LoadingSpinner size="lg" />
-        </div>
+        <EditStorySkeleton />
       </MainLayout>
     );
   }
@@ -868,75 +881,77 @@ export function EditStoryPage() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-2">
-                      {chapters.filter((ch) => !ch.isDeleted).map((chapter, index) => (
-                        <div
-                          key={chapter.id}
-                          className={cn(
-                            "group relative p-3 rounded-lg border cursor-pointer transition-colors",
-                            activeChapter === chapter.id
-                              ? "border-orange-500 bg-orange-50"
-                              : "border-gray-200 hover:border-gray-300"
-                          )}
-                          onClick={() => setActiveChapter(chapter.id)}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className="flex-1">
-                              <p className="font-medium text-sm">
-                                {chapter.title}
-                              </p>
-                              {chapter.isPublished && (
-                                <Badge
-                                  variant="secondary"
-                                  className="mt-1 text-xs"
-                                >
-                                  Published
-                                </Badge>
-                              )}
-                            </div>
-                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                              {index > 0 && (
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-6 w-6"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    reorderChapter(chapter.id, "up");
-                                  }}
-                                >
-                                  <ChevronLeft className="h-3 w-3 rotate-90" />
-                                </Button>
-                              )}
-                              {index < chapters.length - 1 && (
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-6 w-6"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    reorderChapter(chapter.id, "down");
-                                  }}
-                                >
-                                  <ChevronLeft className="h-3 w-3 -rotate-90" />
-                                </Button>
-                              )}
-                              {chapters.length > 1 && (
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-6 w-6"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    deleteChapter(chapter.id);
-                                  }}
-                                >
-                                  <X className="h-3 w-3" />
-                                </Button>
-                              )}
+                      {chapters
+                        .filter((ch) => !ch.isDeleted)
+                        .map((chapter, index) => (
+                          <div
+                            key={chapter.id}
+                            className={cn(
+                              "group relative p-3 rounded-lg border cursor-pointer transition-colors",
+                              activeChapter === chapter.id
+                                ? "border-orange-500 bg-orange-50"
+                                : "border-gray-200 hover:border-gray-300"
+                            )}
+                            onClick={() => setActiveChapter(chapter.id)}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex-1">
+                                <p className="font-medium text-sm">
+                                  {chapter.title}
+                                </p>
+                                {chapter.isPublished && (
+                                  <Badge
+                                    variant="secondary"
+                                    className="mt-1 text-xs"
+                                  >
+                                    Published
+                                  </Badge>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                {index > 0 && (
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-6 w-6"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      reorderChapter(chapter.id, "up");
+                                    }}
+                                  >
+                                    <ChevronLeft className="h-3 w-3 rotate-90" />
+                                  </Button>
+                                )}
+                                {index < chapters.length - 1 && (
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-6 w-6"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      reorderChapter(chapter.id, "down");
+                                    }}
+                                  >
+                                    <ChevronLeft className="h-3 w-3 -rotate-90" />
+                                  </Button>
+                                )}
+                                {chapters.length > 1 && (
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-6 w-6"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      deleteChapter(chapter.id);
+                                    }}
+                                  >
+                                    <X className="h-3 w-3" />
+                                  </Button>
+                                )}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
                       <Button
                         variant="outline"
                         className="w-full"
@@ -951,70 +966,74 @@ export function EditStoryPage() {
 
                 {/* Chapter Editor */}
                 <div className="lg:col-span-3">
-                  {chapters.filter((ch) => !ch.isDeleted).map((chapter) => (
-                    <div
-                      key={chapter.id}
-                      className={
-                        activeChapter === chapter.id ? "block" : "hidden"
-                      }
-                    >
-                      <Card className="bg-white">
-                        <CardHeader>
-                          <div className="flex items-center justify-between">
-                            <div className="flex-1">
-                              <Input
-                                value={chapter.title}
-                                onChange={(e) =>
-                                  updateChapter(chapter.id, {
-                                    title: e.target.value,
-                                  })
-                                }
-                                className="text-xl font-semibold"
-                                placeholder="Chapter Title"
-                              />
-                            </div>
-                            {!chapter.isPublished && (
-                              <Button
-                                variant="outline"
-                                onClick={() => handlePublishChapter(chapter.id)}
-                              >
-                                Publish Chapter
-                              </Button>
-                            )}
-                          </div>
-                        </CardHeader>
-                        <CardContent>
-                          <Textarea
-                            value={chapter.content}
-                            onChange={(e) =>
-                              updateChapter(chapter.id, {
-                                content: e.target.value,
-                              })
-                            }
-                            placeholder="Start writing your chapter..."
-                            className="min-h-[500px] font-serif text-lg leading-relaxed"
-                          />
-                          <div className="flex items-center justify-between mt-4 text-sm text-gray-500">
-                            <div>
-                              Words:{" "}
-                              {
-                                chapter.content.split(/\s+/).filter(Boolean)
-                                  .length
-                              }
-                            </div>
-                            {chapter.isPublished && chapter.publishedAt && (
-                              <div>
-                                Published:{" "}
-                                {new Date(
-                                  chapter.publishedAt
-                                ).toLocaleDateString()}
+                  {chapters
+                    .filter((ch) => !ch.isDeleted)
+                    .map((chapter) => (
+                      <div
+                        key={chapter.id}
+                        className={
+                          activeChapter === chapter.id ? "block" : "hidden"
+                        }
+                      >
+                        <Card className="bg-white">
+                          <CardHeader>
+                            <div className="flex items-center justify-between">
+                              <div className="flex-1">
+                                <Input
+                                  value={chapter.title}
+                                  onChange={(e) =>
+                                    updateChapter(chapter.id, {
+                                      title: e.target.value,
+                                    })
+                                  }
+                                  className="text-xl font-semibold"
+                                  placeholder="Chapter Title"
+                                />
                               </div>
-                            )}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  ))}
+                              {!chapter.isPublished && (
+                                <Button
+                                  variant="outline"
+                                  onClick={() =>
+                                    handlePublishChapter(chapter.id)
+                                  }
+                                >
+                                  Publish Chapter
+                                </Button>
+                              )}
+                            </div>
+                          </CardHeader>
+                          <CardContent>
+                            <Textarea
+                              value={chapter.content}
+                              onChange={(e) =>
+                                updateChapter(chapter.id, {
+                                  content: e.target.value,
+                                })
+                              }
+                              placeholder="Start writing your chapter..."
+                              className="min-h-[500px] font-serif text-lg leading-relaxed"
+                            />
+                            <div className="flex items-center justify-between mt-4 text-sm text-gray-500">
+                              <div>
+                                Words:{" "}
+                                {
+                                  chapter.content.split(/\s+/).filter(Boolean)
+                                    .length
+                                }
+                              </div>
+                              {chapter.isPublished && chapter.publishedAt && (
+                                <div>
+                                  Published:{" "}
+                                  {new Date(
+                                    chapter.publishedAt
+                                  ).toLocaleDateString()}
+                                </div>
+                              )}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    ))}
                 </div>
               </div>
             </TabsContent>

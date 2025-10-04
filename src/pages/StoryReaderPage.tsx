@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { ReaderSkeleton } from "@/components/ui/reader-skeleton";
 import {
   ChevronLeft,
   ChevronRight,
@@ -137,11 +138,7 @@ export function StoryReaderPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <LoadingSpinner size="lg" />
-      </div>
-    );
+    return <ReaderSkeleton />;
   }
 
   if (!story || !currentChapter) {
@@ -211,10 +208,10 @@ export function StoryReaderPage() {
                             : "hover:bg-muted"
                         )}
                       >
-                        <div className="font-medium">
-                          Chapter {index + 1}
+                        <div className="font-medium">Chapter {index + 1}</div>
+                        <div className="text-sm opacity-90">
+                          {chapter.title}
                         </div>
-                        <div className="text-sm opacity-90">{chapter.title}</div>
                       </button>
                     ))}
                   </div>
@@ -258,7 +255,9 @@ export function StoryReaderPage() {
                       <label className="text-sm font-medium">Font Family</label>
                       <div className="grid grid-cols-2 gap-2 mt-2">
                         <Button
-                          variant={fontFamily === "serif" ? "default" : "outline"}
+                          variant={
+                            fontFamily === "serif" ? "default" : "outline"
+                          }
                           size="sm"
                           onClick={() => setFontFamily("serif")}
                         >
@@ -311,7 +310,9 @@ export function StoryReaderPage() {
               className="prose prose-lg dark:prose-invert max-w-none"
             >
               {currentChapter.content ? (
-                <div className="whitespace-pre-wrap">{currentChapter.content}</div>
+                <div className="whitespace-pre-wrap">
+                  {currentChapter.content}
+                </div>
               ) : (
                 <p className="text-muted-foreground italic">
                   No content available for this chapter.

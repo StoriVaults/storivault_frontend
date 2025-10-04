@@ -33,7 +33,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { StoryCard } from "@/components/ui/story-card";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { StoryCardSkeleton } from "@/components/ui/story-card-skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import { MainLayout } from "@/components/layout/main-layout";
 import { useAuthStore } from "@/store/authStore";
 import { Story } from "@/types";
@@ -159,34 +160,6 @@ const genreCards = [
   },
 ];
 
-// Writing tools features
-const writingTools = [
-  {
-    title: "Story Planner",
-    description: "Organize your plot with our intuitive story mapping tool",
-    icon: FileText,
-    color: literaryColors.peach,
-  },
-  {
-    title: "Character Builder",
-    description: "Create deep, memorable characters with guided templates",
-    icon: Users,
-    color: literaryColors.mint,
-  },
-  {
-    title: "Writing Prompts",
-    description: "Never run out of ideas with daily writing inspiration",
-    icon: Lamp,
-    color: literaryColors.lavender,
-  },
-  {
-    title: "Grammar Guide",
-    description: "Perfect your prose with intelligent writing assistance",
-    icon: Glasses,
-    color: literaryColors.skyBlue,
-  },
-];
-
 export function HomePage() {
   const { isAuthenticated, user } = useAuthStore();
   const [featuredStories, setFeaturedStories] = useState<Story[]>([]);
@@ -234,16 +207,81 @@ export function HomePage() {
     fetchHomeData();
   }, []);
 
+  // Loading State
   if (isLoading) {
     return (
       <MainLayout>
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <LoadingSpinner size="lg" />
+        <div
+          className="min-h-screen"
+          style={{ backgroundColor: literaryColors.cream }}
+        >
+          {/* Hero Section Skeleton */}
+          <section className="relative overflow-hidden py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
+            <div className="relative z-10 max-w-7xl mx-auto text-center">
+              <Skeleton className="h-8 w-48 mx-auto mb-6" variant="rounded" />
+              <Skeleton className="h-16 w-3/4 mx-auto mb-4" variant="text" />
+              <Skeleton className="h-6 w-1/2 mx-auto mb-8" variant="text" />
+              <div className="flex justify-center gap-4 mb-12">
+                <Skeleton className="h-12 w-40" variant="rounded" />
+                <Skeleton className="h-12 w-32" variant="rounded" />
+              </div>
+              {/* Stats Skeleton */}
+              <div className="grid grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-sm sm:max-w-md md:max-w-none mx-auto">
+                <div className="text-center">
+                  <Skeleton className="h-10 w-24 mx-auto mb-2" variant="text" />
+                  <Skeleton className="h-4 w-20 mx-auto" variant="text" />
+                </div>
+                <div className="text-center">
+                  <Skeleton className="h-10 w-24 mx-auto mb-2" variant="text" />
+                  <Skeleton className="h-4 w-20 mx-auto" variant="text" />
+                </div>
+                <div className="text-center">
+                  <Skeleton className="h-10 w-24 mx-auto mb-2" variant="text" />
+                  <Skeleton className="h-4 w-20 mx-auto" variant="text" />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Featured Stories Skeleton */}
+          <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-8 sm:mb-10 md:mb-12">
+                <Skeleton className="h-8 w-64 mx-auto mb-4" variant="text" />
+                <Skeleton className="h-5 w-96 mx-auto" variant="text" />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <StoryCardSkeleton key={index} variant="default" />
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Genre Discovery Skeleton */}
+          <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-8 sm:mb-10 md:mb-12">
+                <Skeleton className="h-8 w-64 mx-auto mb-4" variant="text" />
+                <Skeleton className="h-5 w-80 mx-auto" variant="text" />
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <Skeleton
+                    key={index}
+                    className="h-32 rounded-lg"
+                    variant="rounded"
+                  />
+                ))}
+              </div>
+            </div>
+          </section>
         </div>
       </MainLayout>
     );
   }
 
+  // Main Content (existing code continues here...)
   return (
     <MainLayout showFooter={true}>
       {/* Custom Literary Styles */}

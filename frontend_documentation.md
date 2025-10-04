@@ -44,6 +44,8 @@ Generated from: `.`
 - [image-with-fallback.tsx](#src-components-ui-image-with-fallbacktsx)
 - [loading-spinner.tsx](#src-components-ui-loading-spinnertsx)
 - [logo.tsx](#src-components-ui-logotsx)
+- [profile-skeleton.tsx](#src-components-ui-profile-skeletontsx)
+- [story-card-skeleton.tsx](#src-components-ui-story-card-skeletontsx)
 - [story-card.tsx](#src-components-ui-story-cardtsx)
 - [toast-provider.tsx](#src-components-ui-toast-providertsx)
 - [toast.tsx](#src-components-ui-toasttsx)
@@ -258,24 +260,31 @@ export default {
 **Path:** `tailwind.config.ts`
 
 ```typescript
-import type { Config } from "tailwindcss";
-
 export default {
-  darkMode: ["class"],
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
-  prefix: "",
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
   theme: {
-    // ... existing config ...
     extend: {
-      fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        display: ['Playfair Display', 'serif'],
+      animation: {
+        shimmer: "shimmer 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        // ... existing animations
       },
-      // ... rest of your existing extend config ...
+      keyframes: {
+        shimmer: {
+          "0%, 100%": {
+            opacity: "1",
+          },
+          "50%": {
+            opacity: "0.5",
+          },
+        },
+        // ... existing keyframes
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
-} satisfies Config;
+}
 ```
 
 ---
@@ -6936,12 +6945,47 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StoryCard } from "@/components/ui/story-card";
+import { StoryCardSkeleton } from "@/components/ui/story-card-skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { MainLayout } from "@/components/layout/main-layout";
 import { Story, PaginatedResponse } from "@/types";
 import { storiesApi } from "@/apis";
 import { useAuthStore } from "@/store/authStore";
 import { cn } from "@/lib/utils";
+
+// Recommendation Card Skeleton
+function RecommendationCardSkeleton() {
+  return (
+    <Card className="overflow-hidden">
+      <Skeleton className="aspect-[3/4] w-full" />
+      <div className="p-3 space-y-2">
+        <Skeleton className="h-4 w-full" />
+        <div className="flex justify-between">
+          <Skeleton className="h-3 w-12" />
+          <Skeleton className="h-3 w-12" />
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+// Editor Pick Skeleton
+function EditorPickSkeleton() {
+  return (
+    <div className="flex items-start gap-3 p-3">
+      <Skeleton className="h-8 w-8" variant="circular" />
+      <div className="flex-1 space-y-2">
+        <Skeleton className="h-4 w-3/4" variant="text" />
+        <Skeleton className="h-3 w-1/2" variant="text" />
+        <div className="flex gap-2">
+          <Skeleton className="h-5 w-16" variant="rounded" />
+          <Skeleton className="h-3 w-20" variant="text" />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const genres = [
   "All",
@@ -7137,71 +7181,72 @@ export function StoriesPage() {
         )}
 
         {/* Recommendations Section - Show before main content */}
-        {!searchQuery &&
-          !isLoadingRecommendations &&
-          recommendedStories.length > 0 && (
-            <section className="max-w-7xl mx-auto">
-              <div className="mb-6">
-                <h2 className="text-2xl font-bold flex items-center gap-2 mb-2">
-                  <Sparkles className="h-6 w-6 text-yellow-500" />
-                  {isAuthenticated
-                    ? "Recommended for You"
-                    : "Popular Right Now"}
-                </h2>
-                <p className="text-muted-foreground">
-                  {isAuthenticated
-                    ? "Stories we think you'll love based on your reading history"
-                    : "Trending stories loved by our community"}
-                </p>
-              </div>
+        {!searchQuery && (
+          <section className="max-w-7xl mx-auto">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold flex items-center gap-2 mb-2">
+                <Sparkles className="h-6 w-6 text-yellow-500" />
+                {isAuthenticated ? "Recommended for You" : "Popular Right Now"}
+              </h2>
+              <p className="text-muted-foreground">
+                {isAuthenticated
+                  ? "Stories we think you'll love based on your reading history"
+                  : "Trending stories loved by our community"}
+              </p>
+            </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-6">
-                {recommendedStories.map((story) => (
-                  <Card
-                    key={story.id}
-                    className="group hover:shadow-lg transition-all duration-300"
-                  >
-                    <Link to={`/stories/${story.id}`}>
-                      <div className="aspect-[3/4] relative overflow-hidden rounded-t-lg">
-                        <img
-                          src={
-                            story.cover_image ||
-                            `https://source.unsplash.com/200x300/?book,${story.genre}`
-                          }
-                          alt={story.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                        <Badge className="absolute top-2 right-2 bg-white/90">
-                          {story.genre}
-                        </Badge>
-                        <div className="absolute bottom-2 left-2 right-2">
-                          <h3 className="text-white font-semibold text-sm line-clamp-2">
-                            {story.title}
-                          </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-6">
+              {isLoadingRecommendations
+                ? // Skeleton loading for recommendations
+                  Array.from({ length: 6 }).map((_, index) => (
+                    <RecommendationCardSkeleton key={`rec-skeleton-${index}`} />
+                  ))
+                : recommendedStories.map((story) => (
+                    <Card
+                      key={story.id}
+                      className="group hover:shadow-lg transition-all duration-300"
+                    >
+                      <Link to={`/stories/${story.id}`}>
+                        <div className="aspect-[3/4] relative overflow-hidden rounded-t-lg">
+                          <img
+                            src={
+                              story.cover_image ||
+                              `https://source.unsplash.com/200x300/?book,${story.genre}`
+                            }
+                            alt={story.title}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                          <Badge className="absolute top-2 right-2 bg-white/90">
+                            {story.genre}
+                          </Badge>
+                          <div className="absolute bottom-2 left-2 right-2">
+                            <h3 className="text-white font-semibold text-sm line-clamp-2">
+                              {story.title}
+                            </h3>
+                          </div>
                         </div>
-                      </div>
-                      <div className="p-3">
-                        <div className="flex items-center justify-between text-xs text-muted-foreground">
-                          <span className="flex items-center gap-1">
-                            <Heart className="h-3 w-3" />
-                            {(story.votes_count / 1000).toFixed(1)}K
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <BookOpen className="h-3 w-3" />
-                            {(story.reads_count / 1000).toFixed(1)}K
-                          </span>
+                        <div className="p-3">
+                          <div className="flex items-center justify-between text-xs text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                              <Heart className="h-3 w-3" />
+                              {(story.votes_count / 1000).toFixed(1)}K
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <BookOpen className="h-3 w-3" />
+                              {(story.reads_count / 1000).toFixed(1)}K
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                    </Link>
-                  </Card>
-                ))}
-              </div>
-            </section>
-          )}
+                      </Link>
+                    </Card>
+                  ))}
+            </div>
+          </section>
+        )}
 
         {/* Editor's Picks - Sidebar style for desktop */}
-        {!searchQuery && editorPicks.length > 0 && (
+        {!searchQuery && (
           <section className="max-w-7xl mx-auto">
             <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-0">
               <CardHeader>
@@ -7212,31 +7257,36 @@ export function StoriesPage() {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {editorPicks.map((story, index) => (
-                    <Link key={story.id} to={`/stories/${story.id}`}>
-                      <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-white/60 transition-colors">
-                        <span className="text-2xl font-bold text-purple-600">
-                          #{index + 1}
-                        </span>
-                        <div className="flex-1">
-                          <h4 className="font-semibold text-sm line-clamp-2 hover:text-purple-600 transition-colors">
-                            {story.title}
-                          </h4>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            by @{story.author_id.slice(0, 8)}
-                          </p>
-                          <div className="flex items-center gap-2 mt-2">
-                            <Badge variant="outline" className="text-xs">
-                              {story.genre}
-                            </Badge>
-                            <span className="text-xs text-muted-foreground">
-                              {(story.reads_count / 1000).toFixed(1)}K reads
+                  {isLoadingRecommendations
+                    ? // Skeleton loading for editor picks
+                      Array.from({ length: 3 }).map((_, index) => (
+                        <EditorPickSkeleton key={`editor-skeleton-${index}`} />
+                      ))
+                    : editorPicks.map((story, index) => (
+                        <Link key={story.id} to={`/stories/${story.id}`}>
+                          <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-white/60 transition-colors">
+                            <span className="text-2xl font-bold text-purple-600">
+                              #{index + 1}
                             </span>
+                            <div className="flex-1">
+                              <h4 className="font-semibold text-sm line-clamp-2 hover:text-purple-600 transition-colors">
+                                {story.title}
+                              </h4>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                by @{story.author_id.slice(0, 8)}
+                              </p>
+                              <div className="flex items-center gap-2 mt-2">
+                                <Badge variant="outline" className="text-xs">
+                                  {story.genre}
+                                </Badge>
+                                <span className="text-xs text-muted-foreground">
+                                  {(story.reads_count / 1000).toFixed(1)}K reads
+                                </span>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
+                        </Link>
+                      ))}
                 </div>
               </CardContent>
             </Card>
@@ -7254,8 +7304,14 @@ export function StoriesPage() {
             </h1>
           </div>
           <p className="text-muted-foreground">
-            {pagination.total} {pagination.total === 1 ? "story" : "stories"}{" "}
-            found
+            {isLoading ? (
+              <Skeleton className="h-4 w-32 inline-block" />
+            ) : (
+              <>
+                {pagination.total}{" "}
+                {pagination.total === 1 ? "story" : "stories"} found
+              </>
+            )}
           </p>
         </div>
 
@@ -7373,8 +7429,20 @@ export function StoriesPage() {
         {/* Content */}
         <div className="max-w-7xl mx-auto">
           {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <LoadingSpinner size="lg" />
+            <div
+              className={cn(
+                viewMode === "grid"
+                  ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                  : "space-y-4"
+              )}
+            >
+              {/* Show skeleton cards while loading */}
+              {Array.from({ length: 8 }).map((_, index) => (
+                <StoryCardSkeleton
+                  key={`skeleton-${index}`}
+                  variant={viewMode === "list" ? "list" : "default"}
+                />
+              ))}
             </div>
           ) : stories.length === 0 ? (
             <Card className="text-center py-12">
@@ -10376,6 +10444,92 @@ export function Logo({
     >
       {logoContent}
     </Link>
+  );
+}
+```
+
+---
+
+#### 📄 src\components\ui\profile-skeleton.tsx
+<a name='src-components-ui-profile-skeletontsx'></a>
+
+**Path:** `src\components\ui\profile-skeleton.tsx`
+
+```tsx
+// src/components/ui/profile-skeleton.tsx
+import { Skeleton } from "./skeleton";
+
+export function ProfileSkeleton() {
+  return (
+    <div className="max-w-5xl mx-auto px-4 py-8">
+      <div className="flex items-start gap-8 mb-8">
+        <Skeleton className="h-32 w-32" variant="circular" />
+        <div className="flex-1 space-y-3">
+          <Skeleton className="h-8 w-48" variant="text" />
+          <Skeleton className="h-4 w-32" variant="text" />
+          <Skeleton className="h-4 w-full max-w-md" variant="text" />
+          <div className="flex gap-4">
+            <Skeleton className="h-9 w-24" variant="rounded" />
+            <Skeleton className="h-9 w-24" variant="rounded" />
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-4">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Skeleton key={i} className="aspect-[4/5]" variant="rounded" />
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+#### 📄 src\components\ui\story-card-skeleton.tsx
+<a name='src-components-ui-story-card-skeletontsx'></a>
+
+**Path:** `src\components\ui\story-card-skeleton.tsx`
+
+```tsx
+// src/components/ui/story-card-skeleton.tsx
+import { Skeleton } from "./skeleton";
+import { Card } from "./card";
+
+interface StoryCardSkeletonProps {
+  variant?: "default" | "compact" | "list" | "featured";
+}
+
+export function StoryCardSkeleton({
+  variant = "default",
+}: StoryCardSkeletonProps) {
+  if (variant === "compact" || variant === "list") {
+    return (
+      <div className="flex gap-3 p-3">
+        <Skeleton width={64} height={80} variant="rounded" />
+        <div className="flex-1 space-y-2">
+          <Skeleton className="h-4 w-3/4" variant="text" />
+          <Skeleton className="h-3 w-full" variant="text" />
+          <Skeleton className="h-3 w-1/2" variant="text" />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <Card className="overflow-hidden">
+      <Skeleton className="aspect-[2/3] w-full" variant="rectangular" />
+      <div className="p-4 space-y-3">
+        <Skeleton className="h-5 w-3/4" variant="text" />
+        <Skeleton className="h-4 w-full" variant="text" />
+        <Skeleton className="h-4 w-2/3" variant="text" />
+        <div className="flex gap-2">
+          <Skeleton className="h-6 w-16" variant="rounded" />
+          <Skeleton className="h-6 w-16" variant="rounded" />
+        </div>
+      </div>
+    </Card>
   );
 }
 ```

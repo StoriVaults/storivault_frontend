@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { ProfileSkeleton } from "@/components/ui/profile-skeleton";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   Grid3X3,
@@ -309,9 +310,12 @@ export function ProfilePage() {
     }
   };
 
-  const onCropComplete = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
-    setCroppedAreaPixels(croppedAreaPixels);
-  }, []);
+  const onCropComplete = useCallback(
+    (croppedArea: Area, croppedAreaPixels: Area) => {
+      setCroppedAreaPixels(croppedAreaPixels);
+    },
+    []
+  );
 
   const createImage = (url: string): Promise<HTMLImageElement> =>
     new Promise((resolve, reject) => {
@@ -393,7 +397,11 @@ export function ProfilePage() {
     if (!croppedAreaPixels || !imageToCrop) return;
 
     try {
-      const croppedBlob = await getCroppedImg(imageToCrop, croppedAreaPixels, rotation);
+      const croppedBlob = await getCroppedImg(
+        imageToCrop,
+        croppedAreaPixels,
+        rotation
+      );
       const croppedFile = new File([croppedBlob], "profile.jpg", {
         type: "image/jpeg",
       });
@@ -506,9 +514,7 @@ export function ProfilePage() {
   if (isLoading) {
     return (
       <MainLayout>
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <LoadingSpinner size="lg" />
-        </div>
+        <ProfileSkeleton />
       </MainLayout>
     );
   }
@@ -620,13 +626,17 @@ export function ProfilePage() {
                   <span className="font-semibold text-base sm:text-lg">
                     {formatNumber(profileUser.followers_count)}
                   </span>
-                  <span className="text-gray-600 ml-1 text-sm sm:text-base">followers</span>
+                  <span className="text-gray-600 ml-1 text-sm sm:text-base">
+                    followers
+                  </span>
                 </button>
                 <button className="text-center hover:underline order-2 sm:order-2">
                   <span className="font-semibold text-base sm:text-lg">
                     {formatNumber(profileUser.following_count)}
                   </span>
-                  <span className="text-gray-600 ml-1 text-sm sm:text-base">following</span>
+                  <span className="text-gray-600 ml-1 text-sm sm:text-base">
+                    following
+                  </span>
                 </button>
               </div>
             </div>
@@ -1062,7 +1072,9 @@ export function ProfilePage() {
             {/* Header */}
             <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-4">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-bold text-white">Crop Profile Picture</h2>
+                <h2 className="text-xl font-bold text-white">
+                  Crop Profile Picture
+                </h2>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -1103,7 +1115,9 @@ export function ProfilePage() {
                     <ZoomIn className="h-4 w-4" />
                     Zoom
                   </Label>
-                  <span className="text-sm text-gray-600">{Math.round(zoom * 100)}%</span>
+                  <span className="text-sm text-gray-600">
+                    {Math.round(zoom * 100)}%
+                  </span>
                 </div>
                 <input
                   type="range"

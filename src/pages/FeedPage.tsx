@@ -28,7 +28,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MainLayout } from "@/components/layout/main-layout";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { FeedSkeleton } from "@/components/ui/feed-skeleton";
 import { useAuthStore } from "@/store/authStore";
 import { useUiStore } from "@/store/uiStore";
 import { Story, User } from "@/types";
@@ -548,12 +548,11 @@ export function FeedPage() {
     }
   };
 
+  // Loading State
   if (isLoading) {
     return (
       <MainLayout>
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <LoadingSpinner size="lg" />
-        </div>
+        <FeedSkeleton />
       </MainLayout>
     );
   }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Save,
@@ -35,6 +35,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { MainLayout } from "@/components/layout/main-layout";
 import { FileDropzone } from "@/components/ui/file-dropzone";
+import { CreateStorySkeleton } from "@/components/ui/create-story-skeleton";
 import { useAuthStore } from "@/store/authStore";
 import { useUiStore } from "@/store/uiStore";
 import { storiesApi, chaptersApi } from "@/apis";
@@ -51,6 +52,9 @@ export function CreateStoryPage() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
   const { addToast } = useUiStore();
+
+  // Add initialization state for loading skeleton
+  const [isInitializing, setIsInitializing] = useState(true);
 
   const [storyData, setStoryData] = useState({
     title: "",
@@ -69,6 +73,21 @@ export function CreateStoryPage() {
   const [currentTag, setCurrentTag] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState("details");
+
+  // Initialize component and check authentication
+  useEffect(() => {
+    // Simulate initialization time for components to load
+    const timer = setTimeout(() => {
+      setIsInitializing(false);
+    }, 500);
+
+    // Check authentication
+    if (!isAuthenticated) {
+      navigate("/auth/login");
+    }
+
+    return () => clearTimeout(timer);
+  }, [isAuthenticated, navigate]);
 
   const handleCoverSelect = (file: File) => {
     setCoverImage(file);
@@ -232,9 +251,10 @@ export function CreateStoryPage() {
       let errorMessage = "Failed to create story. Please try again.";
       if (error.response) {
         console.error("Error response:", error.response.data);
-        errorMessage = error.response.data?.message ||
-                      error.response.data?.detail ||
-                      `Server error: ${error.response.status}`;
+        errorMessage =
+          error.response.data?.message ||
+          error.response.data?.detail ||
+          `Server error: ${error.response.status}`;
       } else if (error.message) {
         errorMessage = error.message;
       }
@@ -249,8 +269,17 @@ export function CreateStoryPage() {
     }
   };
 
+  // Show loading skeleton while initializing
+  if (isInitializing) {
+    return (
+      <MainLayout showFooter={false}>
+        <CreateStorySkeleton />
+      </MainLayout>
+    );
+  }
+
+  // Redirect if not authenticated (this shouldn't show due to useEffect redirect)
   if (!isAuthenticated) {
-    navigate("/auth/login");
     return null;
   }
 
