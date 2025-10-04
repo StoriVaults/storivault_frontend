@@ -90,6 +90,9 @@ Generated from: `.`
 - [api.ts](#src-types-apits)
 - [index.ts](#src-types-indexts)
 
+### 📁 src\utils
+- [favicon-generator.ts](#src-utils-favicon-generatorts)
+
 ---
 
 ## 📝 Source Code
@@ -9099,6 +9102,46 @@ export interface NavigationItem {
 
 ---
 
+### 📁 src\utils
+
+#### 📄 src\utils\favicon-generator.ts
+<a name='src-utils-favicon-generatorts'></a>
+
+**Path:** `src\utils\favicon-generator.ts`
+
+```typescript
+// src/utils/favicon-generator.ts
+export function generateFaviconSVG(): string {
+  return `
+    <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="6" fill="#FF6B35"/>
+      <path d="M5 6h9v20H5z" fill="white" opacity="0.9"/>
+      <path d="M18 6h9v20h-9z" fill="white" opacity="0.85"/>
+      <rect x="14" y="6" width="4" height="20" fill="#E85D04"/>
+      <path d="M16 3v10l-2-2-2 2V3h4z" fill="#FFD700"/>
+    </svg>
+  `;
+}
+
+// Add this to your index.html or generate dynamically
+export function setFavicon() {
+  const svgString = generateFaviconSVG();
+  const blob = new Blob([svgString], { type: 'image/svg+xml' });
+  const url = URL.createObjectURL(blob);
+  
+  const link = document.querySelector("link[rel~='icon']") as HTMLLinkElement || 
+               document.createElement('link');
+  link.rel = 'icon';
+  link.href = url;
+  
+  if (!document.querySelector("link[rel~='icon']")) {
+    document.head.appendChild(link);
+  }
+}
+```
+
+---
+
 ### 📁 src\components\layout
 
 #### 📄 src\components\layout\footer.tsx
@@ -9279,6 +9322,7 @@ export function Footer() {
 **Path:** `src\components\layout\header.tsx`
 
 ```tsx
+// src/components/layout/header.tsx
 "use client";
 
 import { useState } from "react";
@@ -9316,23 +9360,17 @@ import { cn } from "@/lib/utils";
 const browseCategories = [
   { label: "Browse", href: "/stories", isHeader: true },
   { label: "Romance", href: "/stories?genre=Romance" },
-  { label: "Fanfiction", href: "/stories?genre=Fanfiction" },
   { label: "Fantasy", href: "/stories?genre=Fantasy" },
-  { label: "Short Story", href: "/stories?genre=Short Story" },
-  { label: "Teen Fiction", href: "/stories?genre=Teen Fiction" },
-  { label: "Historical Fiction", href: "/stories?genre=Historical Fiction" },
-  { label: "Paranormal", href: "/stories?genre=Paranormal" },
-  { label: "Editor's Picks", href: "/stories?sort=popular", isSpecial: true },
-  { label: "Humor", href: "/stories?genre=Humor" },
-  { label: "Horror", href: "/stories?genre=Horror" },
-  { label: "Contemporary Lit", href: "/stories?genre=Contemporary Lit" },
-  { label: "Diverse Lit", href: "/stories?genre=Diverse Lit" },
   { label: "Mystery", href: "/stories?genre=Mystery" },
-  { label: "Thriller", href: "/stories?genre=Thriller" },
-  { label: "Science Fiction", href: "/stories?genre=Science Fiction" },
+  { label: "Sci-Fi", href: "/stories?genre=Sci-Fi" },
+  { label: "Horror", href: "/stories?genre=Horror" },
   { label: "Adventure", href: "/stories?genre=Adventure" },
-  { label: "Non-Fiction", href: "/stories?genre=Non-Fiction" },
+  { label: "Drama", href: "/stories?genre=Drama" },
+  { label: "Comedy", href: "/stories?genre=Comedy" },
+  { label: "Thriller", href: "/stories?genre=Thriller" },
+  { label: "Historical", href: "/stories?genre=Historical" },
   { label: "Poetry", href: "/stories?genre=Poetry" },
+  { label: "Non-Fiction", href: "/stories?genre=Non-Fiction" },
 ];
 
 export function Header() {
@@ -9363,22 +9401,13 @@ export function Header() {
 
   return (
     <>
-      {/* Fixed Header with Consistent White Background */}
-      <header
-        className="fixed top-0 left-0 right-0 z-50 border-b shadow-sm"
-        style={{
-          backgroundColor: "#FFFFFF",
-          borderBottomColor: "#E5E7EB",
-        }}
-      >
+      {/* Fixed Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b shadow-sm">
         <div className="relative">
           {/* Main Header Content */}
-          <div
-            className="h-14 sm:h-16 px-3 sm:px-6 lg:px-8"
-            style={{ backgroundColor: "#FFFFFF" }}
-          >
+          <div className="h-14 sm:h-16 px-3 sm:px-6 lg:px-8">
             <div className="flex h-full items-center justify-between max-w-7xl mx-auto">
-              {/* Left Section - Mobile Menu, Logo, and Browse */}
+              {/* Left Section - Mobile Menu and Logo */}
               <div className="flex items-center gap-2 sm:gap-4">
                 {/* Mobile Menu Button */}
                 <Button
@@ -9386,7 +9415,6 @@ export function Header() {
                   size="sm"
                   className="sm:hidden h-8 w-8 p-0"
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  style={{ color: "#374151" }}
                 >
                   {mobileMenuOpen ? (
                     <X className="h-5 w-5" />
@@ -9395,10 +9423,11 @@ export function Header() {
                   )}
                 </Button>
 
-                {/* Logo */}
-                <Logo size="sm" className="hidden sm:flex" variant="default" />
-                <div className="sm:hidden">
-                  <Link to="/" className="flex items-center">
+                {/* Logo with Text on Mobile, Full Logo on Desktop */}
+                <Link to="/" className="flex items-center gap-2">
+                  {/* Mobile - Show StoriVault text */}
+                  <div className="sm:hidden flex items-center gap-2">
+                    {/* Book Icon */}
                     <svg
                       viewBox="0 0 48 48"
                       className="h-8 w-8"
@@ -9428,8 +9457,18 @@ export function Header() {
                       />
                       <rect x="22" y="6" width="4" height="32" fill="#E85D04" />
                     </svg>
-                  </Link>
-                </div>
+                    {/* StoriVault Text */}
+                    <span className="font-bold text-lg">
+                      <span className="text-orange-500">Stori</span>
+                      <span className="text-gray-700">Vault</span>
+                    </span>
+                  </div>
+
+                  {/* Desktop - Full Logo Component */}
+                  <div className="hidden sm:block">
+                    <Logo size="sm" showText={true} />
+                  </div>
+                </Link>
 
                 {/* Browse Dropdown - Desktop Only */}
                 <DropdownMenu>
@@ -9438,7 +9477,6 @@ export function Header() {
                       variant="ghost"
                       size="sm"
                       className="hidden sm:flex items-center gap-1 font-medium"
-                      style={{ color: "#374151" }}
                     >
                       Browse
                       <ChevronDown className="h-4 w-4" />
@@ -9446,8 +9484,7 @@ export function Header() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     align="start"
-                    className="w-56 max-h-[80vh] overflow-y-auto"
-                    style={{ backgroundColor: "#FFFFFF" }}
+                    className="w-56 max-h-[80vh] overflow-y-auto bg-white"
                   >
                     {browseCategories.map((category, index) =>
                       category.isHeader ? (
@@ -9459,14 +9496,7 @@ export function Header() {
                         </DropdownMenuLabel>
                       ) : (
                         <DropdownMenuItem key={index} asChild>
-                          <Link
-                            to={category.href}
-                            className={cn(
-                              "cursor-pointer",
-                              category.isSpecial &&
-                                "font-semibold text-orange-600"
-                            )}
-                          >
+                          <Link to={category.href} className="cursor-pointer">
                             {category.label}
                           </Link>
                         </DropdownMenuItem>
@@ -9485,8 +9515,7 @@ export function Header() {
                     placeholder="Search stories, authors..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 w-full rounded-full border-gray-300 focus:border-orange-400 focus:ring-orange-400"
-                    style={{ backgroundColor: "#F9FAFB" }}
+                    className="pl-10 w-full rounded-full border-gray-300 focus:border-orange-400 focus:ring-orange-400 bg-gray-50"
                   />
                 </form>
               </div>
@@ -9499,58 +9528,30 @@ export function Header() {
                   size="sm"
                   className="md:hidden h-8 w-8 p-0"
                   onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
-                  style={{ color: "#374151" }}
                 >
                   <Search className="h-5 w-5" />
                 </Button>
 
-                {/* Write Dropdown */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
+                {isAuthenticated ? (
+                  <>
+                    {/* Write Button - Desktop */}
                     <Button
                       variant="ghost"
                       size="sm"
                       className="hidden sm:flex items-center gap-1 font-medium"
-                      style={{ color: "#374151" }}
+                      asChild
                     >
-                      Write
-                      <ChevronDown className="h-4 w-4" />
+                      <Link to="/stories/create">
+                        <PenTool className="h-4 w-4" />
+                        Write
+                      </Link>
                     </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    align="end"
-                    className="w-48"
-                    style={{ backgroundColor: "#FFFFFF" }}
-                  >
-                    <DropdownMenuItem asChild>
-                      <Link
-                        to="/stories/create"
-                        className="cursor-pointer flex items-center gap-2"
-                      >
-                        <Plus className="h-4 w-4" />
-                        Create a new story
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link
-                        to="/my-stories"
-                        className="cursor-pointer flex items-center gap-2"
-                      >
-                        <FileText className="h-4 w-4" />
-                        My Stories
-                      </Link>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
 
-                {isAuthenticated ? (
-                  <>
-                    {/* Notifications - Hidden on Mobile */}
+                    {/* Notifications - Desktop */}
                     <Button
                       variant="ghost"
                       size="sm"
                       className="hidden sm:block h-8 w-8 p-0"
-                      style={{ color: "#374151" }}
                     >
                       <Bell className="h-5 w-5" />
                     </Button>
@@ -9568,12 +9569,7 @@ export function Header() {
                               src={user?.profile_pic || undefined}
                               alt={user?.username}
                             />
-                            <AvatarFallback
-                              style={{
-                                backgroundColor: "#FED7AA",
-                                color: "#7C2D12",
-                              }}
-                            >
+                            <AvatarFallback className="bg-orange-100 text-orange-700">
                               {user?.username?.charAt(0).toUpperCase() || "U"}
                             </AvatarFallback>
                           </Avatar>
@@ -9582,7 +9578,7 @@ export function Header() {
                       <DropdownMenuContent
                         className="w-56"
                         align="end"
-                        style={{ backgroundColor: "#FFFFFF" }}
+                        sideOffset={5}
                       >
                         <div className="flex items-center justify-start gap-2 p-2">
                           <div className="flex flex-col space-y-1 leading-none">
@@ -9597,7 +9593,7 @@ export function Header() {
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild>
                           <Link
-                            to={`/users/${user?.username}`}
+                            to={`/profile/${user?.username}`}
                             className="cursor-pointer"
                           >
                             <User className="mr-2 h-4 w-4" />
@@ -9616,6 +9612,15 @@ export function Header() {
                             My Stories
                           </Link>
                         </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link
+                            to="/stories/create"
+                            className="cursor-pointer sm:hidden"
+                          >
+                            <PenTool className="mr-2 h-4 w-4" />
+                            Write Story
+                          </Link>
+                        </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild>
                           <Link to="/settings" className="cursor-pointer">
@@ -9625,37 +9630,33 @@ export function Header() {
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={handleLogout}
-                          className="cursor-pointer"
+                          className="cursor-pointer text-red-600 hover:text-red-600 hover:bg-red-50"
                         >
                           <LogOut className="mr-2 h-4 w-4" />
-                          Log out
+                          Sign Out
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </>
                 ) : (
-                  <div className="flex items-center gap-2">
+                  <>
+                    {/* Sign In and Sign Up buttons for non-authenticated users */}
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="hidden sm:inline-flex text-sm font-medium"
-                      style={{ color: "#374151" }}
+                      className="text-sm font-medium"
                       asChild
                     >
                       <Link to="/auth/login">Sign In</Link>
                     </Button>
                     <Button
                       size="sm"
-                      className="text-white border-0 px-3 sm:px-4 text-sm font-medium"
-                      style={{
-                        background:
-                          "linear-gradient(to right, #FB923C, #F97316)",
-                      }}
+                      className="hidden sm:inline-flex bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-sm font-medium"
                       asChild
                     >
                       <Link to="/auth/signup">Sign Up</Link>
                     </Button>
-                  </div>
+                  </>
                 )}
               </div>
             </div>
@@ -9663,13 +9664,7 @@ export function Header() {
 
           {/* Mobile Search Bar - Expandable */}
           {mobileSearchOpen && (
-            <div
-              className="md:hidden border-t px-4 py-3"
-              style={{
-                backgroundColor: "#FFFFFF",
-                borderTopColor: "#E5E7EB",
-              }}
-            >
+            <div className="md:hidden border-t bg-white px-4 py-3">
               <form onSubmit={handleSearch} className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
@@ -9677,8 +9672,7 @@ export function Header() {
                   placeholder="Search stories, authors..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 w-full rounded-full text-sm border-gray-300"
-                  style={{ backgroundColor: "#F9FAFB" }}
+                  className="pl-10 w-full rounded-full text-sm border-gray-300 bg-gray-50"
                   autoFocus
                 />
               </form>
@@ -9687,27 +9681,18 @@ export function Header() {
 
           {/* Mobile Menu - Slide Down */}
           {mobileMenuOpen && (
-            <div
-              className="sm:hidden border-t"
-              style={{
-                backgroundColor: "#FFFFFF",
-                borderTopColor: "#E5E7EB",
-              }}
-            >
+            <div className="sm:hidden border-t bg-white">
               <div className="px-4 py-3 space-y-1">
                 {/* Browse Section for Mobile */}
                 <div className="pb-2 mb-2 border-b border-gray-200">
                   <p className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2 px-3">
                     Browse Stories
                   </p>
-                  {browseCategories.slice(1, 8).map((category, index) => (
+                  {browseCategories.slice(1, 7).map((category, index) => (
                     <Link
                       key={index}
                       to={category.href}
-                      className={cn(
-                        "block px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100",
-                        category.isSpecial ? "text-orange-600" : "text-gray-700"
-                      )}
+                      className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
                       onClick={closeMobileMenu}
                     >
                       {category.label}
@@ -9715,29 +9700,15 @@ export function Header() {
                   ))}
                   <Link
                     to="/stories"
-                    className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                    className="block px-3 py-2 rounded-md text-sm font-medium text-orange-600 hover:bg-orange-50"
                     onClick={closeMobileMenu}
                   >
-                    View All Genres →
+                    View All Categories →
                   </Link>
                 </div>
 
                 {/* Write Section for Mobile */}
-                {!isAuthenticated ? (
-                  <div className="pb-2 mb-2 border-b border-gray-200">
-                    <p className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2 px-3">
-                      Start Writing
-                    </p>
-                    <Link
-                      to="/auth/signup"
-                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
-                      onClick={closeMobileMenu}
-                    >
-                      <PenTool className="mr-2 h-4 w-4" />
-                      Sign Up to Write
-                    </Link>
-                  </div>
-                ) : (
+                {isAuthenticated ? (
                   <div className="pb-2 mb-2 border-b border-gray-200">
                     <p className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2 px-3">
                       Writing
@@ -9759,6 +9730,20 @@ export function Header() {
                       My Stories
                     </Link>
                   </div>
+                ) : (
+                  <div className="pb-2 mb-2 border-b border-gray-200">
+                    <p className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2 px-3">
+                      Get Started
+                    </p>
+                    <Link
+                      to="/auth/signup"
+                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                      onClick={closeMobileMenu}
+                    >
+                      <PenTool className="mr-2 h-4 w-4" />
+                      Sign Up to Write
+                    </Link>
+                  </div>
                 )}
 
                 {/* User Actions */}
@@ -9773,32 +9758,30 @@ export function Header() {
                       My Library
                     </Link>
                     <Link
-                      to={`/users/${user?.username}`}
+                      to={`/profile/${user?.username}`}
                       className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
                       onClick={closeMobileMenu}
                     >
                       <User className="mr-2 h-4 w-4" />
                       Profile
                     </Link>
-                  </>
-                ) : (
-                  <>
                     <Link
-                      to="/auth/login"
-                      className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                      to="/settings"
+                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
                       onClick={closeMobileMenu}
                     >
-                      Sign In
+                      <Settings className="mr-2 h-4 w-4" />
+                      Settings
                     </Link>
-                    <Link
-                      to="/auth/signup"
-                      className="block px-3 py-2 rounded-md text-sm font-medium text-white bg-gradient-to-r from-orange-400 to-orange-500"
-                      onClick={closeMobileMenu}
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center w-full text-left px-3 py-2 rounded-md text-sm font-medium text-red-600 hover:bg-red-50"
                     >
-                      Sign Up Free
-                    </Link>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Sign Out
+                    </button>
                   </>
-                )}
+                ) : null}
               </div>
             </div>
           )}
@@ -10162,10 +10145,12 @@ export function LoadingSpinner({ size = 'md', className }: LoadingSpinnerProps) 
 **Path:** `src\components\ui\logo.tsx`
 
 ```tsx
+// src/components/ui/logo.tsx
 "use client";
 
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { useEffect } from "react";
 
 interface LogoProps {
   className?: string;
@@ -10187,21 +10172,64 @@ export function Logo({
       container: "h-8",
       icon: "h-8 w-8",
       text: "text-xl",
+      tagline: "text-[10px]",
       spacing: "gap-2",
+      textGap: "gap-0.5",
     },
     md: {
       container: "h-10",
       icon: "h-10 w-10",
       text: "text-2xl",
+      tagline: "text-xs",
       spacing: "gap-2.5",
+      textGap: "gap-0.5",
     },
     lg: {
       container: "h-14",
       icon: "h-14 w-14",
       text: "text-4xl",
+      tagline: "text-sm",
       spacing: "gap-3",
+      textGap: "gap-1",
     },
   };
+
+  // Set favicon dynamically (only run once on mount)
+  useEffect(() => {
+    // Only update favicon if we're showing the logo (main app load)
+    if (
+      typeof window !== "undefined" &&
+      !document.querySelector('link[rel="icon"][data-dynamic="true"]')
+    ) {
+      const link = document.createElement("link");
+      link.rel = "icon";
+      link.type = "image/svg+xml";
+      link.setAttribute("data-dynamic", "true");
+
+      // Create inline SVG favicon
+      const svgFavicon = `
+        <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="6" fill="%23FF6B35"/>
+          <path d="M5 6h9v20H5z" fill="white" opacity="0.9"/>
+          <path d="M18 6h9v20h-9z" fill="white" opacity="0.85"/>
+          <rect x="14" y="6" width="4" height="20" fill="%23E85D04"/>
+          <path d="M16 3v10l-2-2-2 2V3h4z" fill="%23FFD700"/>
+        </svg>
+      `;
+
+      link.href = `data:image/svg+xml,${encodeURIComponent(svgFavicon)}`;
+
+      // Remove any existing dynamic favicon
+      const existingDynamic = document.querySelector(
+        'link[rel="icon"][data-dynamic="true"]'
+      );
+      if (existingDynamic) {
+        existingDynamic.remove();
+      }
+
+      document.head.appendChild(link);
+    }
+  }, []);
 
   const logoIcon = (
     <svg
@@ -10210,111 +10238,67 @@ export function Logo({
       xmlns="http://www.w3.org/2000/svg"
       className={sizes[size].icon}
     >
-      {/* Gradient definitions */}
       <defs>
-        <linearGradient id="bookGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <linearGradient id="vaultGradient" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#FF6B35" />
-          <stop offset="50%" stopColor="#F77737" />
+          <stop offset="50%" stopColor="#FF8C42" />
           <stop offset="100%" stopColor="#FFA500" />
         </linearGradient>
-        <linearGradient id="starGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <linearGradient id="spineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#E85D04" />
+          <stop offset="100%" stopColor="#D84315" />
+        </linearGradient>
+        <linearGradient
+          id="bookmarkGradient"
+          x1="0%"
+          y1="0%"
+          x2="100%"
+          y2="100%"
+        >
           <stop offset="0%" stopColor="#FFD700" />
-          <stop offset="100%" stopColor="#FFA500" />
+          <stop offset="100%" stopColor="#FFC107" />
         </linearGradient>
-        <filter id="glow">
-          <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-          <feMerge>
-            <feMergeNode in="coloredBlur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
       </defs>
 
-      {/* Book pages background */}
-      <path
-        d="M6 8C6 6.89543 6.89543 6 8 6H22V38H8C6.89543 38 6 37.1046 6 36V8Z"
-        fill="url(#bookGradient)"
-        opacity="0.9"
+      {/* Book container */}
+      <rect
+        x="4"
+        y="6"
+        width="40"
+        height="36"
+        rx="4"
+        ry="4"
+        fill="url(#vaultGradient)"
+        opacity="0.1"
       />
+
+      {/* Left book cover */}
       <path
-        d="M26 6H40C41.1046 6 42 6.89543 42 8V36C42 37.1046 41.1046 38 40 38H26V6Z"
-        fill="url(#bookGradient)"
-        opacity="0.8"
+        d="M8 8C8 6.89543 8.89543 6 10 6H22V42H10C8.89543 42 8 41.1046 8 40V8Z"
+        fill="url(#vaultGradient)"
+      />
+
+      {/* Right book cover */}
+      <path
+        d="M26 6H38C39.1046 6 40 6.89543 40 8V40C40 41.1046 39.1046 42 38 42H26V6Z"
+        fill="url(#vaultGradient)"
+        opacity="0.85"
       />
 
       {/* Book spine */}
-      <rect x="22" y="6" width="4" height="32" fill="#E85D04" opacity="0.9" />
+      <rect x="22" y="6" width="4" height="36" fill="url(#spineGradient)" />
 
-      {/* Pages effect */}
-      <path d="M9 10H20V34H9V10Z" fill="white" opacity="0.3" />
-      <path d="M28 10H39V34H28V10Z" fill="white" opacity="0.25" />
+      {/* Pages on left */}
+      <rect x="10" y="10" width="10" height="28" fill="white" opacity="0.9" />
 
-      {/* Page lines */}
-      <line
-        x1="11"
-        y1="14"
-        x2="18"
-        y2="14"
-        stroke="white"
-        strokeWidth="1"
-        opacity="0.5"
-      />
-      <line
-        x1="11"
-        y1="18"
-        x2="18"
-        y2="18"
-        stroke="white"
-        strokeWidth="1"
-        opacity="0.5"
-      />
-      <line
-        x1="11"
-        y1="22"
-        x2="18"
-        y2="22"
-        stroke="white"
-        strokeWidth="1"
-        opacity="0.5"
-      />
-      <line
-        x1="30"
-        y1="14"
-        x2="37"
-        y2="14"
-        stroke="white"
-        strokeWidth="1"
-        opacity="0.5"
-      />
-      <line
-        x1="30"
-        y1="18"
-        x2="37"
-        y2="18"
-        stroke="white"
-        strokeWidth="1"
-        opacity="0.5"
-      />
-      <line
-        x1="30"
-        y1="22"
-        x2="37"
-        y2="22"
-        stroke="white"
-        strokeWidth="1"
-        opacity="0.5"
-      />
+      {/* Pages on right */}
+      <rect x="28" y="10" width="10" height="28" fill="white" opacity="0.85" />
 
-      {/* Central star/sparkle */}
+      {/* Bookmark ribbon */}
       <path
-        d="M24 16 L25.5 20 L29.5 20 L26.5 22.5 L27.5 26.5 L24 24 L20.5 26.5 L21.5 22.5 L18.5 20 L22.5 20 Z"
-        fill="url(#starGradient)"
-        filter="url(#glow)"
+        d="M24 4 L28 4 L28 20 L26 18 L24 20 Z"
+        fill="url(#bookmarkGradient)"
       />
-
-      {/* Small sparkles */}
-      <circle cx="12" cy="28" r="1" fill="#FFD700" opacity="0.8" />
-      <circle cx="36" cy="28" r="1" fill="#FFD700" opacity="0.8" />
     </svg>
   );
 
@@ -10322,11 +10306,10 @@ export function Logo({
     <>
       {logoIcon}
       {showText && (
-        <div className={cn("flex flex-col justify-center", sizes[size].text)}>
-          <span
-            className="font-display leading-none tracking-tight"
-            style={{ fontFamily: "'Crimson Text', serif" }}
-          >
+        <div
+          className={cn("flex flex-col justify-center", sizes[size].textGap)}
+        >
+          <span className={cn("leading-none tracking-tight", sizes[size].text)}>
             <span
               className={cn(
                 "font-bold",
@@ -10334,33 +10317,37 @@ export function Logo({
                   ? "text-white"
                   : variant === "dark"
                   ? "text-gray-900"
-                  : "bg-gradient-to-r from-orange-600 via-orange-500 to-amber-500 bg-clip-text text-transparent"
+                  : "text-orange-500"
               )}
+              style={{ fontFamily: "'Inter', sans-serif" }}
             >
               Stori
             </span>
             <span
               className={cn(
-                "font-light",
+                "font-medium",
                 variant === "light"
                   ? "text-gray-200"
                   : variant === "dark"
                   ? "text-gray-700"
                   : "text-gray-700 dark:text-gray-300"
               )}
+              style={{ fontFamily: "'Inter', sans-serif" }}
             >
               Vault
             </span>
           </span>
           <span
             className={cn(
-              "text-[0.4em] tracking-[0.3em] uppercase font-medium mt-0.5",
+              "uppercase tracking-[0.25em] font-medium",
+              sizes[size].tagline,
               variant === "light"
                 ? "text-gray-300"
                 : variant === "dark"
                 ? "text-gray-500"
                 : "text-gray-500 dark:text-gray-400"
             )}
+            style={{ fontFamily: "'Inter', sans-serif" }}
           >
             Your Story Awaits
           </span>
@@ -10381,7 +10368,7 @@ export function Logo({
     <Link
       to="/"
       className={cn(
-        "flex items-center transition-all hover:scale-105 hover:drop-shadow-lg",
+        "flex items-center transition-all hover:scale-105",
         sizes[size].spacing,
         className
       )}
@@ -10789,23 +10776,18 @@ export {
 **Path:** `src\pages\auth\LoginPage.tsx`
 
 ```tsx
+// src/pages/auth/LoginPage.tsx
 "use client";
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff, BookOpen, Mail, Lock } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { Logo } from "@/components/ui/logo";
 import { useAuthStore } from "@/store/authStore";
 import { cn } from "@/lib/utils";
 
@@ -10824,7 +10806,6 @@ export function LoginPage() {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -10852,15 +10833,12 @@ export function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!validateForm()) return;
 
     try {
       await login(formData.email, formData.password);
-      // Simply navigate without toast
-      navigate("/");
+      navigate("/feed");
     } catch (error: any) {
-      // Error handling is done in the store
       if (error.details) {
         const fieldErrors: Record<string, string> = {};
         Object.entries(error.details).forEach(([field, messages]) => {
@@ -10872,100 +10850,124 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-accent/5 p-4">
-      <div className="w-full max-w-md">
-        {/* Logo */}
-        <div className="flex items-center justify-center mb-8">
-          <Link to="/" className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-xl bg-gradient-primary flex items-center justify-center shadow-primary">
-              <BookOpen className="h-7 w-7 text-white" />
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        {/* Card Container */}
+        <div className="bg-white py-8 px-6 shadow-xl rounded-lg sm:px-10">
+          {/* Logo */}
+          <div className="flex justify-center mb-6">
+            <Logo size="md" showText={true} />
+          </div>
+
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-gray-900">Welcome back!</h2>
+            <p className="mt-2 text-sm text-gray-600">
+              Sign in to continue your reading journey
+            </p>
+          </div>
+
+          {/* Error Alert */}
+          {error && (
+            <Alert variant="destructive" className="mb-6">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Email Field */}
+            <div>
+              <Label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Email Address
+              </Label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Mail className="h-4 w-4 text-gray-400" />
+                </div>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="your@email.com"
+                  className={cn(
+                    "pl-10 block w-full",
+                    "border-gray-300 focus:border-orange-500 focus:ring-orange-500",
+                    errors.email &&
+                      "border-red-500 focus:border-red-500 focus:ring-red-500"
+                  )}
+                  disabled={isLoading}
+                />
+              </div>
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+              )}
             </div>
-            <span className="font-bold text-2xl bg-gradient-primary bg-clip-text text-transparent">
-              StoriVault
-            </span>
-          </Link>
-        </div>
 
-        <Card className="shadow-strong border-0 bg-card/50 backdrop-blur-sm">
-          <CardHeader className="space-y-1 text-center">
-            <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
-            <CardDescription>
-              Sign in to your account to continue your reading journey
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {error && (
-              <Alert variant="destructive" className="mb-6">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder="Enter your email"
-                    className={cn(
-                      "pl-10",
-                      errors.email &&
-                        "border-destructive focus-visible:ring-destructive"
-                    )}
-                    disabled={isLoading}
-                  />
-                </div>
-                {errors.email && (
-                  <p className="text-sm text-destructive">{errors.email}</p>
-                )}
+            {/* Password Field */}
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <Label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Password
+                </Label>
+                <Link
+                  to="/auth/forgot-password"
+                  className="text-sm text-orange-600 hover:text-orange-500"
+                >
+                  Forgot password?
+                </Link>
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    placeholder="Enter your password"
-                    className={cn(
-                      "pl-10 pr-10",
-                      errors.password &&
-                        "border-destructive focus-visible:ring-destructive"
-                    )}
-                    disabled={isLoading}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
-                    onClick={() => setShowPassword(!showPassword)}
-                    disabled={isLoading}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </Button>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-4 w-4 text-gray-400" />
                 </div>
-                {errors.password && (
-                  <p className="text-sm text-destructive">{errors.password}</p>
-                )}
+                <Input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  placeholder="••••••••"
+                  className={cn(
+                    "pl-10 pr-10 block w-full",
+                    "border-gray-300 focus:border-orange-500 focus:ring-orange-500",
+                    errors.password &&
+                      "border-red-500 focus:border-red-500 focus:ring-red-500"
+                  )}
+                  disabled={isLoading}
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                  )}
+                </button>
               </div>
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+              )}
+            </div>
 
+            {/* Submit Button */}
+            <div>
               <Button
                 type="submit"
-                className="w-full bg-gradient-primary hover:opacity-90"
+                className="w-full flex justify-center items-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -10974,24 +10976,50 @@ export function LoginPage() {
                     Signing in...
                   </>
                 ) : (
-                  "Sign In"
+                  <>
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Sign In to StoriVault
+                  </>
                 )}
               </Button>
-            </form>
+            </div>
+          </form>
 
-            <div className="mt-6 text-center text-sm">
-              <span className="text-muted-foreground">
-                Don't have an account?{" "}
-              </span>
+          {/* Sign Up Link */}
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">
+                  New to StoriVault?
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-6 text-center">
               <Link
                 to="/auth/signup"
-                className="font-medium text-primary hover:text-primary/80 transition-colors"
+                className="font-medium text-orange-600 hover:text-orange-500"
               >
-                Sign up
+                Create an account
               </Link>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
+
+        {/* Terms and Privacy */}
+        <p className="text-center text-xs text-gray-500">
+          By signing in, you agree to our{" "}
+          <Link to="/terms" className="text-orange-600 hover:text-orange-500">
+            Terms of Service
+          </Link>{" "}
+          and{" "}
+          <Link to="/privacy" className="text-orange-600 hover:text-orange-500">
+            Privacy Policy
+          </Link>
+        </p>
       </div>
     </div>
   );
@@ -11006,23 +11034,19 @@ export function LoginPage() {
 **Path:** `src\pages\auth\SignupPage.tsx`
 
 ```tsx
+// src/pages/auth/SignupPage.tsx
 "use client";
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff, BookOpen, Mail, Lock, User } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, Sparkles, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { Progress } from "@/components/ui/progress";
+import { Logo } from "@/components/ui/logo";
 import { useAuthStore } from "@/store/authStore";
 import { cn } from "@/lib/utils";
 
@@ -11037,14 +11061,27 @@ export function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [passwordStrength, setPasswordStrength] = useState(0);
 
   const { signup, isLoading, error, clearError } = useAuthStore();
+
+  const calculatePasswordStrength = (password: string) => {
+    let strength = 0;
+    if (password.length >= 8) strength += 25;
+    if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength += 25;
+    if (password.match(/[0-9]/)) strength += 25;
+    if (password.match(/[^a-zA-Z0-9]/)) strength += 25;
+    setPasswordStrength(strength);
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Clear error when user starts typing
+    if (name === "password") {
+      calculatePasswordStrength(value);
+    }
+
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -11071,8 +11108,8 @@ export function SignupPage() {
 
     if (!formData.password) {
       newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters";
     }
 
     if (!formData.confirmPassword) {
@@ -11087,15 +11124,12 @@ export function SignupPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!validateForm()) return;
 
     try {
       await signup(formData.username, formData.email, formData.password);
-      // Simply navigate without toast
-      navigate("/");
+      navigate("/feed");
     } catch (error: any) {
-      // Error handling is done in the store
       if (error.details) {
         const fieldErrors: Record<string, string> = {};
         Object.entries(error.details).forEach(([field, messages]) => {
@@ -11106,167 +11140,244 @@ export function SignupPage() {
     }
   };
 
+  const getPasswordStrengthColor = () => {
+    if (passwordStrength <= 25) return "bg-red-500";
+    if (passwordStrength <= 50) return "bg-orange-500";
+    if (passwordStrength <= 75) return "bg-yellow-500";
+    return "bg-green-500";
+  };
+
+  const getPasswordStrengthText = () => {
+    if (passwordStrength <= 25) return "Weak";
+    if (passwordStrength <= 50) return "Fair";
+    if (passwordStrength <= 75) return "Good";
+    return "Strong";
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-accent/5 p-4">
-      <div className="w-full max-w-md">
-        {/* Logo */}
-        <div className="flex items-center justify-center mb-8">
-          <Link to="/" className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-xl bg-gradient-primary flex items-center justify-center shadow-primary">
-              <BookOpen className="h-7 w-7 text-white" />
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        {/* Card Container */}
+        <div className="bg-white py-8 px-6 shadow-xl rounded-lg sm:px-10">
+          {/* Logo */}
+          <div className="flex justify-center mb-6">
+            <Logo size="md" showText={true} />
+          </div>
+
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-gray-900">
+              Join StoriVault
+            </h2>
+            <p className="mt-2 text-sm text-gray-600">
+              Create your account and start your literary journey
+            </p>
+          </div>
+
+          {/* Error Alert */}
+          {error && (
+            <Alert variant="destructive" className="mb-6">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Username Field */}
+            <div>
+              <Label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Username
+              </Label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <User className="h-4 w-4 text-gray-400" />
+                </div>
+                <Input
+                  id="username"
+                  name="username"
+                  type="text"
+                  autoComplete="username"
+                  value={formData.username}
+                  onChange={handleInputChange}
+                  placeholder="Choose your pen name"
+                  className={cn(
+                    "pl-10 block w-full",
+                    "border-gray-300 focus:border-orange-500 focus:ring-orange-500",
+                    errors.username &&
+                      "border-red-500 focus:border-red-500 focus:ring-red-500"
+                  )}
+                  disabled={isLoading}
+                />
+              </div>
+              {errors.username && (
+                <p className="mt-1 text-sm text-red-600">{errors.username}</p>
+              )}
             </div>
-            <span className="font-bold text-2xl bg-gradient-primary bg-clip-text text-transparent">
-              StoriVault
-            </span>
-          </Link>
-        </div>
 
-        <Card className="shadow-strong border-0 bg-card/50 backdrop-blur-sm">
-          <CardHeader className="space-y-1 text-center">
-            <CardTitle className="text-2xl font-bold">
-              Create your account
-            </CardTitle>
-            <CardDescription>
-              Join thousands of readers and writers on StoriVault
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {error && (
-              <Alert variant="destructive" className="mb-6">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="username">Username</Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="username"
-                    name="username"
-                    type="text"
-                    value={formData.username}
-                    onChange={handleInputChange}
-                    placeholder="Choose a username"
-                    className={cn(
-                      "pl-10",
-                      errors.username &&
-                        "border-destructive focus-visible:ring-destructive"
-                    )}
-                    disabled={isLoading}
-                  />
+            {/* Email Field */}
+            <div>
+              <Label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Email Address
+              </Label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Mail className="h-4 w-4 text-gray-400" />
                 </div>
-                {errors.username && (
-                  <p className="text-sm text-destructive">{errors.username}</p>
-                )}
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="your@email.com"
+                  className={cn(
+                    "pl-10 block w-full",
+                    "border-gray-300 focus:border-orange-500 focus:ring-orange-500",
+                    errors.email &&
+                      "border-red-500 focus:border-red-500 focus:ring-red-500"
+                  )}
+                  disabled={isLoading}
+                />
               </div>
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+              )}
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder="Enter your email"
-                    className={cn(
-                      "pl-10",
-                      errors.email &&
-                        "border-destructive focus-visible:ring-destructive"
-                    )}
-                    disabled={isLoading}
-                  />
+            {/* Password Field */}
+            <div>
+              <Label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Password
+              </Label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-4 w-4 text-gray-400" />
                 </div>
-                {errors.email && (
-                  <p className="text-sm text-destructive">{errors.email}</p>
-                )}
+                <Input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  placeholder="Create a strong password"
+                  className={cn(
+                    "pl-10 pr-10 block w-full",
+                    "border-gray-300 focus:border-orange-500 focus:ring-orange-500",
+                    errors.password &&
+                      "border-red-500 focus:border-red-500 focus:ring-red-500"
+                  )}
+                  disabled={isLoading}
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                  )}
+                </button>
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    placeholder="Create a password"
-                    className={cn(
-                      "pl-10 pr-10",
-                      errors.password &&
-                        "border-destructive focus-visible:ring-destructive"
-                    )}
-                    disabled={isLoading}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
-                    onClick={() => setShowPassword(!showPassword)}
-                    disabled={isLoading}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </Button>
+              {formData.password && (
+                <div className="mt-2">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs text-gray-500">
+                      Password strength
+                    </span>
+                    <span
+                      className={cn(
+                        "text-xs font-medium",
+                        passwordStrength > 75
+                          ? "text-green-600"
+                          : passwordStrength > 50
+                          ? "text-yellow-600"
+                          : passwordStrength > 25
+                          ? "text-orange-600"
+                          : "text-red-600"
+                      )}
+                    >
+                      {getPasswordStrengthText()}
+                    </span>
+                  </div>
+                  <Progress value={passwordStrength} className="h-1.5" />
                 </div>
-                {errors.password && (
-                  <p className="text-sm text-destructive">{errors.password}</p>
-                )}
-              </div>
+              )}
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+              )}
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                    placeholder="Confirm your password"
-                    className={cn(
-                      "pl-10 pr-10",
-                      errors.confirmPassword &&
-                        "border-destructive focus-visible:ring-destructive"
-                    )}
-                    disabled={isLoading}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    disabled={isLoading}
-                  >
-                    {showConfirmPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </Button>
+            {/* Confirm Password Field */}
+            <div>
+              <Label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Confirm Password
+              </Label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-4 w-4 text-gray-400" />
                 </div>
-                {errors.confirmPassword && (
-                  <p className="text-sm text-destructive">
-                    {errors.confirmPassword}
-                  </p>
-                )}
+                <Input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  placeholder="Confirm your password"
+                  className={cn(
+                    "pl-10 pr-10 block w-full",
+                    "border-gray-300 focus:border-orange-500 focus:ring-orange-500",
+                    errors.confirmPassword &&
+                      "border-red-500 focus:border-red-500 focus:ring-red-500"
+                  )}
+                  disabled={isLoading}
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                  )}
+                </button>
+                {formData.confirmPassword &&
+                  formData.password === formData.confirmPassword && (
+                    <div className="absolute inset-y-0 right-10 flex items-center pr-3">
+                      <Check className="h-4 w-4 text-green-500" />
+                    </div>
+                  )}
               </div>
+              {errors.confirmPassword && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.confirmPassword}
+                </p>
+              )}
+            </div>
 
+            {/* Submit Button */}
+            <div>
               <Button
                 type="submit"
-                className="w-full bg-gradient-primary hover:opacity-90"
+                className="w-full flex justify-center items-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -11275,24 +11386,50 @@ export function SignupPage() {
                     Creating account...
                   </>
                 ) : (
-                  "Create Account"
+                  <>
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Create Your Account
+                  </>
                 )}
               </Button>
-            </form>
+            </div>
+          </form>
 
-            <div className="mt-6 text-center text-sm">
-              <span className="text-muted-foreground">
-                Already have an account?{" "}
-              </span>
+          {/* Sign In Link */}
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">
+                  Already have an account?
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-6 text-center">
               <Link
                 to="/auth/login"
-                className="font-medium text-primary hover:text-primary/80 transition-colors"
+                className="font-medium text-orange-600 hover:text-orange-500"
               >
-                Sign in
+                Sign in instead
               </Link>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
+
+        {/* Terms and Privacy */}
+        <p className="text-center text-xs text-gray-500">
+          By creating an account, you agree to our{" "}
+          <Link to="/terms" className="text-orange-600 hover:text-orange-500">
+            Terms of Service
+          </Link>{" "}
+          and{" "}
+          <Link to="/privacy" className="text-orange-600 hover:text-orange-500">
+            Privacy Policy
+          </Link>
+        </p>
       </div>
     </div>
   );

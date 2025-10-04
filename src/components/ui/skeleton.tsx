@@ -1,7 +1,47 @@
 import { cn } from "@/lib/utils";
 
-function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("animate-pulse rounded-md bg-muted", className)} {...props} />;
+interface SkeletonProps {
+  className?: string;
+  variant?: "text" | "circular" | "rectangular" | "rounded";
+  animation?: "pulse" | "wave" | "none";
+  width?: string | number;
+  height?: string | number;
 }
 
-export { Skeleton };
+export function Skeleton({
+  className,
+  variant = "rectangular",
+  animation = "pulse",
+  width,
+  height,
+}: SkeletonProps) {
+  const baseStyles = "bg-gray-200 dark:bg-gray-700";
+
+  const animationStyles = {
+    pulse: "animate-pulse",
+    wave: "animate-shimmer",
+    none: "",
+  };
+
+  const variantStyles = {
+    text: "rounded",
+    circular: "rounded-full",
+    rectangular: "rounded-md",
+    rounded: "rounded-lg",
+  };
+
+  return (
+    <div
+      className={cn(
+        baseStyles,
+        animationStyles[animation],
+        variantStyles[variant],
+        className
+      )}
+      style={{
+        width: width,
+        height: height,
+      }}
+    />
+  );
+}
