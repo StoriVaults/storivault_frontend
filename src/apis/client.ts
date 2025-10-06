@@ -1,9 +1,12 @@
 import axios, { AxiosInstance, AxiosError, AxiosResponse } from 'axios';
 import { ApiEnvelope, ApiError } from '@/types';
 
+// Use environment variable or fallback to production URL
+const API_URL = import.meta.env.VITE_API_URL || 'https://usman678zafar-storivault-backend.hf.space';
+
 // Create axios instance
 export const apiClient: AxiosInstance = axios.create({
-  baseURL: 'https://usman678zafar-storivault-backend.hf.space',
+  baseURL: API_URL,
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
