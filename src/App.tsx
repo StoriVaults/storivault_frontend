@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
 import { useEffect } from "react";
 import { GoogleSuccessPage } from "./pages/auth/GoogleSuccessPage";
+import { VerifyEmailPage } from "./pages/auth/VerifyEmailPage";
 
 // Pages
 import { HomePage } from "./pages/HomePage";
@@ -147,6 +148,10 @@ const App = () => {
                   <GoogleSuccessPage />
                 </PublicOnlyRoute>
               }
+            />
+            <Route
+              path="/auth/verify-email"
+              element={<VerifyEmailPage />}
             />
             <Route
               path="/library"
