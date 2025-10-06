@@ -40,13 +40,19 @@ Generated from: `.`
 - [main-layout.tsx](#src-components-layout-main-layouttsx)
 
 ### 📁 src\components\ui
+- [auth-skeleton.tsx](#src-components-ui-auth-skeletontsx)
+- [create-story-skeleton.tsx](#src-components-ui-create-story-skeletontsx)
+- [edit-story-skeleton.tsx](#src-components-ui-edit-story-skeletontsx)
+- [feed-skeleton.tsx](#src-components-ui-feed-skeletontsx)
 - [file-dropzone.tsx](#src-components-ui-file-dropzonetsx)
 - [image-with-fallback.tsx](#src-components-ui-image-with-fallbacktsx)
 - [loading-spinner.tsx](#src-components-ui-loading-spinnertsx)
 - [logo.tsx](#src-components-ui-logotsx)
 - [profile-skeleton.tsx](#src-components-ui-profile-skeletontsx)
+- [reader-skeleton.tsx](#src-components-ui-reader-skeletontsx)
 - [story-card-skeleton.tsx](#src-components-ui-story-card-skeletontsx)
 - [story-card.tsx](#src-components-ui-story-cardtsx)
+- [story-detail-skeleton.tsx](#src-components-ui-story-detail-skeletontsx)
 - [toast-provider.tsx](#src-components-ui-toast-providertsx)
 - [toast.tsx](#src-components-ui-toasttsx)
 
@@ -2108,7 +2114,7 @@ export function cn(...inputs: ClassValue[]) {
 ```tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Save,
@@ -2143,6 +2149,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { MainLayout } from "@/components/layout/main-layout";
 import { FileDropzone } from "@/components/ui/file-dropzone";
+import { CreateStorySkeleton } from "@/components/ui/create-story-skeleton";
 import { useAuthStore } from "@/store/authStore";
 import { useUiStore } from "@/store/uiStore";
 import { storiesApi, chaptersApi } from "@/apis";
@@ -2159,6 +2166,9 @@ export function CreateStoryPage() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
   const { addToast } = useUiStore();
+
+  // Add initialization state for loading skeleton
+  const [isInitializing, setIsInitializing] = useState(true);
 
   const [storyData, setStoryData] = useState({
     title: "",
@@ -2177,6 +2187,21 @@ export function CreateStoryPage() {
   const [currentTag, setCurrentTag] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState("details");
+
+  // Initialize component and check authentication
+  useEffect(() => {
+    // Simulate initialization time for components to load
+    const timer = setTimeout(() => {
+      setIsInitializing(false);
+    }, 500);
+
+    // Check authentication
+    if (!isAuthenticated) {
+      navigate("/auth/login");
+    }
+
+    return () => clearTimeout(timer);
+  }, [isAuthenticated, navigate]);
 
   const handleCoverSelect = (file: File) => {
     setCoverImage(file);
@@ -2340,9 +2365,10 @@ export function CreateStoryPage() {
       let errorMessage = "Failed to create story. Please try again.";
       if (error.response) {
         console.error("Error response:", error.response.data);
-        errorMessage = error.response.data?.message ||
-                      error.response.data?.detail ||
-                      `Server error: ${error.response.status}`;
+        errorMessage =
+          error.response.data?.message ||
+          error.response.data?.detail ||
+          `Server error: ${error.response.status}`;
       } else if (error.message) {
         errorMessage = error.message;
       }
@@ -2357,8 +2383,17 @@ export function CreateStoryPage() {
     }
   };
 
+  // Show loading skeleton while initializing
+  if (isInitializing) {
+    return (
+      <MainLayout showFooter={false}>
+        <CreateStorySkeleton />
+      </MainLayout>
+    );
+  }
+
+  // Redirect if not authenticated (this shouldn't show due to useEffect redirect)
   if (!isAuthenticated) {
-    navigate("/auth/login");
     return null;
   }
 
@@ -2729,6 +2764,7 @@ export function CreateStoryPage() {
 
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { EditStorySkeleton } from "@/components/ui/edit-story-skeleton";
 import {
   Save,
   Eye,
@@ -2897,7 +2933,10 @@ export function EditStoryPage() {
 
       // Fetch existing chapters from backend
       try {
-        const existingChapters = await chaptersApi.getChaptersByStory(id, false); // Get all chapters including unpublished
+        const existingChapters = await chaptersApi.getChaptersByStory(
+          id,
+          false
+        ); // Get all chapters including unpublished
 
         if (existingChapters.length > 0) {
           const mappedChapters: Chapter[] = existingChapters
@@ -3118,14 +3157,17 @@ export function EditStoryPage() {
             console.log(`Creating new chapter:`, chapterData);
             chapterPromises.push(
               chaptersApi.createChapter(chapterData).catch((err) => {
-                console.error(`Failed to create chapter "${chapter.title}":`, err);
-                console.error('Chapter data was:', chapterData);
+                console.error(
+                  `Failed to create chapter "${chapter.title}":`,
+                  err
+                );
+                console.error("Chapter data was:", chapterData);
                 throw err;
               })
             );
           } else if (!chapter.isNew && !chapter.isDeleted) {
             // Update existing chapter (only if ID is valid - not starting with "new-")
-            if (!chapter.id.startsWith('new-')) {
+            if (!chapter.id.startsWith("new-")) {
               const updateData = {
                 title: chapter.title,
                 content: chapter.content,
@@ -3134,18 +3176,25 @@ export function EditStoryPage() {
               };
               console.log(`Updating chapter ${chapter.id}:`, updateData);
               chapterPromises.push(
-                chaptersApi.updateChapter(chapter.id, updateData).catch((err) => {
-                  console.error(`Failed to update chapter ${chapter.id}:`, err);
-                  console.error('Update data was:', updateData);
-                  throw err;
-                })
+                chaptersApi
+                  .updateChapter(chapter.id, updateData)
+                  .catch((err) => {
+                    console.error(
+                      `Failed to update chapter ${chapter.id}:`,
+                      err
+                    );
+                    console.error("Update data was:", updateData);
+                    throw err;
+                  })
               );
             } else {
-              console.warn(`Skipping update for chapter with invalid ID: ${chapter.id}`);
+              console.warn(
+                `Skipping update for chapter with invalid ID: ${chapter.id}`
+              );
             }
           }
         } catch (err) {
-          console.error('Error processing chapter:', chapter, err);
+          console.error("Error processing chapter:", chapter, err);
           throw err;
         }
       }
@@ -3173,9 +3222,10 @@ export function EditStoryPage() {
       let errorMessage = "Failed to save changes. Please try again.";
       if (error.response) {
         console.error("Error response:", error.response.data);
-        errorMessage = error.response.data?.message ||
-                      error.response.data?.detail ||
-                      `Server error: ${error.response.status}`;
+        errorMessage =
+          error.response.data?.message ||
+          error.response.data?.detail ||
+          `Server error: ${error.response.status}`;
       } else if (error.message) {
         errorMessage = error.message;
       }
@@ -3237,9 +3287,7 @@ export function EditStoryPage() {
   if (isLoading) {
     return (
       <MainLayout>
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <LoadingSpinner size="lg" />
-        </div>
+        <EditStorySkeleton />
       </MainLayout>
     );
   }
@@ -3595,75 +3643,77 @@ export function EditStoryPage() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-2">
-                      {chapters.filter((ch) => !ch.isDeleted).map((chapter, index) => (
-                        <div
-                          key={chapter.id}
-                          className={cn(
-                            "group relative p-3 rounded-lg border cursor-pointer transition-colors",
-                            activeChapter === chapter.id
-                              ? "border-orange-500 bg-orange-50"
-                              : "border-gray-200 hover:border-gray-300"
-                          )}
-                          onClick={() => setActiveChapter(chapter.id)}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className="flex-1">
-                              <p className="font-medium text-sm">
-                                {chapter.title}
-                              </p>
-                              {chapter.isPublished && (
-                                <Badge
-                                  variant="secondary"
-                                  className="mt-1 text-xs"
-                                >
-                                  Published
-                                </Badge>
-                              )}
-                            </div>
-                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                              {index > 0 && (
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-6 w-6"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    reorderChapter(chapter.id, "up");
-                                  }}
-                                >
-                                  <ChevronLeft className="h-3 w-3 rotate-90" />
-                                </Button>
-                              )}
-                              {index < chapters.length - 1 && (
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-6 w-6"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    reorderChapter(chapter.id, "down");
-                                  }}
-                                >
-                                  <ChevronLeft className="h-3 w-3 -rotate-90" />
-                                </Button>
-                              )}
-                              {chapters.length > 1 && (
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-6 w-6"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    deleteChapter(chapter.id);
-                                  }}
-                                >
-                                  <X className="h-3 w-3" />
-                                </Button>
-                              )}
+                      {chapters
+                        .filter((ch) => !ch.isDeleted)
+                        .map((chapter, index) => (
+                          <div
+                            key={chapter.id}
+                            className={cn(
+                              "group relative p-3 rounded-lg border cursor-pointer transition-colors",
+                              activeChapter === chapter.id
+                                ? "border-orange-500 bg-orange-50"
+                                : "border-gray-200 hover:border-gray-300"
+                            )}
+                            onClick={() => setActiveChapter(chapter.id)}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex-1">
+                                <p className="font-medium text-sm">
+                                  {chapter.title}
+                                </p>
+                                {chapter.isPublished && (
+                                  <Badge
+                                    variant="secondary"
+                                    className="mt-1 text-xs"
+                                  >
+                                    Published
+                                  </Badge>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                {index > 0 && (
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-6 w-6"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      reorderChapter(chapter.id, "up");
+                                    }}
+                                  >
+                                    <ChevronLeft className="h-3 w-3 rotate-90" />
+                                  </Button>
+                                )}
+                                {index < chapters.length - 1 && (
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-6 w-6"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      reorderChapter(chapter.id, "down");
+                                    }}
+                                  >
+                                    <ChevronLeft className="h-3 w-3 -rotate-90" />
+                                  </Button>
+                                )}
+                                {chapters.length > 1 && (
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-6 w-6"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      deleteChapter(chapter.id);
+                                    }}
+                                  >
+                                    <X className="h-3 w-3" />
+                                  </Button>
+                                )}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
                       <Button
                         variant="outline"
                         className="w-full"
@@ -3678,70 +3728,74 @@ export function EditStoryPage() {
 
                 {/* Chapter Editor */}
                 <div className="lg:col-span-3">
-                  {chapters.filter((ch) => !ch.isDeleted).map((chapter) => (
-                    <div
-                      key={chapter.id}
-                      className={
-                        activeChapter === chapter.id ? "block" : "hidden"
-                      }
-                    >
-                      <Card className="bg-white">
-                        <CardHeader>
-                          <div className="flex items-center justify-between">
-                            <div className="flex-1">
-                              <Input
-                                value={chapter.title}
-                                onChange={(e) =>
-                                  updateChapter(chapter.id, {
-                                    title: e.target.value,
-                                  })
-                                }
-                                className="text-xl font-semibold"
-                                placeholder="Chapter Title"
-                              />
-                            </div>
-                            {!chapter.isPublished && (
-                              <Button
-                                variant="outline"
-                                onClick={() => handlePublishChapter(chapter.id)}
-                              >
-                                Publish Chapter
-                              </Button>
-                            )}
-                          </div>
-                        </CardHeader>
-                        <CardContent>
-                          <Textarea
-                            value={chapter.content}
-                            onChange={(e) =>
-                              updateChapter(chapter.id, {
-                                content: e.target.value,
-                              })
-                            }
-                            placeholder="Start writing your chapter..."
-                            className="min-h-[500px] font-serif text-lg leading-relaxed"
-                          />
-                          <div className="flex items-center justify-between mt-4 text-sm text-gray-500">
-                            <div>
-                              Words:{" "}
-                              {
-                                chapter.content.split(/\s+/).filter(Boolean)
-                                  .length
-                              }
-                            </div>
-                            {chapter.isPublished && chapter.publishedAt && (
-                              <div>
-                                Published:{" "}
-                                {new Date(
-                                  chapter.publishedAt
-                                ).toLocaleDateString()}
+                  {chapters
+                    .filter((ch) => !ch.isDeleted)
+                    .map((chapter) => (
+                      <div
+                        key={chapter.id}
+                        className={
+                          activeChapter === chapter.id ? "block" : "hidden"
+                        }
+                      >
+                        <Card className="bg-white">
+                          <CardHeader>
+                            <div className="flex items-center justify-between">
+                              <div className="flex-1">
+                                <Input
+                                  value={chapter.title}
+                                  onChange={(e) =>
+                                    updateChapter(chapter.id, {
+                                      title: e.target.value,
+                                    })
+                                  }
+                                  className="text-xl font-semibold"
+                                  placeholder="Chapter Title"
+                                />
                               </div>
-                            )}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  ))}
+                              {!chapter.isPublished && (
+                                <Button
+                                  variant="outline"
+                                  onClick={() =>
+                                    handlePublishChapter(chapter.id)
+                                  }
+                                >
+                                  Publish Chapter
+                                </Button>
+                              )}
+                            </div>
+                          </CardHeader>
+                          <CardContent>
+                            <Textarea
+                              value={chapter.content}
+                              onChange={(e) =>
+                                updateChapter(chapter.id, {
+                                  content: e.target.value,
+                                })
+                              }
+                              placeholder="Start writing your chapter..."
+                              className="min-h-[500px] font-serif text-lg leading-relaxed"
+                            />
+                            <div className="flex items-center justify-between mt-4 text-sm text-gray-500">
+                              <div>
+                                Words:{" "}
+                                {
+                                  chapter.content.split(/\s+/).filter(Boolean)
+                                    .length
+                                }
+                              </div>
+                              {chapter.isPublished && chapter.publishedAt && (
+                                <div>
+                                  Published:{" "}
+                                  {new Date(
+                                    chapter.publishedAt
+                                  ).toLocaleDateString()}
+                                </div>
+                              )}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    ))}
                 </div>
               </div>
             </TabsContent>
@@ -3962,7 +4016,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MainLayout } from "@/components/layout/main-layout";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { FeedSkeleton } from "@/components/ui/feed-skeleton";
 import { useAuthStore } from "@/store/authStore";
 import { useUiStore } from "@/store/uiStore";
 import { Story, User } from "@/types";
@@ -4482,12 +4536,11 @@ export function FeedPage() {
     }
   };
 
+  // Loading State
   if (isLoading) {
     return (
       <MainLayout>
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <LoadingSpinner size="lg" />
-        </div>
+        <FeedSkeleton />
       </MainLayout>
     );
   }
@@ -4744,7 +4797,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { StoryCard } from "@/components/ui/story-card";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { StoryCardSkeleton } from "@/components/ui/story-card-skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import { MainLayout } from "@/components/layout/main-layout";
 import { useAuthStore } from "@/store/authStore";
 import { Story } from "@/types";
@@ -4870,34 +4924,6 @@ const genreCards = [
   },
 ];
 
-// Writing tools features
-const writingTools = [
-  {
-    title: "Story Planner",
-    description: "Organize your plot with our intuitive story mapping tool",
-    icon: FileText,
-    color: literaryColors.peach,
-  },
-  {
-    title: "Character Builder",
-    description: "Create deep, memorable characters with guided templates",
-    icon: Users,
-    color: literaryColors.mint,
-  },
-  {
-    title: "Writing Prompts",
-    description: "Never run out of ideas with daily writing inspiration",
-    icon: Lamp,
-    color: literaryColors.lavender,
-  },
-  {
-    title: "Grammar Guide",
-    description: "Perfect your prose with intelligent writing assistance",
-    icon: Glasses,
-    color: literaryColors.skyBlue,
-  },
-];
-
 export function HomePage() {
   const { isAuthenticated, user } = useAuthStore();
   const [featuredStories, setFeaturedStories] = useState<Story[]>([]);
@@ -4945,16 +4971,81 @@ export function HomePage() {
     fetchHomeData();
   }, []);
 
+  // Loading State
   if (isLoading) {
     return (
       <MainLayout>
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <LoadingSpinner size="lg" />
+        <div
+          className="min-h-screen"
+          style={{ backgroundColor: literaryColors.cream }}
+        >
+          {/* Hero Section Skeleton */}
+          <section className="relative overflow-hidden py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
+            <div className="relative z-10 max-w-7xl mx-auto text-center">
+              <Skeleton className="h-8 w-48 mx-auto mb-6" variant="rounded" />
+              <Skeleton className="h-16 w-3/4 mx-auto mb-4" variant="text" />
+              <Skeleton className="h-6 w-1/2 mx-auto mb-8" variant="text" />
+              <div className="flex justify-center gap-4 mb-12">
+                <Skeleton className="h-12 w-40" variant="rounded" />
+                <Skeleton className="h-12 w-32" variant="rounded" />
+              </div>
+              {/* Stats Skeleton */}
+              <div className="grid grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-sm sm:max-w-md md:max-w-none mx-auto">
+                <div className="text-center">
+                  <Skeleton className="h-10 w-24 mx-auto mb-2" variant="text" />
+                  <Skeleton className="h-4 w-20 mx-auto" variant="text" />
+                </div>
+                <div className="text-center">
+                  <Skeleton className="h-10 w-24 mx-auto mb-2" variant="text" />
+                  <Skeleton className="h-4 w-20 mx-auto" variant="text" />
+                </div>
+                <div className="text-center">
+                  <Skeleton className="h-10 w-24 mx-auto mb-2" variant="text" />
+                  <Skeleton className="h-4 w-20 mx-auto" variant="text" />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Featured Stories Skeleton */}
+          <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-8 sm:mb-10 md:mb-12">
+                <Skeleton className="h-8 w-64 mx-auto mb-4" variant="text" />
+                <Skeleton className="h-5 w-96 mx-auto" variant="text" />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <StoryCardSkeleton key={index} variant="default" />
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Genre Discovery Skeleton */}
+          <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-8 sm:mb-10 md:mb-12">
+                <Skeleton className="h-8 w-64 mx-auto mb-4" variant="text" />
+                <Skeleton className="h-5 w-80 mx-auto" variant="text" />
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <Skeleton
+                    key={index}
+                    className="h-32 rounded-lg"
+                    variant="rounded"
+                  />
+                ))}
+              </div>
+            </div>
+          </section>
         </div>
       </MainLayout>
     );
   }
 
+  // Main Content (existing code continues here...)
   return (
     <MainLayout showFooter={true}>
       {/* Custom Literary Styles */}
@@ -5747,6 +5838,7 @@ export default NotFound;
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { ProfileSkeleton } from "@/components/ui/profile-skeleton";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   Grid3X3,
@@ -6055,9 +6147,12 @@ export function ProfilePage() {
     }
   };
 
-  const onCropComplete = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
-    setCroppedAreaPixels(croppedAreaPixels);
-  }, []);
+  const onCropComplete = useCallback(
+    (croppedArea: Area, croppedAreaPixels: Area) => {
+      setCroppedAreaPixels(croppedAreaPixels);
+    },
+    []
+  );
 
   const createImage = (url: string): Promise<HTMLImageElement> =>
     new Promise((resolve, reject) => {
@@ -6139,7 +6234,11 @@ export function ProfilePage() {
     if (!croppedAreaPixels || !imageToCrop) return;
 
     try {
-      const croppedBlob = await getCroppedImg(imageToCrop, croppedAreaPixels, rotation);
+      const croppedBlob = await getCroppedImg(
+        imageToCrop,
+        croppedAreaPixels,
+        rotation
+      );
       const croppedFile = new File([croppedBlob], "profile.jpg", {
         type: "image/jpeg",
       });
@@ -6252,9 +6351,7 @@ export function ProfilePage() {
   if (isLoading) {
     return (
       <MainLayout>
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <LoadingSpinner size="lg" />
-        </div>
+        <ProfileSkeleton />
       </MainLayout>
     );
   }
@@ -6366,13 +6463,17 @@ export function ProfilePage() {
                   <span className="font-semibold text-base sm:text-lg">
                     {formatNumber(profileUser.followers_count)}
                   </span>
-                  <span className="text-gray-600 ml-1 text-sm sm:text-base">followers</span>
+                  <span className="text-gray-600 ml-1 text-sm sm:text-base">
+                    followers
+                  </span>
                 </button>
                 <button className="text-center hover:underline order-2 sm:order-2">
                   <span className="font-semibold text-base sm:text-lg">
                     {formatNumber(profileUser.following_count)}
                   </span>
-                  <span className="text-gray-600 ml-1 text-sm sm:text-base">following</span>
+                  <span className="text-gray-600 ml-1 text-sm sm:text-base">
+                    following
+                  </span>
                 </button>
               </div>
             </div>
@@ -6808,7 +6909,9 @@ export function ProfilePage() {
             {/* Header */}
             <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-4">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-bold text-white">Crop Profile Picture</h2>
+                <h2 className="text-xl font-bold text-white">
+                  Crop Profile Picture
+                </h2>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -6849,7 +6952,9 @@ export function ProfilePage() {
                     <ZoomIn className="h-4 w-4" />
                     Zoom
                   </Label>
-                  <span className="text-sm text-gray-600">{Math.round(zoom * 100)}%</span>
+                  <span className="text-sm text-gray-600">
+                    {Math.round(zoom * 100)}%
+                  </span>
                 </div>
                 <input
                   type="range"
@@ -7584,7 +7689,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MainLayout } from "@/components/layout/main-layout";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { StoryDetailSkeleton } from "@/components/ui/story-detail-skeleton";
 import { useAuthStore } from "@/store/authStore";
 import { useUiStore } from "@/store/uiStore";
 import { Story, User } from "@/types";
@@ -7831,9 +7936,7 @@ export function StoryDetailPage() {
   if (isLoading) {
     return (
       <MainLayout>
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <LoadingSpinner size="lg" />
-        </div>
+        <StoryDetailSkeleton />
       </MainLayout>
     );
   }
@@ -7852,10 +7955,11 @@ export function StoryDetailPage() {
   return (
     <MainLayout>
       <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-        {/* Story Header */}
+        {/* Mobile-Optimized Story Header */}
         <div className="relative">
+          {/* Hero Background - Hidden on mobile to improve readability */}
           <div
-            className="absolute inset-0 h-[500px] bg-cover bg-center"
+            className="absolute inset-0 h-[300px] sm:h-[400px] md:h-[500px] bg-cover bg-center hidden sm:block"
             style={{
               backgroundImage: `url(${
                 story.cover_image ||
@@ -7866,17 +7970,19 @@ export function StoryDetailPage() {
             <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background" />
           </div>
 
-          <div className="relative z-10 max-w-7xl mx-auto px-4 pt-8 pb-20">
+          <div className="relative z-10 max-w-7xl mx-auto px-4 pt-4 sm:pt-8 pb-8 sm:pb-20">
             <Button
               variant="ghost"
-              className="mb-4 text-white hover:bg-white/10"
+              className="mb-4 text-gray-700 sm:text-white hover:bg-gray-100 sm:hover:bg-white/10"
               onClick={() => navigate(-1)}
             >
               <ChevronLeft className="h-4 w-4 mr-2" />
               Back
             </Button>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Mobile Layout - Better readability */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
+              {/* Cover Image - Centered on mobile */}
               <div className="flex justify-center lg:justify-start">
                 <div className="relative group">
                   <img
@@ -7885,7 +7991,7 @@ export function StoryDetailPage() {
                       "https://source.unsplash.com/400x600/?book,novel"
                     }
                     alt={story.title}
-                    className="w-64 h-96 object-cover rounded-xl shadow-2xl"
+                    className="w-48 h-72 sm:w-64 sm:h-96 object-cover rounded-xl shadow-2xl"
                   />
                   {story.visibility === "private" && (
                     <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-sm rounded px-3 py-1">
@@ -7896,93 +8002,107 @@ export function StoryDetailPage() {
                 </div>
               </div>
 
-              <div className="lg:col-span-2 space-y-6">
-                <div>
-                  <h1 className="text-4xl md:text-5xl font-bold mb-3 text-white">
+              {/* Story Info - Optimized for mobile */}
+              <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+                {/* Title and Description - Better contrast on mobile */}
+                <div className="bg-white sm:bg-transparent rounded-lg p-4 sm:p-0 shadow-sm sm:shadow-none">
+                  <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-3 text-gray-900 sm:text-white">
                     {story.title}
                   </h1>
-                  <p className="text-lg text-gray-200 leading-relaxed">
+                  <p className="text-base sm:text-lg text-gray-700 sm:text-gray-200 leading-relaxed">
                     {story.description}
                   </p>
                 </div>
 
-                {/* Author Info */}
+                {/* Author Info - Better mobile styling */}
                 {author && (
-                  <div className="flex items-center justify-between bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                  <div className="bg-white sm:bg-white/10 backdrop-blur-sm rounded-xl p-4 shadow-sm sm:shadow-none">
                     <Link
                       to={`/profile/${author.username}`}
                       className="flex items-center gap-4 group"
                     >
-                      <Avatar className="h-14 w-14 border-2 border-white/20">
+                      <Avatar className="h-12 sm:h-14 w-12 sm:w-14 border-2 border-gray-200 sm:border-white/20">
                         <AvatarImage src={author.profile_pic || undefined} />
-                        <AvatarFallback className="bg-primary/20 text-white">
+                        <AvatarFallback className="bg-orange-100 text-orange-700 sm:bg-primary/20 sm:text-white">
                           {author.username?.[0]?.toUpperCase() || "A"}
                         </AvatarFallback>
                       </Avatar>
-                      <div>
-                        <p className="font-semibold text-lg text-white group-hover:text-primary-light transition-colors">
+                      <div className="flex-1">
+                        <p className="font-semibold text-base sm:text-lg text-gray-900 sm:text-white group-hover:text-orange-600 sm:group-hover:text-primary-light transition-colors">
                           @{author.username}
                         </p>
-                        <p className="text-sm text-gray-300">
+                        <p className="text-sm text-gray-600 sm:text-gray-300">
                           {formatNumber(author.followers_count)} followers •{" "}
                           {author.total_stories || 0} stories
                         </p>
                       </div>
+                      {author.username !== user?.username && (
+                        <Button
+                          variant={isFollowing ? "secondary" : "default"}
+                          size="sm"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleFollow();
+                          }}
+                          className={cn(
+                            "ml-auto",
+                            isFollowing
+                              ? "bg-gray-200 hover:bg-gray-300 text-gray-800"
+                              : "bg-orange-500 hover:bg-orange-600 text-white sm:bg-white sm:hover:bg-gray-100 sm:text-gray-900"
+                          )}
+                        >
+                          {isFollowing ? "Following" : "Follow"}
+                        </Button>
+                      )}
                     </Link>
-                    {author.username !== user?.username && (
-                      <Button
-                        variant={isFollowing ? "secondary" : "default"}
-                        onClick={handleFollow}
-                        className={cn(
-                          "ml-4",
-                          isFollowing
-                            ? "bg-gray-200 hover:bg-gray-300 text-gray-800"
-                            : "bg-white hover:bg-gray-100 text-gray-900"
-                        )}
-                      >
-                        {isFollowing ? "Following" : "Follow"}
-                      </Button>
-                    )}
                   </div>
                 )}
 
-                {/* Stats Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="bg-gray-800/90 backdrop-blur-sm rounded-lg p-4 text-center border border-gray-700">
-                    <Eye className="h-6 w-6 mx-auto mb-2 text-white" />
-                    <p className="text-2xl font-bold text-white">
+                {/* Stats Grid - Mobile optimized */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+                  <div className="bg-white sm:bg-gray-800/90 backdrop-blur-sm rounded-lg p-3 sm:p-4 text-center border border-gray-200 sm:border-gray-700 shadow-sm sm:shadow-none">
+                    <Eye className="h-5 sm:h-6 w-5 sm:w-6 mx-auto mb-1 sm:mb-2 text-gray-700 sm:text-white" />
+                    <p className="text-lg sm:text-2xl font-bold text-gray-900 sm:text-white">
                       {formatNumber(story.reads_count)}
                     </p>
-                    <p className="text-sm text-gray-300">Reads</p>
+                    <p className="text-xs sm:text-sm text-gray-600 sm:text-gray-300">
+                      Reads
+                    </p>
                   </div>
-                  <div className="bg-gray-800/90 backdrop-blur-sm rounded-lg p-4 text-center border border-gray-700">
-                    <Heart className="h-6 w-6 mx-auto mb-2 text-white" />
-                    <p className="text-2xl font-bold text-white">
+                  <div className="bg-white sm:bg-gray-800/90 backdrop-blur-sm rounded-lg p-3 sm:p-4 text-center border border-gray-200 sm:border-gray-700 shadow-sm sm:shadow-none">
+                    <Heart className="h-5 sm:h-6 w-5 sm:w-6 mx-auto mb-1 sm:mb-2 text-gray-700 sm:text-white" />
+                    <p className="text-lg sm:text-2xl font-bold text-gray-900 sm:text-white">
                       {formatNumber(story.votes_count)}
                     </p>
-                    <p className="text-sm text-gray-300">Likes</p>
+                    <p className="text-xs sm:text-sm text-gray-600 sm:text-gray-300">
+                      Likes
+                    </p>
                   </div>
-                  <div className="bg-gray-800/90 backdrop-blur-sm rounded-lg p-4 text-center border border-gray-700">
-                    <MessageCircle className="h-6 w-6 mx-auto mb-2 text-white" />
-                    <p className="text-2xl font-bold text-white">
+                  <div className="bg-white sm:bg-gray-800/90 backdrop-blur-sm rounded-lg p-3 sm:p-4 text-center border border-gray-200 sm:border-gray-700 shadow-sm sm:shadow-none">
+                    <MessageCircle className="h-5 sm:h-6 w-5 sm:w-6 mx-auto mb-1 sm:mb-2 text-gray-700 sm:text-white" />
+                    <p className="text-lg sm:text-2xl font-bold text-gray-900 sm:text-white">
                       {formatNumber(story.comments_count)}
                     </p>
-                    <p className="text-sm text-gray-300">Comments</p>
+                    <p className="text-xs sm:text-sm text-gray-600 sm:text-gray-300">
+                      Comments
+                    </p>
                   </div>
-                  <div className="bg-gray-800/90 backdrop-blur-sm rounded-lg p-4 text-center border border-gray-700">
-                    <Calendar className="h-6 w-6 mx-auto mb-2 text-white" />
-                    <p className="text-sm font-bold text-white">
+                  <div className="bg-white sm:bg-gray-800/90 backdrop-blur-sm rounded-lg p-3 sm:p-4 text-center border border-gray-200 sm:border-gray-700 shadow-sm sm:shadow-none">
+                    <Calendar className="h-5 sm:h-6 w-5 sm:w-6 mx-auto mb-1 sm:mb-2 text-gray-700 sm:text-white" />
+                    <p className="text-xs sm:text-sm font-bold text-gray-900 sm:text-white">
                       {formatDate(story.created_at)}
                     </p>
-                    <p className="text-sm text-gray-300">Published</p>
+                    <p className="text-xs sm:text-sm text-gray-600 sm:text-gray-300">
+                      Published
+                    </p>
                   </div>
                 </div>
 
-                {/* Tags */}
+                {/* Tags - Mobile friendly */}
                 <div className="flex flex-wrap gap-2">
                   <Badge
                     variant="secondary"
-                    className="bg-white/20 text-white border-white/30"
+                    className="bg-orange-100 text-orange-700 border-orange-200 sm:bg-white/20 sm:text-white sm:border-white/30"
                   >
                     {story.genre}
                   </Badge>
@@ -7990,20 +8110,20 @@ export function StoryDetailPage() {
                     <Badge
                       key={index}
                       variant="outline"
-                      className="text-white border-white/30 bg-white/10"
+                      className="text-gray-700 border-gray-300 bg-white/50 sm:text-white sm:border-white/30 sm:bg-white/10"
                     >
                       #{tag}
                     </Badge>
                   ))}
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-3">
+                {/* Action Buttons - Mobile optimized */}
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                   {isOwnStory ? (
                     <>
                       <Button
                         size="lg"
-                        className="bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
+                        className="bg-orange-500 hover:bg-orange-600 text-white shadow-lg w-full sm:w-auto"
                         onClick={() => navigate(`/stories/${id}/edit`)}
                       >
                         <Edit className="h-5 w-5 mr-2" />
@@ -8012,7 +8132,7 @@ export function StoryDetailPage() {
                       <Button
                         size="lg"
                         variant="secondary"
-                        className="bg-white hover:bg-gray-100 text-gray-800 shadow-lg"
+                        className="bg-white hover:bg-gray-100 text-gray-800 shadow-lg w-full sm:w-auto"
                         onClick={handleShare}
                       >
                         <Share2 className="h-5 w-5 mr-2" />
@@ -8023,62 +8143,68 @@ export function StoryDetailPage() {
                     <>
                       <Button
                         size="lg"
-                        className="bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
+                        className="bg-orange-500 hover:bg-orange-600 text-white shadow-lg w-full sm:w-auto"
                         onClick={() => navigate(`/stories/${id}/read`)}
                       >
                         <BookOpen className="h-5 w-5 mr-2" />
                         Start Reading
                       </Button>
 
-                      <Button
-                        size="lg"
-                        variant={isLiked ? "default" : "secondary"}
-                        className={cn(
-                          "shadow-lg",
-                          isLiked
-                            ? "bg-red-500 hover:bg-red-600 text-white"
-                            : "bg-white hover:bg-gray-100 text-gray-800"
-                        )}
-                        onClick={handleLike}
-                      >
-                        <Heart
+                      <div className="grid grid-cols-3 gap-2 sm:flex sm:flex-row">
+                        <Button
+                          size="lg"
+                          variant={isLiked ? "default" : "secondary"}
                           className={cn(
-                            "h-5 w-5 mr-2",
-                            isLiked ? "fill-current" : ""
+                            "shadow-lg",
+                            isLiked
+                              ? "bg-red-500 hover:bg-red-600 text-white"
+                              : "bg-white hover:bg-gray-100 text-gray-800"
                           )}
-                        />
-                        {isLiked ? "Liked" : "Like"}
-                      </Button>
+                          onClick={handleLike}
+                        >
+                          <Heart
+                            className={cn(
+                              "h-5 w-5 sm:mr-2",
+                              isLiked ? "fill-current" : ""
+                            )}
+                          />
+                          <span className="hidden sm:inline">
+                            {isLiked ? "Liked" : "Like"}
+                          </span>
+                        </Button>
 
-                      <Button
-                        size="lg"
-                        variant={isSaved ? "default" : "secondary"}
-                        className={cn(
-                          "shadow-lg",
-                          isSaved
-                            ? "bg-green-600 hover:bg-green-700 text-white"
-                            : "bg-white hover:bg-gray-100 text-gray-800"
-                        )}
-                        onClick={handleSave}
-                      >
-                        <Bookmark
+                        <Button
+                          size="lg"
+                          variant={isSaved ? "default" : "secondary"}
                           className={cn(
-                            "h-5 w-5 mr-2",
-                            isSaved ? "fill-current" : ""
+                            "shadow-lg",
+                            isSaved
+                              ? "bg-green-600 hover:bg-green-700 text-white"
+                              : "bg-white hover:bg-gray-100 text-gray-800"
                           )}
-                        />
-                        {isSaved ? "Saved" : "Save"}
-                      </Button>
+                          onClick={handleSave}
+                        >
+                          <Bookmark
+                            className={cn(
+                              "h-5 w-5 sm:mr-2",
+                              isSaved ? "fill-current" : ""
+                            )}
+                          />
+                          <span className="hidden sm:inline">
+                            {isSaved ? "Saved" : "Save"}
+                          </span>
+                        </Button>
 
-                      <Button
-                        size="lg"
-                        variant="secondary"
-                        className="bg-white hover:bg-gray-100 text-gray-800 shadow-lg"
-                        onClick={handleShare}
-                      >
-                        <Share2 className="h-5 w-5 mr-2" />
-                        Share
-                      </Button>
+                        <Button
+                          size="lg"
+                          variant="secondary"
+                          className="bg-white hover:bg-gray-100 text-gray-800 shadow-lg"
+                          onClick={handleShare}
+                        >
+                          <Share2 className="h-5 w-5 sm:mr-2" />
+                          <span className="hidden sm:inline">Share</span>
+                        </Button>
+                      </div>
                     </>
                   )}
                 </div>
@@ -8090,7 +8216,7 @@ export function StoryDetailPage() {
         {/* Main Content Area */}
         <div className="max-w-7xl mx-auto px-4 py-8">
           <Tabs defaultValue="about" className="space-y-6">
-            <TabsList className="bg-white border">
+            <TabsList className="bg-white border w-full justify-start">
               <TabsTrigger value="about">About</TabsTrigger>
               <TabsTrigger value="details">Details</TabsTrigger>
             </TabsList>
@@ -8098,7 +8224,7 @@ export function StoryDetailPage() {
             {/* About Tab */}
             <TabsContent value="about" className="space-y-6">
               <Card className="bg-white">
-                <CardContent className="p-6">
+                <CardContent className="p-4 sm:p-6">
                   <h3 className="text-lg font-semibold mb-4">Story Summary</h3>
                   <p className="text-gray-700 whitespace-pre-line">
                     {story.description || "No description available."}
@@ -8108,23 +8234,23 @@ export function StoryDetailPage() {
 
               {author && (
                 <Card className="bg-white">
-                  <CardContent className="p-6">
+                  <CardContent className="p-4 sm:p-6">
                     <h3 className="text-lg font-semibold mb-4">
                       About the Author
                     </h3>
                     <div className="flex items-start gap-4">
-                      <Avatar className="h-16 w-16">
+                      <Avatar className="h-12 sm:h-16 w-12 sm:w-16 flex-shrink-0">
                         <AvatarImage src={author.profile_pic || undefined} />
                         <AvatarFallback>
                           {author.username?.[0]?.toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
-                      <div className="flex-1">
+                      <div className="flex-1 min-w-0">
                         <h4 className="font-semibold">@{author.username}</h4>
                         <p className="text-sm text-muted-foreground mt-1">
                           {author.bio || "No bio available"}
                         </p>
-                        <div className="flex gap-4 mt-3 text-sm">
+                        <div className="flex flex-wrap gap-2 sm:gap-4 mt-3 text-sm">
                           <span>
                             <strong>
                               {formatNumber(author.followers_count)}
@@ -8134,7 +8260,7 @@ export function StoryDetailPage() {
                           <span>
                             <strong>{author.total_stories}</strong> stories
                           </span>
-                          <span>
+                          <span className="hidden sm:inline">
                             <strong>
                               {formatNumber(author.total_reads || 0)}
                             </strong>{" "}
@@ -8151,7 +8277,7 @@ export function StoryDetailPage() {
             {/* Details Tab */}
             <TabsContent value="details" className="space-y-6">
               <Card className="bg-white">
-                <CardContent className="p-6">
+                <CardContent className="p-4 sm:p-6">
                   <h3 className="text-lg font-semibold mb-4">Story Details</h3>
                   <div className="space-y-3">
                     <div className="flex justify-between">
@@ -8207,8 +8333,10 @@ export function StoryDetailPage() {
           {/* Related Stories */}
           {relatedStories.length > 0 && (
             <div className="mt-12">
-              <h2 className="text-2xl font-bold mb-6">More Like This</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <h2 className="text-xl sm:text-2xl font-bold mb-6">
+                More Like This
+              </h2>
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
                 {relatedStories.map((relatedStory) => (
                   <Link
                     key={relatedStory.id}
@@ -8226,11 +8354,11 @@ export function StoryDetailPage() {
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                         />
                       </div>
-                      <CardContent className="p-4">
-                        <h3 className="font-semibold line-clamp-2">
+                      <CardContent className="p-3 sm:p-4">
+                        <h3 className="font-semibold line-clamp-2 text-sm sm:text-base">
                           {relatedStory.title}
                         </h3>
-                        <p className="text-sm text-muted-foreground mt-1">
+                        <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                           {formatNumber(relatedStory.reads_count)} reads
                         </p>
                       </CardContent>
@@ -8265,9 +8393,25 @@ import {
   Settings,
   Heart,
   MessageCircle,
+  Sun,
+  Moon,
+  Type,
+  Minus,
+  Plus,
+  AlignLeft,
+  AlignCenter,
+  AlignJustify,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import {
   Sheet,
   SheetContent,
@@ -8275,13 +8419,53 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { Slider } from "@/components/ui/slider";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { ReaderSkeleton } from "@/components/ui/reader-skeleton";
 import { Badge } from "@/components/ui/badge";
 import { useAuthStore } from "@/store/authStore";
 import { useUiStore } from "@/store/uiStore";
 import { Chapter, Story } from "@/types/api";
 import { chaptersApi, storiesApi } from "@/apis";
 import { cn } from "@/lib/utils";
+
+// Reading themes
+const readingThemes = {
+  light: {
+    name: "Light",
+    background: "#ffffff",
+    text: "#1a1a1a",
+    secondaryText: "#666666",
+    sliderTrack: "#e5e5e5",
+    sliderThumb: "#ff6b35",
+  },
+  sepia: {
+    name: "Sepia",
+    background: "#f7f1e8",
+    text: "#5c4b37",
+    secondaryText: "#8b7355",
+    sliderTrack: "#e8dcc4",
+    sliderThumb: "#8b7355",
+  },
+  dark: {
+    name: "Dark",
+    background: "#1a1a1a",
+    text: "#e8e6e3",
+    secondaryText: "#a8a29e",
+    sliderTrack: "#404040",
+    sliderThumb: "#ff6b35",
+  },
+  night: {
+    name: "Night",
+    background: "#0d1117",
+    text: "#c9d1d9",
+    secondaryText: "#8b949e",
+    sliderTrack: "#30363d",
+    sliderThumb: "#58a6ff",
+  },
+};
 
 export function StoryReaderPage() {
   const { id } = useParams<{ id: string }>();
@@ -8293,12 +8477,50 @@ export function StoryReaderPage() {
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [currentChapterIndex, setCurrentChapterIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Reading settings state
   const [fontSize, setFontSize] = useState(18);
+  const [lineHeight, setLineHeight] = useState(1.8);
   const [fontFamily, setFontFamily] = useState("serif");
+  const [textAlign, setTextAlign] = useState<"left" | "center" | "justify">(
+    "left"
+  );
+  const [theme, setTheme] = useState<keyof typeof readingThemes>("light");
+  const [showSettingsDialog, setShowSettingsDialog] = useState(false);
+  const [showChapterList, setShowChapterList] = useState(false);
 
   const currentChapter = chapters[currentChapterIndex];
   const hasNextChapter = currentChapterIndex < chapters.length - 1;
   const hasPreviousChapter = currentChapterIndex > 0;
+
+  // Load saved preferences
+  useEffect(() => {
+    const savedPreferences = localStorage.getItem("reading-preferences");
+    if (savedPreferences) {
+      try {
+        const prefs = JSON.parse(savedPreferences);
+        setFontSize(prefs.fontSize || 18);
+        setLineHeight(prefs.lineHeight || 1.8);
+        setFontFamily(prefs.fontFamily || "serif");
+        setTextAlign(prefs.textAlign || "left");
+        setTheme(prefs.theme || "light");
+      } catch (error) {
+        console.error("Failed to load reading preferences:", error);
+      }
+    }
+  }, []);
+
+  // Save preferences when they change
+  useEffect(() => {
+    const preferences = {
+      fontSize,
+      lineHeight,
+      fontFamily,
+      textAlign,
+      theme,
+    };
+    localStorage.setItem("reading-preferences", JSON.stringify(preferences));
+  }, [fontSize, lineHeight, fontFamily, textAlign, theme]);
 
   useEffect(() => {
     if (!id) return;
@@ -8382,23 +8604,20 @@ export function StoryReaderPage() {
 
   const goToChapter = (index: number) => {
     setCurrentChapterIndex(index);
+    setShowChapterList(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const increaseFontSize = () => {
-    setFontSize((prev) => Math.min(prev + 2, 32));
-  };
-
-  const decreaseFontSize = () => {
-    setFontSize((prev) => Math.max(prev - 2, 12));
+  const resetSettings = () => {
+    setFontSize(18);
+    setLineHeight(1.8);
+    setFontFamily("serif");
+    setTextAlign("left");
+    setTheme("light");
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <LoadingSpinner size="lg" />
-      </div>
-    );
+    return <ReaderSkeleton />;
   }
 
   if (!story || !currentChapter) {
@@ -8414,10 +8633,69 @@ export function StoryReaderPage() {
     );
   }
 
+  const currentTheme = readingThemes[theme];
+
   return (
-    <div className="min-h-screen bg-background">
+    <div
+      className="min-h-screen transition-colors duration-300"
+      style={{
+        backgroundColor: currentTheme.background,
+        color: currentTheme.text,
+      }}
+    >
+      {/* Custom Slider Styles */}
+      <style>{`
+        .custom-slider {
+          position: relative;
+          display: flex;
+          align-items: center;
+          width: 100%;
+          height: 2rem;
+        }
+        
+        .custom-slider-track {
+          position: relative;
+          height: 6px;
+          width: 100%;
+          border-radius: 3px;
+          background: ${currentTheme.sliderTrack};
+        }
+        
+        .custom-slider-range {
+          position: absolute;
+          height: 100%;
+          border-radius: 3px;
+          background: ${currentTheme.sliderThumb};
+        }
+        
+        .custom-slider-thumb {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: ${currentTheme.sliderThumb};
+          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+          cursor: pointer;
+        }
+        
+        .custom-slider-thumb:hover {
+          transform: scale(1.1);
+        }
+        
+        .custom-slider-thumb:focus {
+          outline: 2px solid ${currentTheme.sliderThumb};
+          outline-offset: 2px;
+        }
+      `}</style>
+
       {/* Reader Header */}
-      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header
+        className="sticky top-0 z-40 border-b backdrop-blur-sm"
+        style={{
+          backgroundColor: `${currentTheme.background}ee`,
+          borderColor:
+            theme === "dark" || theme === "night" ? "#333" : "#e5e5e5",
+        }}
+      >
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -8425,6 +8703,7 @@ export function StoryReaderPage() {
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate(`/stories/${id}`)}
+                style={{ color: currentTheme.text }}
               >
                 <ChevronLeft className="h-4 w-4 mr-1" />
                 Back
@@ -8433,10 +8712,14 @@ export function StoryReaderPage() {
                 <Link
                   to={`/stories/${id}`}
                   className="font-semibold hover:underline"
+                  style={{ color: currentTheme.text }}
                 >
                   {story.title}
                 </Link>
-                <p className="text-sm text-muted-foreground">
+                <p
+                  className="text-sm"
+                  style={{ color: currentTheme.secondaryText }}
+                >
                   Chapter {currentChapterIndex + 1} of {chapters.length}:{" "}
                   {currentChapter.title}
                 </p>
@@ -8445,96 +8728,33 @@ export function StoryReaderPage() {
 
             <div className="flex items-center gap-2">
               {/* Chapter List */}
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    <List className="h-4 w-4 mr-2" />
-                    Chapters
-                  </Button>
-                </SheetTrigger>
-                <SheetContent>
-                  <SheetHeader>
-                    <SheetTitle>Chapters</SheetTitle>
-                  </SheetHeader>
-                  <div className="mt-6 space-y-2">
-                    {chapters.map((chapter, index) => (
-                      <button
-                        key={chapter.id}
-                        onClick={() => goToChapter(index)}
-                        className={cn(
-                          "w-full text-left p-3 rounded-lg transition-colors",
-                          index === currentChapterIndex
-                            ? "bg-primary text-primary-foreground"
-                            : "hover:bg-muted"
-                        )}
-                      >
-                        <div className="font-medium">
-                          Chapter {index + 1}
-                        </div>
-                        <div className="text-sm opacity-90">{chapter.title}</div>
-                      </button>
-                    ))}
-                  </div>
-                </SheetContent>
-              </Sheet>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowChapterList(true)}
+                style={{
+                  borderColor:
+                    theme === "dark" || theme === "night" ? "#444" : "#d1d5db",
+                  color: currentTheme.text,
+                }}
+              >
+                <List className="h-4 w-4 mr-2" />
+                Chapters
+              </Button>
 
               {/* Reading Settings */}
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    <Settings className="h-4 w-4" />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent>
-                  <SheetHeader>
-                    <SheetTitle>Reading Settings</SheetTitle>
-                  </SheetHeader>
-                  <div className="mt-6 space-y-6">
-                    <div>
-                      <label className="text-sm font-medium">Font Size</label>
-                      <div className="flex items-center gap-2 mt-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={decreaseFontSize}
-                        >
-                          A-
-                        </Button>
-                        <span className="text-sm">{fontSize}px</span>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={increaseFontSize}
-                        >
-                          A+
-                        </Button>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="text-sm font-medium">Font Family</label>
-                      <div className="grid grid-cols-2 gap-2 mt-2">
-                        <Button
-                          variant={fontFamily === "serif" ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => setFontFamily("serif")}
-                        >
-                          Serif
-                        </Button>
-                        <Button
-                          variant={
-                            fontFamily === "sans-serif" ? "default" : "outline"
-                          }
-                          size="sm"
-                          onClick={() => setFontFamily("sans-serif")}
-                        >
-                          Sans
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </SheetContent>
-              </Sheet>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowSettingsDialog(true)}
+                style={{
+                  borderColor:
+                    theme === "dark" || theme === "night" ? "#444" : "#d1d5db",
+                  color: currentTheme.text,
+                }}
+              >
+                <Settings className="h-4 w-4" />
+              </Button>
             </div>
           </div>
         </div>
@@ -8543,34 +8763,64 @@ export function StoryReaderPage() {
       {/* Reader Content */}
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">
+          <h1
+            className="text-3xl md:text-4xl font-bold mb-2"
+            style={{ color: currentTheme.text }}
+          >
             {currentChapter.title}
           </h1>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <div
+            className="flex items-center gap-4 text-sm"
+            style={{ color: currentTheme.secondaryText }}
+          >
             <span>
               Chapter {currentChapterIndex + 1} of {chapters.length}
             </span>
-            <Badge variant="secondary">
+            <Badge
+              variant="secondary"
+              style={{
+                backgroundColor:
+                  theme === "dark" || theme === "night" ? "#333" : "#f3f4f6",
+                color: currentTheme.secondaryText,
+              }}
+            >
               <BookOpen className="h-3 w-3 mr-1" />
               {currentChapter.reads_count} reads
             </Badge>
           </div>
         </div>
 
-        <Card className="mb-8">
-          <CardContent className="p-8">
+        <Card
+          className="mb-8 border-0 shadow-none"
+          style={{
+            backgroundColor: currentTheme.background,
+          }}
+        >
+          <CardContent className="p-0">
             <div
               style={{
                 fontSize: `${fontSize}px`,
-                fontFamily: fontFamily,
-                lineHeight: 1.8,
+                fontFamily:
+                  fontFamily === "serif"
+                    ? "Georgia, 'Times New Roman', serif"
+                    : fontFamily === "sans-serif"
+                    ? "'Inter', system-ui, sans-serif"
+                    : "'Courier New', monospace",
+                lineHeight: lineHeight,
+                textAlign: textAlign,
+                color: currentTheme.text,
               }}
               className="prose prose-lg dark:prose-invert max-w-none"
             >
               {currentChapter.content ? (
-                <div className="whitespace-pre-wrap">{currentChapter.content}</div>
+                <div className="whitespace-pre-wrap">
+                  {currentChapter.content}
+                </div>
               ) : (
-                <p className="text-muted-foreground italic">
+                <p
+                  className="italic"
+                  style={{ color: currentTheme.secondaryText }}
+                >
                   No content available for this chapter.
                 </p>
               )}
@@ -8584,12 +8834,21 @@ export function StoryReaderPage() {
             variant="outline"
             onClick={goToPreviousChapter}
             disabled={!hasPreviousChapter}
+            style={{
+              borderColor:
+                theme === "dark" || theme === "night" ? "#444" : "#d1d5db",
+              color: currentTheme.text,
+              opacity: !hasPreviousChapter ? 0.5 : 1,
+            }}
           >
             <ChevronLeft className="h-4 w-4 mr-2" />
             Previous Chapter
           </Button>
 
-          <span className="text-sm text-muted-foreground">
+          <span
+            className="text-sm"
+            style={{ color: currentTheme.secondaryText }}
+          >
             {currentChapterIndex + 1} / {chapters.length}
           </span>
 
@@ -8597,6 +8856,12 @@ export function StoryReaderPage() {
             variant="outline"
             onClick={goToNextChapter}
             disabled={!hasNextChapter}
+            style={{
+              borderColor:
+                theme === "dark" || theme === "night" ? "#444" : "#d1d5db",
+              color: currentTheme.text,
+              opacity: !hasNextChapter ? 0.5 : 1,
+            }}
           >
             Next Chapter
             <ChevronRight className="h-4 w-4 ml-2" />
@@ -8605,12 +8870,22 @@ export function StoryReaderPage() {
 
         {/* End of Story */}
         {!hasNextChapter && (
-          <Card className="bg-muted">
+          <Card
+            style={{
+              backgroundColor:
+                theme === "dark" || theme === "night" ? "#1f1f1f" : "#f9fafb",
+              borderColor:
+                theme === "dark" || theme === "night" ? "#333" : "#e5e5e5",
+            }}
+          >
             <CardContent className="p-6 text-center">
-              <h3 className="text-lg font-semibold mb-2">
+              <h3
+                className="text-lg font-semibold mb-2"
+                style={{ color: currentTheme.text }}
+              >
                 You've reached the end!
               </h3>
-              <p className="text-muted-foreground mb-4">
+              <p className="mb-4" style={{ color: currentTheme.secondaryText }}>
                 Thanks for reading {story.title}
               </p>
               <div className="flex justify-center gap-2">
@@ -8625,6 +8900,387 @@ export function StoryReaderPage() {
           </Card>
         )}
       </main>
+
+      {/* Settings Dialog - Fixed with visible sliders */}
+      <Dialog open={showSettingsDialog} onOpenChange={setShowSettingsDialog}>
+        <DialogContent
+          className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto"
+          style={{
+            backgroundColor:
+              theme === "dark" || theme === "night" ? "#1f1f1f" : "white",
+            color: currentTheme.text,
+            borderColor:
+              theme === "dark" || theme === "night" ? "#333" : "#e5e5e5",
+          }}
+        >
+          <DialogHeader>
+            <DialogTitle style={{ color: currentTheme.text }}>
+              Reading Settings
+            </DialogTitle>
+            <DialogDescription style={{ color: currentTheme.secondaryText }}>
+              Customize your reading experience
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6 py-4">
+            {/* Theme Selection */}
+            <div>
+              <Label
+                className="text-base font-medium mb-3 block"
+                style={{ color: currentTheme.text }}
+              >
+                Theme
+              </Label>
+              <div className="grid grid-cols-2 gap-2">
+                {Object.entries(readingThemes).map(([key, themeOption]) => (
+                  <button
+                    key={key}
+                    onClick={() => setTheme(key as keyof typeof readingThemes)}
+                    className={cn(
+                      "p-3 rounded-lg border-2 transition-all",
+                      theme === key
+                        ? "border-orange-500 shadow-md"
+                        : "border-gray-200 hover:border-gray-300"
+                    )}
+                    style={{
+                      backgroundColor: themeOption.background,
+                      color: themeOption.text,
+                      borderColor:
+                        theme === key ? currentTheme.sliderThumb : undefined,
+                    }}
+                  >
+                    <div className="flex items-center justify-center gap-2">
+                      {key === "light" && <Sun className="h-4 w-4" />}
+                      {key === "dark" && <Moon className="h-4 w-4" />}
+                      {key === "sepia" && <BookOpen className="h-4 w-4" />}
+                      {key === "night" && <Moon className="h-4 w-4" />}
+                      <span className="text-sm font-medium">
+                        {themeOption.name}
+                      </span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <Separator style={{ backgroundColor: currentTheme.sliderTrack }} />
+
+            {/* Font Size with Fixed Slider */}
+            <div>
+              <Label
+                className="text-base font-medium mb-3 block"
+                style={{ color: currentTheme.text }}
+              >
+                Font Size: {fontSize}px
+              </Label>
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setFontSize(Math.max(12, fontSize - 2))}
+                  className="h-9 w-9 p-0"
+                  style={{
+                    borderColor: currentTheme.sliderTrack,
+                    color: currentTheme.text,
+                  }}
+                >
+                  <Minus className="h-4 w-4" />
+                </Button>
+
+                {/* Custom HTML Range Input for better visibility */}
+                <input
+                  type="range"
+                  min={12}
+                  max={32}
+                  step={1}
+                  value={fontSize}
+                  onChange={(e) => setFontSize(Number(e.target.value))}
+                  className="flex-1"
+                  style={{
+                    background: `linear-gradient(to right, ${
+                      currentTheme.sliderThumb
+                    } 0%, ${currentTheme.sliderThumb} ${
+                      ((fontSize - 12) / 20) * 100
+                    }%, ${currentTheme.sliderTrack} ${
+                      ((fontSize - 12) / 20) * 100
+                    }%, ${currentTheme.sliderTrack} 100%)`,
+                    height: "6px",
+                    borderRadius: "3px",
+                    outline: "none",
+                    WebkitAppearance: "none",
+                    cursor: "pointer",
+                  }}
+                />
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setFontSize(Math.min(32, fontSize + 2))}
+                  className="h-9 w-9 p-0"
+                  style={{
+                    borderColor: currentTheme.sliderTrack,
+                    color: currentTheme.text,
+                  }}
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+              <div
+                className="mt-2 p-3 rounded-lg border"
+                style={{
+                  backgroundColor:
+                    theme === "dark" || theme === "night"
+                      ? "#2a2a2a"
+                      : "#f9f9f9",
+                  borderColor: currentTheme.sliderTrack,
+                  color: currentTheme.text,
+                }}
+              >
+                <p style={{ fontSize: `${fontSize}px` }}>
+                  Preview: The quick brown fox jumps over the lazy dog.
+                </p>
+              </div>
+            </div>
+
+            <Separator style={{ backgroundColor: currentTheme.sliderTrack }} />
+
+            {/* Line Height with Fixed Slider */}
+            <div>
+              <Label
+                className="text-base font-medium mb-3 block"
+                style={{ color: currentTheme.text }}
+              >
+                Line Height: {lineHeight.toFixed(1)}
+              </Label>
+
+              {/* Custom HTML Range Input */}
+              <input
+                type="range"
+                min={1.2}
+                max={2.5}
+                step={0.1}
+                value={lineHeight}
+                onChange={(e) => setLineHeight(Number(e.target.value))}
+                className="w-full"
+                style={{
+                  background: `linear-gradient(to right, ${
+                    currentTheme.sliderThumb
+                  } 0%, ${currentTheme.sliderThumb} ${
+                    ((lineHeight - 1.2) / 1.3) * 100
+                  }%, ${currentTheme.sliderTrack} ${
+                    ((lineHeight - 1.2) / 1.3) * 100
+                  }%, ${currentTheme.sliderTrack} 100%)`,
+                  height: "6px",
+                  borderRadius: "3px",
+                  outline: "none",
+                  WebkitAppearance: "none",
+                  cursor: "pointer",
+                }}
+              />
+            </div>
+
+            <Separator style={{ backgroundColor: currentTheme.sliderTrack }} />
+
+            {/* Font Family */}
+            <div>
+              <Label
+                className="text-base font-medium mb-3 block"
+                style={{ color: currentTheme.text }}
+              >
+                Font Family
+              </Label>
+              <RadioGroup value={fontFamily} onValueChange={setFontFamily}>
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem
+                      value="serif"
+                      id="serif"
+                      style={{
+                        borderColor: currentTheme.sliderTrack,
+                      }}
+                    />
+                    <Label
+                      htmlFor="serif"
+                      className="font-serif cursor-pointer"
+                      style={{ color: currentTheme.text }}
+                    >
+                      Serif (Georgia)
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem
+                      value="sans-serif"
+                      id="sans-serif"
+                      style={{
+                        borderColor: currentTheme.sliderTrack,
+                      }}
+                    />
+                    <Label
+                      htmlFor="sans-serif"
+                      className="cursor-pointer"
+                      style={{ color: currentTheme.text }}
+                    >
+                      Sans-serif (Inter)
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem
+                      value="monospace"
+                      id="monospace"
+                      style={{
+                        borderColor: currentTheme.sliderTrack,
+                      }}
+                    />
+                    <Label
+                      htmlFor="monospace"
+                      className="font-mono cursor-pointer"
+                      style={{ color: currentTheme.text }}
+                    >
+                      Monospace (Courier)
+                    </Label>
+                  </div>
+                </div>
+              </RadioGroup>
+            </div>
+
+            <Separator style={{ backgroundColor: currentTheme.sliderTrack }} />
+
+            {/* Text Alignment */}
+            <div>
+              <Label
+                className="text-base font-medium mb-3 block"
+                style={{ color: currentTheme.text }}
+              >
+                Text Alignment
+              </Label>
+              <div className="grid grid-cols-3 gap-2">
+                <Button
+                  variant={textAlign === "left" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setTextAlign("left")}
+                  className="w-full"
+                  style={{
+                    backgroundColor:
+                      textAlign === "left"
+                        ? currentTheme.sliderThumb
+                        : "transparent",
+                    borderColor: currentTheme.sliderTrack,
+                    color: textAlign === "left" ? "white" : currentTheme.text,
+                  }}
+                >
+                  <AlignLeft className="h-4 w-4 mr-2" />
+                  Left
+                </Button>
+                <Button
+                  variant={textAlign === "center" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setTextAlign("center")}
+                  className="w-full"
+                  style={{
+                    backgroundColor:
+                      textAlign === "center"
+                        ? currentTheme.sliderThumb
+                        : "transparent",
+                    borderColor: currentTheme.sliderTrack,
+                    color: textAlign === "center" ? "white" : currentTheme.text,
+                  }}
+                >
+                  <AlignCenter className="h-4 w-4 mr-2" />
+                  Center
+                </Button>
+                <Button
+                  variant={textAlign === "justify" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setTextAlign("justify")}
+                  className="w-full"
+                  style={{
+                    backgroundColor:
+                      textAlign === "justify"
+                        ? currentTheme.sliderThumb
+                        : "transparent",
+                    borderColor: currentTheme.sliderTrack,
+                    color:
+                      textAlign === "justify" ? "white" : currentTheme.text,
+                  }}
+                >
+                  <AlignJustify className="h-4 w-4 mr-2" />
+                  Justify
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className="flex justify-between pt-4 border-t"
+            style={{ borderColor: currentTheme.sliderTrack }}
+          >
+            <Button
+              variant="outline"
+              onClick={resetSettings}
+              style={{
+                borderColor: currentTheme.sliderTrack,
+                color: currentTheme.text,
+              }}
+            >
+              Reset to Default
+            </Button>
+            <Button
+              onClick={() => setShowSettingsDialog(false)}
+              style={{
+                backgroundColor: currentTheme.sliderThumb,
+                color: "white",
+              }}
+            >
+              Done
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Chapter List Sheet */}
+      <Sheet open={showChapterList} onOpenChange={setShowChapterList}>
+        <SheetContent
+          side="left"
+          className="w-[300px] sm:w-[400px]"
+          style={{
+            backgroundColor: currentTheme.background,
+            color: currentTheme.text,
+          }}
+        >
+          <SheetHeader>
+            <SheetTitle style={{ color: currentTheme.text }}>
+              Chapters
+            </SheetTitle>
+          </SheetHeader>
+          <div className="mt-6 space-y-2 max-h-[calc(100vh-8rem)] overflow-y-auto">
+            {chapters.map((chapter, index) => (
+              <button
+                key={chapter.id}
+                onClick={() => goToChapter(index)}
+                className={cn(
+                  "w-full text-left p-3 rounded-lg transition-colors",
+                  index === currentChapterIndex
+                    ? "bg-orange-500 text-white"
+                    : theme === "dark" || theme === "night"
+                    ? "hover:bg-gray-800"
+                    : "hover:bg-gray-100"
+                )}
+                style={{
+                  backgroundColor:
+                    index === currentChapterIndex ? undefined : "transparent",
+                  color:
+                    index === currentChapterIndex
+                      ? undefined
+                      : currentTheme.text,
+                }}
+              >
+                <div className="font-medium">Chapter {index + 1}</div>
+                <div className="text-sm opacity-90">{chapter.title}</div>
+              </button>
+            ))}
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
@@ -9915,6 +10571,344 @@ export function MainLayout({
 
 ### 📁 src\components\ui
 
+#### 📄 src\components\ui\auth-skeleton.tsx
+<a name='src-components-ui-auth-skeletontsx'></a>
+
+**Path:** `src\components\ui\auth-skeleton.tsx`
+
+```tsx
+import { Skeleton } from "./skeleton";
+
+export function AuthFormSkeleton() {
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
+      <div className="max-w-md w-full space-y-8">
+        <div className="bg-white py-8 px-6 shadow-xl rounded-lg sm:px-10">
+          {/* Logo Skeleton */}
+          <div className="flex justify-center mb-6">
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-10 w-10" variant="rounded" />
+              <div className="space-y-1">
+                <Skeleton className="h-6 w-24" variant="text" />
+                <Skeleton className="h-3 w-20" variant="text" />
+              </div>
+            </div>
+          </div>
+
+          {/* Header Skeleton */}
+          <div className="text-center mb-8">
+            <Skeleton className="h-8 w-48 mx-auto mb-2" variant="text" />
+            <Skeleton className="h-4 w-64 mx-auto" variant="text" />
+          </div>
+
+          {/* Form Fields Skeleton */}
+          <div className="space-y-5">
+            {/* Field 1 */}
+            <div>
+              <Skeleton className="h-4 w-24 mb-2" variant="text" />
+              <Skeleton className="h-10 w-full" variant="rounded" />
+            </div>
+
+            {/* Field 2 */}
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <Skeleton className="h-4 w-24" variant="text" />
+                <Skeleton className="h-4 w-28" variant="text" />
+              </div>
+              <Skeleton className="h-10 w-full" variant="rounded" />
+            </div>
+
+            {/* Field 3 */}
+            <div>
+              <Skeleton className="h-4 w-32 mb-2" variant="text" />
+              <Skeleton className="h-10 w-full" variant="rounded" />
+            </div>
+
+            {/* Submit Button */}
+            <Skeleton className="h-10 w-full" variant="rounded" />
+          </div>
+
+          {/* Divider and Footer Link */}
+          <div className="mt-6">
+            <div className="relative mb-6">
+              <div className="absolute inset-0 flex items-center">
+                <Skeleton className="h-px w-full" />
+              </div>
+              <div className="relative flex justify-center">
+                <div className="px-2 bg-white">
+                  <Skeleton className="h-4 w-32" variant="text" />
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <Skeleton className="h-4 w-32 mx-auto" variant="text" />
+            </div>
+          </div>
+        </div>
+
+        {/* Terms and Privacy Links */}
+        <div className="text-center">
+          <Skeleton className="h-3 w-64 mx-auto" variant="text" />
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+#### 📄 src\components\ui\create-story-skeleton.tsx
+<a name='src-components-ui-create-story-skeletontsx'></a>
+
+**Path:** `src\components\ui\create-story-skeleton.tsx`
+
+```tsx
+import { Skeleton } from "./skeleton";
+import { Card } from "./card";
+
+export function CreateStorySkeleton() {
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-6">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <Skeleton className="h-8 w-48" variant="text" />
+        <div className="flex gap-2">
+          <Skeleton className="h-9 w-20" variant="rounded" />
+          <Skeleton className="h-9 w-24" variant="rounded" />
+          <Skeleton className="h-9 w-32" variant="rounded" />
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <Skeleton className="h-10 w-full max-w-md mb-6" variant="rounded" />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Cover Upload */}
+        <Card>
+          <div className="p-4">
+            <Skeleton className="h-6 w-32 mb-4" variant="text" />
+            <Skeleton className="aspect-[2/3]" variant="rounded" />
+          </div>
+        </Card>
+
+        {/* Form Fields */}
+        <div className="space-y-4">
+          <div>
+            <Skeleton className="h-4 w-16 mb-2" variant="text" />
+            <Skeleton className="h-10 w-full" variant="rounded" />
+          </div>
+
+          <div>
+            <Skeleton className="h-4 w-24 mb-2" variant="text" />
+            <Skeleton className="h-24 w-full" variant="rounded" />
+          </div>
+
+          <div>
+            <Skeleton className="h-4 w-20 mb-2" variant="text" />
+            <Skeleton className="h-10 w-full" variant="rounded" />
+          </div>
+
+          <div>
+            <Skeleton className="h-4 w-12 mb-2" variant="text" />
+            <div className="flex gap-2">
+              <Skeleton className="h-10 flex-1" variant="rounded" />
+              <Skeleton className="h-10 w-20" variant="rounded" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+#### 📄 src\components\ui\edit-story-skeleton.tsx
+<a name='src-components-ui-edit-story-skeletontsx'></a>
+
+**Path:** `src\components\ui\edit-story-skeleton.tsx`
+
+```tsx
+import { Skeleton } from "./skeleton";
+import { Card } from "./card";
+
+export function EditStorySkeleton() {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Skeleton className="h-8 w-24" variant="rounded" />
+              <Skeleton className="h-8 w-px" />
+              <div>
+                <Skeleton className="h-6 w-24" variant="text" />
+                <Skeleton className="h-3 w-32 mt-1" variant="text" />
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Skeleton className="h-9 w-24" variant="rounded" />
+              <Skeleton className="h-9 w-32" variant="rounded" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        {/* Tabs */}
+        <Skeleton className="h-10 w-full max-w-md mb-6" variant="rounded" />
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Cover Image Section */}
+          <Card className="lg:col-span-1 bg-white">
+            <div className="p-4">
+              <Skeleton className="h-6 w-32 mb-2" variant="text" />
+              <Skeleton className="h-4 w-full mb-4" variant="text" />
+              <Skeleton className="aspect-[2/3]" variant="rounded" />
+            </div>
+          </Card>
+
+          {/* Story Info */}
+          <div className="lg:col-span-2 space-y-6">
+            <Card className="bg-white">
+              <div className="p-6 space-y-4">
+                <Skeleton className="h-6 w-40 mb-4" variant="text" />
+
+                {/* Title */}
+                <div>
+                  <Skeleton className="h-4 w-16 mb-2" variant="text" />
+                  <Skeleton className="h-10 w-full" variant="rounded" />
+                </div>
+
+                {/* Description */}
+                <div>
+                  <Skeleton className="h-4 w-24 mb-2" variant="text" />
+                  <Skeleton className="h-32 w-full" variant="rounded" />
+                </div>
+
+                {/* Genre */}
+                <div>
+                  <Skeleton className="h-4 w-16 mb-2" variant="text" />
+                  <Skeleton className="h-10 w-full" variant="rounded" />
+                </div>
+
+                {/* Tags */}
+                <div>
+                  <Skeleton className="h-4 w-12 mb-2" variant="text" />
+                  <div className="flex gap-2">
+                    <Skeleton className="h-10 flex-1" variant="rounded" />
+                    <Skeleton className="h-10 w-20" variant="rounded" />
+                  </div>
+                  <div className="flex gap-2 mt-2">
+                    {Array.from({ length: 3 }).map((_, i) => (
+                      <Skeleton
+                        key={i}
+                        className="h-6 w-16"
+                        variant="rounded"
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+#### 📄 src\components\ui\feed-skeleton.tsx
+<a name='src-components-ui-feed-skeletontsx'></a>
+
+**Path:** `src\components\ui\feed-skeleton.tsx`
+
+```tsx
+import { Skeleton } from "./skeleton";
+import { Card } from "./card";
+
+export function FeedSkeleton() {
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-6">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <Skeleton className="h-8 w-32" variant="text" />
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-9 w-20" variant="rounded" />
+          <Skeleton className="h-9 w-32" variant="rounded" />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="lg:col-span-3">
+          {/* Tabs */}
+          <Skeleton className="h-10 w-full mb-6" variant="rounded" />
+
+          {/* Grid of story cards */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                className="group relative aspect-[4/5] overflow-hidden rounded-lg bg-gray-100"
+              >
+                <Skeleton className="h-full w-full" variant="rectangular" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Sidebar */}
+        <div className="hidden lg:block space-y-4">
+          {/* User Card */}
+          <Card className="p-4">
+            <div className="flex items-center gap-3">
+              <Skeleton className="h-14 w-14" variant="circular" />
+              <div className="flex-1">
+                <Skeleton className="h-4 w-24 mb-2" variant="text" />
+                <Skeleton className="h-3 w-32" variant="text" />
+              </div>
+            </div>
+            <Skeleton className="h-9 w-full mt-4" variant="rounded" />
+          </Card>
+
+          {/* Suggested Authors */}
+          <Card className="p-4">
+            <div className="flex items-center justify-between mb-4">
+              <Skeleton className="h-5 w-32" variant="text" />
+              <Skeleton className="h-4 w-12" variant="text" />
+            </div>
+            <div className="space-y-3">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Skeleton className="h-8 w-8" variant="circular" />
+                    <div>
+                      <Skeleton className="h-3 w-20 mb-1" variant="text" />
+                      <Skeleton className="h-3 w-28" variant="text" />
+                    </div>
+                  </div>
+                  <Skeleton className="h-7 w-16" variant="rounded" />
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
 #### 📄 src\components\ui\file-dropzone.tsx
 <a name='src-components-ui-file-dropzonetsx'></a>
 
@@ -10456,30 +11450,124 @@ export function Logo({
 **Path:** `src\components\ui\profile-skeleton.tsx`
 
 ```tsx
-// src/components/ui/profile-skeleton.tsx
 import { Skeleton } from "./skeleton";
+import { Card } from "./card";
 
 export function ProfileSkeleton() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
-      <div className="flex items-start gap-8 mb-8">
-        <Skeleton className="h-32 w-32" variant="circular" />
-        <div className="flex-1 space-y-3">
-          <Skeleton className="h-8 w-48" variant="text" />
-          <Skeleton className="h-4 w-32" variant="text" />
+      {/* Profile Header Skeleton */}
+      <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-8 mb-8">
+        <Skeleton
+          className="h-28 w-28 sm:h-32 sm:w-32 md:h-40 md:w-40"
+          variant="circular"
+        />
+
+        <div className="flex-1 w-full space-y-3">
+          <div className="flex flex-col md:flex-row md:items-center gap-4">
+            <Skeleton className="h-8 w-32" variant="text" />
+            <div className="flex gap-2">
+              <Skeleton className="h-8 w-24" variant="rounded" />
+              <Skeleton className="h-8 w-8" variant="rounded" />
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div className="flex gap-6">
+            <Skeleton className="h-5 w-20" variant="text" />
+            <Skeleton className="h-5 w-24" variant="text" />
+            <Skeleton className="h-5 w-24" variant="text" />
+          </div>
+
+          {/* Bio */}
           <Skeleton className="h-4 w-full max-w-md" variant="text" />
+          <Skeleton className="h-4 w-3/4 max-w-md" variant="text" />
+
+          {/* Additional Info */}
           <div className="flex gap-4">
-            <Skeleton className="h-9 w-24" variant="rounded" />
-            <Skeleton className="h-9 w-24" variant="rounded" />
+            <Skeleton className="h-4 w-32" variant="text" />
+            <Skeleton className="h-6 w-24" variant="rounded" />
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      {/* Tabs Skeleton */}
+      <Skeleton className="h-10 w-full max-w-xs mb-6" variant="rounded" />
+
+      {/* Stories Grid Skeleton */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1 md:gap-4">
         {Array.from({ length: 6 }).map((_, i) => (
           <Skeleton key={i} className="aspect-[4/5]" variant="rounded" />
         ))}
       </div>
+    </div>
+  );
+}
+```
+
+---
+
+#### 📄 src\components\ui\reader-skeleton.tsx
+<a name='src-components-ui-reader-skeletontsx'></a>
+
+**Path:** `src\components\ui\reader-skeleton.tsx`
+
+```tsx
+import { Skeleton } from "./skeleton";
+import { Card } from "./card";
+
+export function ReaderSkeleton() {
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Reader Header */}
+      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Skeleton className="h-8 w-20" variant="rounded" />
+              <div className="hidden md:block space-y-1">
+                <Skeleton className="h-5 w-48" variant="text" />
+                <Skeleton className="h-4 w-32" variant="text" />
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Skeleton className="h-8 w-24" variant="rounded" />
+              <Skeleton className="h-8 w-8" variant="rounded" />
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Reader Content */}
+      <main className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="mb-8">
+          <Skeleton className="h-10 w-3/4 mb-2" variant="text" />
+          <div className="flex gap-4">
+            <Skeleton className="h-5 w-32" variant="text" />
+            <Skeleton className="h-5 w-24" variant="rounded" />
+          </div>
+        </div>
+
+        <Card>
+          <div className="p-8 space-y-4">
+            {Array.from({ length: 15 }).map((_, i) => (
+              <Skeleton
+                key={i}
+                className="h-4 w-full"
+                variant="text"
+                style={{ width: `${Math.random() * 20 + 80}%` }}
+              />
+            ))}
+          </div>
+        </Card>
+
+        {/* Navigation */}
+        <div className="flex justify-between mt-8">
+          <Skeleton className="h-10 w-36" variant="rounded" />
+          <Skeleton className="h-5 w-12" variant="text" />
+          <Skeleton className="h-10 w-36" variant="rounded" />
+        </div>
+      </main>
     </div>
   );
 }
@@ -10493,7 +11581,6 @@ export function ProfileSkeleton() {
 **Path:** `src\components\ui\story-card-skeleton.tsx`
 
 ```tsx
-// src/components/ui/story-card-skeleton.tsx
 import { Skeleton } from "./skeleton";
 import { Card } from "./card";
 
@@ -10514,6 +11601,23 @@ export function StoryCardSkeleton({
           <Skeleton className="h-3 w-1/2" variant="text" />
         </div>
       </div>
+    );
+  }
+
+  if (variant === "featured") {
+    return (
+      <Card className="overflow-hidden">
+        <Skeleton className="aspect-[16/9] w-full" variant="rectangular" />
+        <div className="p-4 space-y-3">
+          <Skeleton className="h-6 w-20" variant="rounded" />
+          <Skeleton className="h-5 w-3/4" variant="text" />
+          <Skeleton className="h-4 w-full" variant="text" />
+          <div className="flex justify-between">
+            <Skeleton className="h-3 w-16" variant="text" />
+            <Skeleton className="h-3 w-16" variant="text" />
+          </div>
+        </div>
+      </Card>
     );
   }
 
@@ -10729,6 +11833,92 @@ export function StoryCard({
         </div>
       </div>
     </Link>
+  );
+}
+```
+
+---
+
+#### 📄 src\components\ui\story-detail-skeleton.tsx
+<a name='src-components-ui-story-detail-skeletontsx'></a>
+
+**Path:** `src\components\ui\story-detail-skeleton.tsx`
+
+```tsx
+import { Skeleton } from "./skeleton";
+import { Card } from "./card";
+
+export function StoryDetailSkeleton() {
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+      {/* Hero Section */}
+      <div className="relative">
+        <Skeleton
+          className="absolute inset-0 h-[500px]"
+          variant="rectangular"
+        />
+        <div className="absolute inset-0 h-[500px] bg-gradient-to-b from-black/70 via-black/50 to-background" />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 pt-8 pb-20">
+          <Skeleton className="h-9 w-20 mb-4" variant="rounded" />
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="flex justify-center lg:justify-start">
+              <Skeleton className="w-64 h-96 rounded-xl" variant="rounded" />
+            </div>
+
+            <div className="lg:col-span-2 space-y-6">
+              <div>
+                <Skeleton className="h-12 w-3/4 mb-3" variant="text" />
+                <Skeleton className="h-6 w-full mb-2" variant="text" />
+                <Skeleton className="h-6 w-5/6" variant="text" />
+              </div>
+
+              {/* Author Info */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                <div className="flex items-center gap-4">
+                  <Skeleton className="h-14 w-14" variant="circular" />
+                  <div>
+                    <Skeleton className="h-5 w-32 mb-2" variant="text" />
+                    <Skeleton className="h-4 w-48" variant="text" />
+                  </div>
+                  <Skeleton className="h-9 w-24 ml-auto" variant="rounded" />
+                </div>
+              </div>
+
+              {/* Stats Grid */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <Skeleton
+                    key={i}
+                    className="h-24 rounded-lg"
+                    variant="rounded"
+                  />
+                ))}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Skeleton className="h-11 w-36" variant="rounded" />
+                <Skeleton className="h-11 w-24" variant="rounded" />
+                <Skeleton className="h-11 w-24" variant="rounded" />
+                <Skeleton className="h-11 w-24" variant="rounded" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Content Area */}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <Card className="bg-white p-6">
+          <Skeleton className="h-6 w-32 mb-4" variant="text" />
+          <Skeleton className="h-4 w-full mb-2" variant="text" />
+          <Skeleton className="h-4 w-full mb-2" variant="text" />
+          <Skeleton className="h-4 w-3/4" variant="text" />
+        </Card>
+      </div>
+    </div>
   );
 }
 ```

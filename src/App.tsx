@@ -2,10 +2,12 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ToastProvider } from "@/components/ui/toast-provider";
+import { SettingsPage } from "./pages/SettingsPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
 import { useEffect } from "react";
+import { GoogleSuccessPage } from "./pages/auth/GoogleSuccessPage";
 
 // Pages
 import { HomePage } from "./pages/HomePage";
@@ -139,6 +141,14 @@ const App = () => {
               }
             />
             <Route
+              path="/auth/google-success"
+              element={
+                <PublicOnlyRoute>
+                  <GoogleSuccessPage />
+                </PublicOnlyRoute>
+              }
+            />
+            <Route
               path="/library"
               element={
                 <ProtectedRoute>
@@ -150,7 +160,7 @@ const App = () => {
               path="/settings"
               element={
                 <ProtectedRoute>
-                  <div>Settings Page (To be implemented)</div>
+                  <SettingsPage />
                 </ProtectedRoute>
               }
             />

@@ -6,6 +6,7 @@ import { authApi } from '@/apis/auth';
 interface AuthState {
   // State
   accessToken: string | null;
+  refreshToken: string | null;
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -14,6 +15,8 @@ interface AuthState {
   // Actions
   login: (email: string, password: string) => Promise<void>;
   signup: (username: string, email: string, password: string) => Promise<void>;
+  loginWithGoogle: () => void;
+  setTokens: (accessToken: string, refreshToken: string) => void;
   logout: () => void;
   fetchMe: () => Promise<void>;
   updateUser: (user: User) => void;
@@ -26,6 +29,7 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       // Initial state
       accessToken: null,
+      refreshToken: null,
       user: null,
       isAuthenticated: false,
       isLoading: false,
@@ -41,6 +45,7 @@ export const useAuthStore = create<AuthState>()(
           
           set({
             accessToken: tokenResponse.access_token,
+            refreshToken: null,
             user: userResponse,
             isAuthenticated: true,
             isLoading: false,
@@ -50,6 +55,7 @@ export const useAuthStore = create<AuthState>()(
           const errorMessage = error.details?.message || error.message || 'Login failed';
           set({
             accessToken: null,
+            refreshToken: null,
             user: null,
             isAuthenticated: false,
             isLoading: false,
@@ -79,9 +85,23 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
+      loginWithGoogle: () => {
+        // Redirect to backend Google OAuth endpoint
+        window.location.href = `${import.meta.env.VITE_API_URL || 'https://usman678zafar-storivault-backend.hf.space'}/auth/google/login`;
+      },
+
+      setTokens: (accessToken: string, refreshToken: string) => {
+        set({
+          accessToken,
+          refreshToken,
+          isAuthenticated: true
+        });
+      },
+
       logout: () => {
         set({
           accessToken: null,
+          refreshToken: null,
           user: null,
           isAuthenticated: false,
           error: null
@@ -131,6 +151,7 @@ export const useAuthStore = create<AuthState>()(
       name: 'auth-storage',
       partialize: (state) => ({
         accessToken: state.accessToken,
+        refreshToken: state.refreshToken,
         user: state.user,
         isAuthenticated: state.isAuthenticated
       })

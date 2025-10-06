@@ -163,3 +163,19 @@
   box-shadow: 0 0 0 9999em rgba(0, 0, 0, 0.5);
   overflow: hidden;
 }
+
+/* Add to the existing index.css */
+@layer components {
+  /* Settings page specific styles */
+  .settings-section {
+    @apply bg-white rounded-lg border shadow-sm;
+  }
+  
+  .settings-header {
+    @apply px-6 py-4 border-b;
+  }
+  
+  .settings-content {
+    @apply px-6 py-4;
+  }
+}
