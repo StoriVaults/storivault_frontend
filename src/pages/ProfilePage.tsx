@@ -110,10 +110,16 @@ export function ProfilePage() {
   const isOwnProfile = user?.username === username;
 
   useEffect(() => {
+    console.log('Profile Debug:', {
+      username,
+      userUsername: user?.username,
+      isOwnProfile,
+      user: { id: user?.id, username: user?.username, profile_pic: user?.profile_pic, cover_image: user?.cover_image }
+    });
     if (username) {
       fetchProfileData();
     }
-  }, [username]);
+  }, [username, user]);
 
   const fetchProfileData = async () => {
     if (!username) return;

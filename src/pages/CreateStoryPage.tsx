@@ -18,6 +18,8 @@ import {
   Plus,
   X,
   Image as ImageIcon,
+  BookOpen,
+  Settings,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -698,6 +700,7 @@ export function CreateStoryPage() {
             </Card>
           </TabsContent>
         </Tabs>
+        </div>
       </div>
     </MainLayout>
   );
