@@ -46,7 +46,7 @@ import { MainLayout } from "@/components/layout/main-layout";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useAuthStore } from "@/store/authStore";
 import { Story, User } from "@/types";
-import { storiesApi, usersApi } from "@/apis";
+import { storiesApi, usersApi, libraryApi } from "@/apis";
 import { UserController } from "@/controllers/userController";
 import { useUiStore } from "@/store/uiStore";
 import { formatDate, formatNumber } from "@/helper/formatting";
@@ -246,6 +246,19 @@ export function ProfilePage() {
 
   const fetchSavedStories = async () => {
     try {
+      // Try to load from backend first
+      try {
+        const response = await libraryApi.getSavedStories(1, 100);
+        setSavedStories(response.items);
+        // Update localStorage as backup
+        const savedIds = response.items.map(s => s.id);
+        localStorage.setItem("saved_stories", JSON.stringify(savedIds));
+        return;
+      } catch (error) {
+        console.error("Failed to fetch saved stories from backend:", error);
+      }
+
+      // Fallback to localStorage
       const savedIds = JSON.parse(
         localStorage.getItem("saved_stories") || "[]"
       );
@@ -594,10 +607,20 @@ export function ProfilePage() {
     }
   };
 
-  const handleRemoveFromSaved = (storyId: string) => {
+  const handleRemoveFromSaved = async (storyId: string) => {
+    try {
+      // Try to remove from backend
+      await libraryApi.removeStory(storyId);
+    } catch (error) {
+      console.error("Failed to remove from backend:", error);
+    }
+
+    // Update localStorage
     const savedIds = JSON.parse(localStorage.getItem("saved_stories") || "[]");
     const updated = savedIds.filter((id: string) => id !== storyId);
     localStorage.setItem("saved_stories", JSON.stringify(updated));
+
+    // Update UI
     setSavedStories((prev) => prev.filter((s) => s.id !== storyId));
 
     addToast({

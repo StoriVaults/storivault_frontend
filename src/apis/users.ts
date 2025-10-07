@@ -80,5 +80,17 @@ export const usersApi = {
   // Delete account
   deleteAccount: async (): Promise<void> => {
     await apiClient.delete('/users/me');
+  },
+
+  // Get user settings
+  getSettings: async (): Promise<any> => {
+    const response = await apiClient.get('/users/me/settings');
+    return response.data;
+  },
+
+  // Update user settings
+  updateSettings: async (settings: any): Promise<any> => {
+    const response = await apiClient.put('/users/me/settings', settings);
+    return response.data;
   }
 };

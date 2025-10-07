@@ -5,3 +5,4 @@ export * from './stories';
 export * from './chapters';
 export * from './uploads';
 export * from './votes';
+export * from './library';

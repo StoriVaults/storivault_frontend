@@ -147,36 +147,63 @@ export function SettingsPage() {
     loginAlerts: true,
   });
 
-  // Load saved settings
+  // Load saved settings from backend
   useEffect(() => {
-    const savedSettings = localStorage.getItem("user-settings");
-    if (savedSettings) {
+    const loadSettings = async () => {
       try {
-        const parsed = JSON.parse(savedSettings);
-        setSettings((prev) => ({ ...prev, ...parsed }));
+        // Try to load from backend first
+        const backendSettings = await usersApi.getSettings();
+        if (backendSettings && Object.keys(backendSettings).length > 0) {
+          setSettings((prev) => ({ ...prev, ...backendSettings }));
+          // Also save to localStorage as backup
+          localStorage.setItem("user-settings", JSON.stringify(backendSettings));
+        } else {
+          // Fallback to localStorage
+          const savedSettings = localStorage.getItem("user-settings");
+          if (savedSettings) {
+            try {
+              const parsed = JSON.parse(savedSettings);
+              setSettings((prev) => ({ ...prev, ...parsed }));
+            } catch (error) {
+              console.error("Failed to parse saved settings:", error);
+            }
+          }
+        }
       } catch (error) {
-        console.error("Failed to load settings:", error);
+        console.error("Failed to load settings from backend:", error);
+        // Fallback to localStorage
+        const savedSettings = localStorage.getItem("user-settings");
+        if (savedSettings) {
+          try {
+            const parsed = JSON.parse(savedSettings);
+            setSettings((prev) => ({ ...prev, ...parsed }));
+          } catch (error) {
+            console.error("Failed to parse saved settings:", error);
+          }
+        }
       }
-    }
 
-    // Load reading preferences
-    const readingPrefs = localStorage.getItem("reading-preferences");
-    if (readingPrefs) {
-      try {
-        const parsed = JSON.parse(readingPrefs);
-        setSettings((prev) => ({
-          ...prev,
-          fontSize:
-            parsed.fontSize === 18
-              ? "small"
-              : parsed.fontSize === 22
-              ? "large"
-              : "medium",
-        }));
-      } catch (error) {
-        console.error("Failed to load reading preferences:", error);
+      // Load reading preferences
+      const readingPrefs = localStorage.getItem("reading-preferences");
+      if (readingPrefs) {
+        try {
+          const parsed = JSON.parse(readingPrefs);
+          setSettings((prev) => ({
+            ...prev,
+            fontSize:
+              parsed.fontSize === 18
+                ? "small"
+                : parsed.fontSize === 22
+                ? "large"
+                : "medium",
+          }));
+        } catch (error) {
+          console.error("Failed to load reading preferences:", error);
+        }
       }
-    }
+    };
+
+    loadSettings();
   }, []);
 
   // Save settings to localStorage when they change
@@ -198,13 +225,22 @@ export function SettingsPage() {
   const handleSaveSettings = async () => {
     setIsSaving(true);
     try {
-      // Save settings to backend (when API is available)
-      // For now, just save to localStorage
       const settingsToSave = { ...settings };
       delete settingsToSave.currentPassword;
       delete settingsToSave.newPassword;
       delete settingsToSave.confirmPassword;
+      delete settingsToSave.email;
+      delete settingsToSave.username;
 
+      // Save settings to backend
+      try {
+        await usersApi.updateSettings(settingsToSave);
+      } catch (error) {
+        console.error("Failed to save settings to backend:", error);
+        // Continue anyway and save to localStorage
+      }
+
+      // Also save to localStorage as backup
       localStorage.setItem("user-settings", JSON.stringify(settingsToSave));
 
       // Apply theme
