@@ -395,31 +395,35 @@ export function SettingsPage() {
     <MainLayout showFooter={false}>
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
-        <div className="bg-white border-b">
-          <div className="max-w-5xl mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
-                  <ChevronLeft className="h-4 w-4 mr-2" />
-                  Back
+        <div className="bg-white border-b sticky top-0 z-40">
+          <div className="max-w-5xl mx-auto px-4 py-3 sm:py-4">
+            {/* Mobile Header - Stack vertically */}
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-3 min-w-0">
+                <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="flex-shrink-0">
+                  <ChevronLeft className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Back</span>
                 </Button>
-                <h1 className="text-xl font-bold">Settings</h1>
+                <h1 className="text-lg sm:text-xl font-bold truncate">Settings</h1>
               </div>
               {hasChanges && (
                 <Button
                   onClick={handleSaveSettings}
                   disabled={isSaving}
-                  className="bg-green-600 hover:bg-green-700"
+                  size="sm"
+                  className="bg-green-600 hover:bg-green-700 w-full sm:w-auto"
                 >
                   {isSaving ? (
                     <>
                       <LoadingSpinner size="sm" className="mr-2" />
-                      Saving...
+                      <span className="hidden sm:inline">Saving...</span>
+                      <span className="sm:hidden">Saving</span>
                     </>
                   ) : (
                     <>
                       <Save className="h-4 w-4 mr-2" />
-                      Save Changes
+                      <span className="hidden sm:inline">Save Changes</span>
+                      <span className="sm:hidden">Save</span>
                     </>
                   )}
                 </Button>
@@ -429,30 +433,48 @@ export function SettingsPage() {
         </div>
 
         {/* Main Content */}
-        <div className="max-w-5xl mx-auto px-4 py-6">
+        <div className="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="mb-6 bg-white">
-              <TabsTrigger value="account">
-                <User className="h-4 w-4 mr-2" />
-                Account
-              </TabsTrigger>
-              <TabsTrigger value="privacy">
-                <Eye className="h-4 w-4 mr-2" />
-                Privacy
-              </TabsTrigger>
-              <TabsTrigger value="notifications">
-                <Bell className="h-4 w-4 mr-2" />
-                Notifications
-              </TabsTrigger>
-              <TabsTrigger value="display">
-                <Monitor className="h-4 w-4 mr-2" />
-                Display
-              </TabsTrigger>
-              <TabsTrigger value="security">
-                <Shield className="h-4 w-4 mr-2" />
-                Security
-              </TabsTrigger>
-            </TabsList>
+            {/* Responsive Tab Navigation */}
+            <div className="mb-4 sm:mb-6">
+              <TabsList className="h-auto p-1 bg-white grid grid-cols-3 sm:flex sm:flex-wrap sm:w-auto">
+                <TabsTrigger
+                  value="account"
+                  className="flex-col sm:flex-row gap-1 sm:gap-2 text-xs sm:text-sm px-2 py-2.5 sm:px-4 h-auto"
+                >
+                  <User className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="truncate">Account</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="privacy"
+                  className="flex-col sm:flex-row gap-1 sm:gap-2 text-xs sm:text-sm px-2 py-2.5 sm:px-4 h-auto"
+                >
+                  <Eye className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="truncate">Privacy</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="notifications"
+                  className="flex-col sm:flex-row gap-1 sm:gap-2 text-xs sm:text-sm px-2 py-2.5 sm:px-4 h-auto"
+                >
+                  <Bell className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="truncate">Notifications</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="display"
+                  className="flex-col sm:flex-row gap-1 sm:gap-2 text-xs sm:text-sm px-2 py-2.5 sm:px-4 h-auto"
+                >
+                  <Monitor className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="truncate">Display</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="security"
+                  className="flex-col sm:flex-row gap-1 sm:gap-2 text-xs sm:text-sm px-2 py-2.5 sm:px-4 h-auto"
+                >
+                  <Shield className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="truncate">Security</span>
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
             {/* Account Settings */}
             <TabsContent value="account" className="space-y-6">
@@ -479,7 +501,7 @@ export function SettingsPage() {
 
                   <div>
                     <Label htmlFor="email">Email Address</Label>
-                    <div className="flex gap-2 mt-1">
+                    <div className="flex flex-col sm:flex-row gap-2 mt-1">
                       <Input
                         id="email"
                         type="email"
@@ -487,9 +509,9 @@ export function SettingsPage() {
                         disabled
                         className="flex-1 bg-gray-50"
                       />
-                      <Button variant="outline" size="sm" disabled>
-                        <Mail className="h-4 w-4 mr-2" />
-                        Verify
+                      <Button variant="outline" size="sm" disabled className="w-full sm:w-auto">
+                        <Mail className="h-4 w-4 sm:mr-2" />
+                        <span className="sm:inline">Verify</span>
                       </Button>
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
@@ -596,38 +618,38 @@ export function SettingsPage() {
                       }
                       className="mt-2 space-y-2"
                     >
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="public" id="public" />
-                        <Label htmlFor="public" className="font-normal">
-                          <div>
-                            <Globe className="h-4 w-4 inline mr-2" />
-                            Public
+                      <div className="flex items-start space-x-3">
+                        <RadioGroupItem value="public" id="public" className="mt-0.5" />
+                        <Label htmlFor="public" className="font-normal cursor-pointer">
+                          <div className="flex items-center gap-2">
+                            <Globe className="h-4 w-4 flex-shrink-0" />
+                            <span className="font-medium">Public</span>
                           </div>
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-gray-500 mt-1 leading-relaxed">
                             Anyone can view your profile
                           </p>
                         </Label>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="friends" id="friends" />
-                        <Label htmlFor="friends" className="font-normal">
-                          <div>
-                            <User className="h-4 w-4 inline mr-2" />
-                            Following Only
+                      <div className="flex items-start space-x-3">
+                        <RadioGroupItem value="friends" id="friends" className="mt-0.5" />
+                        <Label htmlFor="friends" className="font-normal cursor-pointer">
+                          <div className="flex items-center gap-2">
+                            <User className="h-4 w-4 flex-shrink-0" />
+                            <span className="font-medium">Following Only</span>
                           </div>
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-gray-500 mt-1 leading-relaxed">
                             Only people you follow can see your full profile
                           </p>
                         </Label>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="private" id="private" />
-                        <Label htmlFor="private" className="font-normal">
-                          <div>
-                            <Lock className="h-4 w-4 inline mr-2" />
-                            Private
+                      <div className="flex items-start space-x-3">
+                        <RadioGroupItem value="private" id="private" className="mt-0.5" />
+                        <Label htmlFor="private" className="font-normal cursor-pointer">
+                          <div className="flex items-center gap-2">
+                            <Lock className="h-4 w-4 flex-shrink-0" />
+                            <span className="font-medium">Private</span>
                           </div>
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-gray-500 mt-1 leading-relaxed">
                             Only you can see your profile
                           </p>
                         </Label>
@@ -637,11 +659,11 @@ export function SettingsPage() {
 
                   <Separator />
 
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-1">
+                  <div className="space-y-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="space-y-1 min-w-0 flex-1">
                         <Label htmlFor="show-email">Show Email Address</Label>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-gray-500 leading-relaxed">
                           Display your email on your profile
                         </p>
                       </div>
@@ -651,15 +673,16 @@ export function SettingsPage() {
                         onCheckedChange={(checked) =>
                           handleSettingChange("showEmail", checked)
                         }
+                        className="flex-shrink-0 mt-1"
                       />
                     </div>
 
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-1">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="space-y-1 min-w-0 flex-1">
                         <Label htmlFor="show-activity">
                           Show Reading Activity
                         </Label>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-gray-500 leading-relaxed">
                           Let others see what you're reading
                         </p>
                       </div>
@@ -669,6 +692,7 @@ export function SettingsPage() {
                         onCheckedChange={(checked) =>
                           handleSettingChange("showReadingActivity", checked)
                         }
+                        className="flex-shrink-0 mt-1"
                       />
                     </div>
                   </div>
@@ -684,17 +708,17 @@ export function SettingsPage() {
                 </CardHeader>
                 <CardContent>
                   <div>
-                    <Label htmlFor="messages">Allow messages from</Label>
+                    <Label htmlFor="messages" className="block mb-3">Allow messages from</Label>
                     <Select
                       value={settings.allowMessages}
                       onValueChange={(value) =>
                         handleSettingChange("allowMessages", value)
                       }
                     >
-                      <SelectTrigger className="mt-1">
+                      <SelectTrigger className="w-full">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="w-full">
                         <SelectItem value="everyone">Everyone</SelectItem>
                         <SelectItem value="following">
                           People I follow
@@ -715,7 +739,7 @@ export function SettingsPage() {
                 </CardHeader>
                 <CardContent>
                   <div>
-                    <Label htmlFor="story-visibility">
+                    <Label htmlFor="story-visibility" className="block mb-3">
                       Default Story Visibility
                     </Label>
                     <Select
@@ -724,10 +748,10 @@ export function SettingsPage() {
                         handleSettingChange("defaultStoryVisibility", value)
                       }
                     >
-                      <SelectTrigger className="mt-1">
+                      <SelectTrigger className="w-full">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="w-full">
                         <SelectItem value="public">Public</SelectItem>
                         <SelectItem value="private">Private</SelectItem>
                       </SelectContent>
@@ -746,11 +770,11 @@ export function SettingsPage() {
                     Choose how you want to receive notifications
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
+                <CardContent className="space-y-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-1 min-w-0 flex-1">
                       <Label htmlFor="email-notif">Email Notifications</Label>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 leading-relaxed">
                         Receive notifications via email
                       </p>
                     </div>
@@ -760,13 +784,14 @@ export function SettingsPage() {
                       onCheckedChange={(checked) =>
                         handleSettingChange("emailNotifications", checked)
                       }
+                      className="flex-shrink-0 mt-1"
                     />
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-1 min-w-0 flex-1">
                       <Label htmlFor="push-notif">Push Notifications</Label>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 leading-relaxed">
                         Browser push notifications
                       </p>
                     </div>
@@ -776,6 +801,7 @@ export function SettingsPage() {
                       onCheckedChange={(checked) =>
                         handleSettingChange("pushNotifications", checked)
                       }
+                      className="flex-shrink-0 mt-1"
                     />
                   </div>
                 </CardContent>
@@ -788,48 +814,52 @@ export function SettingsPage() {
                     Get notified about interactions
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="follower-notif">New Followers</Label>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <Label htmlFor="follower-notif" className="flex-1 cursor-pointer">New Followers</Label>
                     <Switch
                       id="follower-notif"
                       checked={settings.notifyNewFollower}
                       onCheckedChange={(checked) =>
                         handleSettingChange("notifyNewFollower", checked)
                       }
+                      className="flex-shrink-0"
                     />
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="comment-notif">New Comments</Label>
+                  <div className="flex items-center justify-between gap-4">
+                    <Label htmlFor="comment-notif" className="flex-1 cursor-pointer">New Comments</Label>
                     <Switch
                       id="comment-notif"
                       checked={settings.notifyNewComment}
                       onCheckedChange={(checked) =>
                         handleSettingChange("notifyNewComment", checked)
                       }
+                      className="flex-shrink-0"
                     />
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="vote-notif">New Votes</Label>
+                  <div className="flex items-center justify-between gap-4">
+                    <Label htmlFor="vote-notif" className="flex-1 cursor-pointer">New Votes</Label>
                     <Switch
                       id="vote-notif"
                       checked={settings.notifyNewVote}
                       onCheckedChange={(checked) =>
                         handleSettingChange("notifyNewVote", checked)
                       }
+                      className="flex-shrink-0"
                     />
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="update-notif">Story Updates</Label>
+                  <div className="flex items-center justify-between gap-4">
+                    <Label htmlFor="update-notif" className="flex-1 cursor-pointer">Story Updates</Label>
                     <Switch
                       id="update-notif"
                       checked={settings.notifyStoryUpdate}
                       onCheckedChange={(checked) =>
                         handleSettingChange("notifyStoryUpdate", checked)
                       }
+                      className="flex-shrink-0"
                     />
                   </div>
                 </CardContent>
@@ -841,10 +871,10 @@ export function SettingsPage() {
                   <CardDescription>Periodic summary emails</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-1 min-w-0 flex-1">
                       <Label htmlFor="weekly-digest">Weekly Digest</Label>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 leading-relaxed">
                         Get a weekly summary of activity
                       </p>
                     </div>
@@ -854,6 +884,7 @@ export function SettingsPage() {
                       onCheckedChange={(checked) =>
                         handleSettingChange("notifyWeeklyDigest", checked)
                       }
+                      className="flex-shrink-0 mt-1"
                     />
                   </div>
                 </CardContent>
@@ -912,17 +943,17 @@ export function SettingsPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <Label htmlFor="font-size">Default Font Size</Label>
+                    <Label htmlFor="font-size" className="block mb-3">Default Font Size</Label>
                     <Select
                       value={settings.fontSize}
                       onValueChange={(value) =>
                         handleSettingChange("fontSize", value)
                       }
                     >
-                      <SelectTrigger className="mt-1">
+                      <SelectTrigger className="w-full">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="w-full">
                         <SelectItem value="small">Small</SelectItem>
                         <SelectItem value="medium">Medium</SelectItem>
                         <SelectItem value="large">Large</SelectItem>
@@ -930,12 +961,12 @@ export function SettingsPage() {
                     </Select>
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-1 min-w-0 flex-1">
                       <Label htmlFor="reading-mode">
                         Simplified Reading Mode
                       </Label>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 leading-relaxed">
                         Hide distractions while reading
                       </p>
                     </div>
@@ -945,6 +976,7 @@ export function SettingsPage() {
                       onCheckedChange={(checked) =>
                         handleSettingChange("readingMode", checked)
                       }
+                      className="flex-shrink-0 mt-1"
                     />
                   </div>
                 </CardContent>
@@ -958,12 +990,12 @@ export function SettingsPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-1 min-w-0 flex-1">
                       <Label htmlFor="mature-content">
                         Show Mature Content
                       </Label>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 leading-relaxed">
                         Display stories marked as mature
                       </p>
                     </div>
@@ -973,6 +1005,7 @@ export function SettingsPage() {
                       onCheckedChange={(checked) =>
                         handleSettingChange("showMatureContent", checked)
                       }
+                      className="flex-shrink-0 mt-1"
                     />
                   </div>
                 </CardContent>
@@ -1015,7 +1048,7 @@ export function SettingsPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <Label htmlFor="session-timeout">
+                    <Label htmlFor="session-timeout" className="block mb-3">
                       Auto-logout after inactivity (days)
                     </Label>
                     <Select
@@ -1024,10 +1057,10 @@ export function SettingsPage() {
                         handleSettingChange("sessionTimeout", parseInt(value))
                       }
                     >
-                      <SelectTrigger className="mt-1">
+                      <SelectTrigger className="w-full">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="w-full">
                         <SelectItem value="7">7 days</SelectItem>
                         <SelectItem value="14">14 days</SelectItem>
                         <SelectItem value="30">30 days</SelectItem>
@@ -1036,10 +1069,10 @@ export function SettingsPage() {
                     </Select>
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-1 min-w-0 flex-1">
                       <Label htmlFor="login-alerts">Login Alerts</Label>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 leading-relaxed">
                         Get notified of new login attempts
                       </p>
                     </div>
@@ -1049,6 +1082,7 @@ export function SettingsPage() {
                       onCheckedChange={(checked) =>
                         handleSettingChange("loginAlerts", checked)
                       }
+                      className="flex-shrink-0 mt-1"
                     />
                   </div>
 
@@ -1076,10 +1110,10 @@ export function SettingsPage() {
 
       {/* Change Password Dialog */}
       <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md mx-4">
           <DialogHeader>
-            <DialogTitle>Change Password</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-lg sm:text-xl">Change Password</DialogTitle>
+            <DialogDescription className="text-sm sm:text-base">
               Enter your current password and choose a new one
             </DialogDescription>
           </DialogHeader>

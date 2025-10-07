@@ -714,25 +714,27 @@ export function ProfilePage() {
         {/* Profile Content */}
         <div className="px-4 py-8">
           {/* Profile Header */}
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-8 mb-8 -mt-20 md:-mt-24">
-            {/* Profile Picture */}
-            <div className="flex-shrink-0 relative">
-              <Avatar
-                className="h-28 w-28 sm:h-32 sm:w-32 md:h-40 md:w-40 border-4 border-white shadow-lg cursor-pointer hover:opacity-90 transition-opacity"
-                onClick={() => {
-                  setModalImageUrl(profileUser.profile_pic || `https://api.dicebear.com/7.x/avataaars/svg?seed=${profileUser.username}`);
-                  setShowProfilePicModal(true);
-                }}
-              >
-                <AvatarImage src={profileUser.profile_pic || undefined} />
-                <AvatarFallback className="text-2xl md:text-3xl bg-gradient-to-br from-primary/20 to-primary/10">
-                  {profileUser.username?.[0].toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+          <div className="relative mb-8">
+            {/* Profile Picture - Positioned to overlap cover image */}
+            <div className="flex justify-center md:justify-start -mt-16 md:absolute md:left-4 md:top-0">
+              <div className="flex-shrink-0 relative">
+                <Avatar
+                  className="h-28 w-28 sm:h-32 sm:w-32 md:h-40 md:w-40 border-4 border-white shadow-lg cursor-pointer hover:opacity-90 transition-opacity"
+                  onClick={() => {
+                    setModalImageUrl(profileUser.profile_pic || `https://api.dicebear.com/7.x/avataaars/svg?seed=${profileUser.username}`);
+                    setShowProfilePicModal(true);
+                  }}
+                >
+                  <AvatarImage src={profileUser.profile_pic || undefined} />
+                  <AvatarFallback className="text-2xl md:text-3xl bg-gradient-to-br from-primary/20 to-primary/10">
+                    {profileUser.username?.[0].toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
             </div>
 
-          {/* Profile Info */}
-          <div className="flex-1 w-full">
+            {/* Profile Info */}
+            <div className="flex-1 w-full pt-6 md:ml-48 md:pt-0">
             {/* Username and Actions */}
             <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
               <h1 className="text-xl sm:text-2xl font-medium">
@@ -787,64 +789,64 @@ export function ProfilePage() {
               </div>
             </div>
 
-            {/* Stats */}
-            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 mb-4 text-sm">
-              <div className="text-center">
-                <span className="font-semibold text-lg">
-                  {publicStories.length}
-                </span>
-                <span className="text-gray-600 ml-1">
-                  {publicStories.length === 1 ? "story" : "stories"}
-                </span>
-                {isOwnProfile && privateStories.length > 0 && (
-                  <span className="text-gray-500 ml-2">
-                    (+{privateStories.length} private)
+              {/* Stats */}
+              <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 mb-4 text-sm">
+                <div className="text-center">
+                  <span className="font-semibold text-lg">
+                    {publicStories.length}
                   </span>
-                )}
+                  <span className="text-gray-600 ml-1">
+                    {publicStories.length === 1 ? "story" : "stories"}
+                  </span>
+                  {isOwnProfile && privateStories.length > 0 && (
+                    <span className="text-gray-500 ml-2">
+                      (+{privateStories.length} private)
+                    </span>
+                  )}
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
+                  <button className="text-center hover:underline order-1 sm:order-1">
+                    <span className="font-semibold text-base sm:text-lg">
+                      {formatNumber(profileUser.followers_count)}
+                    </span>
+                    <span className="text-gray-600 ml-1 text-sm sm:text-base">
+                      followers
+                    </span>
+                  </button>
+                  <button className="text-center hover:underline order-2 sm:order-2">
+                    <span className="font-semibold text-base sm:text-lg">
+                      {formatNumber(profileUser.following_count)}
+                    </span>
+                    <span className="text-gray-600 ml-1 text-sm sm:text-base">
+                      following
+                    </span>
+                  </button>
+                </div>
               </div>
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
-                <button className="text-center hover:underline order-1 sm:order-1">
-                  <span className="font-semibold text-base sm:text-lg">
-                    {formatNumber(profileUser.followers_count)}
-                  </span>
-                  <span className="text-gray-600 ml-1 text-sm sm:text-base">
-                    followers
-                  </span>
-                </button>
-                <button className="text-center hover:underline order-2 sm:order-2">
-                  <span className="font-semibold text-base sm:text-lg">
-                    {formatNumber(profileUser.following_count)}
-                  </span>
-                  <span className="text-gray-600 ml-1 text-sm sm:text-base">
-                    following
-                  </span>
-                </button>
-              </div>
-            </div>
 
-            {/* Bio */}
-            {profileUser.bio && (
-              <div className="text-sm whitespace-pre-line text-gray-700">
-                {profileUser.bio}
-              </div>
-            )}
-
-            {/* Additional Stats */}
-            <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
-              <div className="flex items-center gap-1">
-                <Calendar className="h-3 w-3" />
-                Joined {formatDate(profileUser.created_at)}
-              </div>
-              {profileStats.totalReads > 0 && (
-                <div className="flex items-center gap-1">
-                  <Badge variant="secondary" className="text-xs">
-                    {formatNumber(profileStats.totalReads)} total reads
-                  </Badge>
+              {/* Bio */}
+              {profileUser.bio && (
+                <div className="text-sm whitespace-pre-line text-gray-700">
+                  {profileUser.bio}
                 </div>
               )}
+
+              {/* Additional Stats */}
+              <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
+                <div className="flex items-center gap-1">
+                  <Calendar className="h-3 w-3" />
+                  Joined {formatDate(profileUser.created_at)}
+                </div>
+                {profileStats.totalReads > 0 && (
+                  <div className="flex items-center gap-1">
+                    <Badge variant="secondary" className="text-xs">
+                      {formatNumber(profileStats.totalReads)} total reads
+                    </Badge>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
         {/* Desktop Sidebar & Mobile Bottom Nav */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
