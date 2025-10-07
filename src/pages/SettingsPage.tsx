@@ -465,13 +465,24 @@ export function SettingsPage() {
 
                   <div>
                     <h3 className="font-medium mb-3">Password</h3>
-                    <Button
-                      variant="outline"
-                      onClick={() => setShowPasswordDialog(true)}
-                    >
-                      <Key className="h-4 w-4 mr-2" />
-                      Change Password
-                    </Button>
+                    {user?.is_google_user ? (
+                      <div className="space-y-2">
+                        <Alert>
+                          <AlertCircle className="h-4 w-4" />
+                          <AlertDescription>
+                            You signed in with Google. Password management is handled through your Google account.
+                          </AlertDescription>
+                        </Alert>
+                      </div>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        onClick={() => setShowPasswordDialog(true)}
+                      >
+                        <Key className="h-4 w-4 mr-2" />
+                        Change Password
+                      </Button>
+                    )}
                   </div>
                 </CardContent>
               </Card>

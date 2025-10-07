@@ -24,6 +24,12 @@ import {
   ZoomIn,
   ZoomOut,
   RotateCw,
+  Home,
+  Bell,
+  MessageSquare,
+  Heart,
+  Archive,
+  Clock,
 } from "lucide-react";
 import Cropper from "react-easy-crop";
 import type { Area, Point } from "react-easy-crop";
@@ -83,6 +89,11 @@ export function ProfilePage() {
   const [newProfilePic, setNewProfilePic] = useState<File | null>(null);
   const [profilePicPreview, setProfilePicPreview] = useState<string>("");
 
+  // Cover image state
+  const [newCoverImage, setNewCoverImage] = useState<File | null>(null);
+  const [coverImagePreview, setCoverImagePreview] = useState<string>("");
+  const [showCoverCropper, setShowCoverCropper] = useState(false);
+
   // Cropper state
   const [showCropper, setShowCropper] = useState(false);
   const [imageToCrop, setImageToCrop] = useState<string>("");
@@ -90,6 +101,11 @@ export function ProfilePage() {
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
+  const [cropType, setCropType] = useState<'profile' | 'cover'>('profile');
+
+  // Profile picture modal viewer
+  const [showProfilePicModal, setShowProfilePicModal] = useState(false);
+  const [modalImageUrl, setModalImageUrl] = useState<string>("");
 
   const isOwnProfile = user?.username === username;
 
@@ -387,9 +403,53 @@ export function ProfilePage() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImageToCrop(reader.result as string);
+        setCropType('profile');
         setShowCropper(true);
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleCoverImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 10 * 1024 * 1024) {
+        addToast({
+          title: "File too large",
+          description: "Cover image must be less than 10MB",
+          type: "error",
+        });
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageToCrop(reader.result as string);
+        setCropType('cover');
+        setShowCropper(true);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveCoverImage = async () => {
+    try {
+      const updatedUser = await usersApi.deleteCoverImage();
+      setProfileUser(updatedUser);
+      updateUser(updatedUser);
+      setCoverImagePreview("");
+      setNewCoverImage(null);
+      addToast({
+        title: "Cover image removed",
+        description: "Your cover image has been removed",
+        type: "success",
+      });
+    } catch (error) {
+      addToast({
+        title: "Error",
+        description: "Failed to remove cover image",
+        type: "error",
+      });
     }
   };
 
@@ -402,16 +462,30 @@ export function ProfilePage() {
         croppedAreaPixels,
         rotation
       );
-      const croppedFile = new File([croppedBlob], "profile.jpg", {
-        type: "image/jpeg",
-      });
 
-      setNewProfilePic(croppedFile);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfilePicPreview(reader.result as string);
-      };
-      reader.readAsDataURL(croppedFile);
+      if (cropType === 'profile') {
+        const croppedFile = new File([croppedBlob], "profile.jpg", {
+          type: "image/jpeg",
+        });
+
+        setNewProfilePic(croppedFile);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setProfilePicPreview(reader.result as string);
+        };
+        reader.readAsDataURL(croppedFile);
+      } else {
+        const croppedFile = new File([croppedBlob], "cover.jpg", {
+          type: "image/jpeg",
+        });
+
+        setNewCoverImage(croppedFile);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setCoverImagePreview(reader.result as string);
+        };
+        reader.readAsDataURL(croppedFile);
+      }
 
       setShowCropper(false);
       setImageToCrop("");
@@ -457,6 +531,27 @@ export function ProfilePage() {
         }
       }
 
+      // Upload new cover image if selected
+      if (newCoverImage) {
+        try {
+          const updatedUser = await usersApi.uploadCoverImage(newCoverImage);
+          setProfileUser(updatedUser);
+          updateUser(updatedUser);
+          setCoverImagePreview(updatedUser.cover_image || "");
+          addToast({
+            title: "Cover image updated",
+            description: "Your cover image has been updated successfully",
+            type: "success",
+          });
+        } catch (error) {
+          addToast({
+            title: "Error",
+            description: "Failed to upload cover image",
+            type: "error",
+          });
+        }
+      }
+
       // Update bio if changed
       const updates: any = {};
       if (editForm.bio !== profileUser?.bio) {
@@ -480,6 +575,7 @@ export function ProfilePage() {
 
       setEditDialogOpen(false);
       setNewProfilePic(null);
+      setNewCoverImage(null);
 
       addToast({
         title: "Profile updated!",
@@ -537,18 +633,74 @@ export function ProfilePage() {
 
   return (
     <MainLayout showFooter={false}>
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        {/* Profile Header */}
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-8 mb-8">
-          {/* Profile Picture */}
-          <div className="flex-shrink-0">
-            <Avatar className="h-28 w-28 sm:h-32 sm:w-32 md:h-40 md:w-40 border-4 border-gray-200 shadow-lg">
-              <AvatarImage src={profileUser.profile_pic || undefined} />
-              <AvatarFallback className="text-2xl md:text-3xl bg-gradient-to-br from-primary/20 to-primary/10">
-                {profileUser.username?.[0].toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-          </div>
+      <div className="max-w-5xl mx-auto">
+        {/* Cover Image */}
+        <div className="relative w-full h-48 md:h-64 bg-gradient-to-r from-orange-200 to-amber-200 overflow-hidden">
+          {profileUser.cover_image || coverImagePreview ? (
+            <img
+              src={coverImagePreview || profileUser.cover_image || undefined}
+              alt="Cover"
+              className="w-full h-full object-cover"
+            />
+          ) : null}
+
+          {isOwnProfile && (
+            <div className="absolute top-4 right-4 flex gap-2">
+              <label>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="bg-white/90 hover:bg-white"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById('cover-upload')?.click();
+                  }}
+                >
+                  <Camera className="h-4 w-4 mr-2" />
+                  {profileUser.cover_image ? 'Change Cover' : 'Add Cover'}
+                </Button>
+                <input
+                  id="cover-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleCoverImageSelect}
+                  className="hidden"
+                />
+              </label>
+
+              {profileUser.cover_image && (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="bg-white/90 hover:bg-white"
+                  onClick={handleRemoveCoverImage}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Profile Content */}
+        <div className="px-4 py-8">
+          {/* Profile Header */}
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-8 mb-8 -mt-20 md:-mt-24">
+            {/* Profile Picture */}
+            <div className="flex-shrink-0 relative">
+              <Avatar
+                className="h-28 w-28 sm:h-32 sm:w-32 md:h-40 md:w-40 border-4 border-white shadow-lg cursor-pointer hover:opacity-90 transition-opacity"
+                onClick={() => {
+                  setModalImageUrl(profileUser.profile_pic || `https://api.dicebear.com/7.x/avataaars/svg?seed=${profileUser.username}`);
+                  setShowProfilePicModal(true);
+                }}
+              >
+                <AvatarImage src={profileUser.profile_pic || undefined} />
+                <AvatarFallback className="text-2xl md:text-3xl bg-gradient-to-br from-primary/20 to-primary/10">
+                  {profileUser.username?.[0].toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </div>
 
           {/* Profile Info */}
           <div className="flex-1 w-full">
@@ -665,8 +817,81 @@ export function ProfilePage() {
           </div>
         </div>
 
-        {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
+        {/* Desktop Sidebar & Mobile Bottom Nav */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
+          {/* Sidebar - Hidden on mobile, shown on desktop */}
+          <aside className="hidden lg:block lg:col-span-3">
+            <Card className="sticky top-20">
+              <div className="p-4 space-y-1">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start gap-3 hover:bg-gray-100"
+                  onClick={() => navigate("/")}
+                >
+                  <Home className="h-5 w-5" />
+                  <span>Home</span>
+                </Button>
+
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start gap-3 hover:bg-gray-100"
+                  onClick={() => navigate("/stories")}
+                >
+                  <BookOpen className="h-5 w-5" />
+                  <span>Explore Stories</span>
+                </Button>
+
+                {isOwnProfile && (
+                  <>
+                    <Separator className="my-2" />
+
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start gap-3 hover:bg-gray-100"
+                      onClick={() => setActiveTab("saved")}
+                    >
+                      <Bookmark className="h-5 w-5" />
+                      <span>Saved</span>
+                    </Button>
+
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start gap-3 hover:bg-gray-100"
+                      onClick={() => navigate("/notifications")}
+                    >
+                      <Bell className="h-5 w-5" />
+                      <span>Notifications</span>
+                    </Button>
+
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start gap-3 hover:bg-gray-100"
+                      onClick={() => navigate("/messages")}
+                    >
+                      <MessageSquare className="h-5 w-5" />
+                      <span>Messages</span>
+                    </Button>
+
+                    <Separator className="my-2" />
+
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start gap-3 hover:bg-gray-100"
+                      onClick={() => navigate("/settings")}
+                    >
+                      <Settings className="h-5 w-5" />
+                      <span>Settings</span>
+                    </Button>
+                  </>
+                )}
+              </div>
+            </Card>
+          </aside>
+
+          {/* Main Content Area */}
+          <div className="lg:col-span-9">
+            {/* Tabs */}
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="w-full justify-start border-b rounded-none h-auto p-0 bg-transparent">
             <TabsTrigger
               value="stories"
@@ -824,12 +1049,71 @@ export function ProfilePage() {
         {/* Floating Action Button for Creating Stories */}
         {isOwnProfile && (
           <Button
-            className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600"
+            className="fixed bottom-20 lg:bottom-6 right-6 h-14 w-14 rounded-full shadow-lg bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 z-40"
             size="icon"
             onClick={() => navigate("/stories/create")}
           >
             <Plus className="h-6 w-6" />
           </Button>
+        )}
+          </div>
+        </div>
+
+        {/* Mobile Bottom Navigation - Shown only on mobile */}
+        {isOwnProfile && (
+          <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-50">
+            <div className="flex items-center justify-around py-3 px-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex flex-col items-center gap-1 h-auto py-2 px-3"
+                onClick={() => navigate("/")}
+              >
+                <Home className="h-5 w-5" />
+                <span className="text-xs">Home</span>
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex flex-col items-center gap-1 h-auto py-2 px-3"
+                onClick={() => navigate("/stories")}
+              >
+                <BookOpen className="h-5 w-5" />
+                <span className="text-xs">Explore</span>
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex flex-col items-center gap-1 h-auto py-2 px-3"
+                onClick={() => setActiveTab("saved")}
+              >
+                <Bookmark className="h-5 w-5" />
+                <span className="text-xs">Saved</span>
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex flex-col items-center gap-1 h-auto py-2 px-3"
+                onClick={() => navigate("/notifications")}
+              >
+                <Bell className="h-5 w-5" />
+                <span className="text-xs">Alerts</span>
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex flex-col items-center gap-1 h-auto py-2 px-3"
+                onClick={() => navigate("/settings")}
+              >
+                <Settings className="h-5 w-5" />
+                <span className="text-xs">Settings</span>
+              </Button>
+            </div>
+          </div>
         )}
       </div>
 
@@ -1073,7 +1357,7 @@ export function ProfilePage() {
             <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-bold text-white">
-                  Crop Profile Picture
+                  {cropType === 'profile' ? 'Crop Profile Picture' : 'Crop Cover Image'}
                 </h2>
                 <Button
                   variant="ghost"
@@ -1085,7 +1369,9 @@ export function ProfilePage() {
                 </Button>
               </div>
               <p className="text-white/90 text-sm mt-1">
-                Adjust the image to fit perfectly in your round profile picture
+                {cropType === 'profile'
+                  ? 'Adjust the image to fit perfectly in your round profile picture'
+                  : 'Adjust the image for your profile cover'}
               </p>
             </div>
 
@@ -1096,8 +1382,8 @@ export function ProfilePage() {
                 crop={crop}
                 zoom={zoom}
                 rotation={rotation}
-                aspect={1}
-                cropShape="round"
+                aspect={cropType === 'profile' ? 1 : 16/9}
+                cropShape={cropType === 'profile' ? "round" : "rect"}
                 showGrid={false}
                 onCropChange={setCrop}
                 onZoomChange={setZoom}
@@ -1173,6 +1459,30 @@ export function ProfilePage() {
           </div>
         </div>
       )}
+
+      {/* Profile Picture Modal Viewer */}
+      {showProfilePicModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setShowProfilePicModal(false)}>
+          <div className="relative max-w-md w-full aspect-square">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute top-4 right-4 bg-white/20 hover:bg-white/30 rounded-full text-white z-10"
+              onClick={() => setShowProfilePicModal(false)}
+            >
+              <X className="h-6 w-6" />
+            </Button>
+            <div className="w-full h-full rounded-full overflow-hidden border-4 border-white shadow-2xl">
+              <img
+                src={modalImageUrl}
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+        </div>
     </MainLayout>
   );
 }

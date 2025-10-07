@@ -285,40 +285,81 @@ export function CreateStoryPage() {
 
   return (
     <MainLayout showFooter={false}>
-      <div className="max-w-6xl mx-auto px-4 py-6">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Create New Story</h1>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={() => navigate(-1)}>
-              Cancel
-            </Button>
-            <Button variant="outline">
-              <Eye className="h-4 w-4 mr-2" />
-              Preview
-            </Button>
-            <Button onClick={handleSubmit} disabled={isSubmitting}>
-              <Save className="h-4 w-4 mr-2" />
-              {isSubmitting ? "Publishing..." : "Publish Story"}
-            </Button>
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
+        {/* Header */}
+        <div className="bg-white border-b shadow-sm sticky top-0 z-10">
+          <div className="max-w-6xl mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Button variant="ghost" onClick={() => navigate(-1)}>
+                  <X className="h-5 w-5" />
+                </Button>
+                <div>
+                  <h1 className="text-xl font-bold bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">
+                    Create New Story
+                  </h1>
+                  <p className="text-xs text-gray-500">Share your creativity with the world</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm">
+                  <Eye className="h-4 w-4 mr-2" />
+                  Preview
+                </Button>
+                <Button
+                  onClick={handleSubmit}
+                  disabled={isSubmitting}
+                  className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white"
+                >
+                  <Save className="h-4 w-4 mr-2" />
+                  {isSubmitting ? "Publishing..." : "Publish Story"}
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
 
+        {/* Main Content */}
+        <div className="max-w-6xl mx-auto px-4 py-8">
+
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-1 min-[450px]:grid-cols-3">
-            <TabsTrigger value="details">Story Details</TabsTrigger>
-            <TabsTrigger value="chapters">Chapters</TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-1 min-[450px]:grid-cols-3 bg-white shadow-sm rounded-xl p-1 mb-8">
+            <TabsTrigger
+              value="details"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-amber-500 data-[state=active]:text-white rounded-lg transition-all"
+            >
+              <ImageIcon className="h-4 w-4 mr-2" />
+              Story Details
+            </TabsTrigger>
+            <TabsTrigger
+              value="chapters"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-amber-500 data-[state=active]:text-white rounded-lg transition-all"
+            >
+              <BookOpen className="h-4 w-4 mr-2" />
+              Chapters
+            </TabsTrigger>
+            <TabsTrigger
+              value="settings"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-amber-500 data-[state=active]:text-white rounded-lg transition-all"
+            >
+              <Settings className="h-4 w-4 mr-2" />
+              Settings
+            </TabsTrigger>
           </TabsList>
 
           {/* Story Details Tab */}
-          <TabsContent value="details" className="space-y-6 mt-6">
+          <TabsContent value="details" className="space-y-6 mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Cover Image */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Cover Image</CardTitle>
+              <Card className="bg-white shadow-md border-0 overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-orange-100 to-amber-100">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <ImageIcon className="h-5 w-5 text-orange-600" />
+                    Cover Image
+                  </CardTitle>
+                  <p className="text-xs text-gray-600">Add an eye-catching cover for your story</p>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="pt-6">
                   {coverPreview ? (
                     <div className="relative aspect-[2/3] rounded-lg overflow-hidden bg-gray-100">
                       <img
@@ -349,87 +390,112 @@ export function CreateStoryPage() {
               </Card>
 
               {/* Story Info */}
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="title">Title</Label>
-                  <Input
-                    id="title"
-                    value={storyData.title}
-                    onChange={(e) =>
-                      setStoryData({ ...storyData, title: e.target.value })
-                    }
-                    placeholder="Enter your story title"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea
-                    id="description"
-                    value={storyData.description}
-                    onChange={(e) =>
-                      setStoryData({
-                        ...storyData,
-                        description: e.target.value,
-                      })
-                    }
-                    placeholder="Write a brief description of your story"
-                    rows={4}
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="genre">Genre</Label>
-                  <Select
-                    value={storyData.genre}
-                    onValueChange={(value) =>
-                      setStoryData({ ...storyData, genre: value })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a genre" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {GENRES.map((genre) => (
-                        <SelectItem key={genre} value={genre}>
-                          {genre}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label htmlFor="tags">Tags</Label>
-                  <div className="flex gap-2">
+              <Card className="bg-white shadow-md border-0">
+                <CardHeader className="bg-gradient-to-r from-orange-100 to-amber-100">
+                  <CardTitle className="text-lg">Story Information</CardTitle>
+                  <p className="text-xs text-gray-600">Tell readers what your story is about</p>
+                </CardHeader>
+                <CardContent className="pt-6 space-y-4">
+                  <div>
+                    <Label htmlFor="title" className="text-sm font-semibold text-gray-700">
+                      Title *
+                    </Label>
                     <Input
-                      id="tags"
-                      value={currentTag}
-                      onChange={(e) => setCurrentTag(e.target.value)}
-                      placeholder="Add tags"
-                      onKeyPress={(e) => {
-                        if (e.key === "Enter") {
-                          e.preventDefault();
-                          addTag();
-                        }
-                      }}
+                      id="title"
+                      value={storyData.title}
+                      onChange={(e) =>
+                        setStoryData({ ...storyData, title: e.target.value })
+                      }
+                      placeholder="Enter a captivating title..."
+                      className="mt-2 border-gray-300 focus:border-orange-500 focus:ring-orange-500"
                     />
-                    <Button type="button" onClick={addTag}>
-                      Add
-                    </Button>
                   </div>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {storyData.tags.map((tag) => (
-                      <Badge key={tag} variant="secondary">
-                        {tag}
-                        <button className="ml-2" onClick={() => removeTag(tag)}>
-                          <X className="h-3 w-3" />
-                        </button>
-                      </Badge>
-                    ))}
+
+                  <div>
+                    <Label htmlFor="description" className="text-sm font-semibold text-gray-700">
+                      Description
+                    </Label>
+                    <Textarea
+                      id="description"
+                      value={storyData.description}
+                      onChange={(e) =>
+                        setStoryData({
+                          ...storyData,
+                          description: e.target.value,
+                        })
+                      }
+                      placeholder="Describe what makes your story unique..."
+                      rows={4}
+                      className="mt-2 border-gray-300 focus:border-orange-500 focus:ring-orange-500 resize-none"
+                    />
                   </div>
-                </div>
-              </div>
+
+                  <div>
+                    <Label htmlFor="genre" className="text-sm font-semibold text-gray-700">
+                      Genre *
+                    </Label>
+                    <Select
+                      value={storyData.genre}
+                      onValueChange={(value) =>
+                        setStoryData({ ...storyData, genre: value })
+                      }
+                    >
+                      <SelectTrigger className="mt-2 border-gray-300 focus:border-orange-500 focus:ring-orange-500">
+                        <SelectValue placeholder="Choose a genre..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {GENRES.map((genre) => (
+                          <SelectItem key={genre} value={genre}>
+                            {genre}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="tags" className="text-sm font-semibold text-gray-700">
+                      Tags
+                    </Label>
+                    <p className="text-xs text-gray-500 mb-2">Help readers discover your story</p>
+                    <div className="flex gap-2">
+                      <Input
+                        id="tags"
+                        value={currentTag}
+                        onChange={(e) => setCurrentTag(e.target.value)}
+                        placeholder="e.g., romance, adventure..."
+                        onKeyPress={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            addTag();
+                          }
+                        }}
+                        className="border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                      />
+                      <Button
+                        type="button"
+                        onClick={addTag}
+                        className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600"
+                      >
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="flex flex-wrap gap-2 mt-3">
+                      {storyData.tags.map((tag) => (
+                        <Badge
+                          key={tag}
+                          className="bg-gradient-to-r from-orange-100 to-amber-100 text-orange-700 hover:from-orange-200 hover:to-amber-200"
+                        >
+                          {tag}
+                          <button className="ml-2" onClick={() => removeTag(tag)}>
+                            <X className="h-3 w-3" />
+                          </button>
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </TabsContent>
 

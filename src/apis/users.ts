@@ -11,13 +11,32 @@ export const usersApi = {
   // Upload profile picture
   uploadProfilePicture: async (file: File): Promise<User> => {
     const formData = createFormData({ file });
-    
+
     const response = await apiClient.post<User>('/users/me/profile-pic', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
-    
+
+    return response.data;
+  },
+
+  // Upload cover image
+  uploadCoverImage: async (file: File): Promise<User> => {
+    const formData = createFormData({ file });
+
+    const response = await apiClient.post<User>('/users/me/cover-image', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return response.data;
+  },
+
+  // Delete cover image
+  deleteCoverImage: async (): Promise<User> => {
+    const response = await apiClient.delete<User>('/users/me/cover-image');
     return response.data;
   },
 

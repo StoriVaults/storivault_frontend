@@ -1,30 +1,53 @@
-# 📖 Frontend Project Documentation
+# 🎨 StoriVault Frontend Documentation
 
-Generated from: `.`
+**Generated on:** 2025-10-06 17:52:59  
+**Project Path:** `D:\NexusNao\PROJECTS\StoriVault\EDITING\frontend`  
+**Project Name:** storivault-frontend  
+**Version:** 1.0.0  
 
 ---
 
-## 📚 Table of Contents
+## 🚀 Project Overview
 
-### 📁 Root Files
+**Technology Stack:**
+- **Framework:** React + TypeScript
+- **Build Tool:** Vite
+- **Styling:** Tailwind CSS
+- **UI Components:** Custom components with shadcn/ui
+- **State Management:** Zustand stores
+- **HTTP Client:** Custom API client
+
+**Key Dependencies:**
+- react
+- react-dom
+- react-router-dom
+- zustand
+- axios
+- @tanstack/react-query
+
+---
+
+## 📑 Table of Contents
+
+### Configuration
 - [eslint.config.js](#eslintconfigjs)
-- [package.json](#packagejson)
 - [postcss.config.js](#postcssconfigjs)
 - [tailwind.config.ts](#tailwindconfigts)
 - [tsconfig.app.json](#tsconfigappjson)
 - [tsconfig.json](#tsconfigjson)
 - [tsconfig.node.json](#tsconfignodejson)
-- [vercel.json](#verceljson)
 - [vite.config.ts](#viteconfigts)
 
-### 📁 src
+### Source Code
+#### Main
 - [App.css](#src-Appcss)
 - [App.tsx](#src-Apptsx)
 - [index.css](#src-indexcss)
 - [main.tsx](#src-maintsx)
+- [utils.ts](#src-lib-utilsts)
 - [vite-env.d.ts](#src-vite-envdts)
 
-### 📁 src\apis
+#### APIs
 - [auth.ts](#src-apis-authts)
 - [chapters.ts](#src-apis-chaptersts)
 - [client.ts](#src-apis-clientts)
@@ -34,83 +57,179 @@ Generated from: `.`
 - [users.ts](#src-apis-usersts)
 - [votes.ts](#src-apis-votests)
 
-### 📁 src\components\layout
-- [footer.tsx](#src-components-layout-footertsx)
-- [header.tsx](#src-components-layout-headertsx)
-- [main-layout.tsx](#src-components-layout-main-layouttsx)
-
-### 📁 src\components\ui
+#### Components
+- [accordion.tsx](#src-components-ui-accordiontsx)
+- [alert-dialog.tsx](#src-components-ui-alert-dialogtsx)
+- [alert.tsx](#src-components-ui-alerttsx)
+- [aspect-ratio.tsx](#src-components-ui-aspect-ratiotsx)
 - [auth-skeleton.tsx](#src-components-ui-auth-skeletontsx)
+- [avatar.tsx](#src-components-ui-avatartsx)
+- [badge.tsx](#src-components-ui-badgetsx)
+- [breadcrumb.tsx](#src-components-ui-breadcrumbtsx)
+- [button.tsx](#src-components-ui-buttontsx)
+- [calendar.tsx](#src-components-ui-calendartsx)
+- [card.tsx](#src-components-ui-cardtsx)
+- [carousel.tsx](#src-components-ui-carouseltsx)
+- [chart.tsx](#src-components-ui-charttsx)
+- [checkbox.tsx](#src-components-ui-checkboxtsx)
+- [collapsible.tsx](#src-components-ui-collapsibletsx)
+- [command.tsx](#src-components-ui-commandtsx)
+- [context-menu.tsx](#src-components-ui-context-menutsx)
 - [create-story-skeleton.tsx](#src-components-ui-create-story-skeletontsx)
+- [dialog.tsx](#src-components-ui-dialogtsx)
+- [drawer.tsx](#src-components-ui-drawertsx)
+- [dropdown-menu.tsx](#src-components-ui-dropdown-menutsx)
 - [edit-story-skeleton.tsx](#src-components-ui-edit-story-skeletontsx)
 - [feed-skeleton.tsx](#src-components-ui-feed-skeletontsx)
 - [file-dropzone.tsx](#src-components-ui-file-dropzonetsx)
+- [footer.tsx](#src-components-layout-footertsx)
+- [form.tsx](#src-components-ui-formtsx)
+- [header.tsx](#src-components-layout-headertsx)
+- [hover-card.tsx](#src-components-ui-hover-cardtsx)
 - [image-with-fallback.tsx](#src-components-ui-image-with-fallbacktsx)
+- [input-otp.tsx](#src-components-ui-input-otptsx)
+- [input.tsx](#src-components-ui-inputtsx)
+- [label.tsx](#src-components-ui-labeltsx)
 - [loading-spinner.tsx](#src-components-ui-loading-spinnertsx)
 - [logo.tsx](#src-components-ui-logotsx)
+- [main-layout.tsx](#src-components-layout-main-layouttsx)
+- [menubar.tsx](#src-components-ui-menubartsx)
+- [navigation-menu.tsx](#src-components-ui-navigation-menutsx)
+- [pagination.tsx](#src-components-ui-paginationtsx)
+- [popover.tsx](#src-components-ui-popovertsx)
 - [profile-skeleton.tsx](#src-components-ui-profile-skeletontsx)
+- [progress.tsx](#src-components-ui-progresstsx)
+- [radio-group.tsx](#src-components-ui-radio-grouptsx)
 - [reader-skeleton.tsx](#src-components-ui-reader-skeletontsx)
+- [resizable.tsx](#src-components-ui-resizabletsx)
+- [scroll-area.tsx](#src-components-ui-scroll-areatsx)
+- [select.tsx](#src-components-ui-selecttsx)
+- [separator.tsx](#src-components-ui-separatortsx)
+- [sheet.tsx](#src-components-ui-sheettsx)
+- [sidebar.tsx](#src-components-ui-sidebartsx)
+- [skeleton.tsx](#src-components-ui-skeletontsx)
+- [slider.tsx](#src-components-ui-slidertsx)
+- [sonner.tsx](#src-components-ui-sonnertsx)
 - [story-card-skeleton.tsx](#src-components-ui-story-card-skeletontsx)
 - [story-card.tsx](#src-components-ui-story-cardtsx)
 - [story-detail-skeleton.tsx](#src-components-ui-story-detail-skeletontsx)
+- [switch.tsx](#src-components-ui-switchtsx)
+- [table.tsx](#src-components-ui-tabletsx)
+- [tabs.tsx](#src-components-ui-tabstsx)
+- [textarea.tsx](#src-components-ui-textareatsx)
 - [toast-provider.tsx](#src-components-ui-toast-providertsx)
 - [toast.tsx](#src-components-ui-toasttsx)
+- [toaster.tsx](#src-components-ui-toastertsx)
+- [toggle-group.tsx](#src-components-ui-toggle-grouptsx)
+- [toggle.tsx](#src-components-ui-toggletsx)
+- [tooltip.tsx](#src-components-ui-tooltiptsx)
+- [use-toast.ts](#src-components-ui-use-toastts)
 
-### 📁 src\controllers
+#### Pages
+- [CreateStoryPage.tsx](#src-pages-CreateStoryPagetsx)
+- [EditStoryPage.tsx](#src-pages-EditStoryPagetsx)
+- [FeedPage.tsx](#src-pages-FeedPagetsx)
+- [GoogleSuccessPage.tsx](#src-pages-auth-GoogleSuccessPagetsx)
+- [HomePage.tsx](#src-pages-HomePagetsx)
+- [Index.tsx](#src-pages-Indextsx)
+- [LoginPage.tsx](#src-pages-auth-LoginPagetsx)
+- [NotFound.tsx](#src-pages-NotFoundtsx)
+- [ProfilePage.tsx](#src-pages-ProfilePagetsx)
+- [SettingsPage.tsx](#src-pages-SettingsPagetsx)
+- [SignupPage.tsx](#src-pages-auth-SignupPagetsx)
+- [StoriesPage.tsx](#src-pages-StoriesPagetsx)
+- [StoryDetailPage.tsx](#src-pages-StoryDetailPagetsx)
+- [StoryReaderPage.tsx](#src-pages-StoryReaderPagetsx)
+- [VerifyEmailPage.tsx](#src-pages-auth-VerifyEmailPagetsx)
+
+#### Store
+- [authStore.ts](#src-store-authStorets)
+- [uiStore.ts](#src-store-uiStorets)
+
+#### Controllers
 - [authController.ts](#src-controllers-authControllerts)
 - [index.ts](#src-controllers-indexts)
 - [storyController.ts](#src-controllers-storyControllerts)
 - [userController.ts](#src-controllers-userControllerts)
 
-### 📁 src\helper
+#### Hooks
+- [use-mobile.tsx](#src-hooks-use-mobiletsx)
+- [use-toast.ts](#src-hooks-use-toastts)
+
+#### Types
+- [api.ts](#src-types-apits)
+- [index.ts](#src-types-indexts)
+
+#### Utils
+- [favicon-generator.ts](#src-utils-favicon-generatorts)
+
+#### Helpers
 - [constants.ts](#src-helper-constantsts)
 - [formatting.ts](#src-helper-formattingts)
 - [index.ts](#src-helper-indexts)
 - [validation.ts](#src-helper-validationts)
 
-### 📁 src\hooks
-- [use-mobile.tsx](#src-hooks-use-mobiletsx)
+### Public Assets
+- [favicon.svg](#public-faviconsvg)
+- [placeholder.svg](#public-placeholdersvg)
 
-### 📁 src\lib
-- [utils.ts](#src-lib-utilsts)
-
-### 📁 src\pages
-- [CreateStoryPage.tsx](#src-pages-CreateStoryPagetsx)
-- [EditStoryPage.tsx](#src-pages-EditStoryPagetsx)
-- [FeedPage.tsx](#src-pages-FeedPagetsx)
-- [HomePage.tsx](#src-pages-HomePagetsx)
-- [Index.tsx](#src-pages-Indextsx)
-- [NotFound.tsx](#src-pages-NotFoundtsx)
-- [ProfilePage.tsx](#src-pages-ProfilePagetsx)
-- [StoriesPage.tsx](#src-pages-StoriesPagetsx)
-- [StoryDetailPage.tsx](#src-pages-StoryDetailPagetsx)
-- [StoryReaderPage.tsx](#src-pages-StoryReaderPagetsx)
-
-### 📁 src\pages\auth
-- [LoginPage.tsx](#src-pages-auth-LoginPagetsx)
-- [SignupPage.tsx](#src-pages-auth-SignupPagetsx)
-
-### 📁 src\store
-- [authStore.ts](#src-store-authStorets)
-- [uiStore.ts](#src-store-uiStorets)
-
-### 📁 src\types
-- [api.ts](#src-types-apits)
-- [index.ts](#src-types-indexts)
-
-### 📁 src\utils
-- [favicon-generator.ts](#src-utils-favicon-generatorts)
 
 ---
 
-## 📝 Source Code
+## 📄 Source Code
 
-### 📁 Root Files
 
-#### 📄 eslint.config.js
-<a name='eslintconfigjs'></a>
+## .Env Files
 
-**Path:** `eslint.config.js`
+### <a id='env'></a> `.env`
+
+**File Type:** .env
+
+```text
+VITE_API_URL=https://usman678zafar-storivault-backend.hf.space
+VITE_FRONTEND_URL=https://www.storivault.site
+```
+
+---
+
+
+## Components.Json Files
+
+### <a id='componentsjson'></a> `components.json`
+
+**Component:** components.json
+
+```json
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "default",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "config": "tailwind.config.ts",
+    "css": "src/index.css",
+    "baseColor": "slate",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils",
+    "ui": "@/components/ui",
+    "lib": "@/lib",
+    "hooks": "@/hooks"
+  }
+}
+```
+
+---
+
+
+## Eslint.Config.Js Files
+
+### <a id='eslintconfigjs'></a> `eslint.config.js`
+
+**File Type:** eslint.config.js
 
 ```javascript
 import js from "@eslint/js";
@@ -143,10 +262,53 @@ export default tseslint.config(
 
 ---
 
-#### 📄 package.json
-<a name='packagejson'></a>
 
-**Path:** `package.json`
+## Index.Html Files
+
+### <a id='indexhtml'></a> `index.html`
+
+**File Type:** index.html
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StoriVault - Your Story Awaits</title>
+    
+    <!-- Favicon - Add these files to your public folder -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#FF6B35" />
+    
+    <!-- Meta tags -->
+    <meta name="description" content="Your gateway to infinite stories. Read and write amazing stories on StoriVault." />
+    
+    <!-- Google Fonts (if needed) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <!-- This div with id="root" is REQUIRED for React -->
+    <div id="root"></div>
+    
+    <!-- This script tag is REQUIRED for Vite -->
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+```
+
+---
+
+
+## Package.Json Files
+
+### <a id='packagejson'></a> `package.json`
+
+**File Type:** package.json
 
 ```json
 {
@@ -244,10 +406,12 @@ export default tseslint.config(
 
 ---
 
-#### 📄 postcss.config.js
-<a name='postcssconfigjs'></a>
 
-**Path:** `postcss.config.js`
+## Postcss.Config.Js Files
+
+### <a id='postcssconfigjs'></a> `postcss.config.js`
+
+**File Type:** postcss.config.js
 
 ```javascript
 export default {
@@ -260,236 +424,638 @@ export default {
 
 ---
 
-#### 📄 tailwind.config.ts
-<a name='tailwindconfigts'></a>
 
-**Path:** `tailwind.config.ts`
+## Public Files
+
+### <a id='public-faviconsvg'></a> `public\favicon.svg`
+
+**File Type:** favicon.svg
+
+```xml
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" rx="6" fill="#FF6B35"/>
+  
+  <!-- Left book page -->
+  <path d="M5 6h9v20H5z" fill="white" opacity="0.9"/>
+  
+  <!-- Right book page -->
+  <path d="M18 6h9v20h-9z" fill="white" opacity="0.85"/>
+  
+  <!-- Book spine -->
+  <rect x="14" y="6" width="4" height="20" fill="#E85D04"/>
+  
+  <!-- Bookmark -->
+  <path d="M16 3v10l-2-2-2 2V3h4z" fill="#FFD700"/>
+</svg>
+```
+
+---
+
+### <a id='public-placeholdersvg'></a> `public\placeholder.svg`
+
+**File Type:** placeholder.svg
+
+```xml
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" fill="none"><rect width="1200" height="1200" fill="#EAEAEA" rx="3"/><g opacity=".5"><g opacity=".5"><path fill="#FAFAFA" d="M600.709 736.5c-75.454 0-136.621-61.167-136.621-136.62 0-75.454 61.167-136.621 136.621-136.621 75.453 0 136.62 61.167 136.62 136.621 0 75.453-61.167 136.62-136.62 136.62Z"/><path stroke="#C9C9C9" stroke-width="2.418" d="M600.709 736.5c-75.454 0-136.621-61.167-136.621-136.62 0-75.454 61.167-136.621 136.621-136.621 75.453 0 136.62 61.167 136.62 136.621 0 75.453-61.167 136.62-136.62 136.62Z"/></g><path stroke="url(#a)" stroke-width="2.418" d="M0-1.209h553.581" transform="scale(1 -1) rotate(45 1163.11 91.165)"/><path stroke="url(#b)" stroke-width="2.418" d="M404.846 598.671h391.726"/><path stroke="url(#c)" stroke-width="2.418" d="M599.5 795.742V404.017"/><path stroke="url(#d)" stroke-width="2.418" d="m795.717 796.597-391.441-391.44"/><path fill="#fff" d="M600.709 656.704c-31.384 0-56.825-25.441-56.825-56.824 0-31.384 25.441-56.825 56.825-56.825 31.383 0 56.824 25.441 56.824 56.825 0 31.383-25.441 56.824-56.824 56.824Z"/><g clip-path="url(#e)"><path fill="#666" fill-rule="evenodd" d="M616.426 586.58h-31.434v16.176l3.553-3.554.531-.531h9.068l.074-.074 8.463-8.463h2.565l7.18 7.181V586.58Zm-15.715 14.654 3.698 3.699 1.283 1.282-2.565 2.565-1.282-1.283-5.2-5.199h-6.066l-5.514 5.514-.073.073v2.876a2.418 2.418 0 0 0 2.418 2.418h26.598a2.418 2.418 0 0 0 2.418-2.418v-8.317l-8.463-8.463-7.181 7.181-.071.072Zm-19.347 5.442v4.085a6.045 6.045 0 0 0 6.046 6.045h26.598a6.044 6.044 0 0 0 6.045-6.045v-7.108l1.356-1.355-1.282-1.283-.074-.073v-17.989h-38.689v23.43l-.146.146.146.147Z" clip-rule="evenodd"/></g><path stroke="#C9C9C9" stroke-width="2.418" d="M600.709 656.704c-31.384 0-56.825-25.441-56.825-56.824 0-31.384 25.441-56.825 56.825-56.825 31.383 0 56.824 25.441 56.824 56.825 0 31.383-25.441 56.824-56.824 56.824Z"/></g><defs><linearGradient id="a" x1="554.061" x2="-.48" y1=".083" y2=".087" gradientUnits="userSpaceOnUse"><stop stop-color="#C9C9C9" stop-opacity="0"/><stop offset=".208" stop-color="#C9C9C9"/><stop offset=".792" stop-color="#C9C9C9"/><stop offset="1" stop-color="#C9C9C9" stop-opacity="0"/></linearGradient><linearGradient id="b" x1="796.912" x2="404.507" y1="599.963" y2="599.965" gradientUnits="userSpaceOnUse"><stop stop-color="#C9C9C9" stop-opacity="0"/><stop offset=".208" stop-color="#C9C9C9"/><stop offset=".792" stop-color="#C9C9C9"/><stop offset="1" stop-color="#C9C9C9" stop-opacity="0"/></linearGradient><linearGradient id="c" x1="600.792" x2="600.794" y1="403.677" y2="796.082" gradientUnits="userSpaceOnUse"><stop stop-color="#C9C9C9" stop-opacity="0"/><stop offset=".208" stop-color="#C9C9C9"/><stop offset=".792" stop-color="#C9C9C9"/><stop offset="1" stop-color="#C9C9C9" stop-opacity="0"/></linearGradient><linearGradient id="d" x1="404.85" x2="796.972" y1="403.903" y2="796.02" gradientUnits="userSpaceOnUse"><stop stop-color="#C9C9C9" stop-opacity="0"/><stop offset=".208" stop-color="#C9C9C9"/><stop offset=".792" stop-color="#C9C9C9"/><stop offset="1" stop-color="#C9C9C9" stop-opacity="0"/></linearGradient><clipPath id="e"><path fill="#fff" d="M581.364 580.535h38.689v38.689h-38.689z"/></clipPath></defs></svg>
+```
+
+---
+
+
+## Readme.Md Files
+
+### <a id='READMEmd'></a> `README.md`
+
+**File Type:** README.md
+
+```markdown
+# Welcome to your Lovable project
+
+## Project info
+
+**URL**: https://lovable.dev/projects/f947e21b-5566-4f3a-9849-d3c0baf77b71
+
+## How can I edit this code?
+
+There are several ways of editing your application.
+
+**Use Lovable**
+
+Simply visit the [Lovable Project](https://lovable.dev/projects/f947e21b-5566-4f3a-9849-d3c0baf77b71) and start prompting.
+
+Changes made via Lovable will be committed automatically to this repo.
+
+**Use your preferred IDE**
+
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+
+Follow these steps:
+
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
+
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
+
+# Step 3: Install the necessary dependencies.
+npm i
+
+# Step 4: Start the development server with auto-reloading and an instant preview.
+npm run dev
+```
+
+**Edit a file directly in GitHub**
+
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
+
+**Use GitHub Codespaces**
+
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
+
+## What technologies are used for this project?
+
+This project is built with:
+
+- Vite
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS
+
+## How can I deploy this project?
+
+Simply open [Lovable](https://lovable.dev/projects/f947e21b-5566-4f3a-9849-d3c0baf77b71) and click on Share -> Publish.
+
+## Can I connect a custom domain to my Lovable project?
+
+Yes, you can!
+
+To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+
+Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+```
+
+---
+
+
+## Apis Files
+
+### <a id='src-apis-authts'></a> `src\apis\auth.ts`
+
+**API Module:** auth.ts
 
 ```typescript
-export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
-  theme: {
-    extend: {
-      animation: {
-        shimmer: "shimmer 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        // ... existing animations
+import { apiClient, createFormData } from './client';
+import { TokenResponse, User, SignupRequest } from '@/types';
+
+export const authApi = {
+  // Login with email/password
+  login: async (email: string, password: string): Promise<TokenResponse> => {
+    const formData = createFormData({
+      username: email, // Backend expects 'username' field for email
+      password: password
+    });
+
+    const response = await apiClient.post<TokenResponse>('/auth/token', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
       },
-      keyframes: {
-        shimmer: {
-          "0%, 100%": {
-            opacity: "1",
-          },
-          "50%": {
-            opacity: "0.5",
-          },
-        },
-        // ... existing keyframes
-      },
-    },
+    });
+
+    return response.data;
   },
-}
-```
 
----
+  // Sign up new user
+  signup: async (username: string, email: string, password: string): Promise<User> => {
+    const request: SignupRequest = {
+      username,
+      email,
+      password
+    };
 
-#### 📄 tsconfig.app.json
-<a name='tsconfigappjson'></a>
-
-**Path:** `tsconfig.app.json`
-
-```json
-{
-  "compilerOptions": {
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "skipLibCheck": true,
-
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "noEmit": true,
-    "jsx": "react-jsx",
-
-    /* Linting */
-    "strict": false,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noImplicitAny": false,
-    "noFallthroughCasesInSwitch": false,
-
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    const response = await apiClient.post<User>('/auth/signup', request);
+    return response.data;
   },
-  "include": ["src"]
-}
-```
 
----
-
-#### 📄 tsconfig.json
-<a name='tsconfigjson'></a>
-
-**Path:** `tsconfig.json`
-
-```json
-{
-  "files": [],
-  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
-    "noImplicitAny": false,
-    "noUnusedParameters": false,
-    "skipLibCheck": true,
-    "allowJs": true,
-    "noUnusedLocals": false,
-    "strictNullChecks": false
+  // Get current user profile
+  getMe: async (token?: string): Promise<User> => {
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    
+    const response = await apiClient.get<User>('/users/me', { headers });
+    return response.data;
   }
-}
+};
 ```
 
 ---
 
-#### 📄 tsconfig.node.json
-<a name='tsconfignodejson'></a>
+### <a id='src-apis-chaptersts'></a> `src\apis\chapters.ts`
 
-**Path:** `tsconfig.node.json`
-
-```json
-{
-  "compilerOptions": {
-    "target": "ES2022",
-    "lib": ["ES2023"],
-    "module": "ESNext",
-    "skipLibCheck": true,
-
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "noEmit": true,
-
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noFallthroughCasesInSwitch": true
-  },
-  "include": ["vite.config.ts"]
-}
-```
-
----
-
-#### 📄 vercel.json
-<a name='verceljson'></a>
-
-**Path:** `vercel.json`
-
-```json
-{
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/assets/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    },
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        }
-      ]
-    }
-  ],
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "framework": null
-}
-```
-
----
-
-#### 📄 vite.config.ts
-<a name='viteconfigts'></a>
-
-**Path:** `vite.config.ts`
+**API Module:** chapters.ts
 
 ```typescript
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
-import path from "path";
-import { componentTagger } from "lovable-tagger";
+import { apiClient } from './client';
+import { Chapter, CreateChapterRequest, UpdateChapterRequest } from '@/types/api';
 
-// https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
-  server: {
-    host: "::",
-    port: 8080,
+export const chaptersApi = {
+  // Get chapters by story ID
+  getChaptersByStory: async (storyId: string, publishedOnly: boolean = true): Promise<Chapter[]> => {
+    const response = await apiClient.get(`/chapters/by-story/${storyId}`, {
+      params: { published_only: publishedOnly }
+    });
+    return response.data;
   },
-  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
+
+  // Get a single chapter
+  getChapter: async (chapterId: string): Promise<Chapter> => {
+    const response = await apiClient.get(`/chapters/${chapterId}`);
+    return response.data;
   },
-  build: {
-    outDir: "dist",
-    sourcemap: false,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ["react", "react-dom", "react-router-dom"],
-          ui: ["@radix-ui/react-dialog", "@radix-ui/react-dropdown-menu"],
-        },
-      },
-    },
+
+  // Create a new chapter (requires auth)
+  createChapter: async (data: CreateChapterRequest): Promise<Chapter> => {
+    const response = await apiClient.post('/chapters', data);
+    return response.data;
   },
-  // Add base URL if your app is not served from root
-  base: "/",
-}));
+
+  // Update a chapter (requires auth)
+  updateChapter: async (chapterId: string, data: UpdateChapterRequest): Promise<Chapter> => {
+    const response = await apiClient.patch(`/chapters/${chapterId}`, data);
+    return response.data;
+  },
+
+  // Delete a chapter (requires auth)
+  deleteChapter: async (chapterId: string): Promise<void> => {
+    await apiClient.delete(`/chapters/${chapterId}`);
+  },
+
+  // Set read progress for a chapter
+  setReadProgress: async (chapterId: string, storyId: string): Promise<void> => {
+    await apiClient.post(`/chapters/${chapterId}/progress`, null, {
+      params: { story_id: storyId }
+    });
+  }
+};
 ```
 
 ---
 
-### 📁 src
+### <a id='src-apis-clientts'></a> `src\apis\client.ts`
 
-#### 📄 src\App.css
-<a name='src-Appcss'></a>
+**API Module:** client.ts
 
-**Path:** `src\App.css`
+```typescript
+import axios, { AxiosInstance, AxiosError, AxiosResponse } from 'axios';
+import { ApiEnvelope, ApiError } from '@/types';
+
+// Use environment variable or fallback to production URL
+const API_URL = import.meta.env.VITE_API_URL || 'https://usman678zafar-storivault-backend.hf.space';
+
+// Create axios instance
+export const apiClient: AxiosInstance = axios.create({
+  baseURL: API_URL,
+  timeout: 30000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Request interceptor to add auth token
+apiClient.interceptors.request.use(
+  (config) => {
+    // Get token from auth store
+    const authStorage = localStorage.getItem('auth-storage');
+    if (authStorage) {
+      try {
+        const { state } = JSON.parse(authStorage);
+        if (state?.accessToken) {
+          config.headers.Authorization = `Bearer ${state.accessToken}`;
+        }
+      } catch (error) {
+        console.warn('Failed to parse auth storage:', error);
+      }
+    }
+    
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Response interceptor to handle envelope unwrapping and errors
+apiClient.interceptors.response.use(
+  (response: AxiosResponse) => {
+    // Handle /auth/token endpoint (doesn't use envelope)
+    if (response.config.url?.includes('/auth/token')) {
+      return response;
+    }
+    
+    // Unwrap envelope for other endpoints
+    const envelope = response.data as ApiEnvelope;
+    
+    if (envelope.success) {
+      return { ...response, data: envelope.data };
+    } else {
+      // Convert envelope error to ApiError
+      const apiError: ApiError = new Error(envelope.message || 'API Error') as ApiError;
+      apiError.status = response.status;
+      apiError.details = envelope.error?.details;
+      throw apiError;
+    }
+  },
+  (error: AxiosError) => {
+    // Handle network errors and HTTP error responses
+    const apiError: ApiError = new Error() as ApiError;
+
+    if (error.response) {
+      // Server responded with error status
+      const data = error.response.data as any;
+
+      // Log full error response for debugging
+      console.error('API Error Response:', {
+        status: error.response.status,
+        data: error.response.data,
+        url: error.config?.url,
+        method: error.config?.method,
+      });
+
+      if (data && typeof data === 'object') {
+        if (data.success === false) {
+          // Envelope error
+          apiError.message = data.message || 'API Error';
+          apiError.details = data.error?.details;
+        } else if (data.detail) {
+          // FastAPI validation error
+          apiError.message = Array.isArray(data.detail)
+            ? data.detail.map((d: any) => d.msg).join(', ')
+            : data.detail;
+        } else {
+          apiError.message = error.message || `HTTP ${error.response.status} Error`;
+        }
+      } else {
+        apiError.message = error.message || `HTTP ${error.response.status} Error`;
+      }
+
+      apiError.status = error.response.status;
+      
+      // Handle 401 errors - logout user
+      if (error.response.status === 401) {
+        // Clear auth storage
+        localStorage.removeItem('auth-storage');
+        
+        // Redirect to login if not already there
+        if (typeof window !== 'undefined' && !window.location.pathname.includes('/auth')) {
+          window.location.href = '/auth/login';
+        }
+      }
+    } else if (error.request) {
+      // Network error
+      apiError.message = 'Network error. Please check your connection.';
+    } else {
+      // Other error
+      apiError.message = error.message || 'Unknown error occurred';
+    }
+    
+    return Promise.reject(apiError);
+  }
+);
+
+// Helper function to create multipart form data
+export const createFormData = (data: Record<string, any>): FormData => {
+  const formData = new FormData();
+  
+  for (const [key, value] of Object.entries(data)) {
+    if (value !== undefined && value !== null) {
+      if (value instanceof File) {
+        formData.append(key, value);
+      } else if (Array.isArray(value)) {
+        // Handle arrays (e.g., tags)
+        formData.append(key, value.join(','));
+      } else {
+        formData.append(key, String(value));
+      }
+    }
+  }
+  
+  return formData;
+};
+
+export default apiClient;
+```
+
+---
+
+### <a id='src-apis-indexts'></a> `src\apis\index.ts`
+
+**API Module:** index.ts
+
+```typescript
+export * from './client';
+export * from './auth';
+export * from './users';
+export * from './stories';
+export * from './chapters';
+export * from './uploads';
+export * from './votes';
+```
+
+---
+
+### <a id='src-apis-storiests'></a> `src\apis\stories.ts`
+
+**API Module:** stories.ts
+
+```typescript
+import { apiClient, createFormData } from './client';
+import { Story, CreateStoryRequest, UpdateStoryRequest, StoriesQuery, SearchQuery, PaginatedResponse } from '@/types';
+
+export const storiesApi = {
+  // Create story with multipart form (including cover upload)
+  createStoryMultipart: async (data: {
+    title: string;
+    description?: string;
+    genre: string;
+    tags?: string;
+    visibility?: 'public' | 'private';
+    cover?: File;
+  }): Promise<Story> => {
+    const formData = createFormData(data);
+    
+    const response = await apiClient.post<Story>('/stories', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    
+    return response.data;
+  },
+
+  // Create story with JSON
+  createStory: async (data: CreateStoryRequest): Promise<Story> => {
+    const response = await apiClient.post<Story>('/stories/json', data);
+    return response.data;
+  },
+
+  // Update story cover
+  updateStoryCover: async (storyId: string, cover: File): Promise<Story> => {
+    const formData = createFormData({ cover });
+    
+    const response = await apiClient.patch<Story>(`/stories/${storyId}/cover`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    
+    return response.data;
+  },
+
+  // Get stories with filters and pagination
+  getStories: async (query: StoriesQuery = {}): Promise<PaginatedResponse<Story>> => {
+    const response = await apiClient.get<PaginatedResponse<Story>>('/stories', {
+      params: query
+    });
+    return response.data;
+  },
+
+  // Search stories
+  searchStories: async (query: SearchQuery): Promise<PaginatedResponse<Story>> => {
+    const response = await apiClient.get<PaginatedResponse<Story>>('/stories/search', {
+      params: query
+    });
+    return response.data;
+  },
+
+  // Get story by ID
+  getStory: async (storyId: string): Promise<Story> => {
+    const response = await apiClient.get<Story>(`/stories/${storyId}`);
+    return response.data;
+  },
+
+  // Update story
+  updateStory: async (storyId: string, data: UpdateStoryRequest): Promise<Story> => {
+    const response = await apiClient.patch<Story>(`/stories/${storyId}`, data);
+    return response.data;
+  },
+
+  // Delete story
+  deleteStory: async (storyId: string): Promise<void> => {
+    await apiClient.delete(`/stories/${storyId}`);
+  }
+};
+```
+
+---
+
+### <a id='src-apis-uploadsts'></a> `src\apis\uploads.ts`
+
+**API Module:** uploads.ts
+
+```typescript
+import { apiClient, createFormData } from './client';
+import { UploadResponse, PresignRequest, PresignResponse, GetUrlQuery, GetUrlResponse } from '@/types';
+
+export const uploadsApi = {
+  // Check upload status
+  getStatus: async (): Promise<{ configured: boolean }> => {
+    const response = await apiClient.get<{ configured: boolean }>('/uploads/status');
+    return response.data;
+  },
+
+  // Direct file upload
+  uploadFile: async (
+    file: File, 
+    folder?: 'images' | 'covers' | 'media' | 'avatars'
+  ): Promise<UploadResponse> => {
+    const formData = createFormData({ uploadedFile: file });
+    
+    const params = folder ? { folder } : {};
+    
+    const response = await apiClient.post<UploadResponse>('/uploads/file', formData, {
+      params,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    
+    return response.data;
+  },
+
+  // Get presigned URL for upload
+  getPresignedUrl: async (data: PresignRequest): Promise<PresignResponse> => {
+    const response = await apiClient.post<PresignResponse>('/uploads/presign', data);
+    return response.data;
+  },
+
+  // Get signed URL for private file access
+  getSignedUrl: async (query: GetUrlQuery): Promise<GetUrlResponse> => {
+    const response = await apiClient.get<GetUrlResponse>('/uploads/get-url', {
+      params: query
+    });
+    return response.data;
+  },
+
+  // Delete file
+  deleteFile: async (key: string): Promise<{ key: string }> => {
+    const response = await apiClient.delete<{ key: string }>(`/uploads/${key}`);
+    return response.data;
+  }
+};
+```
+
+---
+
+### <a id='src-apis-usersts'></a> `src\apis\users.ts`
+
+**API Module:** users.ts
+
+```typescript
+import { apiClient, createFormData } from './client';
+import { User, UpdateProfileRequest, ChangePasswordRequest, PaginatedResponse } from '@/types';
+
+export const usersApi = {
+  // Update current user profile
+  updateProfile: async (data: UpdateProfileRequest): Promise<User> => {
+    const response = await apiClient.patch<User>('/users/me', data);
+    return response.data;
+  },
+
+  // Upload profile picture
+  uploadProfilePicture: async (file: File): Promise<User> => {
+    const formData = createFormData({ file });
+    
+    const response = await apiClient.post<User>('/users/me/profile-pic', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    
+    return response.data;
+  },
+
+  // Get user by username
+  getUserByUsername: async (username: string): Promise<User> => {
+    const response = await apiClient.get<User>(`/users/${username}`);
+    return response.data;
+  },
+
+  // Follow user
+  followUser: async (username: string): Promise<void> => {
+    await apiClient.post(`/users/${username}/follow`);
+  },
+
+  // Unfollow user
+  unfollowUser: async (username: string): Promise<void> => {
+    await apiClient.post(`/users/${username}/unfollow`);
+  },
+
+  // Get user followers
+  getFollowers: async (username: string, page = 1, limit = 20): Promise<PaginatedResponse<User>> => {
+    const response = await apiClient.get<PaginatedResponse<User>>(`/users/${username}/followers`, {
+      params: { page, limit }
+    });
+    return response.data;
+  },
+
+  // Get user following
+  getFollowing: async (username: string, page = 1, limit = 20): Promise<PaginatedResponse<User>> => {
+    const response = await apiClient.get<PaginatedResponse<User>>(`/users/${username}/following`, {
+      params: { page, limit }
+    });
+    return response.data;
+  },
+
+  // Change password
+  changePassword: async (data: ChangePasswordRequest): Promise<void> => {
+    await apiClient.post('/users/me/password', data);
+  },
+
+  // Delete account
+  deleteAccount: async (): Promise<void> => {
+    await apiClient.delete('/users/me');
+  }
+};
+```
+
+---
+
+### <a id='src-apis-votests'></a> `src\apis\votes.ts`
+
+**API Module:** votes.ts
+
+```typescript
+import { apiClient } from './client';
+import { VoteRequest } from '@/types';
+
+export const votesApi = {
+  // Vote on a chapter
+  vote: async (chapterId: string): Promise<void> => {
+    const request: VoteRequest = {
+      chapter_id: chapterId
+    };
+    
+    await apiClient.post('/votes', request);
+  }
+};
+```
+
+---
+
+
+## App.Css Files
+
+### <a id='src-Appcss'></a> `src\App.css`
+
+**File Type:** App.css
 
 ```css
 #root {
@@ -538,20 +1104,25 @@ export default defineConfig(({ mode }) => ({
 
 ---
 
-#### 📄 src\App.tsx
-<a name='src-Apptsx'></a>
 
-**Path:** `src\App.tsx`
+## App.Tsx Files
+
+### <a id='src-Apptsx'></a> `src\App.tsx`
+
+**File Type:** App.tsx
 
 ```tsx
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ToastProvider } from "@/components/ui/toast-provider";
+import { SettingsPage } from "./pages/SettingsPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
 import { useEffect } from "react";
+import { GoogleSuccessPage } from "./pages/auth/GoogleSuccessPage";
+import { VerifyEmailPage } from "./pages/auth/VerifyEmailPage";
 
 // Pages
 import { HomePage } from "./pages/HomePage";
@@ -685,6 +1256,18 @@ const App = () => {
               }
             />
             <Route
+              path="/auth/google-success"
+              element={
+                <PublicOnlyRoute>
+                  <GoogleSuccessPage />
+                </PublicOnlyRoute>
+              }
+            />
+            <Route
+              path="/auth/verify-email"
+              element={<VerifyEmailPage />}
+            />
+            <Route
               path="/library"
               element={
                 <ProtectedRoute>
@@ -696,7 +1279,7 @@ const App = () => {
               path="/settings"
               element={
                 <ProtectedRoute>
-                  <div>Settings Page (To be implemented)</div>
+                  <SettingsPage />
                 </ProtectedRoute>
               }
             />
@@ -745,10 +1328,7401 @@ export default App;
 
 ---
 
-#### 📄 src\index.css
-<a name='src-indexcss'></a>
 
-**Path:** `src\index.css`
+## Components Files
+
+### <a id='src-components-layout-footertsx'></a> `src\components\layout\footer.tsx`
+
+**Component:** footer.tsx
+
+```tsx
+"use client";
+
+import { Link } from "react-router-dom";
+import { Github, Twitter, Mail, ExternalLink } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/ui/logo";
+
+export function Footer() {
+  const currentYear = new Date().getFullYear();
+
+  const footerLinks = {
+    product: [
+      { label: "Features", href: "/features" },
+      { label: "Pricing", href: "/pricing" },
+      { label: "Stories", href: "/stories" },
+      { label: "Authors", href: "/authors" },
+    ],
+    company: [
+      { label: "About", href: "/about" },
+      { label: "Blog", href: "/blog" },
+      { label: "Careers", href: "/careers" },
+      { label: "Contact", href: "/contact" },
+    ],
+    legal: [
+      { label: "Privacy Policy", href: "/privacy" },
+      { label: "Terms of Service", href: "/terms" },
+      { label: "Cookie Policy", href: "/cookies" },
+      { label: "Guidelines", href: "/guidelines" },
+    ],
+    social: [
+      { label: "Twitter", href: "https://twitter.com", icon: Twitter },
+      { label: "GitHub", href: "https://github.com", icon: Github },
+      { label: "Email", href: "mailto:support@storivault.com", icon: Mail },
+    ],
+  };
+
+  return (
+    <footer className="bg-background border-t mt-auto">
+      {/* Main Footer Content - Dark Background */}
+      <div className="bg-gray-800">
+        <div className="container mx-auto px-4 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+            {/* Brand Section with New Logo */}
+            <div className="lg:col-span-2">
+              <Logo size="md" className="mb-4" />
+              <p className="text-gray-300 mb-4 max-w-sm">
+                Your gateway to infinite stories. Discover captivating tales,
+                connect with passionate writers, and immerse yourself in worlds
+                beyond imagination.
+              </p>
+              <div className="flex gap-2">
+                {footerLinks.social.map((social) => {
+                  const Icon = social.icon;
+                  return (
+                    <Button
+                      key={social.label}
+                      variant="ghost"
+                      size="sm"
+                      className="h-9 w-9 p-0 hover:bg-gray-700 text-gray-300 hover:text-white"
+                      asChild
+                    >
+                      <a
+                        href={social.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={social.label}
+                      >
+                        <Icon className="h-4 w-4" />
+                      </a>
+                    </Button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Product Links */}
+            <div>
+              <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-white">
+                Product
+              </h3>
+              <ul className="space-y-2">
+                {footerLinks.product.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      to={link.href}
+                      className="text-gray-300 hover:text-white transition-colors text-sm"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Company Links */}
+            <div>
+              <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-white">
+                Company
+              </h3>
+              <ul className="space-y-2">
+                {footerLinks.company.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      to={link.href}
+                      className="text-gray-300 hover:text-white transition-colors text-sm"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Legal Links */}
+            <div>
+              <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-white">
+                Legal
+              </h3>
+              <ul className="space-y-2">
+                {footerLinks.legal.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      to={link.href}
+                      className="text-gray-300 hover:text-white transition-colors text-sm"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Footer - Light Background */}
+      <div className="bg-background border-t border-gray-200">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="text-sm text-muted-foreground">
+              <span>© {currentYear} StoriVault. All rights reserved.</span>
+            </div>
+
+            {/* Powered by NexusNao - Right Side */}
+            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+              <span>Powered by</span>
+              <a
+                href="https://nexusnao.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-primary hover:text-primary-hover inline-flex items-center gap-1 transition-colors"
+              >
+                NexusNao
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+```
+
+---
+
+### <a id='src-components-layout-headertsx'></a> `src\components\layout\header.tsx`
+
+**Component:** header.tsx
+
+```tsx
+// src/components/layout/header.tsx
+"use client";
+
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  Search,
+  Bell,
+  Plus,
+  User,
+  Settings,
+  LogOut,
+  Library,
+  Menu,
+  X,
+  ChevronDown,
+  BookOpen,
+  PenTool,
+  FileText,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Logo } from "@/components/ui/logo";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+} from "@/components/ui/dropdown-menu";
+import { useAuthStore } from "@/store/authStore";
+import { cn } from "@/lib/utils";
+
+const browseCategories = [
+  { label: "Browse", href: "/stories", isHeader: true },
+  { label: "Romance", href: "/stories?genre=Romance" },
+  { label: "Fantasy", href: "/stories?genre=Fantasy" },
+  { label: "Mystery", href: "/stories?genre=Mystery" },
+  { label: "Sci-Fi", href: "/stories?genre=Sci-Fi" },
+  { label: "Horror", href: "/stories?genre=Horror" },
+  { label: "Adventure", href: "/stories?genre=Adventure" },
+  { label: "Drama", href: "/stories?genre=Drama" },
+  { label: "Comedy", href: "/stories?genre=Comedy" },
+  { label: "Thriller", href: "/stories?genre=Thriller" },
+  { label: "Historical", href: "/stories?genre=Historical" },
+  { label: "Poetry", href: "/stories?genre=Poetry" },
+  { label: "Non-Fiction", href: "/stories?genre=Non-Fiction" },
+];
+
+export function Header() {
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const { user, isAuthenticated, logout } = useAuthStore();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/stories?q=${encodeURIComponent(searchQuery.trim())}`);
+      setMobileSearchOpen(false);
+      setSearchQuery("");
+    }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+    setMobileMenuOpen(false);
+  };
+
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
+  };
+
+  return (
+    <>
+      {/* Fixed Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b shadow-sm">
+        <div className="relative">
+          {/* Main Header Content */}
+          <div className="h-14 sm:h-16 px-3 sm:px-6 lg:px-8">
+            <div className="flex h-full items-center justify-between max-w-7xl mx-auto">
+              {/* Left Section - Mobile Menu and Logo */}
+              <div className="flex items-center gap-2 sm:gap-4">
+                {/* Mobile Menu Button */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="sm:hidden h-8 w-8 p-0"
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                >
+                  {mobileMenuOpen ? (
+                    <X className="h-5 w-5" />
+                  ) : (
+                    <Menu className="h-5 w-5" />
+                  )}
+                </Button>
+
+                {/* Logo with Text on Mobile, Full Logo on Desktop */}
+                <Link to="/" className="flex items-center gap-2">
+                  {/* Mobile - Show StoriVault text */}
+                  <div className="sm:hidden flex items-center gap-2">
+                    {/* Book Icon */}
+                    <svg
+                      viewBox="0 0 48 48"
+                      className="h-8 w-8"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <defs>
+                        <linearGradient
+                          id="mobileBookGradient"
+                          x1="0%"
+                          y1="0%"
+                          x2="100%"
+                          y2="100%"
+                        >
+                          <stop offset="0%" stopColor="#FF6B35" />
+                          <stop offset="100%" stopColor="#FFA500" />
+                        </linearGradient>
+                      </defs>
+                      <path
+                        d="M6 8C6 6.89543 6.89543 6 8 6H22V38H8C6.89543 38 6 37.1046 6 36V8Z"
+                        fill="url(#mobileBookGradient)"
+                      />
+                      <path
+                        d="M26 6H40C41.1046 6 42 6.89543 42 8V36C42 37.1046 41.1046 38 40 38H26V6Z"
+                        fill="url(#mobileBookGradient)"
+                        opacity="0.8"
+                      />
+                      <rect x="22" y="6" width="4" height="32" fill="#E85D04" />
+                    </svg>
+                    {/* StoriVault Text */}
+                    <span className="font-bold text-lg">
+                      <span className="text-orange-500">Stori</span>
+                      <span className="text-gray-700">Vault</span>
+                    </span>
+                  </div>
+
+                  {/* Desktop - Full Logo Component */}
+                  <div className="hidden sm:block">
+                    <Logo size="sm" showText={true} />
+                  </div>
+                </Link>
+
+                {/* Browse Dropdown - Desktop Only */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="hidden sm:flex items-center gap-1 font-medium"
+                    >
+                      Browse
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="start"
+                    className="w-56 max-h-[80vh] overflow-y-auto bg-white"
+                  >
+                    {browseCategories.map((category, index) =>
+                      category.isHeader ? (
+                        <DropdownMenuLabel
+                          key={index}
+                          className="font-bold text-gray-900"
+                        >
+                          {category.label}
+                        </DropdownMenuLabel>
+                      ) : (
+                        <DropdownMenuItem key={index} asChild>
+                          <Link to={category.href} className="cursor-pointer">
+                            {category.label}
+                          </Link>
+                        </DropdownMenuItem>
+                      )
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+
+              {/* Center - Desktop Search */}
+              <div className="hidden md:flex flex-1 max-w-md mx-8">
+                <form onSubmit={handleSearch} className="relative w-full">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    type="search"
+                    placeholder="Search stories, authors..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10 w-full rounded-full border-gray-300 focus:border-orange-400 focus:ring-orange-400 bg-gray-50"
+                  />
+                </form>
+              </div>
+
+              {/* Right Section */}
+              <div className="flex items-center gap-1 sm:gap-2">
+                {/* Mobile Search Toggle */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="md:hidden h-8 w-8 p-0"
+                  onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
+                >
+                  <Search className="h-5 w-5" />
+                </Button>
+
+                {isAuthenticated ? (
+                  <>
+                    {/* Write Button - Desktop */}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="hidden sm:flex items-center gap-1 font-medium"
+                      asChild
+                    >
+                      <Link to="/stories/create">
+                        <PenTool className="h-4 w-4" />
+                        Write
+                      </Link>
+                    </Button>
+
+                    {/* Notifications - Desktop */}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="hidden sm:block h-8 w-8 p-0"
+                    >
+                      <Bell className="h-5 w-5" />
+                    </Button>
+
+                    {/* User Menu */}
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 rounded-full p-0"
+                        >
+                          <Avatar className="h-8 w-8">
+                            <AvatarImage
+                              src={user?.profile_pic || undefined}
+                              alt={user?.username}
+                            />
+                            <AvatarFallback className="bg-orange-100 text-orange-700">
+                              {user?.username?.charAt(0).toUpperCase() || "U"}
+                            </AvatarFallback>
+                          </Avatar>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        className="w-56"
+                        align="end"
+                        sideOffset={5}
+                      >
+                        <div className="flex items-center justify-start gap-2 p-2">
+                          <div className="flex flex-col space-y-1 leading-none">
+                            <p className="font-medium text-sm">
+                              {user?.username}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {user?.email}
+                            </p>
+                          </div>
+                        </div>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem asChild>
+                          <Link
+                            to={`/profile/${user?.username}`}
+                            className="cursor-pointer"
+                          >
+                            <User className="mr-2 h-4 w-4" />
+                            Profile
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/library" className="cursor-pointer">
+                            <Library className="mr-2 h-4 w-4" />
+                            My Library
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/my-stories" className="cursor-pointer">
+                            <FileText className="mr-2 h-4 w-4" />
+                            My Stories
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link
+                            to="/stories/create"
+                            className="cursor-pointer sm:hidden"
+                          >
+                            <PenTool className="mr-2 h-4 w-4" />
+                            Write Story
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem asChild>
+                          <Link to="/settings" className="cursor-pointer">
+                            <Settings className="mr-2 h-4 w-4" />
+                            Settings
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={handleLogout}
+                          className="cursor-pointer text-red-600 hover:text-red-600 hover:bg-red-50"
+                        >
+                          <LogOut className="mr-2 h-4 w-4" />
+                          Sign Out
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </>
+                ) : (
+                  <>
+                    {/* Sign In and Sign Up buttons for non-authenticated users */}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-sm font-medium"
+                      asChild
+                    >
+                      <Link to="/auth/login">Sign In</Link>
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="hidden sm:inline-flex bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-sm font-medium"
+                      asChild
+                    >
+                      <Link to="/auth/signup">Sign Up</Link>
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile Search Bar - Expandable */}
+          {mobileSearchOpen && (
+            <div className="md:hidden border-t bg-white px-4 py-3">
+              <form onSubmit={handleSearch} className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Input
+                  type="search"
+                  placeholder="Search stories, authors..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 w-full rounded-full text-sm border-gray-300 bg-gray-50"
+                  autoFocus
+                />
+              </form>
+            </div>
+          )}
+
+          {/* Mobile Menu - Slide Down */}
+          {mobileMenuOpen && (
+            <div className="sm:hidden border-t bg-white">
+              <div className="px-4 py-3 space-y-1">
+                {/* Browse Section for Mobile */}
+                <div className="pb-2 mb-2 border-b border-gray-200">
+                  <p className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2 px-3">
+                    Browse Stories
+                  </p>
+                  {browseCategories.slice(1, 7).map((category, index) => (
+                    <Link
+                      key={index}
+                      to={category.href}
+                      className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                      onClick={closeMobileMenu}
+                    >
+                      {category.label}
+                    </Link>
+                  ))}
+                  <Link
+                    to="/stories"
+                    className="block px-3 py-2 rounded-md text-sm font-medium text-orange-600 hover:bg-orange-50"
+                    onClick={closeMobileMenu}
+                  >
+                    View All Categories →
+                  </Link>
+                </div>
+
+                {/* Write Section for Mobile */}
+                {isAuthenticated ? (
+                  <div className="pb-2 mb-2 border-b border-gray-200">
+                    <p className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2 px-3">
+                      Writing
+                    </p>
+                    <Link
+                      to="/stories/create"
+                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                      onClick={closeMobileMenu}
+                    >
+                      <Plus className="mr-2 h-4 w-4" />
+                      Create New Story
+                    </Link>
+                    <Link
+                      to="/my-stories"
+                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                      onClick={closeMobileMenu}
+                    >
+                      <FileText className="mr-2 h-4 w-4" />
+                      My Stories
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="pb-2 mb-2 border-b border-gray-200">
+                    <p className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2 px-3">
+                      Get Started
+                    </p>
+                    <Link
+                      to="/auth/signup"
+                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                      onClick={closeMobileMenu}
+                    >
+                      <PenTool className="mr-2 h-4 w-4" />
+                      Sign Up to Write
+                    </Link>
+                  </div>
+                )}
+
+                {/* User Actions */}
+                {isAuthenticated ? (
+                  <>
+                    <Link
+                      to="/library"
+                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                      onClick={closeMobileMenu}
+                    >
+                      <Library className="mr-2 h-4 w-4" />
+                      My Library
+                    </Link>
+                    <Link
+                      to={`/profile/${user?.username}`}
+                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                      onClick={closeMobileMenu}
+                    >
+                      <User className="mr-2 h-4 w-4" />
+                      Profile
+                    </Link>
+                    <Link
+                      to="/settings"
+                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                      onClick={closeMobileMenu}
+                    >
+                      <Settings className="mr-2 h-4 w-4" />
+                      Settings
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center w-full text-left px-3 py-2 rounded-md text-sm font-medium text-red-600 hover:bg-red-50"
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Sign Out
+                    </button>
+                  </>
+                ) : null}
+              </div>
+            </div>
+          )}
+        </div>
+      </header>
+
+      {/* Spacer to prevent content from going under fixed header */}
+      <div className="h-14 sm:h-16" />
+    </>
+  );
+}
+```
+
+---
+
+### <a id='src-components-layout-main-layouttsx'></a> `src\components\layout\main-layout.tsx`
+
+**Component:** main-layout.tsx
+
+```tsx
+"use client";
+
+import { useEffect } from "react";
+import { Header } from "./header";
+import { Footer } from "./footer";
+import { useAuthStore } from "@/store/authStore";
+import { cn } from "@/lib/utils";
+
+interface MainLayoutProps {
+  children: React.ReactNode;
+  className?: string;
+  showFooter?: boolean;
+}
+
+export function MainLayout({
+  children,
+  className,
+  showFooter = true,
+}: MainLayoutProps) {
+  const { isAuthenticated, fetchMe } = useAuthStore();
+
+  // Fetch user data on mount if authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchMe();
+    }
+  }, [isAuthenticated, fetchMe]);
+
+  return (
+    <div className="min-h-screen bg-background flex flex-col">
+      <Header />
+      <main className={cn("flex-1 flex flex-col", className)}>
+        <div className="flex-1">{children}</div>
+        {showFooter && !isAuthenticated && <Footer />}
+      </main>
+    </div>
+  );
+}
+```
+
+---
+
+### <a id='src-components-ui-accordiontsx'></a> `src\components\ui\accordion.tsx`
+
+**Component:** accordion.tsx
+
+```tsx
+import * as React from "react";
+import * as AccordionPrimitive from "@radix-ui/react-accordion";
+import { ChevronDown } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const Accordion = AccordionPrimitive.Root;
+
+const AccordionItem = React.forwardRef<
+  React.ElementRef<typeof AccordionPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>
+>(({ className, ...props }, ref) => (
+  <AccordionPrimitive.Item ref={ref} className={cn("border-b", className)} {...props} />
+));
+AccordionItem.displayName = "AccordionItem";
+
+const AccordionTrigger = React.forwardRef<
+  React.ElementRef<typeof AccordionPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>
+>(({ className, children, ...props }, ref) => (
+  <AccordionPrimitive.Header className="flex">
+    <AccordionPrimitive.Trigger
+      ref={ref}
+      className={cn(
+        "flex flex-1 items-center justify-between py-4 font-medium transition-all hover:underline [&[data-state=open]>svg]:rotate-180",
+        className,
+      )}
+      {...props}
+    >
+      {children}
+      <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+    </AccordionPrimitive.Trigger>
+  </AccordionPrimitive.Header>
+));
+AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName;
+
+const AccordionContent = React.forwardRef<
+  React.ElementRef<typeof AccordionPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Content>
+>(({ className, children, ...props }, ref) => (
+  <AccordionPrimitive.Content
+    ref={ref}
+    className="overflow-hidden text-sm transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
+    {...props}
+  >
+    <div className={cn("pb-4 pt-0", className)}>{children}</div>
+  </AccordionPrimitive.Content>
+));
+
+AccordionContent.displayName = AccordionPrimitive.Content.displayName;
+
+export { Accordion, AccordionItem, AccordionTrigger, AccordionContent };
+```
+
+---
+
+### <a id='src-components-ui-alert-dialogtsx'></a> `src\components\ui\alert-dialog.tsx`
+
+**Component:** alert-dialog.tsx
+
+```tsx
+import * as React from "react";
+import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
+
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
+
+const AlertDialog = AlertDialogPrimitive.Root;
+
+const AlertDialogTrigger = AlertDialogPrimitive.Trigger;
+
+const AlertDialogPortal = AlertDialogPrimitive.Portal;
+
+const AlertDialogOverlay = React.forwardRef<
+  React.ElementRef<typeof AlertDialogPrimitive.Overlay>,
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Overlay>
+>(({ className, ...props }, ref) => (
+  <AlertDialogPrimitive.Overlay
+    className={cn(
+      "fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      className,
+    )}
+    {...props}
+    ref={ref}
+  />
+));
+AlertDialogOverlay.displayName = AlertDialogPrimitive.Overlay.displayName;
+
+const AlertDialogContent = React.forwardRef<
+  React.ElementRef<typeof AlertDialogPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Content>
+>(({ className, ...props }, ref) => (
+  <AlertDialogPortal>
+    <AlertDialogOverlay />
+    <AlertDialogPrimitive.Content
+      ref={ref}
+      className={cn(
+        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
+        className,
+      )}
+      {...props}
+    />
+  </AlertDialogPortal>
+));
+AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName;
+
+const AlertDialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("flex flex-col space-y-2 text-center sm:text-left", className)} {...props} />
+);
+AlertDialogHeader.displayName = "AlertDialogHeader";
+
+const AlertDialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className)} {...props} />
+);
+AlertDialogFooter.displayName = "AlertDialogFooter";
+
+const AlertDialogTitle = React.forwardRef<
+  React.ElementRef<typeof AlertDialogPrimitive.Title>,
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Title>
+>(({ className, ...props }, ref) => (
+  <AlertDialogPrimitive.Title ref={ref} className={cn("text-lg font-semibold", className)} {...props} />
+));
+AlertDialogTitle.displayName = AlertDialogPrimitive.Title.displayName;
+
+const AlertDialogDescription = React.forwardRef<
+  React.ElementRef<typeof AlertDialogPrimitive.Description>,
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Description>
+>(({ className, ...props }, ref) => (
+  <AlertDialogPrimitive.Description ref={ref} className={cn("text-sm text-muted-foreground", className)} {...props} />
+));
+AlertDialogDescription.displayName = AlertDialogPrimitive.Description.displayName;
+
+const AlertDialogAction = React.forwardRef<
+  React.ElementRef<typeof AlertDialogPrimitive.Action>,
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action>
+>(({ className, ...props }, ref) => (
+  <AlertDialogPrimitive.Action ref={ref} className={cn(buttonVariants(), className)} {...props} />
+));
+AlertDialogAction.displayName = AlertDialogPrimitive.Action.displayName;
+
+const AlertDialogCancel = React.forwardRef<
+  React.ElementRef<typeof AlertDialogPrimitive.Cancel>,
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Cancel>
+>(({ className, ...props }, ref) => (
+  <AlertDialogPrimitive.Cancel
+    ref={ref}
+    className={cn(buttonVariants({ variant: "outline" }), "mt-2 sm:mt-0", className)}
+    {...props}
+  />
+));
+AlertDialogCancel.displayName = AlertDialogPrimitive.Cancel.displayName;
+
+export {
+  AlertDialog,
+  AlertDialogPortal,
+  AlertDialogOverlay,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+};
+```
+
+---
+
+### <a id='src-components-ui-alerttsx'></a> `src\components\ui\alert.tsx`
+
+**Component:** alert.tsx
+
+```tsx
+import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+
+import { cn } from "@/lib/utils";
+
+const alertVariants = cva(
+  "relative w-full rounded-lg border p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground",
+  {
+    variants: {
+      variant: {
+        default: "bg-background text-foreground",
+        destructive: "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  },
+);
+
+const Alert = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>
+>(({ className, variant, ...props }, ref) => (
+  <div ref={ref} role="alert" className={cn(alertVariants({ variant }), className)} {...props} />
+));
+Alert.displayName = "Alert";
+
+const AlertTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
+  ({ className, ...props }, ref) => (
+    <h5 ref={ref} className={cn("mb-1 font-medium leading-none tracking-tight", className)} {...props} />
+  ),
+);
+AlertTitle.displayName = "AlertTitle";
+
+const AlertDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn("text-sm [&_p]:leading-relaxed", className)} {...props} />
+  ),
+);
+AlertDescription.displayName = "AlertDescription";
+
+export { Alert, AlertTitle, AlertDescription };
+```
+
+---
+
+### <a id='src-components-ui-aspect-ratiotsx'></a> `src\components\ui\aspect-ratio.tsx`
+
+**Component:** aspect-ratio.tsx
+
+```tsx
+import * as AspectRatioPrimitive from "@radix-ui/react-aspect-ratio";
+
+const AspectRatio = AspectRatioPrimitive.Root;
+
+export { AspectRatio };
+```
+
+---
+
+### <a id='src-components-ui-auth-skeletontsx'></a> `src\components\ui\auth-skeleton.tsx`
+
+**Component:** auth-skeleton.tsx
+
+```tsx
+import { Skeleton } from "./skeleton";
+
+export function AuthFormSkeleton() {
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
+      <div className="max-w-md w-full space-y-8">
+        <div className="bg-white py-8 px-6 shadow-xl rounded-lg sm:px-10">
+          {/* Logo Skeleton */}
+          <div className="flex justify-center mb-6">
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-10 w-10" variant="rounded" />
+              <div className="space-y-1">
+                <Skeleton className="h-6 w-24" variant="text" />
+                <Skeleton className="h-3 w-20" variant="text" />
+              </div>
+            </div>
+          </div>
+
+          {/* Header Skeleton */}
+          <div className="text-center mb-8">
+            <Skeleton className="h-8 w-48 mx-auto mb-2" variant="text" />
+            <Skeleton className="h-4 w-64 mx-auto" variant="text" />
+          </div>
+
+          {/* Form Fields Skeleton */}
+          <div className="space-y-5">
+            {/* Field 1 */}
+            <div>
+              <Skeleton className="h-4 w-24 mb-2" variant="text" />
+              <Skeleton className="h-10 w-full" variant="rounded" />
+            </div>
+
+            {/* Field 2 */}
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <Skeleton className="h-4 w-24" variant="text" />
+                <Skeleton className="h-4 w-28" variant="text" />
+              </div>
+              <Skeleton className="h-10 w-full" variant="rounded" />
+            </div>
+
+            {/* Field 3 */}
+            <div>
+              <Skeleton className="h-4 w-32 mb-2" variant="text" />
+              <Skeleton className="h-10 w-full" variant="rounded" />
+            </div>
+
+            {/* Submit Button */}
+            <Skeleton className="h-10 w-full" variant="rounded" />
+          </div>
+
+          {/* Divider and Footer Link */}
+          <div className="mt-6">
+            <div className="relative mb-6">
+              <div className="absolute inset-0 flex items-center">
+                <Skeleton className="h-px w-full" />
+              </div>
+              <div className="relative flex justify-center">
+                <div className="px-2 bg-white">
+                  <Skeleton className="h-4 w-32" variant="text" />
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <Skeleton className="h-4 w-32 mx-auto" variant="text" />
+            </div>
+          </div>
+        </div>
+
+        {/* Terms and Privacy Links */}
+        <div className="text-center">
+          <Skeleton className="h-3 w-64 mx-auto" variant="text" />
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+### <a id='src-components-ui-avatartsx'></a> `src\components\ui\avatar.tsx`
+
+**Component:** avatar.tsx
+
+```tsx
+import * as React from "react";
+import * as AvatarPrimitive from "@radix-ui/react-avatar";
+
+import { cn } from "@/lib/utils";
+
+const Avatar = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>
+>(({ className, ...props }, ref) => (
+  <AvatarPrimitive.Root
+    ref={ref}
+    className={cn("relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full", className)}
+    {...props}
+  />
+));
+Avatar.displayName = AvatarPrimitive.Root.displayName;
+
+const AvatarImage = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Image>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
+>(({ className, ...props }, ref) => (
+  <AvatarPrimitive.Image ref={ref} className={cn("aspect-square h-full w-full", className)} {...props} />
+));
+AvatarImage.displayName = AvatarPrimitive.Image.displayName;
+
+const AvatarFallback = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Fallback>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>
+>(({ className, ...props }, ref) => (
+  <AvatarPrimitive.Fallback
+    ref={ref}
+    className={cn("flex h-full w-full items-center justify-center rounded-full bg-muted", className)}
+    {...props}
+  />
+));
+AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
+
+export { Avatar, AvatarImage, AvatarFallback };
+```
+
+---
+
+### <a id='src-components-ui-badgetsx'></a> `src\components\ui\badge.tsx`
+
+**Component:** badge.tsx
+
+```tsx
+import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+
+import { cn } from "@/lib/utils";
+
+const badgeVariants = cva(
+  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  {
+    variants: {
+      variant: {
+        default: "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
+        secondary: "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        destructive: "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
+        outline: "text-foreground",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  },
+);
+
+export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof badgeVariants> {}
+
+function Badge({ className, variant, ...props }: BadgeProps) {
+  return <div className={cn(badgeVariants({ variant }), className)} {...props} />;
+}
+
+export { Badge, badgeVariants };
+```
+
+---
+
+### <a id='src-components-ui-breadcrumbtsx'></a> `src\components\ui\breadcrumb.tsx`
+
+**Component:** breadcrumb.tsx
+
+```tsx
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { ChevronRight, MoreHorizontal } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const Breadcrumb = React.forwardRef<
+  HTMLElement,
+  React.ComponentPropsWithoutRef<"nav"> & {
+    separator?: React.ReactNode;
+  }
+>(({ ...props }, ref) => <nav ref={ref} aria-label="breadcrumb" {...props} />);
+Breadcrumb.displayName = "Breadcrumb";
+
+const BreadcrumbList = React.forwardRef<HTMLOListElement, React.ComponentPropsWithoutRef<"ol">>(
+  ({ className, ...props }, ref) => (
+    <ol
+      ref={ref}
+      className={cn(
+        "flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5",
+        className,
+      )}
+      {...props}
+    />
+  ),
+);
+BreadcrumbList.displayName = "BreadcrumbList";
+
+const BreadcrumbItem = React.forwardRef<HTMLLIElement, React.ComponentPropsWithoutRef<"li">>(
+  ({ className, ...props }, ref) => (
+    <li ref={ref} className={cn("inline-flex items-center gap-1.5", className)} {...props} />
+  ),
+);
+BreadcrumbItem.displayName = "BreadcrumbItem";
+
+const BreadcrumbLink = React.forwardRef<
+  HTMLAnchorElement,
+  React.ComponentPropsWithoutRef<"a"> & {
+    asChild?: boolean;
+  }
+>(({ asChild, className, ...props }, ref) => {
+  const Comp = asChild ? Slot : "a";
+
+  return <Comp ref={ref} className={cn("transition-colors hover:text-foreground", className)} {...props} />;
+});
+BreadcrumbLink.displayName = "BreadcrumbLink";
+
+const BreadcrumbPage = React.forwardRef<HTMLSpanElement, React.ComponentPropsWithoutRef<"span">>(
+  ({ className, ...props }, ref) => (
+    <span
+      ref={ref}
+      role="link"
+      aria-disabled="true"
+      aria-current="page"
+      className={cn("font-normal text-foreground", className)}
+      {...props}
+    />
+  ),
+);
+BreadcrumbPage.displayName = "BreadcrumbPage";
+
+const BreadcrumbSeparator = ({ children, className, ...props }: React.ComponentProps<"li">) => (
+  <li role="presentation" aria-hidden="true" className={cn("[&>svg]:size-3.5", className)} {...props}>
+    {children ?? <ChevronRight />}
+  </li>
+);
+BreadcrumbSeparator.displayName = "BreadcrumbSeparator";
+
+const BreadcrumbEllipsis = ({ className, ...props }: React.ComponentProps<"span">) => (
+  <span
+    role="presentation"
+    aria-hidden="true"
+    className={cn("flex h-9 w-9 items-center justify-center", className)}
+    {...props}
+  >
+    <MoreHorizontal className="h-4 w-4" />
+    <span className="sr-only">More</span>
+  </span>
+);
+BreadcrumbEllipsis.displayName = "BreadcrumbElipssis";
+
+export {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+  BreadcrumbEllipsis,
+};
+```
+
+---
+
+### <a id='src-components-ui-buttontsx'></a> `src\components\ui\button.tsx`
+
+**Component:** button.tsx
+
+```tsx
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
+
+import { cn } from "@/lib/utils";
+
+const buttonVariants = cva(
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  {
+    variants: {
+      variant: {
+        default: "bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-primary/20 hover:shadow-primary/40 shadow-lg",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary-hover",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+        hero: "bg-white text-primary hover:bg-gray-100 shadow-medium font-semibold",
+      },
+      size: {
+        default: "h-10 px-4 py-2",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-11 rounded-md px-8",
+        icon: "h-10 w-10",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  },
+);
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button";
+    return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />;
+  },
+);
+Button.displayName = "Button";
+
+export { Button, buttonVariants };
+```
+
+---
+
+### <a id='src-components-ui-calendartsx'></a> `src\components\ui\calendar.tsx`
+
+**Component:** calendar.tsx
+
+```tsx
+import * as React from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { DayPicker } from "react-day-picker";
+
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
+
+export type CalendarProps = React.ComponentProps<typeof DayPicker>;
+
+function Calendar({ className, classNames, showOutsideDays = true, ...props }: CalendarProps) {
+  return (
+    <DayPicker
+      showOutsideDays={showOutsideDays}
+      className={cn("p-3", className)}
+      classNames={{
+        months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
+        month: "space-y-4",
+        caption: "flex justify-center pt-1 relative items-center",
+        caption_label: "text-sm font-medium",
+        nav: "space-x-1 flex items-center",
+        nav_button: cn(
+          buttonVariants({ variant: "outline" }),
+          "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100",
+        ),
+        nav_button_previous: "absolute left-1",
+        nav_button_next: "absolute right-1",
+        table: "w-full border-collapse space-y-1",
+        head_row: "flex",
+        head_cell: "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
+        row: "flex w-full mt-2",
+        cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+        day: cn(buttonVariants({ variant: "ghost" }), "h-9 w-9 p-0 font-normal aria-selected:opacity-100"),
+        day_range_end: "day-range-end",
+        day_selected:
+          "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
+        day_today: "bg-accent text-accent-foreground",
+        day_outside:
+          "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
+        day_disabled: "text-muted-foreground opacity-50",
+        day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground",
+        day_hidden: "invisible",
+        ...classNames,
+      }}
+      components={{
+        IconLeft: ({ ..._props }) => <ChevronLeft className="h-4 w-4" />,
+        IconRight: ({ ..._props }) => <ChevronRight className="h-4 w-4" />,
+      }}
+      {...props}
+    />
+  );
+}
+Calendar.displayName = "Calendar";
+
+export { Calendar };
+```
+
+---
+
+### <a id='src-components-ui-cardtsx'></a> `src\components\ui\card.tsx`
+
+**Component:** card.tsx
+
+```tsx
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
+
+const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn("rounded-lg border bg-card text-card-foreground shadow-sm", className)} {...props} />
+));
+Card.displayName = "Card";
+
+const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn("flex flex-col space-y-1.5 p-6", className)} {...props} />
+  ),
+);
+CardHeader.displayName = "CardHeader";
+
+const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
+  ({ className, ...props }, ref) => (
+    <h3 ref={ref} className={cn("text-2xl font-semibold leading-none tracking-tight", className)} {...props} />
+  ),
+);
+CardTitle.displayName = "CardTitle";
+
+const CardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
+  ({ className, ...props }, ref) => (
+    <p ref={ref} className={cn("text-sm text-muted-foreground", className)} {...props} />
+  ),
+);
+CardDescription.displayName = "CardDescription";
+
+const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />,
+);
+CardContent.displayName = "CardContent";
+
+const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn("flex items-center p-6 pt-0", className)} {...props} />
+  ),
+);
+CardFooter.displayName = "CardFooter";
+
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent };
+```
+
+---
+
+### <a id='src-components-ui-carouseltsx'></a> `src\components\ui\carousel.tsx`
+
+**Component:** carousel.tsx
+
+```tsx
+import * as React from "react";
+import useEmblaCarousel, { type UseEmblaCarouselType } from "embla-carousel-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+
+type CarouselApi = UseEmblaCarouselType[1];
+type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
+type CarouselOptions = UseCarouselParameters[0];
+type CarouselPlugin = UseCarouselParameters[1];
+
+type CarouselProps = {
+  opts?: CarouselOptions;
+  plugins?: CarouselPlugin;
+  orientation?: "horizontal" | "vertical";
+  setApi?: (api: CarouselApi) => void;
+};
+
+type CarouselContextProps = {
+  carouselRef: ReturnType<typeof useEmblaCarousel>[0];
+  api: ReturnType<typeof useEmblaCarousel>[1];
+  scrollPrev: () => void;
+  scrollNext: () => void;
+  canScrollPrev: boolean;
+  canScrollNext: boolean;
+} & CarouselProps;
+
+const CarouselContext = React.createContext<CarouselContextProps | null>(null);
+
+function useCarousel() {
+  const context = React.useContext(CarouselContext);
+
+  if (!context) {
+    throw new Error("useCarousel must be used within a <Carousel />");
+  }
+
+  return context;
+}
+
+const Carousel = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement> & CarouselProps>(
+  ({ orientation = "horizontal", opts, setApi, plugins, className, children, ...props }, ref) => {
+    const [carouselRef, api] = useEmblaCarousel(
+      {
+        ...opts,
+        axis: orientation === "horizontal" ? "x" : "y",
+      },
+      plugins,
+    );
+    const [canScrollPrev, setCanScrollPrev] = React.useState(false);
+    const [canScrollNext, setCanScrollNext] = React.useState(false);
+
+    const onSelect = React.useCallback((api: CarouselApi) => {
+      if (!api) {
+        return;
+      }
+
+      setCanScrollPrev(api.canScrollPrev());
+      setCanScrollNext(api.canScrollNext());
+    }, []);
+
+    const scrollPrev = React.useCallback(() => {
+      api?.scrollPrev();
+    }, [api]);
+
+    const scrollNext = React.useCallback(() => {
+      api?.scrollNext();
+    }, [api]);
+
+    const handleKeyDown = React.useCallback(
+      (event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          scrollPrev();
+        } else if (event.key === "ArrowRight") {
+          event.preventDefault();
+          scrollNext();
+        }
+      },
+      [scrollPrev, scrollNext],
+    );
+
+    React.useEffect(() => {
+      if (!api || !setApi) {
+        return;
+      }
+
+      setApi(api);
+    }, [api, setApi]);
+
+    React.useEffect(() => {
+      if (!api) {
+        return;
+      }
+
+      onSelect(api);
+      api.on("reInit", onSelect);
+      api.on("select", onSelect);
+
+      return () => {
+        api?.off("select", onSelect);
+      };
+    }, [api, onSelect]);
+
+    return (
+      <CarouselContext.Provider
+        value={{
+          carouselRef,
+          api: api,
+          opts,
+          orientation: orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
+          scrollPrev,
+          scrollNext,
+          canScrollPrev,
+          canScrollNext,
+        }}
+      >
+        <div
+          ref={ref}
+          onKeyDownCapture={handleKeyDown}
+          className={cn("relative", className)}
+          role="region"
+          aria-roledescription="carousel"
+          {...props}
+        >
+          {children}
+        </div>
+      </CarouselContext.Provider>
+    );
+  },
+);
+Carousel.displayName = "Carousel";
+
+const CarouselContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => {
+    const { carouselRef, orientation } = useCarousel();
+
+    return (
+      <div ref={carouselRef} className="overflow-hidden">
+        <div
+          ref={ref}
+          className={cn("flex", orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col", className)}
+          {...props}
+        />
+      </div>
+    );
+  },
+);
+CarouselContent.displayName = "CarouselContent";
+
+const CarouselItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => {
+    const { orientation } = useCarousel();
+
+    return (
+      <div
+        ref={ref}
+        role="group"
+        aria-roledescription="slide"
+        className={cn("min-w-0 shrink-0 grow-0 basis-full", orientation === "horizontal" ? "pl-4" : "pt-4", className)}
+        {...props}
+      />
+    );
+  },
+);
+CarouselItem.displayName = "CarouselItem";
+
+const CarouselPrevious = React.forwardRef<HTMLButtonElement, React.ComponentProps<typeof Button>>(
+  ({ className, variant = "outline", size = "icon", ...props }, ref) => {
+    const { orientation, scrollPrev, canScrollPrev } = useCarousel();
+
+    return (
+      <Button
+        ref={ref}
+        variant={variant}
+        size={size}
+        className={cn(
+          "absolute h-8 w-8 rounded-full",
+          orientation === "horizontal"
+            ? "-left-12 top-1/2 -translate-y-1/2"
+            : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
+          className,
+        )}
+        disabled={!canScrollPrev}
+        onClick={scrollPrev}
+        {...props}
+      >
+        <ArrowLeft className="h-4 w-4" />
+        <span className="sr-only">Previous slide</span>
+      </Button>
+    );
+  },
+);
+CarouselPrevious.displayName = "CarouselPrevious";
+
+const CarouselNext = React.forwardRef<HTMLButtonElement, React.ComponentProps<typeof Button>>(
+  ({ className, variant = "outline", size = "icon", ...props }, ref) => {
+    const { orientation, scrollNext, canScrollNext } = useCarousel();
+
+    return (
+      <Button
+        ref={ref}
+        variant={variant}
+        size={size}
+        className={cn(
+          "absolute h-8 w-8 rounded-full",
+          orientation === "horizontal"
+            ? "-right-12 top-1/2 -translate-y-1/2"
+            : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
+          className,
+        )}
+        disabled={!canScrollNext}
+        onClick={scrollNext}
+        {...props}
+      >
+        <ArrowRight className="h-4 w-4" />
+        <span className="sr-only">Next slide</span>
+      </Button>
+    );
+  },
+);
+CarouselNext.displayName = "CarouselNext";
+
+export { type CarouselApi, Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext };
+```
+
+---
+
+### <a id='src-components-ui-charttsx'></a> `src\components\ui\chart.tsx`
+
+**Component:** chart.tsx
+
+```tsx
+import * as React from "react";
+import * as RechartsPrimitive from "recharts";
+
+import { cn } from "@/lib/utils";
+
+// Format: { THEME_NAME: CSS_SELECTOR }
+const THEMES = { light: "", dark: ".dark" } as const;
+
+export type ChartConfig = {
+  [k in string]: {
+    label?: React.ReactNode;
+    icon?: React.ComponentType;
+  } & ({ color?: string; theme?: never } | { color?: never; theme: Record<keyof typeof THEMES, string> });
+};
+
+type ChartContextProps = {
+  config: ChartConfig;
+};
+
+const ChartContext = React.createContext<ChartContextProps | null>(null);
+
+function useChart() {
+  const context = React.useContext(ChartContext);
+
+  if (!context) {
+    throw new Error("useChart must be used within a <ChartContainer />");
+  }
+
+  return context;
+}
+
+const ChartContainer = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div"> & {
+    config: ChartConfig;
+    children: React.ComponentProps<typeof RechartsPrimitive.ResponsiveContainer>["children"];
+  }
+>(({ id, className, children, config, ...props }, ref) => {
+  const uniqueId = React.useId();
+  const chartId = `chart-${id || uniqueId.replace(/:/g, "")}`;
+
+  return (
+    <ChartContext.Provider value={{ config }}>
+      <div
+        data-chart={chartId}
+        ref={ref}
+        className={cn(
+          "flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-none [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-none [&_.recharts-surface]:outline-none",
+          className,
+        )}
+        {...props}
+      >
+        <ChartStyle id={chartId} config={config} />
+        <RechartsPrimitive.ResponsiveContainer>{children}</RechartsPrimitive.ResponsiveContainer>
+      </div>
+    </ChartContext.Provider>
+  );
+});
+ChartContainer.displayName = "Chart";
+
+const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
+  const colorConfig = Object.entries(config).filter(([_, config]) => config.theme || config.color);
+
+  if (!colorConfig.length) {
+    return null;
+  }
+
+  return (
+    <style
+      dangerouslySetInnerHTML={{
+        __html: Object.entries(THEMES)
+          .map(
+            ([theme, prefix]) => `
+${prefix} [data-chart=${id}] {
+${colorConfig
+  .map(([key, itemConfig]) => {
+    const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] || itemConfig.color;
+    return color ? `  --color-${key}: ${color};` : null;
+  })
+  .join("\n")}
+}
+`,
+          )
+          .join("\n"),
+      }}
+    />
+  );
+};
+
+const ChartTooltip = RechartsPrimitive.Tooltip;
+
+const ChartTooltipContent = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
+    React.ComponentProps<"div"> & {
+      hideLabel?: boolean;
+      hideIndicator?: boolean;
+      indicator?: "line" | "dot" | "dashed";
+      nameKey?: string;
+      labelKey?: string;
+    }
+>(
+  (
+    {
+      active,
+      payload,
+      className,
+      indicator = "dot",
+      hideLabel = false,
+      hideIndicator = false,
+      label,
+      labelFormatter,
+      labelClassName,
+      formatter,
+      color,
+      nameKey,
+      labelKey,
+    },
+    ref,
+  ) => {
+    const { config } = useChart();
+
+    const tooltipLabel = React.useMemo(() => {
+      if (hideLabel || !payload?.length) {
+        return null;
+      }
+
+      const [item] = payload;
+      const key = `${labelKey || item.dataKey || item.name || "value"}`;
+      const itemConfig = getPayloadConfigFromPayload(config, item, key);
+      const value =
+        !labelKey && typeof label === "string"
+          ? config[label as keyof typeof config]?.label || label
+          : itemConfig?.label;
+
+      if (labelFormatter) {
+        return <div className={cn("font-medium", labelClassName)}>{labelFormatter(value, payload)}</div>;
+      }
+
+      if (!value) {
+        return null;
+      }
+
+      return <div className={cn("font-medium", labelClassName)}>{value}</div>;
+    }, [label, labelFormatter, payload, hideLabel, labelClassName, config, labelKey]);
+
+    if (!active || !payload?.length) {
+      return null;
+    }
+
+    const nestLabel = payload.length === 1 && indicator !== "dot";
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          "grid min-w-[8rem] items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl",
+          className,
+        )}
+      >
+        {!nestLabel ? tooltipLabel : null}
+        <div className="grid gap-1.5">
+          {payload.map((item, index) => {
+            const key = `${nameKey || item.name || item.dataKey || "value"}`;
+            const itemConfig = getPayloadConfigFromPayload(config, item, key);
+            const indicatorColor = color || item.payload.fill || item.color;
+
+            return (
+              <div
+                key={item.dataKey}
+                className={cn(
+                  "flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground",
+                  indicator === "dot" && "items-center",
+                )}
+              >
+                {formatter && item?.value !== undefined && item.name ? (
+                  formatter(item.value, item.name, item, index, item.payload)
+                ) : (
+                  <>
+                    {itemConfig?.icon ? (
+                      <itemConfig.icon />
+                    ) : (
+                      !hideIndicator && (
+                        <div
+                          className={cn("shrink-0 rounded-[2px] border-[--color-border] bg-[--color-bg]", {
+                            "h-2.5 w-2.5": indicator === "dot",
+                            "w-1": indicator === "line",
+                            "w-0 border-[1.5px] border-dashed bg-transparent": indicator === "dashed",
+                            "my-0.5": nestLabel && indicator === "dashed",
+                          })}
+                          style={
+                            {
+                              "--color-bg": indicatorColor,
+                              "--color-border": indicatorColor,
+                            } as React.CSSProperties
+                          }
+                        />
+                      )
+                    )}
+                    <div
+                      className={cn(
+                        "flex flex-1 justify-between leading-none",
+                        nestLabel ? "items-end" : "items-center",
+                      )}
+                    >
+                      <div className="grid gap-1.5">
+                        {nestLabel ? tooltipLabel : null}
+                        <span className="text-muted-foreground">{itemConfig?.label || item.name}</span>
+                      </div>
+                      {item.value && (
+                        <span className="font-mono font-medium tabular-nums text-foreground">
+                          {item.value.toLocaleString()}
+                        </span>
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  },
+);
+ChartTooltipContent.displayName = "ChartTooltip";
+
+const ChartLegend = RechartsPrimitive.Legend;
+
+const ChartLegendContent = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div"> &
+    Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
+      hideIcon?: boolean;
+      nameKey?: string;
+    }
+>(({ className, hideIcon = false, payload, verticalAlign = "bottom", nameKey }, ref) => {
+  const { config } = useChart();
+
+  if (!payload?.length) {
+    return null;
+  }
+
+  return (
+    <div
+      ref={ref}
+      className={cn("flex items-center justify-center gap-4", verticalAlign === "top" ? "pb-3" : "pt-3", className)}
+    >
+      {payload.map((item) => {
+        const key = `${nameKey || item.dataKey || "value"}`;
+        const itemConfig = getPayloadConfigFromPayload(config, item, key);
+
+        return (
+          <div
+            key={item.value}
+            className={cn("flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground")}
+          >
+            {itemConfig?.icon && !hideIcon ? (
+              <itemConfig.icon />
+            ) : (
+              <div
+                className="h-2 w-2 shrink-0 rounded-[2px]"
+                style={{
+                  backgroundColor: item.color,
+                }}
+              />
+            )}
+            {itemConfig?.label}
+          </div>
+        );
+      })}
+    </div>
+  );
+});
+ChartLegendContent.displayName = "ChartLegend";
+
+// Helper to extract item config from a payload.
+function getPayloadConfigFromPayload(config: ChartConfig, payload: unknown, key: string) {
+  if (typeof payload !== "object" || payload === null) {
+    return undefined;
+  }
+
+  const payloadPayload =
+    "payload" in payload && typeof payload.payload === "object" && payload.payload !== null
+      ? payload.payload
+      : undefined;
+
+  let configLabelKey: string = key;
+
+  if (key in payload && typeof payload[key as keyof typeof payload] === "string") {
+    configLabelKey = payload[key as keyof typeof payload] as string;
+  } else if (
+    payloadPayload &&
+    key in payloadPayload &&
+    typeof payloadPayload[key as keyof typeof payloadPayload] === "string"
+  ) {
+    configLabelKey = payloadPayload[key as keyof typeof payloadPayload] as string;
+  }
+
+  return configLabelKey in config ? config[configLabelKey] : config[key as keyof typeof config];
+}
+
+export { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent, ChartStyle };
+```
+
+---
+
+### <a id='src-components-ui-checkboxtsx'></a> `src\components\ui\checkbox.tsx`
+
+**Component:** checkbox.tsx
+
+```tsx
+import * as React from "react";
+import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
+import { Check } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const Checkbox = React.forwardRef<
+  React.ElementRef<typeof CheckboxPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
+>(({ className, ...props }, ref) => (
+  <CheckboxPrimitive.Root
+    ref={ref}
+    className={cn(
+      "peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+      className,
+    )}
+    {...props}
+  >
+    <CheckboxPrimitive.Indicator className={cn("flex items-center justify-center text-current")}>
+      <Check className="h-4 w-4" />
+    </CheckboxPrimitive.Indicator>
+  </CheckboxPrimitive.Root>
+));
+Checkbox.displayName = CheckboxPrimitive.Root.displayName;
+
+export { Checkbox };
+```
+
+---
+
+### <a id='src-components-ui-collapsibletsx'></a> `src\components\ui\collapsible.tsx`
+
+**Component:** collapsible.tsx
+
+```tsx
+import * as CollapsiblePrimitive from "@radix-ui/react-collapsible";
+
+const Collapsible = CollapsiblePrimitive.Root;
+
+const CollapsibleTrigger = CollapsiblePrimitive.CollapsibleTrigger;
+
+const CollapsibleContent = CollapsiblePrimitive.CollapsibleContent;
+
+export { Collapsible, CollapsibleTrigger, CollapsibleContent };
+```
+
+---
+
+### <a id='src-components-ui-commandtsx'></a> `src\components\ui\command.tsx`
+
+**Component:** command.tsx
+
+```tsx
+import * as React from "react";
+import { type DialogProps } from "@radix-ui/react-dialog";
+import { Command as CommandPrimitive } from "cmdk";
+import { Search } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+
+const Command = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive>
+>(({ className, ...props }, ref) => (
+  <CommandPrimitive
+    ref={ref}
+    className={cn(
+      "flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground",
+      className,
+    )}
+    {...props}
+  />
+));
+Command.displayName = CommandPrimitive.displayName;
+
+interface CommandDialogProps extends DialogProps {}
+
+const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
+  return (
+    <Dialog {...props}>
+      <DialogContent className="overflow-hidden p-0 shadow-lg">
+        <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
+          {children}
+        </Command>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+const CommandInput = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive.Input>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
+>(({ className, ...props }, ref) => (
+  <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
+    <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+    <CommandPrimitive.Input
+      ref={ref}
+      className={cn(
+        "flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+        className,
+      )}
+      {...props}
+    />
+  </div>
+));
+
+CommandInput.displayName = CommandPrimitive.Input.displayName;
+
+const CommandList = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive.List>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.List>
+>(({ className, ...props }, ref) => (
+  <CommandPrimitive.List
+    ref={ref}
+    className={cn("max-h-[300px] overflow-y-auto overflow-x-hidden", className)}
+    {...props}
+  />
+));
+
+CommandList.displayName = CommandPrimitive.List.displayName;
+
+const CommandEmpty = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive.Empty>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Empty>
+>((props, ref) => <CommandPrimitive.Empty ref={ref} className="py-6 text-center text-sm" {...props} />);
+
+CommandEmpty.displayName = CommandPrimitive.Empty.displayName;
+
+const CommandGroup = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive.Group>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Group>
+>(({ className, ...props }, ref) => (
+  <CommandPrimitive.Group
+    ref={ref}
+    className={cn(
+      "overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground",
+      className,
+    )}
+    {...props}
+  />
+));
+
+CommandGroup.displayName = CommandPrimitive.Group.displayName;
+
+const CommandSeparator = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive.Separator>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Separator>
+>(({ className, ...props }, ref) => (
+  <CommandPrimitive.Separator ref={ref} className={cn("-mx-1 h-px bg-border", className)} {...props} />
+));
+CommandSeparator.displayName = CommandPrimitive.Separator.displayName;
+
+const CommandItem = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item>
+>(({ className, ...props }, ref) => (
+  <CommandPrimitive.Item
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected='true']:bg-accent data-[selected=true]:text-accent-foreground data-[disabled=true]:opacity-50",
+      className,
+    )}
+    {...props}
+  />
+));
+
+CommandItem.displayName = CommandPrimitive.Item.displayName;
+
+const CommandShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
+  return <span className={cn("ml-auto text-xs tracking-widest text-muted-foreground", className)} {...props} />;
+};
+CommandShortcut.displayName = "CommandShortcut";
+
+export {
+  Command,
+  CommandDialog,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandShortcut,
+  CommandSeparator,
+};
+```
+
+---
+
+### <a id='src-components-ui-context-menutsx'></a> `src\components\ui\context-menu.tsx`
+
+**Component:** context-menu.tsx
+
+```tsx
+import * as React from "react";
+import * as ContextMenuPrimitive from "@radix-ui/react-context-menu";
+import { Check, ChevronRight, Circle } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const ContextMenu = ContextMenuPrimitive.Root;
+
+const ContextMenuTrigger = ContextMenuPrimitive.Trigger;
+
+const ContextMenuGroup = ContextMenuPrimitive.Group;
+
+const ContextMenuPortal = ContextMenuPrimitive.Portal;
+
+const ContextMenuSub = ContextMenuPrimitive.Sub;
+
+const ContextMenuRadioGroup = ContextMenuPrimitive.RadioGroup;
+
+const ContextMenuSubTrigger = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.SubTrigger>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.SubTrigger> & {
+    inset?: boolean;
+  }
+>(({ className, inset, children, ...props }, ref) => (
+  <ContextMenuPrimitive.SubTrigger
+    ref={ref}
+    className={cn(
+      "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[state=open]:bg-accent data-[state=open]:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+      inset && "pl-8",
+      className,
+    )}
+    {...props}
+  >
+    {children}
+    <ChevronRight className="ml-auto h-4 w-4" />
+  </ContextMenuPrimitive.SubTrigger>
+));
+ContextMenuSubTrigger.displayName = ContextMenuPrimitive.SubTrigger.displayName;
+
+const ContextMenuSubContent = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.SubContent>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.SubContent>
+>(({ className, ...props }, ref) => (
+  <ContextMenuPrimitive.SubContent
+    ref={ref}
+    className={cn(
+      "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      className,
+    )}
+    {...props}
+  />
+));
+ContextMenuSubContent.displayName = ContextMenuPrimitive.SubContent.displayName;
+
+const ContextMenuContent = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Content>
+>(({ className, ...props }, ref) => (
+  <ContextMenuPrimitive.Portal>
+    <ContextMenuPrimitive.Content
+      ref={ref}
+      className={cn(
+        "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md animate-in fade-in-80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        className,
+      )}
+      {...props}
+    />
+  </ContextMenuPrimitive.Portal>
+));
+ContextMenuContent.displayName = ContextMenuPrimitive.Content.displayName;
+
+const ContextMenuItem = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Item> & {
+    inset?: boolean;
+  }
+>(({ className, inset, ...props }, ref) => (
+  <ContextMenuPrimitive.Item
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+      inset && "pl-8",
+      className,
+    )}
+    {...props}
+  />
+));
+ContextMenuItem.displayName = ContextMenuPrimitive.Item.displayName;
+
+const ContextMenuCheckboxItem = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.CheckboxItem>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.CheckboxItem>
+>(({ className, children, checked, ...props }, ref) => (
+  <ContextMenuPrimitive.CheckboxItem
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+      className,
+    )}
+    checked={checked}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <ContextMenuPrimitive.ItemIndicator>
+        <Check className="h-4 w-4" />
+      </ContextMenuPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </ContextMenuPrimitive.CheckboxItem>
+));
+ContextMenuCheckboxItem.displayName = ContextMenuPrimitive.CheckboxItem.displayName;
+
+const ContextMenuRadioItem = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.RadioItem>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.RadioItem>
+>(({ className, children, ...props }, ref) => (
+  <ContextMenuPrimitive.RadioItem
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+      className,
+    )}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <ContextMenuPrimitive.ItemIndicator>
+        <Circle className="h-2 w-2 fill-current" />
+      </ContextMenuPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </ContextMenuPrimitive.RadioItem>
+));
+ContextMenuRadioItem.displayName = ContextMenuPrimitive.RadioItem.displayName;
+
+const ContextMenuLabel = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.Label>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Label> & {
+    inset?: boolean;
+  }
+>(({ className, inset, ...props }, ref) => (
+  <ContextMenuPrimitive.Label
+    ref={ref}
+    className={cn("px-2 py-1.5 text-sm font-semibold text-foreground", inset && "pl-8", className)}
+    {...props}
+  />
+));
+ContextMenuLabel.displayName = ContextMenuPrimitive.Label.displayName;
+
+const ContextMenuSeparator = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.Separator>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Separator>
+>(({ className, ...props }, ref) => (
+  <ContextMenuPrimitive.Separator ref={ref} className={cn("-mx-1 my-1 h-px bg-border", className)} {...props} />
+));
+ContextMenuSeparator.displayName = ContextMenuPrimitive.Separator.displayName;
+
+const ContextMenuShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
+  return <span className={cn("ml-auto text-xs tracking-widest text-muted-foreground", className)} {...props} />;
+};
+ContextMenuShortcut.displayName = "ContextMenuShortcut";
+
+export {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuCheckboxItem,
+  ContextMenuRadioItem,
+  ContextMenuLabel,
+  ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuGroup,
+  ContextMenuPortal,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+  ContextMenuRadioGroup,
+};
+```
+
+---
+
+### <a id='src-components-ui-create-story-skeletontsx'></a> `src\components\ui\create-story-skeleton.tsx`
+
+**Component:** create-story-skeleton.tsx
+
+```tsx
+import { Skeleton } from "./skeleton";
+import { Card } from "./card";
+
+export function CreateStorySkeleton() {
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-6">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <Skeleton className="h-8 w-48" variant="text" />
+        <div className="flex gap-2">
+          <Skeleton className="h-9 w-20" variant="rounded" />
+          <Skeleton className="h-9 w-24" variant="rounded" />
+          <Skeleton className="h-9 w-32" variant="rounded" />
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <Skeleton className="h-10 w-full max-w-md mb-6" variant="rounded" />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Cover Upload */}
+        <Card>
+          <div className="p-4">
+            <Skeleton className="h-6 w-32 mb-4" variant="text" />
+            <Skeleton className="aspect-[2/3]" variant="rounded" />
+          </div>
+        </Card>
+
+        {/* Form Fields */}
+        <div className="space-y-4">
+          <div>
+            <Skeleton className="h-4 w-16 mb-2" variant="text" />
+            <Skeleton className="h-10 w-full" variant="rounded" />
+          </div>
+
+          <div>
+            <Skeleton className="h-4 w-24 mb-2" variant="text" />
+            <Skeleton className="h-24 w-full" variant="rounded" />
+          </div>
+
+          <div>
+            <Skeleton className="h-4 w-20 mb-2" variant="text" />
+            <Skeleton className="h-10 w-full" variant="rounded" />
+          </div>
+
+          <div>
+            <Skeleton className="h-4 w-12 mb-2" variant="text" />
+            <div className="flex gap-2">
+              <Skeleton className="h-10 flex-1" variant="rounded" />
+              <Skeleton className="h-10 w-20" variant="rounded" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+### <a id='src-components-ui-dialogtsx'></a> `src\components\ui\dialog.tsx`
+
+**Component:** dialog.tsx
+
+```tsx
+import * as React from "react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { X } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const Dialog = DialogPrimitive.Root;
+
+const DialogTrigger = DialogPrimitive.Trigger;
+
+const DialogPortal = DialogPrimitive.Portal;
+
+const DialogClose = DialogPrimitive.Close;
+
+const DialogOverlay = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Overlay>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Overlay
+    ref={ref}
+    className={cn(
+      "fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      className,
+    )}
+    {...props}
+  />
+));
+DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
+
+const DialogContent = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
+>(({ className, children, ...props }, ref) => (
+  <DialogPortal>
+    <DialogOverlay />
+    <DialogPrimitive.Content
+      ref={ref}
+      className={cn(
+        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
+        className,
+      )}
+      {...props}
+    >
+      {children}
+      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity data-[state=open]:bg-accent data-[state=open]:text-muted-foreground hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
+        <X className="h-4 w-4" />
+        <span className="sr-only">Close</span>
+      </DialogPrimitive.Close>
+    </DialogPrimitive.Content>
+  </DialogPortal>
+));
+DialogContent.displayName = DialogPrimitive.Content.displayName;
+
+const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("flex flex-col space-y-1.5 text-center sm:text-left", className)} {...props} />
+);
+DialogHeader.displayName = "DialogHeader";
+
+const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className)} {...props} />
+);
+DialogFooter.displayName = "DialogFooter";
+
+const DialogTitle = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Title>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Title
+    ref={ref}
+    className={cn("text-lg font-semibold leading-none tracking-tight", className)}
+    {...props}
+  />
+));
+DialogTitle.displayName = DialogPrimitive.Title.displayName;
+
+const DialogDescription = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Description>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Description ref={ref} className={cn("text-sm text-muted-foreground", className)} {...props} />
+));
+DialogDescription.displayName = DialogPrimitive.Description.displayName;
+
+export {
+  Dialog,
+  DialogPortal,
+  DialogOverlay,
+  DialogClose,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+};
+```
+
+---
+
+### <a id='src-components-ui-drawertsx'></a> `src\components\ui\drawer.tsx`
+
+**Component:** drawer.tsx
+
+```tsx
+import * as React from "react";
+import { Drawer as DrawerPrimitive } from "vaul";
+
+import { cn } from "@/lib/utils";
+
+const Drawer = ({ shouldScaleBackground = true, ...props }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
+  <DrawerPrimitive.Root shouldScaleBackground={shouldScaleBackground} {...props} />
+);
+Drawer.displayName = "Drawer";
+
+const DrawerTrigger = DrawerPrimitive.Trigger;
+
+const DrawerPortal = DrawerPrimitive.Portal;
+
+const DrawerClose = DrawerPrimitive.Close;
+
+const DrawerOverlay = React.forwardRef<
+  React.ElementRef<typeof DrawerPrimitive.Overlay>,
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Overlay>
+>(({ className, ...props }, ref) => (
+  <DrawerPrimitive.Overlay ref={ref} className={cn("fixed inset-0 z-50 bg-black/80", className)} {...props} />
+));
+DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName;
+
+const DrawerContent = React.forwardRef<
+  React.ElementRef<typeof DrawerPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content>
+>(({ className, children, ...props }, ref) => (
+  <DrawerPortal>
+    <DrawerOverlay />
+    <DrawerPrimitive.Content
+      ref={ref}
+      className={cn(
+        "fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background",
+        className,
+      )}
+      {...props}
+    >
+      <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
+      {children}
+    </DrawerPrimitive.Content>
+  </DrawerPortal>
+));
+DrawerContent.displayName = "DrawerContent";
+
+const DrawerHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("grid gap-1.5 p-4 text-center sm:text-left", className)} {...props} />
+);
+DrawerHeader.displayName = "DrawerHeader";
+
+const DrawerFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("mt-auto flex flex-col gap-2 p-4", className)} {...props} />
+);
+DrawerFooter.displayName = "DrawerFooter";
+
+const DrawerTitle = React.forwardRef<
+  React.ElementRef<typeof DrawerPrimitive.Title>,
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Title>
+>(({ className, ...props }, ref) => (
+  <DrawerPrimitive.Title
+    ref={ref}
+    className={cn("text-lg font-semibold leading-none tracking-tight", className)}
+    {...props}
+  />
+));
+DrawerTitle.displayName = DrawerPrimitive.Title.displayName;
+
+const DrawerDescription = React.forwardRef<
+  React.ElementRef<typeof DrawerPrimitive.Description>,
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Description>
+>(({ className, ...props }, ref) => (
+  <DrawerPrimitive.Description ref={ref} className={cn("text-sm text-muted-foreground", className)} {...props} />
+));
+DrawerDescription.displayName = DrawerPrimitive.Description.displayName;
+
+export {
+  Drawer,
+  DrawerPortal,
+  DrawerOverlay,
+  DrawerTrigger,
+  DrawerClose,
+  DrawerContent,
+  DrawerHeader,
+  DrawerFooter,
+  DrawerTitle,
+  DrawerDescription,
+};
+```
+
+---
+
+### <a id='src-components-ui-dropdown-menutsx'></a> `src\components\ui\dropdown-menu.tsx`
+
+**Component:** dropdown-menu.tsx
+
+```tsx
+"use client";
+
+import * as React from "react";
+import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
+import { Check, ChevronRight, Circle } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const DropdownMenu = DropdownMenuPrimitive.Root;
+
+const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
+
+const DropdownMenuGroup = DropdownMenuPrimitive.Group;
+
+const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
+
+const DropdownMenuSub = DropdownMenuPrimitive.Sub;
+
+const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
+
+const DropdownMenuSubTrigger = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.SubTrigger>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubTrigger> & {
+    inset?: boolean;
+  }
+>(({ className, inset, children, ...props }, ref) => (
+  <DropdownMenuPrimitive.SubTrigger
+    ref={ref}
+    className={cn(
+      "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent data-[state=open]:bg-accent",
+      inset && "pl-8",
+      className
+    )}
+    {...props}
+  >
+    {children}
+    <ChevronRight className="ml-auto h-4 w-4" />
+  </DropdownMenuPrimitive.SubTrigger>
+));
+DropdownMenuSubTrigger.displayName =
+  DropdownMenuPrimitive.SubTrigger.displayName;
+
+const DropdownMenuSubContent = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.SubContent>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubContent>
+>(({ className, ...props }, ref) => (
+  <DropdownMenuPrimitive.SubContent
+    ref={ref}
+    className={cn(
+      "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-white p-1 text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      className
+    )}
+    {...props}
+  />
+));
+DropdownMenuSubContent.displayName =
+  DropdownMenuPrimitive.SubContent.displayName;
+
+const DropdownMenuContent = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
+>(({ className, sideOffset = 4, ...props }, ref) => (
+  <DropdownMenuPrimitive.Portal>
+    <DropdownMenuPrimitive.Content
+      ref={ref}
+      sideOffset={sideOffset}
+      className={cn(
+        "z-50 min-w-[8rem] overflow-hidden rounded-md border border-gray-200 bg-white p-1 text-gray-950 shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        className
+      )}
+      {...props}
+    />
+  </DropdownMenuPrimitive.Portal>
+));
+DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName;
+
+const DropdownMenuItem = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
+    inset?: boolean;
+  }
+>(({ className, inset, ...props }, ref) => (
+  <DropdownMenuPrimitive.Item
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-gray-100 focus:text-gray-900 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      inset && "pl-8",
+      className
+    )}
+    {...props}
+  />
+));
+DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName;
+
+const DropdownMenuCheckboxItem = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.CheckboxItem>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.CheckboxItem>
+>(({ className, children, checked, ...props }, ref) => (
+  <DropdownMenuPrimitive.CheckboxItem
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      className
+    )}
+    checked={checked}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <DropdownMenuPrimitive.ItemIndicator>
+        <Check className="h-4 w-4" />
+      </DropdownMenuPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </DropdownMenuPrimitive.CheckboxItem>
+));
+DropdownMenuCheckboxItem.displayName =
+  DropdownMenuPrimitive.CheckboxItem.displayName;
+
+const DropdownMenuRadioItem = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.RadioItem>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.RadioItem>
+>(({ className, children, ...props }, ref) => (
+  <DropdownMenuPrimitive.RadioItem
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      className
+    )}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <DropdownMenuPrimitive.ItemIndicator>
+        <Circle className="h-2 w-2 fill-current" />
+      </DropdownMenuPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </DropdownMenuPrimitive.RadioItem>
+));
+DropdownMenuRadioItem.displayName = DropdownMenuPrimitive.RadioItem.displayName;
+
+const DropdownMenuLabel = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.Label>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Label> & {
+    inset?: boolean;
+  }
+>(({ className, inset, ...props }, ref) => (
+  <DropdownMenuPrimitive.Label
+    ref={ref}
+    className={cn(
+      "px-2 py-1.5 text-sm font-semibold",
+      inset && "pl-8",
+      className
+    )}
+    {...props}
+  />
+));
+DropdownMenuLabel.displayName = DropdownMenuPrimitive.Label.displayName;
+
+const DropdownMenuSeparator = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.Separator>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Separator>
+>(({ className, ...props }, ref) => (
+  <DropdownMenuPrimitive.Separator
+    ref={ref}
+    className={cn("-mx-1 my-1 h-px bg-gray-200", className)}
+    {...props}
+  />
+));
+DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName;
+
+const DropdownMenuShortcut = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLSpanElement>) => {
+  return (
+    <span
+      className={cn("ml-auto text-xs tracking-widest opacity-60", className)}
+      {...props}
+    />
+  );
+};
+DropdownMenuShortcut.displayName = "DropdownMenuShortcut";
+
+export {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuCheckboxItem,
+  DropdownMenuRadioItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuGroup,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuRadioGroup,
+};
+```
+
+---
+
+### <a id='src-components-ui-edit-story-skeletontsx'></a> `src\components\ui\edit-story-skeleton.tsx`
+
+**Component:** edit-story-skeleton.tsx
+
+```tsx
+import { Skeleton } from "./skeleton";
+import { Card } from "./card";
+
+export function EditStorySkeleton() {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Skeleton className="h-8 w-24" variant="rounded" />
+              <Skeleton className="h-8 w-px" />
+              <div>
+                <Skeleton className="h-6 w-24" variant="text" />
+                <Skeleton className="h-3 w-32 mt-1" variant="text" />
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Skeleton className="h-9 w-24" variant="rounded" />
+              <Skeleton className="h-9 w-32" variant="rounded" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        {/* Tabs */}
+        <Skeleton className="h-10 w-full max-w-md mb-6" variant="rounded" />
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Cover Image Section */}
+          <Card className="lg:col-span-1 bg-white">
+            <div className="p-4">
+              <Skeleton className="h-6 w-32 mb-2" variant="text" />
+              <Skeleton className="h-4 w-full mb-4" variant="text" />
+              <Skeleton className="aspect-[2/3]" variant="rounded" />
+            </div>
+          </Card>
+
+          {/* Story Info */}
+          <div className="lg:col-span-2 space-y-6">
+            <Card className="bg-white">
+              <div className="p-6 space-y-4">
+                <Skeleton className="h-6 w-40 mb-4" variant="text" />
+
+                {/* Title */}
+                <div>
+                  <Skeleton className="h-4 w-16 mb-2" variant="text" />
+                  <Skeleton className="h-10 w-full" variant="rounded" />
+                </div>
+
+                {/* Description */}
+                <div>
+                  <Skeleton className="h-4 w-24 mb-2" variant="text" />
+                  <Skeleton className="h-32 w-full" variant="rounded" />
+                </div>
+
+                {/* Genre */}
+                <div>
+                  <Skeleton className="h-4 w-16 mb-2" variant="text" />
+                  <Skeleton className="h-10 w-full" variant="rounded" />
+                </div>
+
+                {/* Tags */}
+                <div>
+                  <Skeleton className="h-4 w-12 mb-2" variant="text" />
+                  <div className="flex gap-2">
+                    <Skeleton className="h-10 flex-1" variant="rounded" />
+                    <Skeleton className="h-10 w-20" variant="rounded" />
+                  </div>
+                  <div className="flex gap-2 mt-2">
+                    {Array.from({ length: 3 }).map((_, i) => (
+                      <Skeleton
+                        key={i}
+                        className="h-6 w-16"
+                        variant="rounded"
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+### <a id='src-components-ui-feed-skeletontsx'></a> `src\components\ui\feed-skeleton.tsx`
+
+**Component:** feed-skeleton.tsx
+
+```tsx
+import { Skeleton } from "./skeleton";
+import { Card } from "./card";
+
+export function FeedSkeleton() {
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-6">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <Skeleton className="h-8 w-32" variant="text" />
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-9 w-20" variant="rounded" />
+          <Skeleton className="h-9 w-32" variant="rounded" />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="lg:col-span-3">
+          {/* Tabs */}
+          <Skeleton className="h-10 w-full mb-6" variant="rounded" />
+
+          {/* Grid of story cards */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                className="group relative aspect-[4/5] overflow-hidden rounded-lg bg-gray-100"
+              >
+                <Skeleton className="h-full w-full" variant="rectangular" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Sidebar */}
+        <div className="hidden lg:block space-y-4">
+          {/* User Card */}
+          <Card className="p-4">
+            <div className="flex items-center gap-3">
+              <Skeleton className="h-14 w-14" variant="circular" />
+              <div className="flex-1">
+                <Skeleton className="h-4 w-24 mb-2" variant="text" />
+                <Skeleton className="h-3 w-32" variant="text" />
+              </div>
+            </div>
+            <Skeleton className="h-9 w-full mt-4" variant="rounded" />
+          </Card>
+
+          {/* Suggested Authors */}
+          <Card className="p-4">
+            <div className="flex items-center justify-between mb-4">
+              <Skeleton className="h-5 w-32" variant="text" />
+              <Skeleton className="h-4 w-12" variant="text" />
+            </div>
+            <div className="space-y-3">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Skeleton className="h-8 w-8" variant="circular" />
+                    <div>
+                      <Skeleton className="h-3 w-20 mb-1" variant="text" />
+                      <Skeleton className="h-3 w-28" variant="text" />
+                    </div>
+                  </div>
+                  <Skeleton className="h-7 w-16" variant="rounded" />
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+### <a id='src-components-ui-file-dropzonetsx'></a> `src\components\ui\file-dropzone.tsx`
+
+**Component:** file-dropzone.tsx
+
+```tsx
+'use client';
+
+import { useCallback, useState } from 'react';
+import { Upload, X, File, Image } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Button } from './button';
+
+interface FileDropzoneProps {
+  onFileSelect: (file: File) => void;
+  accept?: string;
+  maxSize?: number; // in bytes
+  className?: string;
+  disabled?: boolean;
+  multiple?: boolean;
+  value?: File | File[] | null;
+  onRemove?: (index?: number) => void;
+}
+
+export function FileDropzone({
+  onFileSelect,
+  accept = 'image/*',
+  maxSize = 5 * 1024 * 1024, // 5MB default
+  className,
+  disabled = false,
+  multiple = false,
+  value,
+  onRemove,
+}: FileDropzoneProps) {
+  const [isDragOver, setIsDragOver] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const validateFile = useCallback((file: File): boolean => {
+    setError(null);
+    
+    if (maxSize && file.size > maxSize) {
+      setError(`File size must be less than ${Math.round(maxSize / 1024 / 1024)}MB`);
+      return false;
+    }
+
+    if (accept && !accept.split(',').some(type => {
+      const trimmedType = type.trim();
+      if (trimmedType.endsWith('/*')) {
+        return file.type.startsWith(trimmedType.slice(0, -1));
+      }
+      return file.type === trimmedType;
+    })) {
+      setError('File type not supported');
+      return false;
+    }
+
+    return true;
+  }, [accept, maxSize]);
+
+  const handleFileSelect = useCallback((files: FileList) => {
+    const fileArray = Array.from(files);
+    
+    if (multiple) {
+      const validFiles = fileArray.filter(validateFile);
+      validFiles.forEach(onFileSelect);
+    } else {
+      const file = fileArray[0];
+      if (file && validateFile(file)) {
+        onFileSelect(file);
+      }
+    }
+  }, [multiple, validateFile, onFileSelect]);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    
+    if (disabled) return;
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleFileSelect(files);
+    }
+  }, [disabled, handleFileSelect]);
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    if (!disabled) {
+      setIsDragOver(true);
+    }
+  }, [disabled]);
+
+  const handleDragLeave = useCallback(() => {
+    setIsDragOver(false);
+  }, []);
+
+  const handleClick = () => {
+    if (disabled) return;
+    
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = accept;
+    input.multiple = multiple;
+    input.onchange = (e) => {
+      const files = (e.target as HTMLInputElement).files;
+      if (files) {
+        handleFileSelect(files);
+      }
+    };
+    input.click();
+  };
+
+  const renderPreview = () => {
+    if (!value) return null;
+
+    const files = Array.isArray(value) ? value : [value];
+    
+    return (
+      <div className="mt-4 space-y-2">
+        {files.map((file, index) => (
+          <div key={`${file.name}-${index}`} className="flex items-center gap-3 p-3 bg-secondary rounded-lg">
+            <div className="flex-shrink-0">
+              {file.type.startsWith('image/') ? (
+                <Image className="h-5 w-5 text-primary" />
+              ) : (
+                <File className="h-5 w-5 text-muted-foreground" />
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium truncate">{file.name}</p>
+              <p className="text-xs text-muted-foreground">
+                {(file.size / 1024 / 1024).toFixed(2)} MB
+              </p>
+            </div>
+            {onRemove && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => onRemove(multiple ? index : undefined)}
+                className="flex-shrink-0"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  return (
+    <div className={cn("space-y-2", className)}>
+      <div
+        className={cn(
+          "relative border-2 border-dashed rounded-lg p-6 transition-colors cursor-pointer",
+          "hover:border-primary/50 hover:bg-primary/5",
+          isDragOver && "border-primary bg-primary/10",
+          disabled && "opacity-50 cursor-not-allowed",
+          error && "border-destructive",
+          !error && !isDragOver && "border-border"
+        )}
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onClick={handleClick}
+      >
+        <div className="flex flex-col items-center justify-center text-center">
+          <Upload className={cn(
+            "h-10 w-10 mb-4",
+            isDragOver ? "text-primary" : "text-muted-foreground"
+          )} />
+          <p className="text-sm font-medium mb-1">
+            Drop files here or click to browse
+          </p>
+          <p className="text-xs text-muted-foreground">
+            {accept === 'image/*' ? 'Images only' : accept} • Max {Math.round(maxSize / 1024 / 1024)}MB
+          </p>
+        </div>
+      </div>
+      
+      {error && (
+        <p className="text-sm text-destructive">{error}</p>
+      )}
+      
+      {renderPreview()}
+    </div>
+  );
+}
+```
+
+---
+
+### <a id='src-components-ui-formtsx'></a> `src\components\ui\form.tsx`
+
+**Component:** form.tsx
+
+```tsx
+import * as React from "react";
+import * as LabelPrimitive from "@radix-ui/react-label";
+import { Slot } from "@radix-ui/react-slot";
+import { Controller, ControllerProps, FieldPath, FieldValues, FormProvider, useFormContext } from "react-hook-form";
+
+import { cn } from "@/lib/utils";
+import { Label } from "@/components/ui/label";
+
+const Form = FormProvider;
+
+type FormFieldContextValue<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+> = {
+  name: TName;
+};
+
+const FormFieldContext = React.createContext<FormFieldContextValue>({} as FormFieldContextValue);
+
+const FormField = <
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+>({
+  ...props
+}: ControllerProps<TFieldValues, TName>) => {
+  return (
+    <FormFieldContext.Provider value={{ name: props.name }}>
+      <Controller {...props} />
+    </FormFieldContext.Provider>
+  );
+};
+
+const useFormField = () => {
+  const fieldContext = React.useContext(FormFieldContext);
+  const itemContext = React.useContext(FormItemContext);
+  const { getFieldState, formState } = useFormContext();
+
+  const fieldState = getFieldState(fieldContext.name, formState);
+
+  if (!fieldContext) {
+    throw new Error("useFormField should be used within <FormField>");
+  }
+
+  const { id } = itemContext;
+
+  return {
+    id,
+    name: fieldContext.name,
+    formItemId: `${id}-form-item`,
+    formDescriptionId: `${id}-form-item-description`,
+    formMessageId: `${id}-form-item-message`,
+    ...fieldState,
+  };
+};
+
+type FormItemContextValue = {
+  id: string;
+};
+
+const FormItemContext = React.createContext<FormItemContextValue>({} as FormItemContextValue);
+
+const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => {
+    const id = React.useId();
+
+    return (
+      <FormItemContext.Provider value={{ id }}>
+        <div ref={ref} className={cn("space-y-2", className)} {...props} />
+      </FormItemContext.Provider>
+    );
+  },
+);
+FormItem.displayName = "FormItem";
+
+const FormLabel = React.forwardRef<
+  React.ElementRef<typeof LabelPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
+>(({ className, ...props }, ref) => {
+  const { error, formItemId } = useFormField();
+
+  return <Label ref={ref} className={cn(error && "text-destructive", className)} htmlFor={formItemId} {...props} />;
+});
+FormLabel.displayName = "FormLabel";
+
+const FormControl = React.forwardRef<React.ElementRef<typeof Slot>, React.ComponentPropsWithoutRef<typeof Slot>>(
+  ({ ...props }, ref) => {
+    const { error, formItemId, formDescriptionId, formMessageId } = useFormField();
+
+    return (
+      <Slot
+        ref={ref}
+        id={formItemId}
+        aria-describedby={!error ? `${formDescriptionId}` : `${formDescriptionId} ${formMessageId}`}
+        aria-invalid={!!error}
+        {...props}
+      />
+    );
+  },
+);
+FormControl.displayName = "FormControl";
+
+const FormDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
+  ({ className, ...props }, ref) => {
+    const { formDescriptionId } = useFormField();
+
+    return <p ref={ref} id={formDescriptionId} className={cn("text-sm text-muted-foreground", className)} {...props} />;
+  },
+);
+FormDescription.displayName = "FormDescription";
+
+const FormMessage = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
+  ({ className, children, ...props }, ref) => {
+    const { error, formMessageId } = useFormField();
+    const body = error ? String(error?.message) : children;
+
+    if (!body) {
+      return null;
+    }
+
+    return (
+      <p ref={ref} id={formMessageId} className={cn("text-sm font-medium text-destructive", className)} {...props}>
+        {body}
+      </p>
+    );
+  },
+);
+FormMessage.displayName = "FormMessage";
+
+export { useFormField, Form, FormItem, FormLabel, FormControl, FormDescription, FormMessage, FormField };
+```
+
+---
+
+### <a id='src-components-ui-hover-cardtsx'></a> `src\components\ui\hover-card.tsx`
+
+**Component:** hover-card.tsx
+
+```tsx
+import * as React from "react";
+import * as HoverCardPrimitive from "@radix-ui/react-hover-card";
+
+import { cn } from "@/lib/utils";
+
+const HoverCard = HoverCardPrimitive.Root;
+
+const HoverCardTrigger = HoverCardPrimitive.Trigger;
+
+const HoverCardContent = React.forwardRef<
+  React.ElementRef<typeof HoverCardPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof HoverCardPrimitive.Content>
+>(({ className, align = "center", sideOffset = 4, ...props }, ref) => (
+  <HoverCardPrimitive.Content
+    ref={ref}
+    align={align}
+    sideOffset={sideOffset}
+    className={cn(
+      "z-50 w-64 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      className,
+    )}
+    {...props}
+  />
+));
+HoverCardContent.displayName = HoverCardPrimitive.Content.displayName;
+
+export { HoverCard, HoverCardTrigger, HoverCardContent };
+```
+
+---
+
+### <a id='src-components-ui-image-with-fallbacktsx'></a> `src\components\ui\image-with-fallback.tsx`
+
+**Component:** image-with-fallback.tsx
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import { cn } from '@/lib/utils';
+
+interface ImageWithFallbackProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+  fallback?: string;
+  fallbackComponent?: React.ReactNode;
+}
+
+export function ImageWithFallback({
+  src,
+  fallback = '/placeholder.svg',
+  fallbackComponent,
+  className,
+  alt,
+  ...props
+}: ImageWithFallbackProps) {
+  const [hasError, setHasError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleError = () => {
+    setHasError(true);
+    setIsLoading(false);
+  };
+
+  const handleLoad = () => {
+    setIsLoading(false);
+  };
+
+  if (hasError && fallbackComponent) {
+    return <>{fallbackComponent}</>;
+  }
+
+  return (
+    <div className="relative">
+      {isLoading && (
+        <div className={cn(
+          "absolute inset-0 bg-muted animate-pulse rounded",
+          className
+        )} />
+      )}
+      <img
+        {...props}
+        src={hasError ? fallback : src}
+        alt={alt}
+        className={cn(
+          "transition-opacity duration-200",
+          isLoading ? "opacity-0" : "opacity-100",
+          className
+        )}
+        onError={handleError}
+        onLoad={handleLoad}
+      />
+    </div>
+  );
+}
+```
+
+---
+
+### <a id='src-components-ui-input-otptsx'></a> `src\components\ui\input-otp.tsx`
+
+**Component:** input-otp.tsx
+
+```tsx
+import * as React from "react";
+import { OTPInput, OTPInputContext } from "input-otp";
+import { Dot } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const InputOTP = React.forwardRef<React.ElementRef<typeof OTPInput>, React.ComponentPropsWithoutRef<typeof OTPInput>>(
+  ({ className, containerClassName, ...props }, ref) => (
+    <OTPInput
+      ref={ref}
+      containerClassName={cn("flex items-center gap-2 has-[:disabled]:opacity-50", containerClassName)}
+      className={cn("disabled:cursor-not-allowed", className)}
+      {...props}
+    />
+  ),
+);
+InputOTP.displayName = "InputOTP";
+
+const InputOTPGroup = React.forwardRef<React.ElementRef<"div">, React.ComponentPropsWithoutRef<"div">>(
+  ({ className, ...props }, ref) => <div ref={ref} className={cn("flex items-center", className)} {...props} />,
+);
+InputOTPGroup.displayName = "InputOTPGroup";
+
+const InputOTPSlot = React.forwardRef<
+  React.ElementRef<"div">,
+  React.ComponentPropsWithoutRef<"div"> & { index: number }
+>(({ index, className, ...props }, ref) => {
+  const inputOTPContext = React.useContext(OTPInputContext);
+  const { char, hasFakeCaret, isActive } = inputOTPContext.slots[index];
+
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        "relative flex h-10 w-10 items-center justify-center border-y border-r border-input text-sm transition-all first:rounded-l-md first:border-l last:rounded-r-md",
+        isActive && "z-10 ring-2 ring-ring ring-offset-background",
+        className,
+      )}
+      {...props}
+    >
+      {char}
+      {hasFakeCaret && (
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+          <div className="animate-caret-blink h-4 w-px bg-foreground duration-1000" />
+        </div>
+      )}
+    </div>
+  );
+});
+InputOTPSlot.displayName = "InputOTPSlot";
+
+const InputOTPSeparator = React.forwardRef<React.ElementRef<"div">, React.ComponentPropsWithoutRef<"div">>(
+  ({ ...props }, ref) => (
+    <div ref={ref} role="separator" {...props}>
+      <Dot />
+    </div>
+  ),
+);
+InputOTPSeparator.displayName = "InputOTPSeparator";
+
+export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator };
+```
+
+---
+
+### <a id='src-components-ui-inputtsx'></a> `src\components\ui\input.tsx`
+
+**Component:** input.tsx
+
+```tsx
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
+
+const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
+  ({ className, type, ...props }, ref) => {
+    return (
+      <input
+        type={type}
+        className={cn(
+          "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+          className,
+        )}
+        ref={ref}
+        {...props}
+      />
+    );
+  },
+);
+Input.displayName = "Input";
+
+export { Input };
+```
+
+---
+
+### <a id='src-components-ui-labeltsx'></a> `src\components\ui\label.tsx`
+
+**Component:** label.tsx
+
+```tsx
+import * as React from "react";
+import * as LabelPrimitive from "@radix-ui/react-label";
+import { cva, type VariantProps } from "class-variance-authority";
+
+import { cn } from "@/lib/utils";
+
+const labelVariants = cva("text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70");
+
+const Label = React.forwardRef<
+  React.ElementRef<typeof LabelPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> & VariantProps<typeof labelVariants>
+>(({ className, ...props }, ref) => (
+  <LabelPrimitive.Root ref={ref} className={cn(labelVariants(), className)} {...props} />
+));
+Label.displayName = LabelPrimitive.Root.displayName;
+
+export { Label };
+```
+
+---
+
+### <a id='src-components-ui-loading-spinnertsx'></a> `src\components\ui\loading-spinner.tsx`
+
+**Component:** loading-spinner.tsx
+
+```tsx
+import { cn } from '@/lib/utils';
+
+interface LoadingSpinnerProps {
+  size?: 'sm' | 'md' | 'lg';
+  className?: string;
+}
+
+export function LoadingSpinner({ size = 'md', className }: LoadingSpinnerProps) {
+  const sizeClasses = {
+    sm: 'h-4 w-4',
+    md: 'h-6 w-6',
+    lg: 'h-8 w-8'
+  };
+
+  return (
+    <div className={cn(
+      "animate-spin rounded-full border-2 border-current border-t-transparent",
+      sizeClasses[size],
+      className
+    )} />
+  );
+}
+```
+
+---
+
+### <a id='src-components-ui-logotsx'></a> `src\components\ui\logo.tsx`
+
+**Component:** logo.tsx
+
+```tsx
+// src/components/ui/logo.tsx
+"use client";
+
+import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
+import { useEffect } from "react";
+
+interface LogoProps {
+  className?: string;
+  showText?: boolean;
+  size?: "sm" | "md" | "lg";
+  asLink?: boolean;
+  variant?: "default" | "light" | "dark";
+}
+
+export function Logo({
+  className,
+  showText = true,
+  size = "md",
+  asLink = true,
+  variant = "default",
+}: LogoProps) {
+  const sizes = {
+    sm: {
+      container: "h-8",
+      icon: "h-8 w-8",
+      text: "text-xl",
+      tagline: "text-[10px]",
+      spacing: "gap-2",
+      textGap: "gap-0.5",
+    },
+    md: {
+      container: "h-10",
+      icon: "h-10 w-10",
+      text: "text-2xl",
+      tagline: "text-xs",
+      spacing: "gap-2.5",
+      textGap: "gap-0.5",
+    },
+    lg: {
+      container: "h-14",
+      icon: "h-14 w-14",
+      text: "text-4xl",
+      tagline: "text-sm",
+      spacing: "gap-3",
+      textGap: "gap-1",
+    },
+  };
+
+  // Set favicon dynamically (only run once on mount)
+  useEffect(() => {
+    // Only update favicon if we're showing the logo (main app load)
+    if (
+      typeof window !== "undefined" &&
+      !document.querySelector('link[rel="icon"][data-dynamic="true"]')
+    ) {
+      const link = document.createElement("link");
+      link.rel = "icon";
+      link.type = "image/svg+xml";
+      link.setAttribute("data-dynamic", "true");
+
+      // Create inline SVG favicon
+      const svgFavicon = `
+        <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="6" fill="%23FF6B35"/>
+          <path d="M5 6h9v20H5z" fill="white" opacity="0.9"/>
+          <path d="M18 6h9v20h-9z" fill="white" opacity="0.85"/>
+          <rect x="14" y="6" width="4" height="20" fill="%23E85D04"/>
+          <path d="M16 3v10l-2-2-2 2V3h4z" fill="%23FFD700"/>
+        </svg>
+      `;
+
+      link.href = `data:image/svg+xml,${encodeURIComponent(svgFavicon)}`;
+
+      // Remove any existing dynamic favicon
+      const existingDynamic = document.querySelector(
+        'link[rel="icon"][data-dynamic="true"]'
+      );
+      if (existingDynamic) {
+        existingDynamic.remove();
+      }
+
+      document.head.appendChild(link);
+    }
+  }, []);
+
+  const logoIcon = (
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={sizes[size].icon}
+    >
+      <defs>
+        <linearGradient id="vaultGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FF6B35" />
+          <stop offset="50%" stopColor="#FF8C42" />
+          <stop offset="100%" stopColor="#FFA500" />
+        </linearGradient>
+        <linearGradient id="spineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#E85D04" />
+          <stop offset="100%" stopColor="#D84315" />
+        </linearGradient>
+        <linearGradient
+          id="bookmarkGradient"
+          x1="0%"
+          y1="0%"
+          x2="100%"
+          y2="100%"
+        >
+          <stop offset="0%" stopColor="#FFD700" />
+          <stop offset="100%" stopColor="#FFC107" />
+        </linearGradient>
+      </defs>
+
+      {/* Book container */}
+      <rect
+        x="4"
+        y="6"
+        width="40"
+        height="36"
+        rx="4"
+        ry="4"
+        fill="url(#vaultGradient)"
+        opacity="0.1"
+      />
+
+      {/* Left book cover */}
+      <path
+        d="M8 8C8 6.89543 8.89543 6 10 6H22V42H10C8.89543 42 8 41.1046 8 40V8Z"
+        fill="url(#vaultGradient)"
+      />
+
+      {/* Right book cover */}
+      <path
+        d="M26 6H38C39.1046 6 40 6.89543 40 8V40C40 41.1046 39.1046 42 38 42H26V6Z"
+        fill="url(#vaultGradient)"
+        opacity="0.85"
+      />
+
+      {/* Book spine */}
+      <rect x="22" y="6" width="4" height="36" fill="url(#spineGradient)" />
+
+      {/* Pages on left */}
+      <rect x="10" y="10" width="10" height="28" fill="white" opacity="0.9" />
+
+      {/* Pages on right */}
+      <rect x="28" y="10" width="10" height="28" fill="white" opacity="0.85" />
+
+      {/* Bookmark ribbon */}
+      <path
+        d="M24 4 L28 4 L28 20 L26 18 L24 20 Z"
+        fill="url(#bookmarkGradient)"
+      />
+    </svg>
+  );
+
+  const logoContent = (
+    <>
+      {logoIcon}
+      {showText && (
+        <div
+          className={cn("flex flex-col justify-center", sizes[size].textGap)}
+        >
+          <span className={cn("leading-none tracking-tight", sizes[size].text)}>
+            <span
+              className={cn(
+                "font-bold",
+                variant === "light"
+                  ? "text-white"
+                  : variant === "dark"
+                  ? "text-gray-900"
+                  : "text-orange-500"
+              )}
+              style={{ fontFamily: "'Inter', sans-serif" }}
+            >
+              Stori
+            </span>
+            <span
+              className={cn(
+                "font-medium",
+                variant === "light"
+                  ? "text-gray-200"
+                  : variant === "dark"
+                  ? "text-gray-700"
+                  : "text-gray-700 dark:text-gray-300"
+              )}
+              style={{ fontFamily: "'Inter', sans-serif" }}
+            >
+              Vault
+            </span>
+          </span>
+          <span
+            className={cn(
+              "uppercase tracking-[0.25em] font-medium",
+              sizes[size].tagline,
+              variant === "light"
+                ? "text-gray-300"
+                : variant === "dark"
+                ? "text-gray-500"
+                : "text-gray-500 dark:text-gray-400"
+            )}
+            style={{ fontFamily: "'Inter', sans-serif" }}
+          >
+            Your Story Awaits
+          </span>
+        </div>
+      )}
+    </>
+  );
+
+  if (!asLink) {
+    return (
+      <div className={cn("flex items-center", sizes[size].spacing, className)}>
+        {logoContent}
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      to="/"
+      className={cn(
+        "flex items-center transition-all hover:scale-105",
+        sizes[size].spacing,
+        className
+      )}
+      aria-label="StoriVault Home"
+    >
+      {logoContent}
+    </Link>
+  );
+}
+```
+
+---
+
+### <a id='src-components-ui-menubartsx'></a> `src\components\ui\menubar.tsx`
+
+**Component:** menubar.tsx
+
+```tsx
+import * as React from "react";
+import * as MenubarPrimitive from "@radix-ui/react-menubar";
+import { Check, ChevronRight, Circle } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const MenubarMenu = MenubarPrimitive.Menu;
+
+const MenubarGroup = MenubarPrimitive.Group;
+
+const MenubarPortal = MenubarPrimitive.Portal;
+
+const MenubarSub = MenubarPrimitive.Sub;
+
+const MenubarRadioGroup = MenubarPrimitive.RadioGroup;
+
+const Menubar = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.Root>
+>(({ className, ...props }, ref) => (
+  <MenubarPrimitive.Root
+    ref={ref}
+    className={cn("flex h-10 items-center space-x-1 rounded-md border bg-background p-1", className)}
+    {...props}
+  />
+));
+Menubar.displayName = MenubarPrimitive.Root.displayName;
+
+const MenubarTrigger = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.Trigger>
+>(({ className, ...props }, ref) => (
+  <MenubarPrimitive.Trigger
+    ref={ref}
+    className={cn(
+      "flex cursor-default select-none items-center rounded-sm px-3 py-1.5 text-sm font-medium outline-none data-[state=open]:bg-accent data-[state=open]:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+      className,
+    )}
+    {...props}
+  />
+));
+MenubarTrigger.displayName = MenubarPrimitive.Trigger.displayName;
+
+const MenubarSubTrigger = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.SubTrigger>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.SubTrigger> & {
+    inset?: boolean;
+  }
+>(({ className, inset, children, ...props }, ref) => (
+  <MenubarPrimitive.SubTrigger
+    ref={ref}
+    className={cn(
+      "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[state=open]:bg-accent data-[state=open]:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+      inset && "pl-8",
+      className,
+    )}
+    {...props}
+  >
+    {children}
+    <ChevronRight className="ml-auto h-4 w-4" />
+  </MenubarPrimitive.SubTrigger>
+));
+MenubarSubTrigger.displayName = MenubarPrimitive.SubTrigger.displayName;
+
+const MenubarSubContent = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.SubContent>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.SubContent>
+>(({ className, ...props }, ref) => (
+  <MenubarPrimitive.SubContent
+    ref={ref}
+    className={cn(
+      "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      className,
+    )}
+    {...props}
+  />
+));
+MenubarSubContent.displayName = MenubarPrimitive.SubContent.displayName;
+
+const MenubarContent = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.Content>
+>(({ className, align = "start", alignOffset = -4, sideOffset = 8, ...props }, ref) => (
+  <MenubarPrimitive.Portal>
+    <MenubarPrimitive.Content
+      ref={ref}
+      align={align}
+      alignOffset={alignOffset}
+      sideOffset={sideOffset}
+      className={cn(
+        "z-50 min-w-[12rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        className,
+      )}
+      {...props}
+    />
+  </MenubarPrimitive.Portal>
+));
+MenubarContent.displayName = MenubarPrimitive.Content.displayName;
+
+const MenubarItem = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.Item> & {
+    inset?: boolean;
+  }
+>(({ className, inset, ...props }, ref) => (
+  <MenubarPrimitive.Item
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+      inset && "pl-8",
+      className,
+    )}
+    {...props}
+  />
+));
+MenubarItem.displayName = MenubarPrimitive.Item.displayName;
+
+const MenubarCheckboxItem = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.CheckboxItem>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.CheckboxItem>
+>(({ className, children, checked, ...props }, ref) => (
+  <MenubarPrimitive.CheckboxItem
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+      className,
+    )}
+    checked={checked}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <MenubarPrimitive.ItemIndicator>
+        <Check className="h-4 w-4" />
+      </MenubarPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </MenubarPrimitive.CheckboxItem>
+));
+MenubarCheckboxItem.displayName = MenubarPrimitive.CheckboxItem.displayName;
+
+const MenubarRadioItem = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.RadioItem>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.RadioItem>
+>(({ className, children, ...props }, ref) => (
+  <MenubarPrimitive.RadioItem
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+      className,
+    )}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <MenubarPrimitive.ItemIndicator>
+        <Circle className="h-2 w-2 fill-current" />
+      </MenubarPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </MenubarPrimitive.RadioItem>
+));
+MenubarRadioItem.displayName = MenubarPrimitive.RadioItem.displayName;
+
+const MenubarLabel = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.Label>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.Label> & {
+    inset?: boolean;
+  }
+>(({ className, inset, ...props }, ref) => (
+  <MenubarPrimitive.Label
+    ref={ref}
+    className={cn("px-2 py-1.5 text-sm font-semibold", inset && "pl-8", className)}
+    {...props}
+  />
+));
+MenubarLabel.displayName = MenubarPrimitive.Label.displayName;
+
+const MenubarSeparator = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.Separator>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.Separator>
+>(({ className, ...props }, ref) => (
+  <MenubarPrimitive.Separator ref={ref} className={cn("-mx-1 my-1 h-px bg-muted", className)} {...props} />
+));
+MenubarSeparator.displayName = MenubarPrimitive.Separator.displayName;
+
+const MenubarShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
+  return <span className={cn("ml-auto text-xs tracking-widest text-muted-foreground", className)} {...props} />;
+};
+MenubarShortcut.displayname = "MenubarShortcut";
+
+export {
+  Menubar,
+  MenubarMenu,
+  MenubarTrigger,
+  MenubarContent,
+  MenubarItem,
+  MenubarSeparator,
+  MenubarLabel,
+  MenubarCheckboxItem,
+  MenubarRadioGroup,
+  MenubarRadioItem,
+  MenubarPortal,
+  MenubarSubContent,
+  MenubarSubTrigger,
+  MenubarGroup,
+  MenubarSub,
+  MenubarShortcut,
+};
+```
+
+---
+
+### <a id='src-components-ui-navigation-menutsx'></a> `src\components\ui\navigation-menu.tsx`
+
+**Component:** navigation-menu.tsx
+
+```tsx
+import * as React from "react";
+import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
+import { cva } from "class-variance-authority";
+import { ChevronDown } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const NavigationMenu = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Root>
+>(({ className, children, ...props }, ref) => (
+  <NavigationMenuPrimitive.Root
+    ref={ref}
+    className={cn("relative z-10 flex max-w-max flex-1 items-center justify-center", className)}
+    {...props}
+  >
+    {children}
+    <NavigationMenuViewport />
+  </NavigationMenuPrimitive.Root>
+));
+NavigationMenu.displayName = NavigationMenuPrimitive.Root.displayName;
+
+const NavigationMenuList = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.List>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.List>
+>(({ className, ...props }, ref) => (
+  <NavigationMenuPrimitive.List
+    ref={ref}
+    className={cn("group flex flex-1 list-none items-center justify-center space-x-1", className)}
+    {...props}
+  />
+));
+NavigationMenuList.displayName = NavigationMenuPrimitive.List.displayName;
+
+const NavigationMenuItem = NavigationMenuPrimitive.Item;
+
+const navigationMenuTriggerStyle = cva(
+  "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
+);
+
+const NavigationMenuTrigger = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Trigger>
+>(({ className, children, ...props }, ref) => (
+  <NavigationMenuPrimitive.Trigger
+    ref={ref}
+    className={cn(navigationMenuTriggerStyle(), "group", className)}
+    {...props}
+  >
+    {children}{" "}
+    <ChevronDown
+      className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180"
+      aria-hidden="true"
+    />
+  </NavigationMenuPrimitive.Trigger>
+));
+NavigationMenuTrigger.displayName = NavigationMenuPrimitive.Trigger.displayName;
+
+const NavigationMenuContent = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Content>
+>(({ className, ...props }, ref) => (
+  <NavigationMenuPrimitive.Content
+    ref={ref}
+    className={cn(
+      "left-0 top-0 w-full data-[motion^=from-]:animate-in data-[motion^=to-]:animate-out data-[motion^=from-]:fade-in data-[motion^=to-]:fade-out data-[motion=from-end]:slide-in-from-right-52 data-[motion=from-start]:slide-in-from-left-52 data-[motion=to-end]:slide-out-to-right-52 data-[motion=to-start]:slide-out-to-left-52 md:absolute md:w-auto",
+      className,
+    )}
+    {...props}
+  />
+));
+NavigationMenuContent.displayName = NavigationMenuPrimitive.Content.displayName;
+
+const NavigationMenuLink = NavigationMenuPrimitive.Link;
+
+const NavigationMenuViewport = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Viewport>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Viewport>
+>(({ className, ...props }, ref) => (
+  <div className={cn("absolute left-0 top-full flex justify-center")}>
+    <NavigationMenuPrimitive.Viewport
+      className={cn(
+        "origin-top-center relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 md:w-[var(--radix-navigation-menu-viewport-width)]",
+        className,
+      )}
+      ref={ref}
+      {...props}
+    />
+  </div>
+));
+NavigationMenuViewport.displayName = NavigationMenuPrimitive.Viewport.displayName;
+
+const NavigationMenuIndicator = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Indicator>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Indicator>
+>(({ className, ...props }, ref) => (
+  <NavigationMenuPrimitive.Indicator
+    ref={ref}
+    className={cn(
+      "top-full z-[1] flex h-1.5 items-end justify-center overflow-hidden data-[state=visible]:animate-in data-[state=hidden]:animate-out data-[state=hidden]:fade-out data-[state=visible]:fade-in",
+      className,
+    )}
+    {...props}
+  >
+    <div className="relative top-[60%] h-2 w-2 rotate-45 rounded-tl-sm bg-border shadow-md" />
+  </NavigationMenuPrimitive.Indicator>
+));
+NavigationMenuIndicator.displayName = NavigationMenuPrimitive.Indicator.displayName;
+
+export {
+  navigationMenuTriggerStyle,
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuContent,
+  NavigationMenuTrigger,
+  NavigationMenuLink,
+  NavigationMenuIndicator,
+  NavigationMenuViewport,
+};
+```
+
+---
+
+### <a id='src-components-ui-paginationtsx'></a> `src\components\ui\pagination.tsx`
+
+**Component:** pagination.tsx
+
+```tsx
+import * as React from "react";
+import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { ButtonProps, buttonVariants } from "@/components/ui/button";
+
+const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
+  <nav
+    role="navigation"
+    aria-label="pagination"
+    className={cn("mx-auto flex w-full justify-center", className)}
+    {...props}
+  />
+);
+Pagination.displayName = "Pagination";
+
+const PaginationContent = React.forwardRef<HTMLUListElement, React.ComponentProps<"ul">>(
+  ({ className, ...props }, ref) => (
+    <ul ref={ref} className={cn("flex flex-row items-center gap-1", className)} {...props} />
+  ),
+);
+PaginationContent.displayName = "PaginationContent";
+
+const PaginationItem = React.forwardRef<HTMLLIElement, React.ComponentProps<"li">>(({ className, ...props }, ref) => (
+  <li ref={ref} className={cn("", className)} {...props} />
+));
+PaginationItem.displayName = "PaginationItem";
+
+type PaginationLinkProps = {
+  isActive?: boolean;
+} & Pick<ButtonProps, "size"> &
+  React.ComponentProps<"a">;
+
+const PaginationLink = ({ className, isActive, size = "icon", ...props }: PaginationLinkProps) => (
+  <a
+    aria-current={isActive ? "page" : undefined}
+    className={cn(
+      buttonVariants({
+        variant: isActive ? "outline" : "ghost",
+        size,
+      }),
+      className,
+    )}
+    {...props}
+  />
+);
+PaginationLink.displayName = "PaginationLink";
+
+const PaginationPrevious = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
+  <PaginationLink aria-label="Go to previous page" size="default" className={cn("gap-1 pl-2.5", className)} {...props}>
+    <ChevronLeft className="h-4 w-4" />
+    <span>Previous</span>
+  </PaginationLink>
+);
+PaginationPrevious.displayName = "PaginationPrevious";
+
+const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
+  <PaginationLink aria-label="Go to next page" size="default" className={cn("gap-1 pr-2.5", className)} {...props}>
+    <span>Next</span>
+    <ChevronRight className="h-4 w-4" />
+  </PaginationLink>
+);
+PaginationNext.displayName = "PaginationNext";
+
+const PaginationEllipsis = ({ className, ...props }: React.ComponentProps<"span">) => (
+  <span aria-hidden className={cn("flex h-9 w-9 items-center justify-center", className)} {...props}>
+    <MoreHorizontal className="h-4 w-4" />
+    <span className="sr-only">More pages</span>
+  </span>
+);
+PaginationEllipsis.displayName = "PaginationEllipsis";
+
+export {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+};
+```
+
+---
+
+### <a id='src-components-ui-popovertsx'></a> `src\components\ui\popover.tsx`
+
+**Component:** popover.tsx
+
+```tsx
+import * as React from "react";
+import * as PopoverPrimitive from "@radix-ui/react-popover";
+
+import { cn } from "@/lib/utils";
+
+const Popover = PopoverPrimitive.Root;
+
+const PopoverTrigger = PopoverPrimitive.Trigger;
+
+const PopoverContent = React.forwardRef<
+  React.ElementRef<typeof PopoverPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
+>(({ className, align = "center", sideOffset = 4, ...props }, ref) => (
+  <PopoverPrimitive.Portal>
+    <PopoverPrimitive.Content
+      ref={ref}
+      align={align}
+      sideOffset={sideOffset}
+      className={cn(
+        "z-50 w-72 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        className,
+      )}
+      {...props}
+    />
+  </PopoverPrimitive.Portal>
+));
+PopoverContent.displayName = PopoverPrimitive.Content.displayName;
+
+export { Popover, PopoverTrigger, PopoverContent };
+```
+
+---
+
+### <a id='src-components-ui-profile-skeletontsx'></a> `src\components\ui\profile-skeleton.tsx`
+
+**Component:** profile-skeleton.tsx
+
+```tsx
+import { Skeleton } from "./skeleton";
+import { Card } from "./card";
+
+export function ProfileSkeleton() {
+  return (
+    <div className="max-w-5xl mx-auto px-4 py-8">
+      {/* Profile Header Skeleton */}
+      <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-8 mb-8">
+        <Skeleton
+          className="h-28 w-28 sm:h-32 sm:w-32 md:h-40 md:w-40"
+          variant="circular"
+        />
+
+        <div className="flex-1 w-full space-y-3">
+          <div className="flex flex-col md:flex-row md:items-center gap-4">
+            <Skeleton className="h-8 w-32" variant="text" />
+            <div className="flex gap-2">
+              <Skeleton className="h-8 w-24" variant="rounded" />
+              <Skeleton className="h-8 w-8" variant="rounded" />
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div className="flex gap-6">
+            <Skeleton className="h-5 w-20" variant="text" />
+            <Skeleton className="h-5 w-24" variant="text" />
+            <Skeleton className="h-5 w-24" variant="text" />
+          </div>
+
+          {/* Bio */}
+          <Skeleton className="h-4 w-full max-w-md" variant="text" />
+          <Skeleton className="h-4 w-3/4 max-w-md" variant="text" />
+
+          {/* Additional Info */}
+          <div className="flex gap-4">
+            <Skeleton className="h-4 w-32" variant="text" />
+            <Skeleton className="h-6 w-24" variant="rounded" />
+          </div>
+        </div>
+      </div>
+
+      {/* Tabs Skeleton */}
+      <Skeleton className="h-10 w-full max-w-xs mb-6" variant="rounded" />
+
+      {/* Stories Grid Skeleton */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1 md:gap-4">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Skeleton key={i} className="aspect-[4/5]" variant="rounded" />
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+### <a id='src-components-ui-progresstsx'></a> `src\components\ui\progress.tsx`
+
+**Component:** progress.tsx
+
+```tsx
+import * as React from "react";
+import * as ProgressPrimitive from "@radix-ui/react-progress";
+
+import { cn } from "@/lib/utils";
+
+const Progress = React.forwardRef<
+  React.ElementRef<typeof ProgressPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
+>(({ className, value, ...props }, ref) => (
+  <ProgressPrimitive.Root
+    ref={ref}
+    className={cn("relative h-4 w-full overflow-hidden rounded-full bg-secondary", className)}
+    {...props}
+  >
+    <ProgressPrimitive.Indicator
+      className="h-full w-full flex-1 bg-primary transition-all"
+      style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
+    />
+  </ProgressPrimitive.Root>
+));
+Progress.displayName = ProgressPrimitive.Root.displayName;
+
+export { Progress };
+```
+
+---
+
+### <a id='src-components-ui-radio-grouptsx'></a> `src\components\ui\radio-group.tsx`
+
+**Component:** radio-group.tsx
+
+```tsx
+import * as React from "react";
+import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
+import { Circle } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const RadioGroup = React.forwardRef<
+  React.ElementRef<typeof RadioGroupPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
+>(({ className, ...props }, ref) => {
+  return <RadioGroupPrimitive.Root className={cn("grid gap-2", className)} {...props} ref={ref} />;
+});
+RadioGroup.displayName = RadioGroupPrimitive.Root.displayName;
+
+const RadioGroupItem = React.forwardRef<
+  React.ElementRef<typeof RadioGroupPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>
+>(({ className, ...props }, ref) => {
+  return (
+    <RadioGroupPrimitive.Item
+      ref={ref}
+      className={cn(
+        "aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        className,
+      )}
+      {...props}
+    >
+      <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
+        <Circle className="h-2.5 w-2.5 fill-current text-current" />
+      </RadioGroupPrimitive.Indicator>
+    </RadioGroupPrimitive.Item>
+  );
+});
+RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName;
+
+export { RadioGroup, RadioGroupItem };
+```
+
+---
+
+### <a id='src-components-ui-reader-skeletontsx'></a> `src\components\ui\reader-skeleton.tsx`
+
+**Component:** reader-skeleton.tsx
+
+```tsx
+import { Skeleton } from "./skeleton";
+import { Card } from "./card";
+
+export function ReaderSkeleton() {
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Reader Header */}
+      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Skeleton className="h-8 w-20" variant="rounded" />
+              <div className="hidden md:block space-y-1">
+                <Skeleton className="h-5 w-48" variant="text" />
+                <Skeleton className="h-4 w-32" variant="text" />
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Skeleton className="h-8 w-24" variant="rounded" />
+              <Skeleton className="h-8 w-8" variant="rounded" />
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Reader Content */}
+      <main className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="mb-8">
+          <Skeleton className="h-10 w-3/4 mb-2" variant="text" />
+          <div className="flex gap-4">
+            <Skeleton className="h-5 w-32" variant="text" />
+            <Skeleton className="h-5 w-24" variant="rounded" />
+          </div>
+        </div>
+
+        <Card>
+          <div className="p-8 space-y-4">
+            {Array.from({ length: 15 }).map((_, i) => (
+              <Skeleton
+                key={i}
+                className="h-4 w-full"
+                variant="text"
+                style={{ width: `${Math.random() * 20 + 80}%` }}
+              />
+            ))}
+          </div>
+        </Card>
+
+        {/* Navigation */}
+        <div className="flex justify-between mt-8">
+          <Skeleton className="h-10 w-36" variant="rounded" />
+          <Skeleton className="h-5 w-12" variant="text" />
+          <Skeleton className="h-10 w-36" variant="rounded" />
+        </div>
+      </main>
+    </div>
+  );
+}
+```
+
+---
+
+### <a id='src-components-ui-resizabletsx'></a> `src\components\ui\resizable.tsx`
+
+**Component:** resizable.tsx
+
+```tsx
+import { GripVertical } from "lucide-react";
+import * as ResizablePrimitive from "react-resizable-panels";
+
+import { cn } from "@/lib/utils";
+
+const ResizablePanelGroup = ({ className, ...props }: React.ComponentProps<typeof ResizablePrimitive.PanelGroup>) => (
+  <ResizablePrimitive.PanelGroup
+    className={cn("flex h-full w-full data-[panel-group-direction=vertical]:flex-col", className)}
+    {...props}
+  />
+);
+
+const ResizablePanel = ResizablePrimitive.Panel;
+
+const ResizableHandle = ({
+  withHandle,
+  className,
+  ...props
+}: React.ComponentProps<typeof ResizablePrimitive.PanelResizeHandle> & {
+  withHandle?: boolean;
+}) => (
+  <ResizablePrimitive.PanelResizeHandle
+    className={cn(
+      "relative flex w-px items-center justify-center bg-border after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2 data-[panel-group-direction=vertical]:h-px data-[panel-group-direction=vertical]:w-full data-[panel-group-direction=vertical]:after:left-0 data-[panel-group-direction=vertical]:after:h-1 data-[panel-group-direction=vertical]:after:w-full data-[panel-group-direction=vertical]:after:-translate-y-1/2 data-[panel-group-direction=vertical]:after:translate-x-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 [&[data-panel-group-direction=vertical]>div]:rotate-90",
+      className,
+    )}
+    {...props}
+  >
+    {withHandle && (
+      <div className="z-10 flex h-4 w-3 items-center justify-center rounded-sm border bg-border">
+        <GripVertical className="h-2.5 w-2.5" />
+      </div>
+    )}
+  </ResizablePrimitive.PanelResizeHandle>
+);
+
+export { ResizablePanelGroup, ResizablePanel, ResizableHandle };
+```
+
+---
+
+### <a id='src-components-ui-scroll-areatsx'></a> `src\components\ui\scroll-area.tsx`
+
+**Component:** scroll-area.tsx
+
+```tsx
+import * as React from "react";
+import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
+
+import { cn } from "@/lib/utils";
+
+const ScrollArea = React.forwardRef<
+  React.ElementRef<typeof ScrollAreaPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root>
+>(({ className, children, ...props }, ref) => (
+  <ScrollAreaPrimitive.Root ref={ref} className={cn("relative overflow-hidden", className)} {...props}>
+    <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit]">{children}</ScrollAreaPrimitive.Viewport>
+    <ScrollBar />
+    <ScrollAreaPrimitive.Corner />
+  </ScrollAreaPrimitive.Root>
+));
+ScrollArea.displayName = ScrollAreaPrimitive.Root.displayName;
+
+const ScrollBar = React.forwardRef<
+  React.ElementRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>,
+  React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>
+>(({ className, orientation = "vertical", ...props }, ref) => (
+  <ScrollAreaPrimitive.ScrollAreaScrollbar
+    ref={ref}
+    orientation={orientation}
+    className={cn(
+      "flex touch-none select-none transition-colors",
+      orientation === "vertical" && "h-full w-2.5 border-l border-l-transparent p-[1px]",
+      orientation === "horizontal" && "h-2.5 flex-col border-t border-t-transparent p-[1px]",
+      className,
+    )}
+    {...props}
+  >
+    <ScrollAreaPrimitive.ScrollAreaThumb className="relative flex-1 rounded-full bg-border" />
+  </ScrollAreaPrimitive.ScrollAreaScrollbar>
+));
+ScrollBar.displayName = ScrollAreaPrimitive.ScrollAreaScrollbar.displayName;
+
+export { ScrollArea, ScrollBar };
+```
+
+---
+
+### <a id='src-components-ui-selecttsx'></a> `src\components\ui\select.tsx`
+
+**Component:** select.tsx
+
+```tsx
+import * as React from "react";
+import * as SelectPrimitive from "@radix-ui/react-select";
+import { Check, ChevronDown, ChevronUp } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const Select = SelectPrimitive.Root;
+
+const SelectGroup = SelectPrimitive.Group;
+
+const SelectValue = SelectPrimitive.Value;
+
+const SelectTrigger = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
+>(({ className, children, ...props }, ref) => (
+  <SelectPrimitive.Trigger
+    ref={ref}
+    className={cn(
+      "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+      className,
+    )}
+    {...props}
+  >
+    {children}
+    <SelectPrimitive.Icon asChild>
+      <ChevronDown className="h-4 w-4 opacity-50" />
+    </SelectPrimitive.Icon>
+  </SelectPrimitive.Trigger>
+));
+SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
+
+const SelectScrollUpButton = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.ScrollUpButton>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpButton>
+>(({ className, ...props }, ref) => (
+  <SelectPrimitive.ScrollUpButton
+    ref={ref}
+    className={cn("flex cursor-default items-center justify-center py-1", className)}
+    {...props}
+  >
+    <ChevronUp className="h-4 w-4" />
+  </SelectPrimitive.ScrollUpButton>
+));
+SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName;
+
+const SelectScrollDownButton = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.ScrollDownButton>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollDownButton>
+>(({ className, ...props }, ref) => (
+  <SelectPrimitive.ScrollDownButton
+    ref={ref}
+    className={cn("flex cursor-default items-center justify-center py-1", className)}
+    {...props}
+  >
+    <ChevronDown className="h-4 w-4" />
+  </SelectPrimitive.ScrollDownButton>
+));
+SelectScrollDownButton.displayName = SelectPrimitive.ScrollDownButton.displayName;
+
+const SelectContent = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
+>(({ className, children, position = "popper", ...props }, ref) => (
+  <SelectPrimitive.Portal>
+    <SelectPrimitive.Content
+      ref={ref}
+      className={cn(
+        "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        position === "popper" &&
+          "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
+        className,
+      )}
+      position={position}
+      {...props}
+    >
+      <SelectScrollUpButton />
+      <SelectPrimitive.Viewport
+        className={cn(
+          "p-1",
+          position === "popper" &&
+            "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]",
+        )}
+      >
+        {children}
+      </SelectPrimitive.Viewport>
+      <SelectScrollDownButton />
+    </SelectPrimitive.Content>
+  </SelectPrimitive.Portal>
+));
+SelectContent.displayName = SelectPrimitive.Content.displayName;
+
+const SelectLabel = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Label>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Label>
+>(({ className, ...props }, ref) => (
+  <SelectPrimitive.Label ref={ref} className={cn("py-1.5 pl-8 pr-2 text-sm font-semibold", className)} {...props} />
+));
+SelectLabel.displayName = SelectPrimitive.Label.displayName;
+
+const SelectItem = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
+>(({ className, children, ...props }, ref) => (
+  <SelectPrimitive.Item
+    ref={ref}
+    className={cn(
+      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+      className,
+    )}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <SelectPrimitive.ItemIndicator>
+        <Check className="h-4 w-4" />
+      </SelectPrimitive.ItemIndicator>
+    </span>
+
+    <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+  </SelectPrimitive.Item>
+));
+SelectItem.displayName = SelectPrimitive.Item.displayName;
+
+const SelectSeparator = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Separator>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Separator>
+>(({ className, ...props }, ref) => (
+  <SelectPrimitive.Separator ref={ref} className={cn("-mx-1 my-1 h-px bg-muted", className)} {...props} />
+));
+SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
+
+export {
+  Select,
+  SelectGroup,
+  SelectValue,
+  SelectTrigger,
+  SelectContent,
+  SelectLabel,
+  SelectItem,
+  SelectSeparator,
+  SelectScrollUpButton,
+  SelectScrollDownButton,
+};
+```
+
+---
+
+### <a id='src-components-ui-separatortsx'></a> `src\components\ui\separator.tsx`
+
+**Component:** separator.tsx
+
+```tsx
+import * as React from "react";
+import * as SeparatorPrimitive from "@radix-ui/react-separator";
+import { cn } from "@/lib/utils";
+
+const Separator = React.forwardRef<
+  React.ElementRef<typeof SeparatorPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof SeparatorPrimitive.Root>
+>(
+  (
+    { className, orientation = "horizontal", decorative = true, ...props },
+    ref
+  ) => (
+    <SeparatorPrimitive.Root
+      ref={ref}
+      decorative={decorative}
+      orientation={orientation}
+      className={cn(
+        "shrink-0 bg-border",
+        orientation === "horizontal" ? "h-[1px] w-full" : "h-full w-[1px]",
+        className
+      )}
+      {...props}
+    />
+  )
+);
+Separator.displayName = SeparatorPrimitive.Root.displayName;
+
+export { Separator };
+```
+
+---
+
+### <a id='src-components-ui-sheettsx'></a> `src\components\ui\sheet.tsx`
+
+**Component:** sheet.tsx
+
+```tsx
+import * as SheetPrimitive from "@radix-ui/react-dialog";
+import { cva, type VariantProps } from "class-variance-authority";
+import { X } from "lucide-react";
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
+
+const Sheet = SheetPrimitive.Root;
+
+const SheetTrigger = SheetPrimitive.Trigger;
+
+const SheetClose = SheetPrimitive.Close;
+
+const SheetPortal = SheetPrimitive.Portal;
+
+const SheetOverlay = React.forwardRef<
+  React.ElementRef<typeof SheetPrimitive.Overlay>,
+  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Overlay>
+>(({ className, ...props }, ref) => (
+  <SheetPrimitive.Overlay
+    className={cn(
+      "fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      className,
+    )}
+    {...props}
+    ref={ref}
+  />
+));
+SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
+
+const sheetVariants = cva(
+  "fixed z-50 gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
+  {
+    variants: {
+      side: {
+        top: "inset-x-0 top-0 border-b data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top",
+        bottom:
+          "inset-x-0 bottom-0 border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
+        left: "inset-y-0 left-0 h-full w-3/4 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm",
+        right:
+          "inset-y-0 right-0 h-full w-3/4  border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm",
+      },
+    },
+    defaultVariants: {
+      side: "right",
+    },
+  },
+);
+
+interface SheetContentProps
+  extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
+    VariantProps<typeof sheetVariants> {}
+
+const SheetContent = React.forwardRef<React.ElementRef<typeof SheetPrimitive.Content>, SheetContentProps>(
+  ({ side = "right", className, children, ...props }, ref) => (
+    <SheetPortal>
+      <SheetOverlay />
+      <SheetPrimitive.Content ref={ref} className={cn(sheetVariants({ side }), className)} {...props}>
+        {children}
+        <SheetPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity data-[state=open]:bg-secondary hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
+          <X className="h-4 w-4" />
+          <span className="sr-only">Close</span>
+        </SheetPrimitive.Close>
+      </SheetPrimitive.Content>
+    </SheetPortal>
+  ),
+);
+SheetContent.displayName = SheetPrimitive.Content.displayName;
+
+const SheetHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("flex flex-col space-y-2 text-center sm:text-left", className)} {...props} />
+);
+SheetHeader.displayName = "SheetHeader";
+
+const SheetFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className)} {...props} />
+);
+SheetFooter.displayName = "SheetFooter";
+
+const SheetTitle = React.forwardRef<
+  React.ElementRef<typeof SheetPrimitive.Title>,
+  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Title>
+>(({ className, ...props }, ref) => (
+  <SheetPrimitive.Title ref={ref} className={cn("text-lg font-semibold text-foreground", className)} {...props} />
+));
+SheetTitle.displayName = SheetPrimitive.Title.displayName;
+
+const SheetDescription = React.forwardRef<
+  React.ElementRef<typeof SheetPrimitive.Description>,
+  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Description>
+>(({ className, ...props }, ref) => (
+  <SheetPrimitive.Description ref={ref} className={cn("text-sm text-muted-foreground", className)} {...props} />
+));
+SheetDescription.displayName = SheetPrimitive.Description.displayName;
+
+export {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetOverlay,
+  SheetPortal,
+  SheetTitle,
+  SheetTrigger,
+};
+```
+
+---
+
+### <a id='src-components-ui-sidebartsx'></a> `src\components\ui\sidebar.tsx`
+
+**Component:** sidebar.tsx
+
+```tsx
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { VariantProps, cva } from "class-variance-authority";
+import { PanelLeft } from "lucide-react";
+
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
+const SIDEBAR_COOKIE_NAME = "sidebar:state";
+const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
+const SIDEBAR_WIDTH = "16rem";
+const SIDEBAR_WIDTH_MOBILE = "18rem";
+const SIDEBAR_WIDTH_ICON = "3rem";
+const SIDEBAR_KEYBOARD_SHORTCUT = "b";
+
+type SidebarContext = {
+  state: "expanded" | "collapsed";
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  openMobile: boolean;
+  setOpenMobile: (open: boolean) => void;
+  isMobile: boolean;
+  toggleSidebar: () => void;
+};
+
+const SidebarContext = React.createContext<SidebarContext | null>(null);
+
+function useSidebar() {
+  const context = React.useContext(SidebarContext);
+  if (!context) {
+    throw new Error("useSidebar must be used within a SidebarProvider.");
+  }
+
+  return context;
+}
+
+const SidebarProvider = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div"> & {
+    defaultOpen?: boolean;
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
+  }
+>(({ defaultOpen = true, open: openProp, onOpenChange: setOpenProp, className, style, children, ...props }, ref) => {
+  const isMobile = useIsMobile();
+  const [openMobile, setOpenMobile] = React.useState(false);
+
+  // This is the internal state of the sidebar.
+  // We use openProp and setOpenProp for control from outside the component.
+  const [_open, _setOpen] = React.useState(defaultOpen);
+  const open = openProp ?? _open;
+  const setOpen = React.useCallback(
+    (value: boolean | ((value: boolean) => boolean)) => {
+      const openState = typeof value === "function" ? value(open) : value;
+      if (setOpenProp) {
+        setOpenProp(openState);
+      } else {
+        _setOpen(openState);
+      }
+
+      // This sets the cookie to keep the sidebar state.
+      document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+    },
+    [setOpenProp, open],
+  );
+
+  // Helper to toggle the sidebar.
+  const toggleSidebar = React.useCallback(() => {
+    return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open);
+  }, [isMobile, setOpen, setOpenMobile]);
+
+  // Adds a keyboard shortcut to toggle the sidebar.
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === SIDEBAR_KEYBOARD_SHORTCUT && (event.metaKey || event.ctrlKey)) {
+        event.preventDefault();
+        toggleSidebar();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [toggleSidebar]);
+
+  // We add a state so that we can do data-state="expanded" or "collapsed".
+  // This makes it easier to style the sidebar with Tailwind classes.
+  const state = open ? "expanded" : "collapsed";
+
+  const contextValue = React.useMemo<SidebarContext>(
+    () => ({
+      state,
+      open,
+      setOpen,
+      isMobile,
+      openMobile,
+      setOpenMobile,
+      toggleSidebar,
+    }),
+    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar],
+  );
+
+  return (
+    <SidebarContext.Provider value={contextValue}>
+      <TooltipProvider delayDuration={0}>
+        <div
+          style={
+            {
+              "--sidebar-width": SIDEBAR_WIDTH,
+              "--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
+              ...style,
+            } as React.CSSProperties
+          }
+          className={cn("group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar", className)}
+          ref={ref}
+          {...props}
+        >
+          {children}
+        </div>
+      </TooltipProvider>
+    </SidebarContext.Provider>
+  );
+});
+SidebarProvider.displayName = "SidebarProvider";
+
+const Sidebar = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div"> & {
+    side?: "left" | "right";
+    variant?: "sidebar" | "floating" | "inset";
+    collapsible?: "offcanvas" | "icon" | "none";
+  }
+>(({ side = "left", variant = "sidebar", collapsible = "offcanvas", className, children, ...props }, ref) => {
+  const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
+
+  if (collapsible === "none") {
+    return (
+      <div
+        className={cn("flex h-full w-[--sidebar-width] flex-col bg-sidebar text-sidebar-foreground", className)}
+        ref={ref}
+        {...props}
+      >
+        {children}
+      </div>
+    );
+  }
+
+  if (isMobile) {
+    return (
+      <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
+        <SheetContent
+          data-sidebar="sidebar"
+          data-mobile="true"
+          className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
+          style={
+            {
+              "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
+            } as React.CSSProperties
+          }
+          side={side}
+        >
+          <div className="flex h-full w-full flex-col">{children}</div>
+        </SheetContent>
+      </Sheet>
+    );
+  }
+
+  return (
+    <div
+      ref={ref}
+      className="group peer hidden text-sidebar-foreground md:block"
+      data-state={state}
+      data-collapsible={state === "collapsed" ? collapsible : ""}
+      data-variant={variant}
+      data-side={side}
+    >
+      {/* This is what handles the sidebar gap on desktop */}
+      <div
+        className={cn(
+          "relative h-svh w-[--sidebar-width] bg-transparent transition-[width] duration-200 ease-linear",
+          "group-data-[collapsible=offcanvas]:w-0",
+          "group-data-[side=right]:rotate-180",
+          variant === "floating" || variant === "inset"
+            ? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4))]"
+            : "group-data-[collapsible=icon]:w-[--sidebar-width-icon]",
+        )}
+      />
+      <div
+        className={cn(
+          "fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] transition-[left,right,width] duration-200 ease-linear md:flex",
+          side === "left"
+            ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
+            : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
+          // Adjust the padding for floating and inset variants.
+          variant === "floating" || variant === "inset"
+            ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]"
+            : "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l",
+          className,
+        )}
+        {...props}
+      >
+        <div
+          data-sidebar="sidebar"
+          className="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
+        >
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+});
+Sidebar.displayName = "Sidebar";
+
+const SidebarTrigger = React.forwardRef<React.ElementRef<typeof Button>, React.ComponentProps<typeof Button>>(
+  ({ className, onClick, ...props }, ref) => {
+    const { toggleSidebar } = useSidebar();
+
+    return (
+      <Button
+        ref={ref}
+        data-sidebar="trigger"
+        variant="ghost"
+        size="icon"
+        className={cn("h-7 w-7", className)}
+        onClick={(event) => {
+          onClick?.(event);
+          toggleSidebar();
+        }}
+        {...props}
+      >
+        <PanelLeft />
+        <span className="sr-only">Toggle Sidebar</span>
+      </Button>
+    );
+  },
+);
+SidebarTrigger.displayName = "SidebarTrigger";
+
+const SidebarRail = React.forwardRef<HTMLButtonElement, React.ComponentProps<"button">>(
+  ({ className, ...props }, ref) => {
+    const { toggleSidebar } = useSidebar();
+
+    return (
+      <button
+        ref={ref}
+        data-sidebar="rail"
+        aria-label="Toggle Sidebar"
+        tabIndex={-1}
+        onClick={toggleSidebar}
+        title="Toggle Sidebar"
+        className={cn(
+          "absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] group-data-[side=left]:-right-4 group-data-[side=right]:left-0 hover:after:bg-sidebar-border sm:flex",
+          "[[data-side=left]_&]:cursor-w-resize [[data-side=right]_&]:cursor-e-resize",
+          "[[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-state=collapsed]_&]:cursor-w-resize",
+          "group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full group-data-[collapsible=offcanvas]:hover:bg-sidebar",
+          "[[data-side=left][data-collapsible=offcanvas]_&]:-right-2",
+          "[[data-side=right][data-collapsible=offcanvas]_&]:-left-2",
+          className,
+        )}
+        {...props}
+      />
+    );
+  },
+);
+SidebarRail.displayName = "SidebarRail";
+
+const SidebarInset = React.forwardRef<HTMLDivElement, React.ComponentProps<"main">>(({ className, ...props }, ref) => {
+  return (
+    <main
+      ref={ref}
+      className={cn(
+        "relative flex min-h-svh flex-1 flex-col bg-background",
+        "peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow",
+        className,
+      )}
+      {...props}
+    />
+  );
+});
+SidebarInset.displayName = "SidebarInset";
+
+const SidebarInput = React.forwardRef<React.ElementRef<typeof Input>, React.ComponentProps<typeof Input>>(
+  ({ className, ...props }, ref) => {
+    return (
+      <Input
+        ref={ref}
+        data-sidebar="input"
+        className={cn(
+          "h-8 w-full bg-background shadow-none focus-visible:ring-2 focus-visible:ring-sidebar-ring",
+          className,
+        )}
+        {...props}
+      />
+    );
+  },
+);
+SidebarInput.displayName = "SidebarInput";
+
+const SidebarHeader = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">>(({ className, ...props }, ref) => {
+  return <div ref={ref} data-sidebar="header" className={cn("flex flex-col gap-2 p-2", className)} {...props} />;
+});
+SidebarHeader.displayName = "SidebarHeader";
+
+const SidebarFooter = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">>(({ className, ...props }, ref) => {
+  return <div ref={ref} data-sidebar="footer" className={cn("flex flex-col gap-2 p-2", className)} {...props} />;
+});
+SidebarFooter.displayName = "SidebarFooter";
+
+const SidebarSeparator = React.forwardRef<React.ElementRef<typeof Separator>, React.ComponentProps<typeof Separator>>(
+  ({ className, ...props }, ref) => {
+    return (
+      <Separator
+        ref={ref}
+        data-sidebar="separator"
+        className={cn("mx-2 w-auto bg-sidebar-border", className)}
+        {...props}
+      />
+    );
+  },
+);
+SidebarSeparator.displayName = "SidebarSeparator";
+
+const SidebarContent = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">>(({ className, ...props }, ref) => {
+  return (
+    <div
+      ref={ref}
+      data-sidebar="content"
+      className={cn(
+        "flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
+        className,
+      )}
+      {...props}
+    />
+  );
+});
+SidebarContent.displayName = "SidebarContent";
+
+const SidebarGroup = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">>(({ className, ...props }, ref) => {
+  return (
+    <div
+      ref={ref}
+      data-sidebar="group"
+      className={cn("relative flex w-full min-w-0 flex-col p-2", className)}
+      {...props}
+    />
+  );
+});
+SidebarGroup.displayName = "SidebarGroup";
+
+const SidebarGroupLabel = React.forwardRef<HTMLDivElement, React.ComponentProps<"div"> & { asChild?: boolean }>(
+  ({ className, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "div";
+
+    return (
+      <Comp
+        ref={ref}
+        data-sidebar="group-label"
+        className={cn(
+          "flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium text-sidebar-foreground/70 outline-none ring-sidebar-ring transition-[margin,opa] duration-200 ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
+          "group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0",
+          className,
+        )}
+        {...props}
+      />
+    );
+  },
+);
+SidebarGroupLabel.displayName = "SidebarGroupLabel";
+
+const SidebarGroupAction = React.forwardRef<HTMLButtonElement, React.ComponentProps<"button"> & { asChild?: boolean }>(
+  ({ className, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button";
+
+    return (
+      <Comp
+        ref={ref}
+        data-sidebar="group-action"
+        className={cn(
+          "absolute right-3 top-3.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground outline-none ring-sidebar-ring transition-transform hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
+          // Increases the hit area of the button on mobile.
+          "after:absolute after:-inset-2 after:md:hidden",
+          "group-data-[collapsible=icon]:hidden",
+          className,
+        )}
+        {...props}
+      />
+    );
+  },
+);
+SidebarGroupAction.displayName = "SidebarGroupAction";
+
+const SidebarGroupContent = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} data-sidebar="group-content" className={cn("w-full text-sm", className)} {...props} />
+  ),
+);
+SidebarGroupContent.displayName = "SidebarGroupContent";
+
+const SidebarMenu = React.forwardRef<HTMLUListElement, React.ComponentProps<"ul">>(({ className, ...props }, ref) => (
+  <ul ref={ref} data-sidebar="menu" className={cn("flex w-full min-w-0 flex-col gap-1", className)} {...props} />
+));
+SidebarMenu.displayName = "SidebarMenu";
+
+const SidebarMenuItem = React.forwardRef<HTMLLIElement, React.ComponentProps<"li">>(({ className, ...props }, ref) => (
+  <li ref={ref} data-sidebar="menu-item" className={cn("group/menu-item relative", className)} {...props} />
+));
+SidebarMenuItem.displayName = "SidebarMenuItem";
+
+const sidebarMenuButtonVariants = cva(
+  "peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-none ring-sidebar-ring transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
+  {
+    variants: {
+      variant: {
+        default: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+        outline:
+          "bg-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]",
+      },
+      size: {
+        default: "h-8 text-sm",
+        sm: "h-7 text-xs",
+        lg: "h-12 text-sm group-data-[collapsible=icon]:!p-0",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  },
+);
+
+const SidebarMenuButton = React.forwardRef<
+  HTMLButtonElement,
+  React.ComponentProps<"button"> & {
+    asChild?: boolean;
+    isActive?: boolean;
+    tooltip?: string | React.ComponentProps<typeof TooltipContent>;
+  } & VariantProps<typeof sidebarMenuButtonVariants>
+>(({ asChild = false, isActive = false, variant = "default", size = "default", tooltip, className, ...props }, ref) => {
+  const Comp = asChild ? Slot : "button";
+  const { isMobile, state } = useSidebar();
+
+  const button = (
+    <Comp
+      ref={ref}
+      data-sidebar="menu-button"
+      data-size={size}
+      data-active={isActive}
+      className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
+      {...props}
+    />
+  );
+
+  if (!tooltip) {
+    return button;
+  }
+
+  if (typeof tooltip === "string") {
+    tooltip = {
+      children: tooltip,
+    };
+  }
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{button}</TooltipTrigger>
+      <TooltipContent side="right" align="center" hidden={state !== "collapsed" || isMobile} {...tooltip} />
+    </Tooltip>
+  );
+});
+SidebarMenuButton.displayName = "SidebarMenuButton";
+
+const SidebarMenuAction = React.forwardRef<
+  HTMLButtonElement,
+  React.ComponentProps<"button"> & {
+    asChild?: boolean;
+    showOnHover?: boolean;
+  }
+>(({ className, asChild = false, showOnHover = false, ...props }, ref) => {
+  const Comp = asChild ? Slot : "button";
+
+  return (
+    <Comp
+      ref={ref}
+      data-sidebar="menu-action"
+      className={cn(
+        "absolute right-1 top-1.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground outline-none ring-sidebar-ring transition-transform peer-hover/menu-button:text-sidebar-accent-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
+        // Increases the hit area of the button on mobile.
+        "after:absolute after:-inset-2 after:md:hidden",
+        "peer-data-[size=sm]/menu-button:top-1",
+        "peer-data-[size=default]/menu-button:top-1.5",
+        "peer-data-[size=lg]/menu-button:top-2.5",
+        "group-data-[collapsible=icon]:hidden",
+        showOnHover &&
+          "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0",
+        className,
+      )}
+      {...props}
+    />
+  );
+});
+SidebarMenuAction.displayName = "SidebarMenuAction";
+
+const SidebarMenuBadge = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      data-sidebar="menu-badge"
+      className={cn(
+        "pointer-events-none absolute right-1 flex h-5 min-w-5 select-none items-center justify-center rounded-md px-1 text-xs font-medium tabular-nums text-sidebar-foreground",
+        "peer-hover/menu-button:text-sidebar-accent-foreground peer-data-[active=true]/menu-button:text-sidebar-accent-foreground",
+        "peer-data-[size=sm]/menu-button:top-1",
+        "peer-data-[size=default]/menu-button:top-1.5",
+        "peer-data-[size=lg]/menu-button:top-2.5",
+        "group-data-[collapsible=icon]:hidden",
+        className,
+      )}
+      {...props}
+    />
+  ),
+);
+SidebarMenuBadge.displayName = "SidebarMenuBadge";
+
+const SidebarMenuSkeleton = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div"> & {
+    showIcon?: boolean;
+  }
+>(({ className, showIcon = false, ...props }, ref) => {
+  // Random width between 50 to 90%.
+  const width = React.useMemo(() => {
+    return `${Math.floor(Math.random() * 40) + 50}%`;
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      data-sidebar="menu-skeleton"
+      className={cn("flex h-8 items-center gap-2 rounded-md px-2", className)}
+      {...props}
+    >
+      {showIcon && <Skeleton className="size-4 rounded-md" data-sidebar="menu-skeleton-icon" />}
+      <Skeleton
+        className="h-4 max-w-[--skeleton-width] flex-1"
+        data-sidebar="menu-skeleton-text"
+        style={
+          {
+            "--skeleton-width": width,
+          } as React.CSSProperties
+        }
+      />
+    </div>
+  );
+});
+SidebarMenuSkeleton.displayName = "SidebarMenuSkeleton";
+
+const SidebarMenuSub = React.forwardRef<HTMLUListElement, React.ComponentProps<"ul">>(
+  ({ className, ...props }, ref) => (
+    <ul
+      ref={ref}
+      data-sidebar="menu-sub"
+      className={cn(
+        "mx-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l border-sidebar-border px-2.5 py-0.5",
+        "group-data-[collapsible=icon]:hidden",
+        className,
+      )}
+      {...props}
+    />
+  ),
+);
+SidebarMenuSub.displayName = "SidebarMenuSub";
+
+const SidebarMenuSubItem = React.forwardRef<HTMLLIElement, React.ComponentProps<"li">>(({ ...props }, ref) => (
+  <li ref={ref} {...props} />
+));
+SidebarMenuSubItem.displayName = "SidebarMenuSubItem";
+
+const SidebarMenuSubButton = React.forwardRef<
+  HTMLAnchorElement,
+  React.ComponentProps<"a"> & {
+    asChild?: boolean;
+    size?: "sm" | "md";
+    isActive?: boolean;
+  }
+>(({ asChild = false, size = "md", isActive, className, ...props }, ref) => {
+  const Comp = asChild ? Slot : "a";
+
+  return (
+    <Comp
+      ref={ref}
+      data-sidebar="menu-sub-button"
+      data-size={size}
+      data-active={isActive}
+      className={cn(
+        "flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 text-sidebar-foreground outline-none ring-sidebar-ring aria-disabled:pointer-events-none aria-disabled:opacity-50 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:text-sidebar-accent-foreground",
+        "data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground",
+        size === "sm" && "text-xs",
+        size === "md" && "text-sm",
+        "group-data-[collapsible=icon]:hidden",
+        className,
+      )}
+      {...props}
+    />
+  );
+});
+SidebarMenuSubButton.displayName = "SidebarMenuSubButton";
+
+export {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupAction,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInput,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuAction,
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSkeleton,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarProvider,
+  SidebarRail,
+  SidebarSeparator,
+  SidebarTrigger,
+  useSidebar,
+};
+```
+
+---
+
+### <a id='src-components-ui-skeletontsx'></a> `src\components\ui\skeleton.tsx`
+
+**Component:** skeleton.tsx
+
+```tsx
+import { cn } from "@/lib/utils";
+
+interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: "rectangular" | "circular" | "text" | "rounded";
+  animation?: "pulse" | "wave" | "none";
+  width?: string | number;
+  height?: string | number;
+}
+
+export function Skeleton({
+  className,
+  variant = "rectangular",
+  animation = "pulse",
+  width,
+  height,
+  ...props
+}: SkeletonProps) {
+  const variantStyles = {
+    rectangular: "",
+    circular: "rounded-full",
+    text: "rounded h-4",
+    rounded: "rounded-lg",
+  };
+
+  const animationStyles = {
+    pulse: "animate-pulse",
+    wave: "animate-shimmer",
+    none: "",
+  };
+
+  return (
+    <div
+      className={cn(
+        "bg-gray-200 dark:bg-gray-700",
+        variantStyles[variant],
+        animationStyles[animation],
+        className
+      )}
+      style={{
+        width: width,
+        height: height,
+      }}
+      {...props}
+    />
+  );
+}
+```
+
+---
+
+### <a id='src-components-ui-slidertsx'></a> `src\components\ui\slider.tsx`
+
+**Component:** slider.tsx
+
+```tsx
+import * as React from "react";
+import * as SliderPrimitive from "@radix-ui/react-slider";
+
+import { cn } from "@/lib/utils";
+
+const Slider = React.forwardRef<
+  React.ElementRef<typeof SliderPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
+>(({ className, ...props }, ref) => (
+  <SliderPrimitive.Root
+    ref={ref}
+    className={cn("relative flex w-full touch-none select-none items-center", className)}
+    {...props}
+  >
+    <SliderPrimitive.Track className="relative h-2 w-full grow overflow-hidden rounded-full bg-secondary">
+      <SliderPrimitive.Range className="absolute h-full bg-primary" />
+    </SliderPrimitive.Track>
+    <SliderPrimitive.Thumb className="block h-5 w-5 rounded-full border-2 border-primary bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" />
+  </SliderPrimitive.Root>
+));
+Slider.displayName = SliderPrimitive.Root.displayName;
+
+export { Slider };
+```
+
+---
+
+### <a id='src-components-ui-sonnertsx'></a> `src\components\ui\sonner.tsx`
+
+**Component:** sonner.tsx
+
+```tsx
+import { useTheme } from "next-themes";
+import { Toaster as Sonner, toast } from "sonner";
+
+type ToasterProps = React.ComponentProps<typeof Sonner>;
+
+const Toaster = ({ ...props }: ToasterProps) => {
+  const { theme = "system" } = useTheme();
+
+  return (
+    <Sonner
+      theme={theme as ToasterProps["theme"]}
+      className="toaster group"
+      toastOptions={{
+        classNames: {
+          toast:
+            "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg",
+          description: "group-[.toast]:text-muted-foreground",
+          actionButton: "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
+          cancelButton: "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
+        },
+      }}
+      {...props}
+    />
+  );
+};
+
+export { Toaster, toast };
+```
+
+---
+
+### <a id='src-components-ui-story-card-skeletontsx'></a> `src\components\ui\story-card-skeleton.tsx`
+
+**Component:** story-card-skeleton.tsx
+
+```tsx
+import { Skeleton } from "./skeleton";
+import { Card } from "./card";
+
+interface StoryCardSkeletonProps {
+  variant?: "default" | "compact" | "list" | "featured";
+}
+
+export function StoryCardSkeleton({
+  variant = "default",
+}: StoryCardSkeletonProps) {
+  if (variant === "compact" || variant === "list") {
+    return (
+      <div className="flex gap-3 p-3">
+        <Skeleton width={64} height={80} variant="rounded" />
+        <div className="flex-1 space-y-2">
+          <Skeleton className="h-4 w-3/4" variant="text" />
+          <Skeleton className="h-3 w-full" variant="text" />
+          <Skeleton className="h-3 w-1/2" variant="text" />
+        </div>
+      </div>
+    );
+  }
+
+  if (variant === "featured") {
+    return (
+      <Card className="overflow-hidden">
+        <Skeleton className="aspect-[16/9] w-full" variant="rectangular" />
+        <div className="p-4 space-y-3">
+          <Skeleton className="h-6 w-20" variant="rounded" />
+          <Skeleton className="h-5 w-3/4" variant="text" />
+          <Skeleton className="h-4 w-full" variant="text" />
+          <div className="flex justify-between">
+            <Skeleton className="h-3 w-16" variant="text" />
+            <Skeleton className="h-3 w-16" variant="text" />
+          </div>
+        </div>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="overflow-hidden">
+      <Skeleton className="aspect-[2/3] w-full" variant="rectangular" />
+      <div className="p-4 space-y-3">
+        <Skeleton className="h-5 w-3/4" variant="text" />
+        <Skeleton className="h-4 w-full" variant="text" />
+        <Skeleton className="h-4 w-2/3" variant="text" />
+        <div className="flex gap-2">
+          <Skeleton className="h-6 w-16" variant="rounded" />
+          <Skeleton className="h-6 w-16" variant="rounded" />
+        </div>
+      </div>
+    </Card>
+  );
+}
+```
+
+---
+
+### <a id='src-components-ui-story-cardtsx'></a> `src\components\ui\story-card.tsx`
+
+**Component:** story-card.tsx
+
+```tsx
+'use client';
+
+import { Link } from 'react-router-dom';
+import { Eye, Heart, MessageCircle, Clock } from 'lucide-react';
+import { Story } from '@/types';
+import { ImageWithFallback } from './image-with-fallback';
+import { Badge } from './badge';
+import { cn } from '@/lib/utils';
+
+interface StoryCardProps {
+  story: Story;
+  className?: string;
+  showStats?: boolean;
+  variant?: 'default' | 'compact' | 'featured';
+}
+
+export function StoryCard({ 
+  story, 
+  className, 
+  showStats = true,
+  variant = 'default' 
+}: StoryCardProps) {
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return new Intl.RelativeTimeFormat('en', { numeric: 'auto' }).format(
+      Math.ceil((date.getTime() - Date.now()) / (1000 * 60 * 60 * 24)),
+      'day'
+    );
+  };
+
+  const formatCount = (count: number) => {
+    if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M`;
+    if (count >= 1000) return `${(count / 1000).toFixed(1)}K`;
+    return count.toString();
+  };
+
+  if (variant === 'compact') {
+    return (
+      <Link to={`/stories/${story.id}`}>
+        <div className={cn(
+          "group flex gap-3 p-3 rounded-lg transition-colors hover:bg-secondary/50",
+          className
+        )}>
+          <div className="relative flex-shrink-0">
+            <ImageWithFallback
+              src={story.cover_image || '/placeholder.svg'}
+              alt={story.title}
+              className="w-16 h-20 object-cover rounded-md"
+            />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold text-sm line-clamp-2 group-hover:text-primary transition-colors">
+              {story.title}
+            </h3>
+            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+              {story.description}
+            </p>
+            <div className="flex items-center gap-2 mt-2">
+              <Badge variant="secondary" className="text-xs px-2 py-0">
+                {story.genre}
+              </Badge>
+              {showStats && (
+                <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <Eye className="h-3 w-3" />
+                  {formatCount(story.reads_count)}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </Link>
+    );
+  }
+
+  if (variant === 'featured') {
+    return (
+      <Link to={`/stories/${story.id}`}>
+        <div className={cn(
+          "group relative overflow-hidden rounded-xl bg-gradient-card shadow-medium hover:shadow-strong transition-all duration-300",
+          className
+        )}>
+          <div className="aspect-[16/9] relative">
+            <ImageWithFallback
+              src={story.cover_image || '/placeholder.svg'}
+              alt={story.title}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            <div className="absolute bottom-4 left-4 right-4 text-white">
+              <Badge variant="secondary" className="mb-2 bg-primary text-primary-foreground">
+                {story.genre}
+              </Badge>
+              <h3 className="font-bold text-lg line-clamp-2 group-hover:text-primary-light transition-colors">
+                {story.title}
+              </h3>
+              <p className="text-sm text-gray-200 mt-1 line-clamp-2">
+                {story.description}
+              </p>
+            </div>
+          </div>
+          {showStats && (
+            <div className="p-4 flex items-center justify-between text-sm text-muted-foreground">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1">
+                  <Eye className="h-4 w-4" />
+                  {formatCount(story.reads_count)}
+                </div>
+                <div className="flex items-center gap-1">
+                  <Heart className="h-4 w-4" />
+                  {formatCount(story.votes_count)}
+                </div>
+                <div className="flex items-center gap-1">
+                  <MessageCircle className="h-4 w-4" />
+                  {formatCount(story.comments_count)}
+                </div>
+              </div>
+              <div className="flex items-center gap-1">
+                <Clock className="h-4 w-4" />
+                {formatDate(story.updated_at)}
+              </div>
+            </div>
+          )}
+        </div>
+      </Link>
+    );
+  }
+
+  return (
+    <Link to={`/stories/${story.id}`}>
+      <div className={cn(
+        "group bg-card rounded-lg shadow-soft hover:shadow-medium transition-all duration-300 overflow-hidden",
+        className
+      )}>
+        <div className="aspect-[2/3] relative">
+          <ImageWithFallback
+            src={story.cover_image || '/placeholder.svg'}
+            alt={story.title}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute top-2 right-2">
+            <Badge variant="secondary" className="bg-background/90 text-foreground">
+              {story.genre}
+            </Badge>
+          </div>
+        </div>
+        <div className="p-4">
+          <h3 className="font-semibold line-clamp-2 group-hover:text-primary transition-colors">
+            {story.title}
+          </h3>
+          <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+            {story.description}
+          </p>
+          {story.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-2">
+              {story.tags.slice(0, 2).map((tag, index) => (
+                <Badge key={index} variant="outline" className="text-xs">
+                  {tag}
+                </Badge>
+              ))}
+              {story.tags.length > 2 && (
+                <span className="text-xs text-muted-foreground">
+                  +{story.tags.length - 2} more
+                </span>
+              )}
+            </div>
+          )}
+          {showStats && (
+            <div className="flex items-center justify-between mt-3 text-sm text-muted-foreground">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1">
+                  <Eye className="h-4 w-4" />
+                  {formatCount(story.reads_count)}
+                </div>
+                <div className="flex items-center gap-1">
+                  <Heart className="h-4 w-4" />
+                  {formatCount(story.votes_count)}
+                </div>
+              </div>
+              <div className="flex items-center gap-1">
+                <Clock className="h-4 w-4" />
+                {formatDate(story.updated_at)}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </Link>
+  );
+}
+```
+
+---
+
+### <a id='src-components-ui-story-detail-skeletontsx'></a> `src\components\ui\story-detail-skeleton.tsx`
+
+**Component:** story-detail-skeleton.tsx
+
+```tsx
+import { Skeleton } from "./skeleton";
+import { Card } from "./card";
+
+export function StoryDetailSkeleton() {
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+      {/* Hero Section */}
+      <div className="relative">
+        <Skeleton
+          className="absolute inset-0 h-[500px]"
+          variant="rectangular"
+        />
+        <div className="absolute inset-0 h-[500px] bg-gradient-to-b from-black/70 via-black/50 to-background" />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 pt-8 pb-20">
+          <Skeleton className="h-9 w-20 mb-4" variant="rounded" />
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="flex justify-center lg:justify-start">
+              <Skeleton className="w-64 h-96 rounded-xl" variant="rounded" />
+            </div>
+
+            <div className="lg:col-span-2 space-y-6">
+              <div>
+                <Skeleton className="h-12 w-3/4 mb-3" variant="text" />
+                <Skeleton className="h-6 w-full mb-2" variant="text" />
+                <Skeleton className="h-6 w-5/6" variant="text" />
+              </div>
+
+              {/* Author Info */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                <div className="flex items-center gap-4">
+                  <Skeleton className="h-14 w-14" variant="circular" />
+                  <div>
+                    <Skeleton className="h-5 w-32 mb-2" variant="text" />
+                    <Skeleton className="h-4 w-48" variant="text" />
+                  </div>
+                  <Skeleton className="h-9 w-24 ml-auto" variant="rounded" />
+                </div>
+              </div>
+
+              {/* Stats Grid */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <Skeleton
+                    key={i}
+                    className="h-24 rounded-lg"
+                    variant="rounded"
+                  />
+                ))}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Skeleton className="h-11 w-36" variant="rounded" />
+                <Skeleton className="h-11 w-24" variant="rounded" />
+                <Skeleton className="h-11 w-24" variant="rounded" />
+                <Skeleton className="h-11 w-24" variant="rounded" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Content Area */}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <Card className="bg-white p-6">
+          <Skeleton className="h-6 w-32 mb-4" variant="text" />
+          <Skeleton className="h-4 w-full mb-2" variant="text" />
+          <Skeleton className="h-4 w-full mb-2" variant="text" />
+          <Skeleton className="h-4 w-3/4" variant="text" />
+        </Card>
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+### <a id='src-components-ui-switchtsx'></a> `src\components\ui\switch.tsx`
+
+**Component:** switch.tsx
+
+```tsx
+import * as React from "react";
+import * as SwitchPrimitives from "@radix-ui/react-switch";
+
+import { cn } from "@/lib/utils";
+
+const Switch = React.forwardRef<
+  React.ElementRef<typeof SwitchPrimitives.Root>,
+  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
+>(({ className, ...props }, ref) => (
+  <SwitchPrimitives.Root
+    className={cn(
+      "peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors data-[state=checked]:bg-primary data-[state=unchecked]:bg-input focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50",
+      className,
+    )}
+    {...props}
+    ref={ref}
+  >
+    <SwitchPrimitives.Thumb
+      className={cn(
+        "pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0",
+      )}
+    />
+  </SwitchPrimitives.Root>
+));
+Switch.displayName = SwitchPrimitives.Root.displayName;
+
+export { Switch };
+```
+
+---
+
+### <a id='src-components-ui-tabletsx'></a> `src\components\ui\table.tsx`
+
+**Component:** table.tsx
+
+```tsx
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
+
+const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
+  ({ className, ...props }, ref) => (
+    <div className="relative w-full overflow-auto">
+      <table ref={ref} className={cn("w-full caption-bottom text-sm", className)} {...props} />
+    </div>
+  ),
+);
+Table.displayName = "Table";
+
+const TableHeader = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(
+  ({ className, ...props }, ref) => <thead ref={ref} className={cn("[&_tr]:border-b", className)} {...props} />,
+);
+TableHeader.displayName = "TableHeader";
+
+const TableBody = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(
+  ({ className, ...props }, ref) => (
+    <tbody ref={ref} className={cn("[&_tr:last-child]:border-0", className)} {...props} />
+  ),
+);
+TableBody.displayName = "TableBody";
+
+const TableFooter = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(
+  ({ className, ...props }, ref) => (
+    <tfoot ref={ref} className={cn("border-t bg-muted/50 font-medium [&>tr]:last:border-b-0", className)} {...props} />
+  ),
+);
+TableFooter.displayName = "TableFooter";
+
+const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTMLTableRowElement>>(
+  ({ className, ...props }, ref) => (
+    <tr
+      ref={ref}
+      className={cn("border-b transition-colors data-[state=selected]:bg-muted hover:bg-muted/50", className)}
+      {...props}
+    />
+  ),
+);
+TableRow.displayName = "TableRow";
+
+const TableHead = React.forwardRef<HTMLTableCellElement, React.ThHTMLAttributes<HTMLTableCellElement>>(
+  ({ className, ...props }, ref) => (
+    <th
+      ref={ref}
+      className={cn(
+        "h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",
+        className,
+      )}
+      {...props}
+    />
+  ),
+);
+TableHead.displayName = "TableHead";
+
+const TableCell = React.forwardRef<HTMLTableCellElement, React.TdHTMLAttributes<HTMLTableCellElement>>(
+  ({ className, ...props }, ref) => (
+    <td ref={ref} className={cn("p-4 align-middle [&:has([role=checkbox])]:pr-0", className)} {...props} />
+  ),
+);
+TableCell.displayName = "TableCell";
+
+const TableCaption = React.forwardRef<HTMLTableCaptionElement, React.HTMLAttributes<HTMLTableCaptionElement>>(
+  ({ className, ...props }, ref) => (
+    <caption ref={ref} className={cn("mt-4 text-sm text-muted-foreground", className)} {...props} />
+  ),
+);
+TableCaption.displayName = "TableCaption";
+
+export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption };
+```
+
+---
+
+### <a id='src-components-ui-tabstsx'></a> `src\components\ui\tabs.tsx`
+
+**Component:** tabs.tsx
+
+```tsx
+import * as React from "react";
+import * as TabsPrimitive from "@radix-ui/react-tabs";
+
+import { cn } from "@/lib/utils";
+
+const Tabs = TabsPrimitive.Root;
+
+const TabsList = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.List>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.List
+    ref={ref}
+    className={cn(
+      "inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",
+      className,
+    )}
+    {...props}
+  />
+));
+TabsList.displayName = TabsPrimitive.List.displayName;
+
+const TabsTrigger = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.Trigger
+    ref={ref}
+    className={cn(
+      "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+      className,
+    )}
+    {...props}
+  />
+));
+TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
+
+const TabsContent = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.Content
+    ref={ref}
+    className={cn(
+      "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+      className,
+    )}
+    {...props}
+  />
+));
+TabsContent.displayName = TabsPrimitive.Content.displayName;
+
+export { Tabs, TabsList, TabsTrigger, TabsContent };
+```
+
+---
+
+### <a id='src-components-ui-textareatsx'></a> `src\components\ui\textarea.tsx`
+
+**Component:** textarea.tsx
+
+```tsx
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
+
+export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
+
+const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(({ className, ...props }, ref) => {
+  return (
+    <textarea
+      className={cn(
+        "flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        className,
+      )}
+      ref={ref}
+      {...props}
+    />
+  );
+});
+Textarea.displayName = "Textarea";
+
+export { Textarea };
+```
+
+---
+
+### <a id='src-components-ui-toast-providertsx'></a> `src\components\ui\toast-provider.tsx`
+
+**Component:** toast-provider.tsx
+
+```tsx
+'use client';
+
+import { useEffect } from 'react';
+import { CheckCircle, XCircle, AlertCircle, Info, X } from 'lucide-react';
+import { useUiStore } from '@/store/uiStore';
+import { cn } from '@/lib/utils';
+
+const toastIcons = {
+  success: CheckCircle,
+  error: XCircle,
+  warning: AlertCircle,
+  info: Info,
+};
+
+const toastStyles = {
+  success: 'bg-success-light text-success border-success/20',
+  error: 'bg-destructive-light text-destructive border-destructive/20',
+  warning: 'bg-warning-light text-warning border-warning/20',
+  info: 'bg-accent/10 text-accent border-accent/20',
+};
+
+export function ToastProvider() {
+  const { toasts, removeToast } = useUiStore();
+
+  return (
+    <div className="fixed top-4 right-4 z-50 space-y-2">
+      {toasts.map((toast) => {
+        const Icon = toastIcons[toast.type];
+        
+        return (
+          <div
+            key={toast.id}
+            className={cn(
+              "flex items-start gap-3 p-4 rounded-lg border shadow-medium max-w-sm animate-in slide-in-from-right-full",
+              toastStyles[toast.type]
+            )}
+          >
+            <Icon className="h-5 w-5 flex-shrink-0 mt-0.5" />
+            <div className="flex-1 min-w-0">
+              <h4 className="font-semibold text-sm">{toast.title}</h4>
+              {toast.description && (
+                <p className="text-sm opacity-90 mt-1">{toast.description}</p>
+              )}
+            </div>
+            <button
+              onClick={() => removeToast(toast.id)}
+              className="flex-shrink-0 opacity-70 hover:opacity-100 transition-opacity"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+```
+
+---
+
+### <a id='src-components-ui-toasttsx'></a> `src\components\ui\toast.tsx`
+
+**Component:** toast.tsx
+
+```tsx
+import * as React from "react";
+import * as ToastPrimitives from "@radix-ui/react-toast";
+import { cva, type VariantProps } from "class-variance-authority";
+import { X } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const ToastProvider = ToastPrimitives.Provider;
+
+const ToastViewport = React.forwardRef<
+  React.ElementRef<typeof ToastPrimitives.Viewport>,
+  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Viewport>
+>(({ className, ...props }, ref) => (
+  <ToastPrimitives.Viewport
+    ref={ref}
+    className={cn(
+      "fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]",
+      className,
+    )}
+    {...props}
+  />
+));
+ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
+
+const toastVariants = cva(
+  "group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full",
+  {
+    variants: {
+      variant: {
+        default: "border bg-background text-foreground",
+        destructive: "destructive group border-destructive bg-destructive text-destructive-foreground",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  },
+);
+
+const Toast = React.forwardRef<
+  React.ElementRef<typeof ToastPrimitives.Root>,
+  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> & VariantProps<typeof toastVariants>
+>(({ className, variant, ...props }, ref) => {
+  return <ToastPrimitives.Root ref={ref} className={cn(toastVariants({ variant }), className)} {...props} />;
+});
+Toast.displayName = ToastPrimitives.Root.displayName;
+
+const ToastAction = React.forwardRef<
+  React.ElementRef<typeof ToastPrimitives.Action>,
+  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Action>
+>(({ className, ...props }, ref) => (
+  <ToastPrimitives.Action
+    ref={ref}
+    className={cn(
+      "inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium ring-offset-background transition-colors group-[.destructive]:border-muted/40 hover:bg-secondary group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 group-[.destructive]:focus:ring-destructive disabled:pointer-events-none disabled:opacity-50",
+      className,
+    )}
+    {...props}
+  />
+));
+ToastAction.displayName = ToastPrimitives.Action.displayName;
+
+const ToastClose = React.forwardRef<
+  React.ElementRef<typeof ToastPrimitives.Close>,
+  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Close>
+>(({ className, ...props }, ref) => (
+  <ToastPrimitives.Close
+    ref={ref}
+    className={cn(
+      "absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity group-hover:opacity-100 group-[.destructive]:text-red-300 hover:text-foreground group-[.destructive]:hover:text-red-50 focus:opacity-100 focus:outline-none focus:ring-2 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600",
+      className,
+    )}
+    toast-close=""
+    {...props}
+  >
+    <X className="h-4 w-4" />
+  </ToastPrimitives.Close>
+));
+ToastClose.displayName = ToastPrimitives.Close.displayName;
+
+const ToastTitle = React.forwardRef<
+  React.ElementRef<typeof ToastPrimitives.Title>,
+  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Title>
+>(({ className, ...props }, ref) => (
+  <ToastPrimitives.Title ref={ref} className={cn("text-sm font-semibold", className)} {...props} />
+));
+ToastTitle.displayName = ToastPrimitives.Title.displayName;
+
+const ToastDescription = React.forwardRef<
+  React.ElementRef<typeof ToastPrimitives.Description>,
+  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Description>
+>(({ className, ...props }, ref) => (
+  <ToastPrimitives.Description ref={ref} className={cn("text-sm opacity-90", className)} {...props} />
+));
+ToastDescription.displayName = ToastPrimitives.Description.displayName;
+
+type ToastProps = React.ComponentPropsWithoutRef<typeof Toast>;
+
+type ToastActionElement = React.ReactElement<typeof ToastAction>;
+
+export {
+  type ToastProps,
+  type ToastActionElement,
+  ToastProvider,
+  ToastViewport,
+  Toast,
+  ToastTitle,
+  ToastDescription,
+  ToastClose,
+  ToastAction,
+};
+```
+
+---
+
+### <a id='src-components-ui-toastertsx'></a> `src\components\ui\toaster.tsx`
+
+**Component:** toaster.tsx
+
+```tsx
+import { useToast } from "@/hooks/use-toast";
+import { Toast, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport } from "@/components/ui/toast";
+
+export function Toaster() {
+  const { toasts } = useToast();
+
+  return (
+    <ToastProvider>
+      {toasts.map(function ({ id, title, description, action, ...props }) {
+        return (
+          <Toast key={id} {...props}>
+            <div className="grid gap-1">
+              {title && <ToastTitle>{title}</ToastTitle>}
+              {description && <ToastDescription>{description}</ToastDescription>}
+            </div>
+            {action}
+            <ToastClose />
+          </Toast>
+        );
+      })}
+      <ToastViewport />
+    </ToastProvider>
+  );
+}
+```
+
+---
+
+### <a id='src-components-ui-toggle-grouptsx'></a> `src\components\ui\toggle-group.tsx`
+
+**Component:** toggle-group.tsx
+
+```tsx
+import * as React from "react";
+import * as ToggleGroupPrimitive from "@radix-ui/react-toggle-group";
+import { type VariantProps } from "class-variance-authority";
+
+import { cn } from "@/lib/utils";
+import { toggleVariants } from "@/components/ui/toggle";
+
+const ToggleGroupContext = React.createContext<VariantProps<typeof toggleVariants>>({
+  size: "default",
+  variant: "default",
+});
+
+const ToggleGroup = React.forwardRef<
+  React.ElementRef<typeof ToggleGroupPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Root> & VariantProps<typeof toggleVariants>
+>(({ className, variant, size, children, ...props }, ref) => (
+  <ToggleGroupPrimitive.Root ref={ref} className={cn("flex items-center justify-center gap-1", className)} {...props}>
+    <ToggleGroupContext.Provider value={{ variant, size }}>{children}</ToggleGroupContext.Provider>
+  </ToggleGroupPrimitive.Root>
+));
+
+ToggleGroup.displayName = ToggleGroupPrimitive.Root.displayName;
+
+const ToggleGroupItem = React.forwardRef<
+  React.ElementRef<typeof ToggleGroupPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Item> & VariantProps<typeof toggleVariants>
+>(({ className, children, variant, size, ...props }, ref) => {
+  const context = React.useContext(ToggleGroupContext);
+
+  return (
+    <ToggleGroupPrimitive.Item
+      ref={ref}
+      className={cn(
+        toggleVariants({
+          variant: context.variant || variant,
+          size: context.size || size,
+        }),
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </ToggleGroupPrimitive.Item>
+  );
+});
+
+ToggleGroupItem.displayName = ToggleGroupPrimitive.Item.displayName;
+
+export { ToggleGroup, ToggleGroupItem };
+```
+
+---
+
+### <a id='src-components-ui-toggletsx'></a> `src\components\ui\toggle.tsx`
+
+**Component:** toggle.tsx
+
+```tsx
+import * as React from "react";
+import * as TogglePrimitive from "@radix-ui/react-toggle";
+import { cva, type VariantProps } from "class-variance-authority";
+
+import { cn } from "@/lib/utils";
+
+const toggleVariants = cva(
+  "inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-muted hover:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground",
+  {
+    variants: {
+      variant: {
+        default: "bg-transparent",
+        outline: "border border-input bg-transparent hover:bg-accent hover:text-accent-foreground",
+      },
+      size: {
+        default: "h-10 px-3",
+        sm: "h-9 px-2.5",
+        lg: "h-11 px-5",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  },
+);
+
+const Toggle = React.forwardRef<
+  React.ElementRef<typeof TogglePrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof TogglePrimitive.Root> & VariantProps<typeof toggleVariants>
+>(({ className, variant, size, ...props }, ref) => (
+  <TogglePrimitive.Root ref={ref} className={cn(toggleVariants({ variant, size, className }))} {...props} />
+));
+
+Toggle.displayName = TogglePrimitive.Root.displayName;
+
+export { Toggle, toggleVariants };
+```
+
+---
+
+### <a id='src-components-ui-tooltiptsx'></a> `src\components\ui\tooltip.tsx`
+
+**Component:** tooltip.tsx
+
+```tsx
+import * as React from "react";
+import * as TooltipPrimitive from "@radix-ui/react-tooltip";
+
+import { cn } from "@/lib/utils";
+
+const TooltipProvider = TooltipPrimitive.Provider;
+
+const Tooltip = TooltipPrimitive.Root;
+
+const TooltipTrigger = TooltipPrimitive.Trigger;
+
+const TooltipContent = React.forwardRef<
+  React.ElementRef<typeof TooltipPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
+>(({ className, sideOffset = 4, ...props }, ref) => (
+  <TooltipPrimitive.Content
+    ref={ref}
+    sideOffset={sideOffset}
+    className={cn(
+      "z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      className,
+    )}
+    {...props}
+  />
+));
+TooltipContent.displayName = TooltipPrimitive.Content.displayName;
+
+export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };
+```
+
+---
+
+### <a id='src-components-ui-use-toastts'></a> `src\components\ui\use-toast.ts`
+
+**Component:** use-toast.ts
+
+```typescript
+import { useToast, toast } from "@/hooks/use-toast";
+
+export { useToast, toast };
+```
+
+---
+
+
+## Controllers Files
+
+### <a id='src-controllers-authControllerts'></a> `src\controllers\authController.ts`
+
+**File Type:** authController.ts
+
+```typescript
+import { authApi } from '@/apis';
+import { useAuthStore } from '@/store/authStore';
+import { useUiStore } from '@/store/uiStore';
+
+export class AuthController {
+  static async loginWithToast(email: string, password: string): Promise<boolean> {
+    const { login } = useAuthStore.getState();
+    const { addToast } = useUiStore.getState();
+    
+    try {
+      await login(email, password);
+      addToast({
+        title: 'Welcome back!',
+        description: 'You have successfully signed in.',
+        type: 'success'
+      });
+      return true;
+    } catch (error: any) {
+      addToast({
+        title: 'Login failed',
+        description: error.message || 'Please check your credentials and try again.',
+        type: 'error'
+      });
+      return false;
+    }
+  }
+
+  static async signupWithToast(username: string, email: string, password: string): Promise<boolean> {
+    const { signup } = useAuthStore.getState();
+    const { addToast } = useUiStore.getState();
+    
+    try {
+      await signup(username, email, password);
+      addToast({
+        title: 'Welcome to StoriVault!',
+        description: 'Your account has been created successfully.',
+        type: 'success'
+      });
+      return true;
+    } catch (error: any) {
+      addToast({
+        title: 'Signup failed',
+        description: error.message || 'Please check your information and try again.',
+        type: 'error'
+      });
+      return false;
+    }
+  }
+
+  static logoutWithToast(): void {
+    const { logout } = useAuthStore.getState();
+    const { addToast } = useUiStore.getState();
+    
+    logout();
+    addToast({
+      title: 'Signed out',
+      description: 'You have been successfully signed out.',
+      type: 'success'
+    });
+  }
+}
+```
+
+---
+
+### <a id='src-controllers-indexts'></a> `src\controllers\index.ts`
+
+**File Type:** index.ts
+
+```typescript
+// Controllers orchestrate complex business logic flows
+export * from './storyController';
+export * from './userController';
+export * from './authController';
+```
+
+---
+
+### <a id='src-controllers-storyControllerts'></a> `src\controllers\storyController.ts`
+
+**File Type:** storyController.ts
+
+```typescript
+import { storiesApi, uploadsApi } from '@/apis';
+import { useUiStore } from '@/store/uiStore';
+import { Story, CreateStoryRequest } from '@/types';
+
+export class StoryController {
+  static async createStoryWithCover(
+    data: Omit<CreateStoryRequest, 'cover_image'> & { cover?: File }
+  ): Promise<Story | null> {
+    const { addToast } = useUiStore.getState();
+    
+    try {
+      let story: Story;
+      
+      if (data.cover) {
+        // Upload cover and create story with multipart
+        story = await storiesApi.createStoryMultipart({
+          title: data.title,
+          description: data.description,
+          genre: data.genre,
+          tags: data.tags?.join(','),
+          visibility: data.visibility,
+          cover: data.cover
+        });
+      } else {
+        // Create story without cover
+        story = await storiesApi.createStory({
+          title: data.title,
+          description: data.description,
+          genre: data.genre,
+          tags: data.tags,
+          visibility: data.visibility
+        });
+      }
+      
+      addToast({
+        title: 'Story created!',
+        description: 'Your story has been published successfully.',
+        type: 'success'
+      });
+      
+      return story;
+    } catch (error: any) {
+      addToast({
+        title: 'Failed to create story',
+        description: error.message || 'Please try again later.',
+        type: 'error'
+      });
+      return null;
+    }
+  }
+
+  static async updateStoryCover(storyId: string, cover: File): Promise<Story | null> {
+    const { addToast } = useUiStore.getState();
+    
+    try {
+      const story = await storiesApi.updateStoryCover(storyId, cover);
+      
+      addToast({
+        title: 'Cover updated!',
+        description: 'Your story cover has been updated successfully.',
+        type: 'success'
+      });
+      
+      return story;
+    } catch (error: any) {
+      addToast({
+        title: 'Failed to update cover',
+        description: error.message || 'Please try again later.',
+        type: 'error'
+      });
+      return null;
+    }
+  }
+
+  static async deleteStoryWithConfirmation(storyId: string): Promise<boolean> {
+    const { addToast } = useUiStore.getState();
+    
+    const confirmed = window.confirm(
+      'Are you sure you want to delete this story? This action cannot be undone.'
+    );
+    
+    if (!confirmed) return false;
+    
+    try {
+      await storiesApi.deleteStory(storyId);
+      
+      addToast({
+        title: 'Story deleted',
+        description: 'Your story has been deleted successfully.',
+        type: 'success'
+      });
+      
+      return true;
+    } catch (error: any) {
+      addToast({
+        title: 'Failed to delete story',
+        description: error.message || 'Please try again later.',
+        type: 'error'
+      });
+      return false;
+    }
+  }
+}
+```
+
+---
+
+### <a id='src-controllers-userControllerts'></a> `src\controllers\userController.ts`
+
+**File Type:** userController.ts
+
+```typescript
+import { usersApi } from '@/apis';
+import { useAuthStore } from '@/store/authStore';
+import { useUiStore } from '@/store/uiStore';
+import { User, UpdateProfileRequest } from '@/types';
+
+export class UserController {
+  static async updateProfileWithToast(data: UpdateProfileRequest): Promise<User | null> {
+    const { updateUser } = useAuthStore.getState();
+    const { addToast } = useUiStore.getState();
+    
+    try {
+      const user = await usersApi.updateProfile(data);
+      updateUser(user);
+      
+      addToast({
+        title: 'Profile updated!',
+        description: 'Your profile has been updated successfully.',
+        type: 'success'
+      });
+      
+      return user;
+    } catch (error: any) {
+      addToast({
+        title: 'Failed to update profile',
+        description: error.message || 'Please try again later.',
+        type: 'error'
+      });
+      return null;
+    }
+  }
+
+  static async uploadProfilePictureWithToast(file: File): Promise<User | null> {
+    const { updateUser } = useAuthStore.getState();
+    const { addToast } = useUiStore.getState();
+    
+    try {
+      const user = await usersApi.uploadProfilePicture(file);
+      updateUser(user);
+      
+      addToast({
+        title: 'Profile picture updated!',
+        description: 'Your profile picture has been updated successfully.',
+        type: 'success'
+      });
+      
+      return user;
+    } catch (error: any) {
+      addToast({
+        title: 'Failed to update profile picture',
+        description: error.message || 'Please try again later.',
+        type: 'error'
+      });
+      return null;
+    }
+  }
+
+  static async followUserWithToast(username: string): Promise<boolean> {
+    const { addToast } = useUiStore.getState();
+    
+    try {
+      await usersApi.followUser(username);
+      
+      addToast({
+        title: 'Following!',
+        description: `You are now following @${username}.`,
+        type: 'success'
+      });
+      
+      return true;
+    } catch (error: any) {
+      addToast({
+        title: 'Failed to follow user',
+        description: error.message || 'Please try again later.',
+        type: 'error'
+      });
+      return false;
+    }
+  }
+
+  static async unfollowUserWithToast(username: string): Promise<boolean> {
+    const { addToast } = useUiStore.getState();
+    
+    try {
+      await usersApi.unfollowUser(username);
+      
+      addToast({
+        title: 'Unfollowed',
+        description: `You have unfollowed @${username}.`,
+        type: 'success'
+      });
+      
+      return true;
+    } catch (error: any) {
+      addToast({
+        title: 'Failed to unfollow user',
+        description: error.message || 'Please try again later.',
+        type: 'error'
+      });
+      return false;
+    }
+  }
+
+  static async changePasswordWithToast(oldPassword: string, newPassword: string): Promise<boolean> {
+    const { addToast } = useUiStore.getState();
+    
+    try {
+      await usersApi.changePassword({ old_password: oldPassword, new_password: newPassword });
+      
+      addToast({
+        title: 'Password changed!',
+        description: 'Your password has been updated successfully.',
+        type: 'success'
+      });
+      
+      return true;
+    } catch (error: any) {
+      addToast({
+        title: 'Failed to change password',
+        description: error.message || 'Please check your current password and try again.',
+        type: 'error'
+      });
+      return false;
+    }
+  }
+}
+```
+
+---
+
+
+## Helper Files
+
+### <a id='src-helper-constantsts'></a> `src\helper\constants.ts`
+
+**File Type:** constants.ts
+
+```typescript
+// Application constants
+
+export const API_BASE_URL = 'https://usman678zafar-storivault-backend.hf.space';
+
+export const GENRES = [
+  'Romance',
+  'Fantasy',
+  'Mystery',
+  'Sci-Fi',
+  'Horror',
+  'Adventure',
+  'Drama',
+  'Comedy',
+  'Thriller',
+  'Historical',
+  'Young Adult',
+  'Literary Fiction',
+  'Poetry',
+  'Non-Fiction'
+] as const;
+
+export const STORY_VISIBILITY = {
+  PUBLIC: 'public',
+  PRIVATE: 'private'
+} as const;
+
+export const SORT_OPTIONS = {
+  LATEST: 'latest',
+  POPULAR: 'popular',
+  TRENDING: 'trending'
+} as const;
+
+export const FILE_LIMITS = {
+  IMAGE_MAX_SIZE: 5 * 1024 * 1024, // 5MB
+  COVER_MAX_SIZE: 5 * 1024 * 1024, // 5MB
+  ALLOWED_IMAGE_TYPES: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
+} as const;
+
+export const PAGINATION = {
+  DEFAULT_LIMIT: 12,
+  MAX_LIMIT: 50
+} as const;
+
+export const QUERY_KEYS = {
+  STORIES: 'stories',
+  STORY: 'story',
+  USER: 'user',
+  USERS: 'users',
+  SEARCH: 'search',
+  FOLLOWERS: 'followers',
+  FOLLOWING: 'following'
+} as const;
+
+export const ROUTES = {
+  HOME: '/',
+  LOGIN: '/auth/login',
+  SIGNUP: '/auth/signup',
+  STORIES: '/stories',
+  STORY_DETAIL: '/stories/:id',
+  STORY_CREATE: '/stories/create',
+  STORY_EDIT: '/stories/:id/edit',
+  USER_PROFILE: '/users/:username',
+  SETTINGS: '/settings',
+  LIBRARY: '/library'
+} as const;
+```
+
+---
+
+### <a id='src-helper-formattingts'></a> `src\helper\formatting.ts`
+
+**File Type:** formatting.ts
+
+```typescript
+// Formatting and utility helpers
+
+export const formatNumber = (num: number): string => {
+  if (num >= 1000000) {
+    return `${(num / 1000000).toFixed(1)}M`;
+  }
+  if (num >= 1000) {
+    return `${(num / 1000).toFixed(1)}K`;
+  }
+  return num.toString();
+};
+
+export const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInMs = now.getTime() - date.getTime();
+  const diffInHours = diffInMs / (1000 * 60 * 60);
+  const diffInDays = diffInHours / 24;
+
+  if (diffInHours < 1) {
+    const diffInMinutes = diffInMs / (1000 * 60);
+    return `${Math.floor(diffInMinutes)}m ago`;
+  }
+  
+  if (diffInHours < 24) {
+    return `${Math.floor(diffInHours)}h ago`;
+  }
+  
+  if (diffInDays < 7) {
+    return `${Math.floor(diffInDays)}d ago`;
+  }
+  
+  if (diffInDays < 30) {
+    const diffInWeeks = diffInDays / 7;
+    return `${Math.floor(diffInWeeks)}w ago`;
+  }
+  
+  return date.toLocaleDateString();
+};
+
+export const formatRelativeTime = (dateString: string): string => {
+  const date = new Date(dateString);
+  const formatter = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+  
+  const diffInMs = date.getTime() - Date.now();
+  const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
+  
+  return formatter.format(diffInDays, 'day');
+};
+
+export const truncateText = (text: string, maxLength: number): string => {
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength) + '...';
+};
+
+export const capitalizeFirst = (str: string): string => {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+};
+
+export const slugify = (text: string): string => {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .replace(/[\s_-]+/g, '-') // Replace spaces and underscores with hyphens
+    .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+};
+
+export const parseTagString = (tagString: string): string[] => {
+  return tagString
+    .split(',')
+    .map(tag => tag.trim())
+    .filter(tag => tag.length > 0);
+};
+
+export const formatTagsForDisplay = (tags: string[]): string => {
+  if (tags.length === 0) return '';
+  if (tags.length === 1) return tags[0];
+  if (tags.length === 2) return tags.join(' and ');
+  return `${tags.slice(0, -1).join(', ')}, and ${tags[tags.length - 1]}`;
+};
+```
+
+---
+
+### <a id='src-helper-indexts'></a> `src\helper\index.ts`
+
+**File Type:** index.ts
+
+```typescript
+export * from './validation';
+export * from './formatting';
+export * from './constants';
+```
+
+---
+
+### <a id='src-helper-validationts'></a> `src\helper\validation.ts`
+
+**File Type:** validation.ts
+
+```typescript
+// Form validation helpers
+
+export const validateEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+export const validateUsername = (username: string): string | null => {
+  if (!username.trim()) {
+    return 'Username is required';
+  }
+  if (username.length < 3) {
+    return 'Username must be at least 3 characters';
+  }
+  if (username.length > 30) {
+    return 'Username must be less than 30 characters';  
+  }
+  if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
+    return 'Username can only contain letters, numbers, hyphens, and underscores';
+  }
+  return null;
+};
+
+export const validatePassword = (password: string): string | null => {
+  if (!password) {
+    return 'Password is required';
+  }
+  if (password.length < 6) {
+    return 'Password must be at least 6 characters';
+  }
+  if (password.length > 128) {
+    return 'Password must be less than 128 characters';
+  }
+  return null;
+};
+
+export const validateStoryTitle = (title: string): string | null => {
+  if (!title.trim()) {
+    return 'Title is required';
+  }
+  if (title.length > 200) {
+    return 'Title must be less than 200 characters';
+  }
+  return null;
+};
+
+export const validateStoryDescription = (description: string): string | null => {
+  if (description.length > 2000) {
+    return 'Description must be less than 2000 characters';
+  }
+  return null;
+};
+
+export const validateObjectId = (id: string): boolean => {
+  return /^[0-9a-fA-F]{24}$/.test(id);
+};
+
+export const validateFileSize = (file: File, maxSizeInMB: number): string | null => {
+  const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
+  if (file.size > maxSizeInBytes) {
+    return `File size must be less than ${maxSizeInMB}MB`;
+  }
+  return null;
+};
+
+export const validateImageFile = (file: File): string | null => {
+  const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+  if (!allowedTypes.includes(file.type)) {
+    return 'Only JPEG, PNG, and WebP images are allowed';
+  }
+  
+  return validateFileSize(file, 5); // 5MB limit for images
+};
+```
+
+---
+
+
+## Hooks Files
+
+### <a id='src-hooks-use-mobiletsx'></a> `src\hooks\use-mobile.tsx`
+
+**File Type:** use-mobile.tsx
+
+```tsx
+import * as React from "react";
+
+const MOBILE_BREAKPOINT = 768;
+
+export function useIsMobile() {
+  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined);
+
+  React.useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
+    const onChange = () => {
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    };
+    mql.addEventListener("change", onChange);
+    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+
+  return !!isMobile;
+}
+```
+
+---
+
+### <a id='src-hooks-use-toastts'></a> `src\hooks\use-toast.ts`
+
+**File Type:** use-toast.ts
+
+```typescript
+import * as React from "react";
+
+import type { ToastActionElement, ToastProps } from "@/components/ui/toast";
+
+const TOAST_LIMIT = 1;
+const TOAST_REMOVE_DELAY = 1000000;
+
+type ToasterToast = ToastProps & {
+  id: string;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
+  action?: ToastActionElement;
+};
+
+const actionTypes = {
+  ADD_TOAST: "ADD_TOAST",
+  UPDATE_TOAST: "UPDATE_TOAST",
+  DISMISS_TOAST: "DISMISS_TOAST",
+  REMOVE_TOAST: "REMOVE_TOAST",
+} as const;
+
+let count = 0;
+
+function genId() {
+  count = (count + 1) % Number.MAX_SAFE_INTEGER;
+  return count.toString();
+}
+
+type ActionType = typeof actionTypes;
+
+type Action =
+  | {
+      type: ActionType["ADD_TOAST"];
+      toast: ToasterToast;
+    }
+  | {
+      type: ActionType["UPDATE_TOAST"];
+      toast: Partial<ToasterToast>;
+    }
+  | {
+      type: ActionType["DISMISS_TOAST"];
+      toastId?: ToasterToast["id"];
+    }
+  | {
+      type: ActionType["REMOVE_TOAST"];
+      toastId?: ToasterToast["id"];
+    };
+
+interface State {
+  toasts: ToasterToast[];
+}
+
+const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
+
+const addToRemoveQueue = (toastId: string) => {
+  if (toastTimeouts.has(toastId)) {
+    return;
+  }
+
+  const timeout = setTimeout(() => {
+    toastTimeouts.delete(toastId);
+    dispatch({
+      type: "REMOVE_TOAST",
+      toastId: toastId,
+    });
+  }, TOAST_REMOVE_DELAY);
+
+  toastTimeouts.set(toastId, timeout);
+};
+
+export const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case "ADD_TOAST":
+      return {
+        ...state,
+        toasts: [action.toast, ...state.toasts].slice(0, TOAST_LIMIT),
+      };
+
+    case "UPDATE_TOAST":
+      return {
+        ...state,
+        toasts: state.toasts.map((t) => (t.id === action.toast.id ? { ...t, ...action.toast } : t)),
+      };
+
+    case "DISMISS_TOAST": {
+      const { toastId } = action;
+
+      // ! Side effects ! - This could be extracted into a dismissToast() action,
+      // but I'll keep it here for simplicity
+      if (toastId) {
+        addToRemoveQueue(toastId);
+      } else {
+        state.toasts.forEach((toast) => {
+          addToRemoveQueue(toast.id);
+        });
+      }
+
+      return {
+        ...state,
+        toasts: state.toasts.map((t) =>
+          t.id === toastId || toastId === undefined
+            ? {
+                ...t,
+                open: false,
+              }
+            : t,
+        ),
+      };
+    }
+    case "REMOVE_TOAST":
+      if (action.toastId === undefined) {
+        return {
+          ...state,
+          toasts: [],
+        };
+      }
+      return {
+        ...state,
+        toasts: state.toasts.filter((t) => t.id !== action.toastId),
+      };
+  }
+};
+
+const listeners: Array<(state: State) => void> = [];
+
+let memoryState: State = { toasts: [] };
+
+function dispatch(action: Action) {
+  memoryState = reducer(memoryState, action);
+  listeners.forEach((listener) => {
+    listener(memoryState);
+  });
+}
+
+type Toast = Omit<ToasterToast, "id">;
+
+function toast({ ...props }: Toast) {
+  const id = genId();
+
+  const update = (props: ToasterToast) =>
+    dispatch({
+      type: "UPDATE_TOAST",
+      toast: { ...props, id },
+    });
+  const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id });
+
+  dispatch({
+    type: "ADD_TOAST",
+    toast: {
+      ...props,
+      id,
+      open: true,
+      onOpenChange: (open) => {
+        if (!open) dismiss();
+      },
+    },
+  });
+
+  return {
+    id: id,
+    dismiss,
+    update,
+  };
+}
+
+function useToast() {
+  const [state, setState] = React.useState<State>(memoryState);
+
+  React.useEffect(() => {
+    listeners.push(setState);
+    return () => {
+      const index = listeners.indexOf(setState);
+      if (index > -1) {
+        listeners.splice(index, 1);
+      }
+    };
+  }, [state]);
+
+  return {
+    ...state,
+    toast,
+    dismiss: (toastId?: string) => dispatch({ type: "DISMISS_TOAST", toastId }),
+  };
+}
+
+export { useToast, toast };
+```
+
+---
+
+
+## Index.Css Files
+
+### <a id='src-indexcss'></a> `src\index.css`
+
+**File Type:** index.css
 
 ```css
 @tailwind base;
@@ -916,14 +8890,50 @@ export default App;
   box-shadow: 0 0 0 9999em rgba(0, 0, 0, 0.5);
   overflow: hidden;
 }
+
+/* Add to the existing index.css */
+@layer components {
+  /* Settings page specific styles */
+  .settings-section {
+    @apply bg-white rounded-lg border shadow-sm;
+  }
+  
+  .settings-header {
+    @apply px-6 py-4 border-b;
+  }
+  
+  .settings-content {
+    @apply px-6 py-4;
+  }
+}
 ```
 
 ---
 
-#### 📄 src\main.tsx
-<a name='src-maintsx'></a>
 
-**Path:** `src\main.tsx`
+## Lib Files
+
+### <a id='src-lib-utilsts'></a> `src\lib\utils.ts`
+
+**File Type:** utils.ts
+
+```typescript
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+```
+
+---
+
+
+## Main.Tsx Files
+
+### <a id='src-maintsx'></a> `src\main.tsx`
+
+**File Type:** main.tsx
 
 ```tsx
 import { createRoot } from "react-dom/client";
@@ -938,1178 +8948,1062 @@ createRoot(document.getElementById("root")!).render(<App />);
 
 ---
 
-#### 📄 src\vite-env.d.ts
-<a name='src-vite-envdts'></a>
 
-**Path:** `src\vite-env.d.ts`
+## Pages Files
 
-```typescript
-/// <reference types="vite/client" />
-```
+### <a id='src-pages-auth-GoogleSuccessPagetsx'></a> `src\pages\auth\GoogleSuccessPage.tsx`
 
----
-
-### 📁 src\apis
-
-#### 📄 src\apis\auth.ts
-<a name='src-apis-authts'></a>
-
-**Path:** `src\apis\auth.ts`
-
-```typescript
-import { apiClient, createFormData } from './client';
-import { TokenResponse, User, SignupRequest } from '@/types';
-
-export const authApi = {
-  // Login with email/password
-  login: async (email: string, password: string): Promise<TokenResponse> => {
-    const formData = createFormData({
-      username: email, // Backend expects 'username' field for email
-      password: password
-    });
-
-    const response = await apiClient.post<TokenResponse>('/auth/token', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-
-    return response.data;
-  },
-
-  // Sign up new user
-  signup: async (username: string, email: string, password: string): Promise<User> => {
-    const request: SignupRequest = {
-      username,
-      email,
-      password
-    };
-
-    const response = await apiClient.post<User>('/auth/signup', request);
-    return response.data;
-  },
-
-  // Get current user profile
-  getMe: async (token?: string): Promise<User> => {
-    const headers = token ? { Authorization: `Bearer ${token}` } : {};
-    
-    const response = await apiClient.get<User>('/users/me', { headers });
-    return response.data;
-  }
-};
-```
-
----
-
-#### 📄 src\apis\chapters.ts
-<a name='src-apis-chaptersts'></a>
-
-**Path:** `src\apis\chapters.ts`
-
-```typescript
-import { apiClient } from './client';
-import { Chapter, CreateChapterRequest, UpdateChapterRequest } from '@/types/api';
-
-export const chaptersApi = {
-  // Get chapters by story ID
-  getChaptersByStory: async (storyId: string, publishedOnly: boolean = true): Promise<Chapter[]> => {
-    const response = await apiClient.get(`/chapters/by-story/${storyId}`, {
-      params: { published_only: publishedOnly }
-    });
-    return response.data;
-  },
-
-  // Get a single chapter
-  getChapter: async (chapterId: string): Promise<Chapter> => {
-    const response = await apiClient.get(`/chapters/${chapterId}`);
-    return response.data;
-  },
-
-  // Create a new chapter (requires auth)
-  createChapter: async (data: CreateChapterRequest): Promise<Chapter> => {
-    const response = await apiClient.post('/chapters', data);
-    return response.data;
-  },
-
-  // Update a chapter (requires auth)
-  updateChapter: async (chapterId: string, data: UpdateChapterRequest): Promise<Chapter> => {
-    const response = await apiClient.patch(`/chapters/${chapterId}`, data);
-    return response.data;
-  },
-
-  // Delete a chapter (requires auth)
-  deleteChapter: async (chapterId: string): Promise<void> => {
-    await apiClient.delete(`/chapters/${chapterId}`);
-  },
-
-  // Set read progress for a chapter
-  setReadProgress: async (chapterId: string, storyId: string): Promise<void> => {
-    await apiClient.post(`/chapters/${chapterId}/progress`, null, {
-      params: { story_id: storyId }
-    });
-  }
-};
-```
-
----
-
-#### 📄 src\apis\client.ts
-<a name='src-apis-clientts'></a>
-
-**Path:** `src\apis\client.ts`
-
-```typescript
-import axios, { AxiosInstance, AxiosError, AxiosResponse } from 'axios';
-import { ApiEnvelope, ApiError } from '@/types';
-
-// Create axios instance
-export const apiClient: AxiosInstance = axios.create({
-  baseURL: 'https://usman678zafar-storivault-backend.hf.space',
-  timeout: 30000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// Request interceptor to add auth token
-apiClient.interceptors.request.use(
-  (config) => {
-    // Get token from auth store
-    const authStorage = localStorage.getItem('auth-storage');
-    if (authStorage) {
-      try {
-        const { state } = JSON.parse(authStorage);
-        if (state?.accessToken) {
-          config.headers.Authorization = `Bearer ${state.accessToken}`;
-        }
-      } catch (error) {
-        console.warn('Failed to parse auth storage:', error);
-      }
-    }
-    
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-// Response interceptor to handle envelope unwrapping and errors
-apiClient.interceptors.response.use(
-  (response: AxiosResponse) => {
-    // Handle /auth/token endpoint (doesn't use envelope)
-    if (response.config.url?.includes('/auth/token')) {
-      return response;
-    }
-    
-    // Unwrap envelope for other endpoints
-    const envelope = response.data as ApiEnvelope;
-    
-    if (envelope.success) {
-      return { ...response, data: envelope.data };
-    } else {
-      // Convert envelope error to ApiError
-      const apiError: ApiError = new Error(envelope.message || 'API Error') as ApiError;
-      apiError.status = response.status;
-      apiError.details = envelope.error?.details;
-      throw apiError;
-    }
-  },
-  (error: AxiosError) => {
-    // Handle network errors and HTTP error responses
-    const apiError: ApiError = new Error() as ApiError;
-
-    if (error.response) {
-      // Server responded with error status
-      const data = error.response.data as any;
-
-      // Log full error response for debugging
-      console.error('API Error Response:', {
-        status: error.response.status,
-        data: error.response.data,
-        url: error.config?.url,
-        method: error.config?.method,
-      });
-
-      if (data && typeof data === 'object') {
-        if (data.success === false) {
-          // Envelope error
-          apiError.message = data.message || 'API Error';
-          apiError.details = data.error?.details;
-        } else if (data.detail) {
-          // FastAPI validation error
-          apiError.message = Array.isArray(data.detail)
-            ? data.detail.map((d: any) => d.msg).join(', ')
-            : data.detail;
-        } else {
-          apiError.message = error.message || `HTTP ${error.response.status} Error`;
-        }
-      } else {
-        apiError.message = error.message || `HTTP ${error.response.status} Error`;
-      }
-
-      apiError.status = error.response.status;
-      
-      // Handle 401 errors - logout user
-      if (error.response.status === 401) {
-        // Clear auth storage
-        localStorage.removeItem('auth-storage');
-        
-        // Redirect to login if not already there
-        if (typeof window !== 'undefined' && !window.location.pathname.includes('/auth')) {
-          window.location.href = '/auth/login';
-        }
-      }
-    } else if (error.request) {
-      // Network error
-      apiError.message = 'Network error. Please check your connection.';
-    } else {
-      // Other error
-      apiError.message = error.message || 'Unknown error occurred';
-    }
-    
-    return Promise.reject(apiError);
-  }
-);
-
-// Helper function to create multipart form data
-export const createFormData = (data: Record<string, any>): FormData => {
-  const formData = new FormData();
-  
-  for (const [key, value] of Object.entries(data)) {
-    if (value !== undefined && value !== null) {
-      if (value instanceof File) {
-        formData.append(key, value);
-      } else if (Array.isArray(value)) {
-        // Handle arrays (e.g., tags)
-        formData.append(key, value.join(','));
-      } else {
-        formData.append(key, String(value));
-      }
-    }
-  }
-  
-  return formData;
-};
-
-export default apiClient;
-```
-
----
-
-#### 📄 src\apis\index.ts
-<a name='src-apis-indexts'></a>
-
-**Path:** `src\apis\index.ts`
-
-```typescript
-export * from './client';
-export * from './auth';
-export * from './users';
-export * from './stories';
-export * from './chapters';
-export * from './uploads';
-export * from './votes';
-```
-
----
-
-#### 📄 src\apis\stories.ts
-<a name='src-apis-storiests'></a>
-
-**Path:** `src\apis\stories.ts`
-
-```typescript
-import { apiClient, createFormData } from './client';
-import { Story, CreateStoryRequest, UpdateStoryRequest, StoriesQuery, SearchQuery, PaginatedResponse } from '@/types';
-
-export const storiesApi = {
-  // Create story with multipart form (including cover upload)
-  createStoryMultipart: async (data: {
-    title: string;
-    description?: string;
-    genre: string;
-    tags?: string;
-    visibility?: 'public' | 'private';
-    cover?: File;
-  }): Promise<Story> => {
-    const formData = createFormData(data);
-    
-    const response = await apiClient.post<Story>('/stories', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    
-    return response.data;
-  },
-
-  // Create story with JSON
-  createStory: async (data: CreateStoryRequest): Promise<Story> => {
-    const response = await apiClient.post<Story>('/stories/json', data);
-    return response.data;
-  },
-
-  // Update story cover
-  updateStoryCover: async (storyId: string, cover: File): Promise<Story> => {
-    const formData = createFormData({ cover });
-    
-    const response = await apiClient.patch<Story>(`/stories/${storyId}/cover`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    
-    return response.data;
-  },
-
-  // Get stories with filters and pagination
-  getStories: async (query: StoriesQuery = {}): Promise<PaginatedResponse<Story>> => {
-    const response = await apiClient.get<PaginatedResponse<Story>>('/stories', {
-      params: query
-    });
-    return response.data;
-  },
-
-  // Search stories
-  searchStories: async (query: SearchQuery): Promise<PaginatedResponse<Story>> => {
-    const response = await apiClient.get<PaginatedResponse<Story>>('/stories/search', {
-      params: query
-    });
-    return response.data;
-  },
-
-  // Get story by ID
-  getStory: async (storyId: string): Promise<Story> => {
-    const response = await apiClient.get<Story>(`/stories/${storyId}`);
-    return response.data;
-  },
-
-  // Update story
-  updateStory: async (storyId: string, data: UpdateStoryRequest): Promise<Story> => {
-    const response = await apiClient.patch<Story>(`/stories/${storyId}`, data);
-    return response.data;
-  },
-
-  // Delete story
-  deleteStory: async (storyId: string): Promise<void> => {
-    await apiClient.delete(`/stories/${storyId}`);
-  }
-};
-```
-
----
-
-#### 📄 src\apis\uploads.ts
-<a name='src-apis-uploadsts'></a>
-
-**Path:** `src\apis\uploads.ts`
-
-```typescript
-import { apiClient, createFormData } from './client';
-import { UploadResponse, PresignRequest, PresignResponse, GetUrlQuery, GetUrlResponse } from '@/types';
-
-export const uploadsApi = {
-  // Check upload status
-  getStatus: async (): Promise<{ configured: boolean }> => {
-    const response = await apiClient.get<{ configured: boolean }>('/uploads/status');
-    return response.data;
-  },
-
-  // Direct file upload
-  uploadFile: async (
-    file: File, 
-    folder?: 'images' | 'covers' | 'media' | 'avatars'
-  ): Promise<UploadResponse> => {
-    const formData = createFormData({ uploadedFile: file });
-    
-    const params = folder ? { folder } : {};
-    
-    const response = await apiClient.post<UploadResponse>('/uploads/file', formData, {
-      params,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    
-    return response.data;
-  },
-
-  // Get presigned URL for upload
-  getPresignedUrl: async (data: PresignRequest): Promise<PresignResponse> => {
-    const response = await apiClient.post<PresignResponse>('/uploads/presign', data);
-    return response.data;
-  },
-
-  // Get signed URL for private file access
-  getSignedUrl: async (query: GetUrlQuery): Promise<GetUrlResponse> => {
-    const response = await apiClient.get<GetUrlResponse>('/uploads/get-url', {
-      params: query
-    });
-    return response.data;
-  },
-
-  // Delete file
-  deleteFile: async (key: string): Promise<{ key: string }> => {
-    const response = await apiClient.delete<{ key: string }>(`/uploads/${key}`);
-    return response.data;
-  }
-};
-```
-
----
-
-#### 📄 src\apis\users.ts
-<a name='src-apis-usersts'></a>
-
-**Path:** `src\apis\users.ts`
-
-```typescript
-import { apiClient, createFormData } from './client';
-import { User, UpdateProfileRequest, ChangePasswordRequest, PaginatedResponse } from '@/types';
-
-export const usersApi = {
-  // Update current user profile
-  updateProfile: async (data: UpdateProfileRequest): Promise<User> => {
-    const response = await apiClient.patch<User>('/users/me', data);
-    return response.data;
-  },
-
-  // Upload profile picture
-  uploadProfilePicture: async (file: File): Promise<User> => {
-    const formData = createFormData({ file });
-    
-    const response = await apiClient.post<User>('/users/me/profile-pic', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    
-    return response.data;
-  },
-
-  // Get user by username
-  getUserByUsername: async (username: string): Promise<User> => {
-    const response = await apiClient.get<User>(`/users/${username}`);
-    return response.data;
-  },
-
-  // Follow user
-  followUser: async (username: string): Promise<void> => {
-    await apiClient.post(`/users/${username}/follow`);
-  },
-
-  // Unfollow user
-  unfollowUser: async (username: string): Promise<void> => {
-    await apiClient.post(`/users/${username}/unfollow`);
-  },
-
-  // Get user followers
-  getFollowers: async (username: string, page = 1, limit = 20): Promise<PaginatedResponse<User>> => {
-    const response = await apiClient.get<PaginatedResponse<User>>(`/users/${username}/followers`, {
-      params: { page, limit }
-    });
-    return response.data;
-  },
-
-  // Get user following
-  getFollowing: async (username: string, page = 1, limit = 20): Promise<PaginatedResponse<User>> => {
-    const response = await apiClient.get<PaginatedResponse<User>>(`/users/${username}/following`, {
-      params: { page, limit }
-    });
-    return response.data;
-  },
-
-  // Change password
-  changePassword: async (data: ChangePasswordRequest): Promise<void> => {
-    await apiClient.post('/users/me/password', data);
-  },
-
-  // Delete account
-  deleteAccount: async (): Promise<void> => {
-    await apiClient.delete('/users/me');
-  }
-};
-```
-
----
-
-#### 📄 src\apis\votes.ts
-<a name='src-apis-votests'></a>
-
-**Path:** `src\apis\votes.ts`
-
-```typescript
-import { apiClient } from './client';
-import { VoteRequest } from '@/types';
-
-export const votesApi = {
-  // Vote on a chapter
-  vote: async (chapterId: string): Promise<void> => {
-    const request: VoteRequest = {
-      chapter_id: chapterId
-    };
-    
-    await apiClient.post('/votes', request);
-  }
-};
-```
-
----
-
-### 📁 src\controllers
-
-#### 📄 src\controllers\authController.ts
-<a name='src-controllers-authControllerts'></a>
-
-**Path:** `src\controllers\authController.ts`
-
-```typescript
-import { authApi } from '@/apis';
-import { useAuthStore } from '@/store/authStore';
-import { useUiStore } from '@/store/uiStore';
-
-export class AuthController {
-  static async loginWithToast(email: string, password: string): Promise<boolean> {
-    const { login } = useAuthStore.getState();
-    const { addToast } = useUiStore.getState();
-    
-    try {
-      await login(email, password);
-      addToast({
-        title: 'Welcome back!',
-        description: 'You have successfully signed in.',
-        type: 'success'
-      });
-      return true;
-    } catch (error: any) {
-      addToast({
-        title: 'Login failed',
-        description: error.message || 'Please check your credentials and try again.',
-        type: 'error'
-      });
-      return false;
-    }
-  }
-
-  static async signupWithToast(username: string, email: string, password: string): Promise<boolean> {
-    const { signup } = useAuthStore.getState();
-    const { addToast } = useUiStore.getState();
-    
-    try {
-      await signup(username, email, password);
-      addToast({
-        title: 'Welcome to StoriVault!',
-        description: 'Your account has been created successfully.',
-        type: 'success'
-      });
-      return true;
-    } catch (error: any) {
-      addToast({
-        title: 'Signup failed',
-        description: error.message || 'Please check your information and try again.',
-        type: 'error'
-      });
-      return false;
-    }
-  }
-
-  static logoutWithToast(): void {
-    const { logout } = useAuthStore.getState();
-    const { addToast } = useUiStore.getState();
-    
-    logout();
-    addToast({
-      title: 'Signed out',
-      description: 'You have been successfully signed out.',
-      type: 'success'
-    });
-  }
-}
-```
-
----
-
-#### 📄 src\controllers\index.ts
-<a name='src-controllers-indexts'></a>
-
-**Path:** `src\controllers\index.ts`
-
-```typescript
-// Controllers orchestrate complex business logic flows
-export * from './storyController';
-export * from './userController';
-export * from './authController';
-```
-
----
-
-#### 📄 src\controllers\storyController.ts
-<a name='src-controllers-storyControllerts'></a>
-
-**Path:** `src\controllers\storyController.ts`
-
-```typescript
-import { storiesApi, uploadsApi } from '@/apis';
-import { useUiStore } from '@/store/uiStore';
-import { Story, CreateStoryRequest } from '@/types';
-
-export class StoryController {
-  static async createStoryWithCover(
-    data: Omit<CreateStoryRequest, 'cover_image'> & { cover?: File }
-  ): Promise<Story | null> {
-    const { addToast } = useUiStore.getState();
-    
-    try {
-      let story: Story;
-      
-      if (data.cover) {
-        // Upload cover and create story with multipart
-        story = await storiesApi.createStoryMultipart({
-          title: data.title,
-          description: data.description,
-          genre: data.genre,
-          tags: data.tags?.join(','),
-          visibility: data.visibility,
-          cover: data.cover
-        });
-      } else {
-        // Create story without cover
-        story = await storiesApi.createStory({
-          title: data.title,
-          description: data.description,
-          genre: data.genre,
-          tags: data.tags,
-          visibility: data.visibility
-        });
-      }
-      
-      addToast({
-        title: 'Story created!',
-        description: 'Your story has been published successfully.',
-        type: 'success'
-      });
-      
-      return story;
-    } catch (error: any) {
-      addToast({
-        title: 'Failed to create story',
-        description: error.message || 'Please try again later.',
-        type: 'error'
-      });
-      return null;
-    }
-  }
-
-  static async updateStoryCover(storyId: string, cover: File): Promise<Story | null> {
-    const { addToast } = useUiStore.getState();
-    
-    try {
-      const story = await storiesApi.updateStoryCover(storyId, cover);
-      
-      addToast({
-        title: 'Cover updated!',
-        description: 'Your story cover has been updated successfully.',
-        type: 'success'
-      });
-      
-      return story;
-    } catch (error: any) {
-      addToast({
-        title: 'Failed to update cover',
-        description: error.message || 'Please try again later.',
-        type: 'error'
-      });
-      return null;
-    }
-  }
-
-  static async deleteStoryWithConfirmation(storyId: string): Promise<boolean> {
-    const { addToast } = useUiStore.getState();
-    
-    const confirmed = window.confirm(
-      'Are you sure you want to delete this story? This action cannot be undone.'
-    );
-    
-    if (!confirmed) return false;
-    
-    try {
-      await storiesApi.deleteStory(storyId);
-      
-      addToast({
-        title: 'Story deleted',
-        description: 'Your story has been deleted successfully.',
-        type: 'success'
-      });
-      
-      return true;
-    } catch (error: any) {
-      addToast({
-        title: 'Failed to delete story',
-        description: error.message || 'Please try again later.',
-        type: 'error'
-      });
-      return false;
-    }
-  }
-}
-```
-
----
-
-#### 📄 src\controllers\userController.ts
-<a name='src-controllers-userControllerts'></a>
-
-**Path:** `src\controllers\userController.ts`
-
-```typescript
-import { usersApi } from '@/apis';
-import { useAuthStore } from '@/store/authStore';
-import { useUiStore } from '@/store/uiStore';
-import { User, UpdateProfileRequest } from '@/types';
-
-export class UserController {
-  static async updateProfileWithToast(data: UpdateProfileRequest): Promise<User | null> {
-    const { updateUser } = useAuthStore.getState();
-    const { addToast } = useUiStore.getState();
-    
-    try {
-      const user = await usersApi.updateProfile(data);
-      updateUser(user);
-      
-      addToast({
-        title: 'Profile updated!',
-        description: 'Your profile has been updated successfully.',
-        type: 'success'
-      });
-      
-      return user;
-    } catch (error: any) {
-      addToast({
-        title: 'Failed to update profile',
-        description: error.message || 'Please try again later.',
-        type: 'error'
-      });
-      return null;
-    }
-  }
-
-  static async uploadProfilePictureWithToast(file: File): Promise<User | null> {
-    const { updateUser } = useAuthStore.getState();
-    const { addToast } = useUiStore.getState();
-    
-    try {
-      const user = await usersApi.uploadProfilePicture(file);
-      updateUser(user);
-      
-      addToast({
-        title: 'Profile picture updated!',
-        description: 'Your profile picture has been updated successfully.',
-        type: 'success'
-      });
-      
-      return user;
-    } catch (error: any) {
-      addToast({
-        title: 'Failed to update profile picture',
-        description: error.message || 'Please try again later.',
-        type: 'error'
-      });
-      return null;
-    }
-  }
-
-  static async followUserWithToast(username: string): Promise<boolean> {
-    const { addToast } = useUiStore.getState();
-    
-    try {
-      await usersApi.followUser(username);
-      
-      addToast({
-        title: 'Following!',
-        description: `You are now following @${username}.`,
-        type: 'success'
-      });
-      
-      return true;
-    } catch (error: any) {
-      addToast({
-        title: 'Failed to follow user',
-        description: error.message || 'Please try again later.',
-        type: 'error'
-      });
-      return false;
-    }
-  }
-
-  static async unfollowUserWithToast(username: string): Promise<boolean> {
-    const { addToast } = useUiStore.getState();
-    
-    try {
-      await usersApi.unfollowUser(username);
-      
-      addToast({
-        title: 'Unfollowed',
-        description: `You have unfollowed @${username}.`,
-        type: 'success'
-      });
-      
-      return true;
-    } catch (error: any) {
-      addToast({
-        title: 'Failed to unfollow user',
-        description: error.message || 'Please try again later.',
-        type: 'error'
-      });
-      return false;
-    }
-  }
-
-  static async changePasswordWithToast(oldPassword: string, newPassword: string): Promise<boolean> {
-    const { addToast } = useUiStore.getState();
-    
-    try {
-      await usersApi.changePassword({ old_password: oldPassword, new_password: newPassword });
-      
-      addToast({
-        title: 'Password changed!',
-        description: 'Your password has been updated successfully.',
-        type: 'success'
-      });
-      
-      return true;
-    } catch (error: any) {
-      addToast({
-        title: 'Failed to change password',
-        description: error.message || 'Please check your current password and try again.',
-        type: 'error'
-      });
-      return false;
-    }
-  }
-}
-```
-
----
-
-### 📁 src\helper
-
-#### 📄 src\helper\constants.ts
-<a name='src-helper-constantsts'></a>
-
-**Path:** `src\helper\constants.ts`
-
-```typescript
-// Application constants
-
-export const API_BASE_URL = 'https://usman678zafar-storivault-backend.hf.space';
-
-export const GENRES = [
-  'Romance',
-  'Fantasy',
-  'Mystery',
-  'Sci-Fi',
-  'Horror',
-  'Adventure',
-  'Drama',
-  'Comedy',
-  'Thriller',
-  'Historical',
-  'Young Adult',
-  'Literary Fiction',
-  'Poetry',
-  'Non-Fiction'
-] as const;
-
-export const STORY_VISIBILITY = {
-  PUBLIC: 'public',
-  PRIVATE: 'private'
-} as const;
-
-export const SORT_OPTIONS = {
-  LATEST: 'latest',
-  POPULAR: 'popular',
-  TRENDING: 'trending'
-} as const;
-
-export const FILE_LIMITS = {
-  IMAGE_MAX_SIZE: 5 * 1024 * 1024, // 5MB
-  COVER_MAX_SIZE: 5 * 1024 * 1024, // 5MB
-  ALLOWED_IMAGE_TYPES: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
-} as const;
-
-export const PAGINATION = {
-  DEFAULT_LIMIT: 12,
-  MAX_LIMIT: 50
-} as const;
-
-export const QUERY_KEYS = {
-  STORIES: 'stories',
-  STORY: 'story',
-  USER: 'user',
-  USERS: 'users',
-  SEARCH: 'search',
-  FOLLOWERS: 'followers',
-  FOLLOWING: 'following'
-} as const;
-
-export const ROUTES = {
-  HOME: '/',
-  LOGIN: '/auth/login',
-  SIGNUP: '/auth/signup',
-  STORIES: '/stories',
-  STORY_DETAIL: '/stories/:id',
-  STORY_CREATE: '/stories/create',
-  STORY_EDIT: '/stories/:id/edit',
-  USER_PROFILE: '/users/:username',
-  SETTINGS: '/settings',
-  LIBRARY: '/library'
-} as const;
-```
-
----
-
-#### 📄 src\helper\formatting.ts
-<a name='src-helper-formattingts'></a>
-
-**Path:** `src\helper\formatting.ts`
-
-```typescript
-// Formatting and utility helpers
-
-export const formatNumber = (num: number): string => {
-  if (num >= 1000000) {
-    return `${(num / 1000000).toFixed(1)}M`;
-  }
-  if (num >= 1000) {
-    return `${(num / 1000).toFixed(1)}K`;
-  }
-  return num.toString();
-};
-
-export const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffInMs = now.getTime() - date.getTime();
-  const diffInHours = diffInMs / (1000 * 60 * 60);
-  const diffInDays = diffInHours / 24;
-
-  if (diffInHours < 1) {
-    const diffInMinutes = diffInMs / (1000 * 60);
-    return `${Math.floor(diffInMinutes)}m ago`;
-  }
-  
-  if (diffInHours < 24) {
-    return `${Math.floor(diffInHours)}h ago`;
-  }
-  
-  if (diffInDays < 7) {
-    return `${Math.floor(diffInDays)}d ago`;
-  }
-  
-  if (diffInDays < 30) {
-    const diffInWeeks = diffInDays / 7;
-    return `${Math.floor(diffInWeeks)}w ago`;
-  }
-  
-  return date.toLocaleDateString();
-};
-
-export const formatRelativeTime = (dateString: string): string => {
-  const date = new Date(dateString);
-  const formatter = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
-  
-  const diffInMs = date.getTime() - Date.now();
-  const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
-  
-  return formatter.format(diffInDays, 'day');
-};
-
-export const truncateText = (text: string, maxLength: number): string => {
-  if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength) + '...';
-};
-
-export const capitalizeFirst = (str: string): string => {
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-};
-
-export const slugify = (text: string): string => {
-  return text
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '') // Remove special characters
-    .replace(/[\s_-]+/g, '-') // Replace spaces and underscores with hyphens
-    .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
-};
-
-export const parseTagString = (tagString: string): string[] => {
-  return tagString
-    .split(',')
-    .map(tag => tag.trim())
-    .filter(tag => tag.length > 0);
-};
-
-export const formatTagsForDisplay = (tags: string[]): string => {
-  if (tags.length === 0) return '';
-  if (tags.length === 1) return tags[0];
-  if (tags.length === 2) return tags.join(' and ');
-  return `${tags.slice(0, -1).join(', ')}, and ${tags[tags.length - 1]}`;
-};
-```
-
----
-
-#### 📄 src\helper\index.ts
-<a name='src-helper-indexts'></a>
-
-**Path:** `src\helper\index.ts`
-
-```typescript
-export * from './validation';
-export * from './formatting';
-export * from './constants';
-```
-
----
-
-#### 📄 src\helper\validation.ts
-<a name='src-helper-validationts'></a>
-
-**Path:** `src\helper\validation.ts`
-
-```typescript
-// Form validation helpers
-
-export const validateEmail = (email: string): boolean => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-};
-
-export const validateUsername = (username: string): string | null => {
-  if (!username.trim()) {
-    return 'Username is required';
-  }
-  if (username.length < 3) {
-    return 'Username must be at least 3 characters';
-  }
-  if (username.length > 30) {
-    return 'Username must be less than 30 characters';  
-  }
-  if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
-    return 'Username can only contain letters, numbers, hyphens, and underscores';
-  }
-  return null;
-};
-
-export const validatePassword = (password: string): string | null => {
-  if (!password) {
-    return 'Password is required';
-  }
-  if (password.length < 6) {
-    return 'Password must be at least 6 characters';
-  }
-  if (password.length > 128) {
-    return 'Password must be less than 128 characters';
-  }
-  return null;
-};
-
-export const validateStoryTitle = (title: string): string | null => {
-  if (!title.trim()) {
-    return 'Title is required';
-  }
-  if (title.length > 200) {
-    return 'Title must be less than 200 characters';
-  }
-  return null;
-};
-
-export const validateStoryDescription = (description: string): string | null => {
-  if (description.length > 2000) {
-    return 'Description must be less than 2000 characters';
-  }
-  return null;
-};
-
-export const validateObjectId = (id: string): boolean => {
-  return /^[0-9a-fA-F]{24}$/.test(id);
-};
-
-export const validateFileSize = (file: File, maxSizeInMB: number): string | null => {
-  const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
-  if (file.size > maxSizeInBytes) {
-    return `File size must be less than ${maxSizeInMB}MB`;
-  }
-  return null;
-};
-
-export const validateImageFile = (file: File): string | null => {
-  const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-  if (!allowedTypes.includes(file.type)) {
-    return 'Only JPEG, PNG, and WebP images are allowed';
-  }
-  
-  return validateFileSize(file, 5); // 5MB limit for images
-};
-```
-
----
-
-### 📁 src\hooks
-
-#### 📄 src\hooks\use-mobile.tsx
-<a name='src-hooks-use-mobiletsx'></a>
-
-**Path:** `src\hooks\use-mobile.tsx`
+**Page Component:** GoogleSuccessPage.tsx
 
 ```tsx
-import * as React from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { useAuthStore } from "@/store/authStore";
+import { AlertCircle, CheckCircle } from "lucide-react";
 
-const MOBILE_BREAKPOINT = 768;
+export function GoogleSuccessPage() {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const { setTokens, fetchMe } = useAuthStore();
+  const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
+  const [message, setMessage] = useState("Completing sign in...");
 
-export function useIsMobile() {
-  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined);
+  useEffect(() => {
+    const handleGoogleSuccess = async () => {
+      try {
+        const accessToken = searchParams.get("access_token");
+        const refreshToken = searchParams.get("refresh_token");
+        const error = searchParams.get("error");
 
-  React.useEffect(() => {
-    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
-    const onChange = () => {
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+        if (error) {
+          console.error("Google auth error:", error);
+          setStatus("error");
+          setMessage("Google authentication failed. Redirecting...");
+          setTimeout(() => {
+            navigate("/auth/login?error=google_auth_failed");
+          }, 2000);
+          return;
+        }
+
+        if (!accessToken || !refreshToken) {
+          console.error("Missing tokens in callback");
+          setStatus("error");
+          setMessage("Authentication incomplete. Redirecting...");
+          setTimeout(() => {
+            navigate("/auth/login?error=missing_tokens");
+          }, 2000);
+          return;
+        }
+
+        // Store tokens
+        setTokens(accessToken, refreshToken);
+
+        // Fetch user data
+        setMessage("Loading your profile...");
+        await fetchMe();
+
+        // Show success message briefly before redirect
+        setStatus("success");
+        setMessage("Success! Redirecting to your feed...");
+
+        setTimeout(() => {
+          navigate("/feed");
+        }, 1500);
+      } catch (err) {
+        console.error("Error in Google callback:", err);
+        setStatus("error");
+        setMessage("Something went wrong. Redirecting...");
+        setTimeout(() => {
+          navigate("/auth/login?error=auth_processing_failed");
+        }, 2000);
+      }
     };
-    mql.addEventListener("change", onChange);
-    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-    return () => mql.removeEventListener("change", onChange);
-  }, []);
 
-  return !!isMobile;
+    handleGoogleSuccess();
+  }, [searchParams, navigate, setTokens, fetchMe]);
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="text-center bg-white p-8 rounded-lg shadow-md max-w-md">
+        {status === "loading" && (
+          <>
+            <LoadingSpinner size="lg" className="mx-auto mb-4" />
+            <h2 className="text-xl font-semibold text-gray-900">
+              {message}
+            </h2>
+            <p className="mt-2 text-sm text-gray-600">
+              Please wait while we set up your account
+            </p>
+          </>
+        )}
+
+        {status === "success" && (
+          <>
+            <div className="mx-auto mb-4 w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+              <CheckCircle className="w-10 h-10 text-green-600" />
+            </div>
+            <h2 className="text-xl font-semibold text-gray-900">
+              {message}
+            </h2>
+          </>
+        )}
+
+        {status === "error" && (
+          <>
+            <div className="mx-auto mb-4 w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
+              <AlertCircle className="w-10 h-10 text-red-600" />
+            </div>
+            <h2 className="text-xl font-semibold text-gray-900">
+              {message}
+            </h2>
+            <p className="mt-2 text-sm text-gray-600">
+              You'll be redirected to the login page
+            </p>
+          </>
+        )}
+      </div>
+    </div>
+  );
 }
 ```
 
 ---
 
-### 📁 src\lib
+### <a id='src-pages-auth-LoginPagetsx'></a> `src\pages\auth\LoginPage.tsx`
 
-#### 📄 src\lib\utils.ts
-<a name='src-lib-utilsts'></a>
+**Page Component:** LoginPage.tsx
 
-**Path:** `src\lib\utils.ts`
+```tsx
+"use client";
 
-```typescript
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Eye, EyeOff, Mail, Lock, Sparkles, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { Separator } from "@/components/ui/separator";
+import { Logo } from "@/components/ui/logo";
+import { useAuthStore } from "@/store/authStore";
+import { cn } from "@/lib/utils";
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+export function LoginPage() {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [googleError, setGoogleError] = useState<string | null>(null);
+
+  const { login, loginWithGoogle, isLoading, error, clearError } =
+    useAuthStore();
+
+  // Check for Google auth errors in URL
+  useEffect(() => {
+    const error = searchParams.get("error");
+    if (error === "google_auth_failed") {
+      setGoogleError("Failed to sign in with Google. Please try again.");
+    } else if (error === "missing_tokens") {
+      setGoogleError("Authentication failed. Please try again.");
+    }
+  }, [searchParams]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+    clearError();
+    setGoogleError(null);
+  };
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email";
+    }
+
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    try {
+      await login(formData.email, formData.password);
+      navigate("/feed");
+    } catch (error: any) {
+      if (error.message?.includes("sign in with Google")) {
+        setErrors({
+          email:
+            "This account uses Google Sign-in. Please use the Google button below.",
+        });
+      } else if (error.details) {
+        const fieldErrors: Record<string, string> = {};
+        Object.entries(error.details).forEach(([field, messages]) => {
+          fieldErrors[field] = Array.isArray(messages) ? messages[0] : messages;
+        });
+        setErrors(fieldErrors);
+      }
+    }
+  };
+
+  const handleGoogleLogin = () => {
+    loginWithGoogle();
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        {/* Card Container */}
+        <div className="bg-white py-8 px-6 shadow-xl rounded-lg sm:px-10">
+          {/* Logo */}
+          <div className="flex justify-center mb-6">
+            <Logo size="md" showText={true} />
+          </div>
+
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-gray-900">Welcome back!</h2>
+            <p className="mt-2 text-sm text-gray-600">
+              Sign in to continue your reading journey
+            </p>
+          </div>
+
+          {/* Error Alerts */}
+          {(error || googleError) && (
+            <Alert variant="destructive" className="mb-6">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error || googleError}</AlertDescription>
+            </Alert>
+          )}
+
+          {/* Google Sign In Button */}
+          <div className="mb-6">
+            <Button
+              type="button"
+              onClick={handleGoogleLogin}
+              variant="outline"
+              className="w-full flex items-center justify-center gap-3 py-2.5 px-4 border-2 hover:bg-gray-50 transition-colors"
+              disabled={isLoading}
+            >
+              <svg className="w-5 h-5" viewBox="0 0 24 24">
+                <path
+                  fill="#4285F4"
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                />
+                <path
+                  fill="#EA4335"
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                />
+              </svg>
+              <span className="font-medium">Continue with Google</span>
+            </Button>
+          </div>
+
+          {/* Divider */}
+          <div className="relative mb-6">
+            <div className="absolute inset-0 flex items-center">
+              <Separator />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white px-2 text-gray-500">
+                Or continue with email
+              </span>
+            </div>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Email Field */}
+            <div>
+              <Label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Email Address
+              </Label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Mail className="h-4 w-4 text-gray-400" />
+                </div>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="your@email.com"
+                  className={cn(
+                    "pl-10 block w-full",
+                    "border-gray-300 focus:border-orange-500 focus:ring-orange-500",
+                    errors.email &&
+                      "border-red-500 focus:border-red-500 focus:ring-red-500"
+                  )}
+                  disabled={isLoading}
+                />
+              </div>
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+              )}
+            </div>
+
+            {/* Password Field */}
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <Label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Password
+                </Label>
+                <Link
+                  to="/auth/forgot-password"
+                  className="text-sm text-orange-600 hover:text-orange-500"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-4 w-4 text-gray-400" />
+                </div>
+                <Input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  placeholder="••••••••"
+                  className={cn(
+                    "pl-10 pr-10 block w-full",
+                    "border-gray-300 focus:border-orange-500 focus:ring-orange-500",
+                    errors.password &&
+                      "border-red-500 focus:border-red-500 focus:ring-red-500"
+                  )}
+                  disabled={isLoading}
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                  )}
+                </button>
+              </div>
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+              )}
+            </div>
+
+            {/* Submit Button */}
+            <div>
+              <Button
+                type="submit"
+                className="w-full flex justify-center items-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <LoadingSpinner size="sm" className="mr-2" />
+                    Signing in...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Sign In to StoriVault
+                  </>
+                )}
+              </Button>
+            </div>
+          </form>
+
+          {/* Sign Up Link */}
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">
+                  New to StoriVault?
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-6 text-center">
+              <Link
+                to="/auth/signup"
+                className="font-medium text-orange-600 hover:text-orange-500"
+              >
+                Create an account
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Terms and Privacy */}
+        <p className="text-center text-xs text-gray-500">
+          By signing in, you agree to our{" "}
+          <Link to="/terms" className="text-orange-600 hover:text-orange-500">
+            Terms of Service
+          </Link>{" "}
+          and{" "}
+          <Link to="/privacy" className="text-orange-600 hover:text-orange-500">
+            Privacy Policy
+          </Link>
+        </p>
+      </div>
+    </div>
+  );
 }
 ```
 
 ---
 
-### 📁 src\pages
+### <a id='src-pages-auth-SignupPagetsx'></a> `src\pages\auth\SignupPage.tsx`
 
-#### 📄 src\pages\CreateStoryPage.tsx
-<a name='src-pages-CreateStoryPagetsx'></a>
+**Page Component:** SignupPage.tsx
 
-**Path:** `src\pages\CreateStoryPage.tsx`
+```tsx
+"use client";
+
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Eye, EyeOff, Mail, Lock, User, Sparkles, Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { Progress } from "@/components/ui/progress";
+import { Separator } from "@/components/ui/separator";
+import { Logo } from "@/components/ui/logo";
+import { useAuthStore } from "@/store/authStore";
+import { cn } from "@/lib/utils";
+
+export function SignupPage() {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [passwordStrength, setPasswordStrength] = useState(0);
+
+  const { signup, loginWithGoogle, isLoading, error, clearError } =
+    useAuthStore();
+
+  const calculatePasswordStrength = (password: string) => {
+    let strength = 0;
+    if (password.length >= 8) strength += 25;
+    if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength += 25;
+    if (password.match(/[0-9]/)) strength += 25;
+    if (password.match(/[^a-zA-Z0-9]/)) strength += 25;
+    setPasswordStrength(strength);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    if (name === "password") {
+      calculatePasswordStrength(value);
+    }
+
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+    clearError();
+  };
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.username.trim()) {
+      newErrors.username = "Username is required";
+    } else if (formData.username.length < 3) {
+      newErrors.username = "Username must be at least 3 characters";
+    } else if (!/^[a-zA-Z0-9_-]+$/.test(formData.username)) {
+      newErrors.username =
+        "Username can only contain letters, numbers, hyphens, and underscores";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email";
+    }
+
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters";
+    }
+
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = "Please confirm your password";
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    try {
+      await signup(formData.username, formData.email, formData.password);
+      navigate("/feed");
+    } catch (error: any) {
+      if (error.details) {
+        const fieldErrors: Record<string, string> = {};
+        Object.entries(error.details).forEach(([field, messages]) => {
+          fieldErrors[field] = Array.isArray(messages) ? messages[0] : messages;
+        });
+        setErrors(fieldErrors);
+      }
+    }
+  };
+
+  const handleGoogleSignup = () => {
+    loginWithGoogle();
+  };
+
+  const getPasswordStrengthColor = () => {
+    if (passwordStrength <= 25) return "bg-red-500";
+    if (passwordStrength <= 50) return "bg-orange-500";
+    if (passwordStrength <= 75) return "bg-yellow-500";
+    return "bg-green-500";
+  };
+
+  const getPasswordStrengthText = () => {
+    if (passwordStrength <= 25) return "Weak";
+    if (passwordStrength <= 50) return "Fair";
+    if (passwordStrength <= 75) return "Good";
+    return "Strong";
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        {/* Card Container */}
+        <div className="bg-white py-8 px-6 shadow-xl rounded-lg sm:px-10">
+          {/* Logo */}
+          <div className="flex justify-center mb-6">
+            <Logo size="md" showText={true} />
+          </div>
+
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-gray-900">
+              Join StoriVault
+            </h2>
+            <p className="mt-2 text-sm text-gray-600">
+              Create your account and start your literary journey
+            </p>
+          </div>
+
+          {/* Error Alert */}
+          {error && (
+            <Alert variant="destructive" className="mb-6">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
+          {/* Google Sign Up Button */}
+          <div className="mb-6">
+            <Button
+              type="button"
+              onClick={handleGoogleSignup}
+              variant="outline"
+              className="w-full flex items-center justify-center gap-3 py-2.5 px-4 border-2 hover:bg-gray-50 transition-colors"
+              disabled={isLoading}
+            >
+              <svg className="w-5 h-5" viewBox="0 0 24 24">
+                <path
+                  fill="#4285F4"
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                />
+                <path
+                  fill="#EA4335"
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                />
+              </svg>
+              <span className="font-medium">Sign up with Google</span>
+            </Button>
+          </div>
+
+          {/* Divider */}
+          <div className="relative mb-6">
+            <div className="absolute inset-0 flex items-center">
+              <Separator />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white px-2 text-gray-500">
+                Or sign up with email
+              </span>
+            </div>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Username Field */}
+            <div>
+              <Label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Username
+              </Label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <User className="h-4 w-4 text-gray-400" />
+                </div>
+                <Input
+                  id="username"
+                  name="username"
+                  type="text"
+                  autoComplete="username"
+                  value={formData.username}
+                  onChange={handleInputChange}
+                  placeholder="Choose your pen name"
+                  className={cn(
+                    "pl-10 block w-full",
+                    "border-gray-300 focus:border-orange-500 focus:ring-orange-500",
+                    errors.username &&
+                      "border-red-500 focus:border-red-500 focus:ring-red-500"
+                  )}
+                  disabled={isLoading}
+                />
+              </div>
+              {errors.username && (
+                <p className="mt-1 text-sm text-red-600">{errors.username}</p>
+              )}
+            </div>
+
+            {/* Email Field */}
+            <div>
+              <Label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Email Address
+              </Label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Mail className="h-4 w-4 text-gray-400" />
+                </div>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="your@email.com"
+                  className={cn(
+                    "pl-10 block w-full",
+                    "border-gray-300 focus:border-orange-500 focus:ring-orange-500",
+                    errors.email &&
+                      "border-red-500 focus:border-red-500 focus:ring-red-500"
+                  )}
+                  disabled={isLoading}
+                />
+              </div>
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+              )}
+            </div>
+
+            {/* Password Field */}
+            <div>
+              <Label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Password
+              </Label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-4 w-4 text-gray-400" />
+                </div>
+                <Input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  placeholder="Create a strong password"
+                  className={cn(
+                    "pl-10 pr-10 block w-full",
+                    "border-gray-300 focus:border-orange-500 focus:ring-orange-500",
+                    errors.password &&
+                      "border-red-500 focus:border-red-500 focus:ring-red-500"
+                  )}
+                  disabled={isLoading}
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                  )}
+                </button>
+              </div>
+              {formData.password && (
+                <div className="mt-2">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs text-gray-500">
+                      Password strength
+                    </span>
+                    <span
+                      className={cn(
+                        "text-xs font-medium",
+                        passwordStrength > 75
+                          ? "text-green-600"
+                          : passwordStrength > 50
+                          ? "text-yellow-600"
+                          : passwordStrength > 25
+                          ? "text-orange-600"
+                          : "text-red-600"
+                      )}
+                    >
+                      {getPasswordStrengthText()}
+                    </span>
+                  </div>
+                  <Progress value={passwordStrength} className="h-1.5" />
+                </div>
+              )}
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+              )}
+            </div>
+
+            {/* Confirm Password Field */}
+            <div>
+              <Label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Confirm Password
+              </Label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-4 w-4 text-gray-400" />
+                </div>
+                <Input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  placeholder="Confirm your password"
+                  className={cn(
+                    "pl-10 pr-10 block w-full",
+                    "border-gray-300 focus:border-orange-500 focus:ring-orange-500",
+                    errors.confirmPassword &&
+                      "border-red-500 focus:border-red-500 focus:ring-red-500"
+                  )}
+                  disabled={isLoading}
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                  )}
+                </button>
+                {formData.confirmPassword &&
+                  formData.password === formData.confirmPassword && (
+                    <div className="absolute inset-y-0 right-10 flex items-center pr-3">
+                      <Check className="h-4 w-4 text-green-500" />
+                    </div>
+                  )}
+              </div>
+              {errors.confirmPassword && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.confirmPassword}
+                </p>
+              )}
+            </div>
+
+            {/* Submit Button */}
+            <div>
+              <Button
+                type="submit"
+                className="w-full flex justify-center items-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <LoadingSpinner size="sm" className="mr-2" />
+                    Creating account...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Create Your Account
+                  </>
+                )}
+              </Button>
+            </div>
+          </form>
+
+          {/* Sign In Link */}
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">
+                  Already have an account?
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-6 text-center">
+              <Link
+                to="/auth/login"
+                className="font-medium text-orange-600 hover:text-orange-500"
+              >
+                Sign in instead
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Terms and Privacy */}
+        <p className="text-center text-xs text-gray-500">
+          By creating an account, you agree to our{" "}
+          <Link to="/terms" className="text-orange-600 hover:text-orange-500">
+            Terms of Service
+          </Link>{" "}
+          and{" "}
+          <Link to="/privacy" className="text-orange-600 hover:text-orange-500">
+            Privacy Policy
+          </Link>
+        </p>
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+### <a id='src-pages-auth-VerifyEmailPagetsx'></a> `src\pages\auth\VerifyEmailPage.tsx`
+
+**Page Component:** VerifyEmailPage.tsx
+
+```tsx
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { Button } from "@/components/ui/button";
+import { AlertCircle, CheckCircle, Mail } from "lucide-react";
+import { Logo } from "@/components/ui/logo";
+
+export function VerifyEmailPage() {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
+  const [message, setMessage] = useState("Verifying your email...");
+
+  useEffect(() => {
+    const verifyEmail = async () => {
+      const token = searchParams.get("token");
+
+      if (!token) {
+        setStatus("error");
+        setMessage("Invalid verification link");
+        return;
+      }
+
+      try {
+        const apiUrl = import.meta.env.VITE_API_URL || 'https://usman678zafar-storivault-backend.hf.space';
+        const response = await fetch(`${apiUrl}/auth/verify-email`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          setStatus("success");
+          setMessage("Your email has been verified successfully!");
+        } else {
+          setStatus("error");
+          setMessage(data.detail || "Verification failed. The link may be invalid or expired.");
+        }
+      } catch (error) {
+        console.error("Email verification error:", error);
+        setStatus("error");
+        setMessage("Something went wrong. Please try again.");
+      }
+    };
+
+    verifyEmail();
+  }, [searchParams]);
+
+  const handleContinue = () => {
+    navigate("/auth/login");
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
+      <div className="max-w-md w-full">
+        <div className="bg-white py-8 px-6 shadow-xl rounded-lg text-center">
+          {/* Logo */}
+          <div className="flex justify-center mb-6">
+            <Logo size="md" showText={true} />
+          </div>
+
+          {/* Loading State */}
+          {status === "loading" && (
+            <>
+              <LoadingSpinner size="lg" className="mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                {message}
+              </h2>
+              <p className="text-sm text-gray-600">
+                Please wait while we verify your email address
+              </p>
+            </>
+          )}
+
+          {/* Success State */}
+          {status === "success" && (
+            <>
+              <div className="mx-auto mb-4 w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                <CheckCircle className="w-10 h-10 text-green-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                Email Verified!
+              </h2>
+              <p className="text-sm text-gray-600 mb-6">
+                {message}
+              </p>
+              <Button
+                onClick={handleContinue}
+                className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700"
+              >
+                Continue to Login
+              </Button>
+            </>
+          )}
+
+          {/* Error State */}
+          {status === "error" && (
+            <>
+              <div className="mx-auto mb-4 w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
+                <AlertCircle className="w-10 h-10 text-red-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                Verification Failed
+              </h2>
+              <p className="text-sm text-gray-600 mb-6">
+                {message}
+              </p>
+              <div className="space-y-3">
+                <Button
+                  onClick={handleContinue}
+                  className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700"
+                >
+                  Go to Login
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => navigate("/auth/signup")}
+                  className="w-full"
+                >
+                  Create New Account
+                </Button>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Help Text */}
+        <p className="mt-4 text-center text-xs text-gray-500">
+          Need help? Contact{" "}
+          <a href="mailto:support@storivault.com" className="text-orange-600 hover:text-orange-500">
+            support@storivault.com
+          </a>
+        </p>
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+### <a id='src-pages-CreateStoryPagetsx'></a> `src\pages\CreateStoryPage.tsx`
+
+**Page Component:** CreateStoryPage.tsx
 
 ```tsx
 "use client";
@@ -2754,10 +10648,9 @@ export function CreateStoryPage() {
 
 ---
 
-#### 📄 src\pages\EditStoryPage.tsx
-<a name='src-pages-EditStoryPagetsx'></a>
+### <a id='src-pages-EditStoryPagetsx'></a> `src\pages\EditStoryPage.tsx`
 
-**Path:** `src\pages\EditStoryPage.tsx`
+**Page Component:** EditStoryPage.tsx
 
 ```tsx
 "use client";
@@ -3980,10 +11873,9 @@ export function EditStoryPage() {
 
 ---
 
-#### 📄 src\pages\FeedPage.tsx
-<a name='src-pages-FeedPagetsx'></a>
+### <a id='src-pages-FeedPagetsx'></a> `src\pages\FeedPage.tsx`
 
-**Path:** `src\pages\FeedPage.tsx`
+**Page Component:** FeedPage.tsx
 
 ```tsx
 "use client";
@@ -4756,10 +12648,9 @@ export function FeedPage() {
 
 ---
 
-#### 📄 src\pages\HomePage.tsx
-<a name='src-pages-HomePagetsx'></a>
+### <a id='src-pages-HomePagetsx'></a> `src\pages\HomePage.tsx`
 
-**Path:** `src\pages\HomePage.tsx`
+**Page Component:** HomePage.tsx
 
 ```tsx
 "use client";
@@ -5771,10 +13662,9 @@ export function HomePage() {
 
 ---
 
-#### 📄 src\pages\Index.tsx
-<a name='src-pages-Indextsx'></a>
+### <a id='src-pages-Indextsx'></a> `src\pages\Index.tsx`
 
-**Path:** `src\pages\Index.tsx`
+**Page Component:** Index.tsx
 
 ```tsx
 // Update this page (the content is just a fallback if you fail to update the page)
@@ -5795,10 +13685,9 @@ export default Index;
 
 ---
 
-#### 📄 src\pages\NotFound.tsx
-<a name='src-pages-NotFoundtsx'></a>
+### <a id='src-pages-NotFoundtsx'></a> `src\pages\NotFound.tsx`
 
-**Path:** `src\pages\NotFound.tsx`
+**Page Component:** NotFound.tsx
 
 ```tsx
 import { useLocation } from "react-router-dom";
@@ -5829,10 +13718,9 @@ export default NotFound;
 
 ---
 
-#### 📄 src\pages\ProfilePage.tsx
-<a name='src-pages-ProfilePagetsx'></a>
+### <a id='src-pages-ProfilePagetsx'></a> `src\pages\ProfilePage.tsx`
 
-**Path:** `src\pages\ProfilePage.tsx`
+**Page Component:** ProfilePage.tsx
 
 ```tsx
 "use client";
@@ -7017,10 +14905,1196 @@ export function ProfilePage() {
 
 ---
 
-#### 📄 src\pages\StoriesPage.tsx
-<a name='src-pages-StoriesPagetsx'></a>
+### <a id='src-pages-SettingsPagetsx'></a> `src\pages\SettingsPage.tsx`
 
-**Path:** `src\pages\StoriesPage.tsx`
+**Page Component:** SettingsPage.tsx
+
+```tsx
+"use client";
+
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  User,
+  Lock,
+  Bell,
+  Eye,
+  Shield,
+  Trash2,
+  Save,
+  ChevronLeft,
+  Mail,
+  Smartphone,
+  Moon,
+  Sun,
+  Monitor,
+  Globe,
+  BookOpen,
+  Download,
+  AlertCircle,
+  Check,
+  X,
+  Key,
+  LogOut,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Separator } from "@/components/ui/separator";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { MainLayout } from "@/components/layout/main-layout";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { useAuthStore } from "@/store/authStore";
+import { useUiStore } from "@/store/uiStore";
+import { usersApi } from "@/apis";
+import { cn } from "@/lib/utils";
+
+interface SettingsState {
+  // Account Settings
+  email: string;
+  username: string;
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+
+  // Privacy Settings
+  profileVisibility: "public" | "private" | "friends";
+  showEmail: boolean;
+  showReadingActivity: boolean;
+  allowMessages: "everyone" | "following" | "none";
+  defaultStoryVisibility: "public" | "private";
+
+  // Notifications
+  emailNotifications: boolean;
+  pushNotifications: boolean;
+  notifyNewFollower: boolean;
+  notifyNewComment: boolean;
+  notifyNewVote: boolean;
+  notifyStoryUpdate: boolean;
+  notifyWeeklyDigest: boolean;
+
+  // Display
+  theme: "light" | "dark" | "system";
+  fontSize: "small" | "medium" | "large";
+  readingMode: boolean;
+  showMatureContent: boolean;
+
+  // Security
+  twoFactorEnabled: boolean;
+  sessionTimeout: number;
+  loginAlerts: boolean;
+}
+
+export function SettingsPage() {
+  const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuthStore();
+  const { addToast, theme, setTheme } = useUiStore();
+
+  const [activeTab, setActiveTab] = useState("account");
+  const [isSaving, setIsSaving] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showPasswordDialog, setShowPasswordDialog] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
+
+  // Load saved preferences
+  const [settings, setSettings] = useState<SettingsState>({
+    // Account
+    email: user?.email || "",
+    username: user?.username || "",
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+
+    // Privacy
+    profileVisibility: "public",
+    showEmail: false,
+    showReadingActivity: true,
+    allowMessages: "everyone",
+    defaultStoryVisibility: "public",
+
+    // Notifications
+    emailNotifications: true,
+    pushNotifications: false,
+    notifyNewFollower: true,
+    notifyNewComment: true,
+    notifyNewVote: true,
+    notifyStoryUpdate: true,
+    notifyWeeklyDigest: false,
+
+    // Display
+    theme: theme || "system",
+    fontSize: "medium",
+    readingMode: false,
+    showMatureContent: false,
+
+    // Security
+    twoFactorEnabled: false,
+    sessionTimeout: 30,
+    loginAlerts: true,
+  });
+
+  // Load saved settings
+  useEffect(() => {
+    const savedSettings = localStorage.getItem("user-settings");
+    if (savedSettings) {
+      try {
+        const parsed = JSON.parse(savedSettings);
+        setSettings((prev) => ({ ...prev, ...parsed }));
+      } catch (error) {
+        console.error("Failed to load settings:", error);
+      }
+    }
+
+    // Load reading preferences
+    const readingPrefs = localStorage.getItem("reading-preferences");
+    if (readingPrefs) {
+      try {
+        const parsed = JSON.parse(readingPrefs);
+        setSettings((prev) => ({
+          ...prev,
+          fontSize:
+            parsed.fontSize === 18
+              ? "small"
+              : parsed.fontSize === 22
+              ? "large"
+              : "medium",
+        }));
+      } catch (error) {
+        console.error("Failed to load reading preferences:", error);
+      }
+    }
+  }, []);
+
+  // Save settings to localStorage when they change
+  useEffect(() => {
+    if (hasChanges) {
+      const settingsToSave = { ...settings };
+      delete settingsToSave.currentPassword;
+      delete settingsToSave.newPassword;
+      delete settingsToSave.confirmPassword;
+      localStorage.setItem("user-settings", JSON.stringify(settingsToSave));
+    }
+  }, [settings, hasChanges]);
+
+  const handleSettingChange = (key: keyof SettingsState, value: any) => {
+    setSettings((prev) => ({ ...prev, [key]: value }));
+    setHasChanges(true);
+  };
+
+  const handleSaveSettings = async () => {
+    setIsSaving(true);
+    try {
+      // Save settings to backend (when API is available)
+      // For now, just save to localStorage
+      const settingsToSave = { ...settings };
+      delete settingsToSave.currentPassword;
+      delete settingsToSave.newPassword;
+      delete settingsToSave.confirmPassword;
+
+      localStorage.setItem("user-settings", JSON.stringify(settingsToSave));
+
+      // Apply theme
+      setTheme(settings.theme as any);
+
+      addToast({
+        title: "Settings saved",
+        description: "Your preferences have been updated successfully.",
+        type: "success",
+      });
+      setHasChanges(false);
+    } catch (error) {
+      addToast({
+        title: "Error",
+        description: "Failed to save settings. Please try again.",
+        type: "error",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handlePasswordChange = async () => {
+    // Validation
+    if (!settings.currentPassword || !settings.newPassword) {
+      addToast({
+        title: "Required fields",
+        description: "Please fill in all password fields",
+        type: "error",
+      });
+      return;
+    }
+
+    if (settings.newPassword !== settings.confirmPassword) {
+      addToast({
+        title: "Passwords don't match",
+        description: "New password and confirmation must match",
+        type: "error",
+      });
+      return;
+    }
+
+    if (settings.newPassword.length < 8) {
+      addToast({
+        title: "Password too short",
+        description: "Password must be at least 8 characters",
+        type: "error",
+      });
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      await usersApi.changePassword({
+        old_password: settings.currentPassword,
+        new_password: settings.newPassword,
+      });
+
+      addToast({
+        title: "Password changed",
+        description: "Your password has been updated successfully.",
+        type: "success",
+      });
+
+      // Clear password fields
+      setSettings((prev) => ({
+        ...prev,
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      }));
+      setShowPasswordDialog(false);
+    } catch (error: any) {
+      addToast({
+        title: "Error",
+        description: error.message || "Failed to change password",
+        type: "error",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (deleteConfirmText !== user?.username) {
+      addToast({
+        title: "Confirmation required",
+        description: "Please type your username to confirm deletion",
+        type: "error",
+      });
+      return;
+    }
+
+    try {
+      await usersApi.deleteAccount();
+      logout();
+      navigate("/");
+      addToast({
+        title: "Account deleted",
+        description: "Your account has been permanently deleted.",
+        type: "info",
+      });
+    } catch (error) {
+      addToast({
+        title: "Error",
+        description: "Failed to delete account. Please try again.",
+        type: "error",
+      });
+    }
+  };
+
+  const handleExportData = () => {
+    // Create a data export
+    const exportData = {
+      user: {
+        username: user?.username,
+        email: user?.email,
+        bio: user?.bio,
+        created_at: user?.created_at,
+      },
+      settings: settings,
+      readingHistory: JSON.parse(localStorage.getItem("read_stories") || "[]"),
+      savedStories: JSON.parse(localStorage.getItem("saved_stories") || "[]"),
+      exportedAt: new Date().toISOString(),
+    };
+
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `storivault_data_${user?.username}_${Date.now()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    addToast({
+      title: "Data exported",
+      description: "Your data has been downloaded successfully.",
+      type: "success",
+    });
+  };
+
+  if (!isAuthenticated) {
+    navigate("/auth/login");
+    return null;
+  }
+
+  return (
+    <MainLayout showFooter={false}>
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <div className="bg-white border-b">
+          <div className="max-w-5xl mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
+                  <ChevronLeft className="h-4 w-4 mr-2" />
+                  Back
+                </Button>
+                <h1 className="text-xl font-bold">Settings</h1>
+              </div>
+              {hasChanges && (
+                <Button
+                  onClick={handleSaveSettings}
+                  disabled={isSaving}
+                  className="bg-green-600 hover:bg-green-700"
+                >
+                  {isSaving ? (
+                    <>
+                      <LoadingSpinner size="sm" className="mr-2" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4 mr-2" />
+                      Save Changes
+                    </>
+                  )}
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="max-w-5xl mx-auto px-4 py-6">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="mb-6 bg-white">
+              <TabsTrigger value="account">
+                <User className="h-4 w-4 mr-2" />
+                Account
+              </TabsTrigger>
+              <TabsTrigger value="privacy">
+                <Eye className="h-4 w-4 mr-2" />
+                Privacy
+              </TabsTrigger>
+              <TabsTrigger value="notifications">
+                <Bell className="h-4 w-4 mr-2" />
+                Notifications
+              </TabsTrigger>
+              <TabsTrigger value="display">
+                <Monitor className="h-4 w-4 mr-2" />
+                Display
+              </TabsTrigger>
+              <TabsTrigger value="security">
+                <Shield className="h-4 w-4 mr-2" />
+                Security
+              </TabsTrigger>
+            </TabsList>
+
+            {/* Account Settings */}
+            <TabsContent value="account" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Account Information</CardTitle>
+                  <CardDescription>
+                    Manage your basic account details
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label htmlFor="username">Username</Label>
+                    <Input
+                      id="username"
+                      value={settings.username}
+                      disabled
+                      className="mt-1 bg-gray-50"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Usernames cannot be changed
+                    </p>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="email">Email Address</Label>
+                    <div className="flex gap-2 mt-1">
+                      <Input
+                        id="email"
+                        type="email"
+                        value={settings.email}
+                        disabled
+                        className="flex-1 bg-gray-50"
+                      />
+                      <Button variant="outline" size="sm" disabled>
+                        <Mail className="h-4 w-4 mr-2" />
+                        Verify
+                      </Button>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Contact support to change your email
+                    </p>
+                  </div>
+
+                  <Separator />
+
+                  <div>
+                    <h3 className="font-medium mb-3">Password</h3>
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowPasswordDialog(true)}
+                    >
+                      <Key className="h-4 w-4 mr-2" />
+                      Change Password
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Profile Settings</CardTitle>
+                  <CardDescription>
+                    Manage your public profile information
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button
+                    variant="outline"
+                    onClick={() => navigate(`/profile/${user?.username}`)}
+                  >
+                    <User className="h-4 w-4 mr-2" />
+                    Edit Profile
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Data Management</CardTitle>
+                  <CardDescription>
+                    Export or delete your account data
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Button variant="outline" onClick={handleExportData}>
+                      <Download className="h-4 w-4 mr-2" />
+                      Export My Data
+                    </Button>
+                    <p className="text-sm text-gray-500 mt-2">
+                      Download a copy of your StoriVault data
+                    </p>
+                  </div>
+
+                  <Separator />
+
+                  <div>
+                    <Button
+                      variant="destructive"
+                      onClick={() => setShowDeleteDialog(true)}
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete Account
+                    </Button>
+                    <p className="text-sm text-gray-500 mt-2">
+                      Permanently delete your account and all data
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Privacy Settings */}
+            <TabsContent value="privacy" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Profile Privacy</CardTitle>
+                  <CardDescription>
+                    Control who can see your profile and activity
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label>Profile Visibility</Label>
+                    <RadioGroup
+                      value={settings.profileVisibility}
+                      onValueChange={(value) =>
+                        handleSettingChange("profileVisibility", value)
+                      }
+                      className="mt-2 space-y-2"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="public" id="public" />
+                        <Label htmlFor="public" className="font-normal">
+                          <div>
+                            <Globe className="h-4 w-4 inline mr-2" />
+                            Public
+                          </div>
+                          <p className="text-xs text-gray-500">
+                            Anyone can view your profile
+                          </p>
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="friends" id="friends" />
+                        <Label htmlFor="friends" className="font-normal">
+                          <div>
+                            <User className="h-4 w-4 inline mr-2" />
+                            Following Only
+                          </div>
+                          <p className="text-xs text-gray-500">
+                            Only people you follow can see your full profile
+                          </p>
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="private" id="private" />
+                        <Label htmlFor="private" className="font-normal">
+                          <div>
+                            <Lock className="h-4 w-4 inline mr-2" />
+                            Private
+                          </div>
+                          <p className="text-xs text-gray-500">
+                            Only you can see your profile
+                          </p>
+                        </Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+
+                  <Separator />
+
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-1">
+                        <Label htmlFor="show-email">Show Email Address</Label>
+                        <p className="text-xs text-gray-500">
+                          Display your email on your profile
+                        </p>
+                      </div>
+                      <Switch
+                        id="show-email"
+                        checked={settings.showEmail}
+                        onCheckedChange={(checked) =>
+                          handleSettingChange("showEmail", checked)
+                        }
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-1">
+                        <Label htmlFor="show-activity">
+                          Show Reading Activity
+                        </Label>
+                        <p className="text-xs text-gray-500">
+                          Let others see what you're reading
+                        </p>
+                      </div>
+                      <Switch
+                        id="show-activity"
+                        checked={settings.showReadingActivity}
+                        onCheckedChange={(checked) =>
+                          handleSettingChange("showReadingActivity", checked)
+                        }
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Messaging</CardTitle>
+                  <CardDescription>
+                    Control who can send you messages
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div>
+                    <Label htmlFor="messages">Allow messages from</Label>
+                    <Select
+                      value={settings.allowMessages}
+                      onValueChange={(value) =>
+                        handleSettingChange("allowMessages", value)
+                      }
+                    >
+                      <SelectTrigger className="mt-1">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="everyone">Everyone</SelectItem>
+                        <SelectItem value="following">
+                          People I follow
+                        </SelectItem>
+                        <SelectItem value="none">No one</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Story Defaults</CardTitle>
+                  <CardDescription>
+                    Default settings for new stories
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div>
+                    <Label htmlFor="story-visibility">
+                      Default Story Visibility
+                    </Label>
+                    <Select
+                      value={settings.defaultStoryVisibility}
+                      onValueChange={(value) =>
+                        handleSettingChange("defaultStoryVisibility", value)
+                      }
+                    >
+                      <SelectTrigger className="mt-1">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="public">Public</SelectItem>
+                        <SelectItem value="private">Private</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Notification Settings */}
+            <TabsContent value="notifications" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Notification Channels</CardTitle>
+                  <CardDescription>
+                    Choose how you want to receive notifications
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                      <Label htmlFor="email-notif">Email Notifications</Label>
+                      <p className="text-xs text-gray-500">
+                        Receive notifications via email
+                      </p>
+                    </div>
+                    <Switch
+                      id="email-notif"
+                      checked={settings.emailNotifications}
+                      onCheckedChange={(checked) =>
+                        handleSettingChange("emailNotifications", checked)
+                      }
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                      <Label htmlFor="push-notif">Push Notifications</Label>
+                      <p className="text-xs text-gray-500">
+                        Browser push notifications
+                      </p>
+                    </div>
+                    <Switch
+                      id="push-notif"
+                      checked={settings.pushNotifications}
+                      onCheckedChange={(checked) =>
+                        handleSettingChange("pushNotifications", checked)
+                      }
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Activity Notifications</CardTitle>
+                  <CardDescription>
+                    Get notified about interactions
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="follower-notif">New Followers</Label>
+                    <Switch
+                      id="follower-notif"
+                      checked={settings.notifyNewFollower}
+                      onCheckedChange={(checked) =>
+                        handleSettingChange("notifyNewFollower", checked)
+                      }
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="comment-notif">New Comments</Label>
+                    <Switch
+                      id="comment-notif"
+                      checked={settings.notifyNewComment}
+                      onCheckedChange={(checked) =>
+                        handleSettingChange("notifyNewComment", checked)
+                      }
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="vote-notif">New Votes</Label>
+                    <Switch
+                      id="vote-notif"
+                      checked={settings.notifyNewVote}
+                      onCheckedChange={(checked) =>
+                        handleSettingChange("notifyNewVote", checked)
+                      }
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="update-notif">Story Updates</Label>
+                    <Switch
+                      id="update-notif"
+                      checked={settings.notifyStoryUpdate}
+                      onCheckedChange={(checked) =>
+                        handleSettingChange("notifyStoryUpdate", checked)
+                      }
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Email Digests</CardTitle>
+                  <CardDescription>Periodic summary emails</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                      <Label htmlFor="weekly-digest">Weekly Digest</Label>
+                      <p className="text-xs text-gray-500">
+                        Get a weekly summary of activity
+                      </p>
+                    </div>
+                    <Switch
+                      id="weekly-digest"
+                      checked={settings.notifyWeeklyDigest}
+                      onCheckedChange={(checked) =>
+                        handleSettingChange("notifyWeeklyDigest", checked)
+                      }
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Display Settings */}
+            <TabsContent value="display" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Theme</CardTitle>
+                  <CardDescription>
+                    Choose your preferred color theme
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <RadioGroup
+                    value={settings.theme}
+                    onValueChange={(value) => {
+                      handleSettingChange("theme", value);
+                      setTheme(value as any);
+                    }}
+                    className="space-y-2"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="light" id="light" />
+                      <Label htmlFor="light" className="font-normal">
+                        <Sun className="h-4 w-4 inline mr-2" />
+                        Light
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="dark" id="dark" />
+                      <Label htmlFor="dark" className="font-normal">
+                        <Moon className="h-4 w-4 inline mr-2" />
+                        Dark
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="system" id="system" />
+                      <Label htmlFor="system" className="font-normal">
+                        <Monitor className="h-4 w-4 inline mr-2" />
+                        System
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Reading Preferences</CardTitle>
+                  <CardDescription>
+                    Default settings for the story reader
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label htmlFor="font-size">Default Font Size</Label>
+                    <Select
+                      value={settings.fontSize}
+                      onValueChange={(value) =>
+                        handleSettingChange("fontSize", value)
+                      }
+                    >
+                      <SelectTrigger className="mt-1">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="small">Small</SelectItem>
+                        <SelectItem value="medium">Medium</SelectItem>
+                        <SelectItem value="large">Large</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                      <Label htmlFor="reading-mode">
+                        Simplified Reading Mode
+                      </Label>
+                      <p className="text-xs text-gray-500">
+                        Hide distractions while reading
+                      </p>
+                    </div>
+                    <Switch
+                      id="reading-mode"
+                      checked={settings.readingMode}
+                      onCheckedChange={(checked) =>
+                        handleSettingChange("readingMode", checked)
+                      }
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Content Preferences</CardTitle>
+                  <CardDescription>
+                    Control what content you see
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                      <Label htmlFor="mature-content">
+                        Show Mature Content
+                      </Label>
+                      <p className="text-xs text-gray-500">
+                        Display stories marked as mature
+                      </p>
+                    </div>
+                    <Switch
+                      id="mature-content"
+                      checked={settings.showMatureContent}
+                      onCheckedChange={(checked) =>
+                        handleSettingChange("showMatureContent", checked)
+                      }
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Security Settings */}
+            <TabsContent value="security" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Two-Factor Authentication</CardTitle>
+                  <CardDescription>
+                    Add an extra layer of security to your account
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <Alert>
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Coming Soon</AlertTitle>
+                    <AlertDescription>
+                      Two-factor authentication will be available in a future
+                      update.
+                    </AlertDescription>
+                  </Alert>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="2fa">Enable 2FA</Label>
+                    <Switch
+                      id="2fa"
+                      checked={settings.twoFactorEnabled}
+                      disabled
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Session Management</CardTitle>
+                  <CardDescription>Control your login sessions</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label htmlFor="session-timeout">
+                      Auto-logout after inactivity (days)
+                    </Label>
+                    <Select
+                      value={settings.sessionTimeout.toString()}
+                      onValueChange={(value) =>
+                        handleSettingChange("sessionTimeout", parseInt(value))
+                      }
+                    >
+                      <SelectTrigger className="mt-1">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="7">7 days</SelectItem>
+                        <SelectItem value="14">14 days</SelectItem>
+                        <SelectItem value="30">30 days</SelectItem>
+                        <SelectItem value="90">90 days</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                      <Label htmlFor="login-alerts">Login Alerts</Label>
+                      <p className="text-xs text-gray-500">
+                        Get notified of new login attempts
+                      </p>
+                    </div>
+                    <Switch
+                      id="login-alerts"
+                      checked={settings.loginAlerts}
+                      onCheckedChange={(checked) =>
+                        handleSettingChange("loginAlerts", checked)
+                      }
+                    />
+                  </div>
+
+                  <Separator />
+
+                  <div>
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => {
+                        logout();
+                        navigate("/");
+                      }}
+                    >
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Sign Out of All Devices
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
+
+      {/* Change Password Dialog */}
+      <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Change Password</DialogTitle>
+            <DialogDescription>
+              Enter your current password and choose a new one
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            <div>
+              <Label htmlFor="current-password">Current Password</Label>
+              <Input
+                id="current-password"
+                type="password"
+                value={settings.currentPassword}
+                onChange={(e) =>
+                  handleSettingChange("currentPassword", e.target.value)
+                }
+                placeholder="Enter current password"
+                className="mt-1"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="new-password">New Password</Label>
+              <Input
+                id="new-password"
+                type="password"
+                value={settings.newPassword}
+                onChange={(e) =>
+                  handleSettingChange("newPassword", e.target.value)
+                }
+                placeholder="Enter new password"
+                className="mt-1"
+              />
+              {settings.newPassword && settings.newPassword.length < 8 && (
+                <p className="text-xs text-red-500 mt-1">
+                  Password must be at least 8 characters
+                </p>
+              )}
+            </div>
+
+            <div>
+              <Label htmlFor="confirm-password">Confirm New Password</Label>
+              <Input
+                id="confirm-password"
+                type="password"
+                value={settings.confirmPassword}
+                onChange={(e) =>
+                  handleSettingChange("confirmPassword", e.target.value)
+                }
+                placeholder="Confirm new password"
+                className="mt-1"
+              />
+              {settings.confirmPassword &&
+                settings.newPassword !== settings.confirmPassword && (
+                  <p className="text-xs text-red-500 mt-1">
+                    Passwords don't match
+                  </p>
+                )}
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowPasswordDialog(false);
+                setSettings((prev) => ({
+                  ...prev,
+                  currentPassword: "",
+                  newPassword: "",
+                  confirmPassword: "",
+                }));
+              }}
+            >
+              Cancel
+            </Button>
+            <Button onClick={handlePasswordChange} disabled={isSaving}>
+              {isSaving ? (
+                <>
+                  <LoadingSpinner size="sm" className="mr-2" />
+                  Changing...
+                </>
+              ) : (
+                "Change Password"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Account Dialog */}
+      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Account</DialogTitle>
+            <DialogDescription>
+              This action cannot be undone. This will permanently delete your
+              account and remove your data from our servers.
+            </DialogDescription>
+          </DialogHeader>
+
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Warning</AlertTitle>
+            <AlertDescription>
+              All your stories, comments, and data will be permanently deleted.
+            </AlertDescription>
+          </Alert>
+
+          <div>
+            <Label htmlFor="delete-confirm">
+              Type <strong>{user?.username}</strong> to confirm
+            </Label>
+            <Input
+              id="delete-confirm"
+              value={deleteConfirmText}
+              onChange={(e) => setDeleteConfirmText(e.target.value)}
+              placeholder="Enter your username"
+              className="mt-1"
+            />
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowDeleteDialog(false);
+                setDeleteConfirmText("");
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDeleteAccount}
+              disabled={deleteConfirmText !== user?.username}
+            >
+              Delete My Account
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </MainLayout>
+  );
+}
+```
+
+---
+
+### <a id='src-pages-StoriesPagetsx'></a> `src\pages\StoriesPage.tsx`
+
+**Page Component:** StoriesPage.tsx
 
 ```tsx
 "use client";
@@ -7660,10 +16734,9 @@ export function StoriesPage() {
 
 ---
 
-#### 📄 src\pages\StoryDetailPage.tsx
-<a name='src-pages-StoryDetailPagetsx'></a>
+### <a id='src-pages-StoryDetailPagetsx'></a> `src\pages\StoryDetailPage.tsx`
 
-**Path:** `src\pages\StoryDetailPage.tsx`
+**Page Component:** StoryDetailPage.tsx
 
 ```tsx
 "use client";
@@ -8377,10 +17450,9 @@ export function StoryDetailPage() {
 
 ---
 
-#### 📄 src\pages\StoryReaderPage.tsx
-<a name='src-pages-StoryReaderPagetsx'></a>
+### <a id='src-pages-StoryReaderPagetsx'></a> `src\pages\StoryReaderPage.tsx`
 
-**Path:** `src\pages\StoryReaderPage.tsx`
+**Page Component:** StoryReaderPage.tsx
 
 ```tsx
 import { useState, useEffect } from "react";
@@ -9288,12 +18360,12 @@ export function StoryReaderPage() {
 
 ---
 
-### 📁 src\store
 
-#### 📄 src\store\authStore.ts
-<a name='src-store-authStorets'></a>
+## Store Files
 
-**Path:** `src\store\authStore.ts`
+### <a id='src-store-authStorets'></a> `src\store\authStore.ts`
+
+**State Store:** authStore.ts
 
 ```typescript
 import { create } from 'zustand';
@@ -9304,6 +18376,7 @@ import { authApi } from '@/apis/auth';
 interface AuthState {
   // State
   accessToken: string | null;
+  refreshToken: string | null;
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -9312,6 +18385,8 @@ interface AuthState {
   // Actions
   login: (email: string, password: string) => Promise<void>;
   signup: (username: string, email: string, password: string) => Promise<void>;
+  loginWithGoogle: () => void;
+  setTokens: (accessToken: string, refreshToken: string) => void;
   logout: () => void;
   fetchMe: () => Promise<void>;
   updateUser: (user: User) => void;
@@ -9324,6 +18399,7 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       // Initial state
       accessToken: null,
+      refreshToken: null,
       user: null,
       isAuthenticated: false,
       isLoading: false,
@@ -9339,6 +18415,7 @@ export const useAuthStore = create<AuthState>()(
           
           set({
             accessToken: tokenResponse.access_token,
+            refreshToken: null,
             user: userResponse,
             isAuthenticated: true,
             isLoading: false,
@@ -9348,6 +18425,7 @@ export const useAuthStore = create<AuthState>()(
           const errorMessage = error.details?.message || error.message || 'Login failed';
           set({
             accessToken: null,
+            refreshToken: null,
             user: null,
             isAuthenticated: false,
             isLoading: false,
@@ -9377,9 +18455,23 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
+      loginWithGoogle: () => {
+        // Redirect to backend Google OAuth endpoint
+        window.location.href = `${import.meta.env.VITE_API_URL || 'https://usman678zafar-storivault-backend.hf.space'}/auth/google/login`;
+      },
+
+      setTokens: (accessToken: string, refreshToken: string) => {
+        set({
+          accessToken,
+          refreshToken,
+          isAuthenticated: true
+        });
+      },
+
       logout: () => {
         set({
           accessToken: null,
+          refreshToken: null,
           user: null,
           isAuthenticated: false,
           error: null
@@ -9429,6 +18521,7 @@ export const useAuthStore = create<AuthState>()(
       name: 'auth-storage',
       partialize: (state) => ({
         accessToken: state.accessToken,
+        refreshToken: state.refreshToken,
         user: state.user,
         isAuthenticated: state.isAuthenticated
       })
@@ -9439,10 +18532,9 @@ export const useAuthStore = create<AuthState>()(
 
 ---
 
-#### 📄 src\store\uiStore.ts
-<a name='src-store-uiStorets'></a>
+### <a id='src-store-uiStorets'></a> `src\store\uiStore.ts`
 
-**Path:** `src\store\uiStore.ts`
+**State Store:** uiStore.ts
 
 ```typescript
 import { create } from 'zustand';
@@ -9576,12 +18668,12 @@ if (typeof window !== 'undefined') {
 
 ---
 
-### 📁 src\types
 
-#### 📄 src\types\api.ts
-<a name='src-types-apits'></a>
+## Types Files
 
-**Path:** `src\types\api.ts`
+### <a id='src-types-apits'></a> `src\types\api.ts`
+
+**File Type:** api.ts
 
 ```typescript
 // API Response Types
@@ -9770,10 +18862,9 @@ export interface ApiError extends Error {
 
 ---
 
-#### 📄 src\types\index.ts
-<a name='src-types-indexts'></a>
+### <a id='src-types-indexts'></a> `src\types\index.ts`
 
-**Path:** `src\types\index.ts`
+**File Type:** index.ts
 
 ```typescript
 export * from './api';
@@ -9826,12 +18917,12 @@ export interface NavigationItem {
 
 ---
 
-### 📁 src\utils
 
-#### 📄 src\utils\favicon-generator.ts
-<a name='src-utils-favicon-generatorts'></a>
+## Utils Files
 
-**Path:** `src\utils\favicon-generator.ts`
+### <a id='src-utils-favicon-generatorts'></a> `src\utils\favicon-generator.ts`
+
+**File Type:** favicon-generator.ts
 
 ```typescript
 // src/utils/favicon-generator.ts
@@ -9866,2919 +18957,271 @@ export function setFavicon() {
 
 ---
 
-### 📁 src\components\layout
 
-#### 📄 src\components\layout\footer.tsx
-<a name='src-components-layout-footertsx'></a>
+## Vite Env.D.Ts Files
 
-**Path:** `src\components\layout\footer.tsx`
+### <a id='src-vite-envdts'></a> `src\vite-env.d.ts`
 
-```tsx
-"use client";
+**File Type:** vite-env.d.ts
 
-import { Link } from "react-router-dom";
-import { Github, Twitter, Mail, ExternalLink } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Logo } from "@/components/ui/logo";
-
-export function Footer() {
-  const currentYear = new Date().getFullYear();
-
-  const footerLinks = {
-    product: [
-      { label: "Features", href: "/features" },
-      { label: "Pricing", href: "/pricing" },
-      { label: "Stories", href: "/stories" },
-      { label: "Authors", href: "/authors" },
-    ],
-    company: [
-      { label: "About", href: "/about" },
-      { label: "Blog", href: "/blog" },
-      { label: "Careers", href: "/careers" },
-      { label: "Contact", href: "/contact" },
-    ],
-    legal: [
-      { label: "Privacy Policy", href: "/privacy" },
-      { label: "Terms of Service", href: "/terms" },
-      { label: "Cookie Policy", href: "/cookies" },
-      { label: "Guidelines", href: "/guidelines" },
-    ],
-    social: [
-      { label: "Twitter", href: "https://twitter.com", icon: Twitter },
-      { label: "GitHub", href: "https://github.com", icon: Github },
-      { label: "Email", href: "mailto:support@storivault.com", icon: Mail },
-    ],
-  };
-
-  return (
-    <footer className="bg-background border-t mt-auto">
-      {/* Main Footer Content - Dark Background */}
-      <div className="bg-gray-800">
-        <div className="container mx-auto px-4 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-            {/* Brand Section with New Logo */}
-            <div className="lg:col-span-2">
-              <Logo size="md" className="mb-4" />
-              <p className="text-gray-300 mb-4 max-w-sm">
-                Your gateway to infinite stories. Discover captivating tales,
-                connect with passionate writers, and immerse yourself in worlds
-                beyond imagination.
-              </p>
-              <div className="flex gap-2">
-                {footerLinks.social.map((social) => {
-                  const Icon = social.icon;
-                  return (
-                    <Button
-                      key={social.label}
-                      variant="ghost"
-                      size="sm"
-                      className="h-9 w-9 p-0 hover:bg-gray-700 text-gray-300 hover:text-white"
-                      asChild
-                    >
-                      <a
-                        href={social.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={social.label}
-                      >
-                        <Icon className="h-4 w-4" />
-                      </a>
-                    </Button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Product Links */}
-            <div>
-              <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-white">
-                Product
-              </h3>
-              <ul className="space-y-2">
-                {footerLinks.product.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      to={link.href}
-                      className="text-gray-300 hover:text-white transition-colors text-sm"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Company Links */}
-            <div>
-              <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-white">
-                Company
-              </h3>
-              <ul className="space-y-2">
-                {footerLinks.company.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      to={link.href}
-                      className="text-gray-300 hover:text-white transition-colors text-sm"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Legal Links */}
-            <div>
-              <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-white">
-                Legal
-              </h3>
-              <ul className="space-y-2">
-                {footerLinks.legal.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      to={link.href}
-                      className="text-gray-300 hover:text-white transition-colors text-sm"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom Footer - Light Background */}
-      <div className="bg-background border-t border-gray-200">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="text-sm text-muted-foreground">
-              <span>© {currentYear} StoriVault. All rights reserved.</span>
-            </div>
-
-            {/* Powered by NexusNao - Right Side */}
-            <div className="flex items-center gap-1 text-sm text-muted-foreground">
-              <span>Powered by</span>
-              <a
-                href="https://nexusnao.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-semibold text-primary hover:text-primary-hover inline-flex items-center gap-1 transition-colors"
-              >
-                NexusNao
-                <ExternalLink className="h-3 w-3" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
-}
+```typescript
+/// <reference types="vite/client" />
 ```
 
 ---
 
-#### 📄 src\components\layout\header.tsx
-<a name='src-components-layout-headertsx'></a>
 
-**Path:** `src\components\layout\header.tsx`
-
-```tsx
-// src/components/layout/header.tsx
-"use client";
-
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import {
-  Search,
-  Bell,
-  Plus,
-  User,
-  Settings,
-  LogOut,
-  Library,
-  Menu,
-  X,
-  ChevronDown,
-  BookOpen,
-  PenTool,
-  FileText,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Logo } from "@/components/ui/logo";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  DropdownMenuLabel,
-} from "@/components/ui/dropdown-menu";
-import { useAuthStore } from "@/store/authStore";
-import { cn } from "@/lib/utils";
-
-const browseCategories = [
-  { label: "Browse", href: "/stories", isHeader: true },
-  { label: "Romance", href: "/stories?genre=Romance" },
-  { label: "Fantasy", href: "/stories?genre=Fantasy" },
-  { label: "Mystery", href: "/stories?genre=Mystery" },
-  { label: "Sci-Fi", href: "/stories?genre=Sci-Fi" },
-  { label: "Horror", href: "/stories?genre=Horror" },
-  { label: "Adventure", href: "/stories?genre=Adventure" },
-  { label: "Drama", href: "/stories?genre=Drama" },
-  { label: "Comedy", href: "/stories?genre=Comedy" },
-  { label: "Thriller", href: "/stories?genre=Thriller" },
-  { label: "Historical", href: "/stories?genre=Historical" },
-  { label: "Poetry", href: "/stories?genre=Poetry" },
-  { label: "Non-Fiction", href: "/stories?genre=Non-Fiction" },
-];
-
-export function Header() {
-  const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
-  const { user, isAuthenticated, logout } = useAuthStore();
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/stories?q=${encodeURIComponent(searchQuery.trim())}`);
-      setMobileSearchOpen(false);
-      setSearchQuery("");
-    }
-  };
-
-  const handleLogout = () => {
-    logout();
-    navigate("/");
-    setMobileMenuOpen(false);
-  };
-
-  const closeMobileMenu = () => {
-    setMobileMenuOpen(false);
-  };
-
-  return (
-    <>
-      {/* Fixed Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b shadow-sm">
-        <div className="relative">
-          {/* Main Header Content */}
-          <div className="h-14 sm:h-16 px-3 sm:px-6 lg:px-8">
-            <div className="flex h-full items-center justify-between max-w-7xl mx-auto">
-              {/* Left Section - Mobile Menu and Logo */}
-              <div className="flex items-center gap-2 sm:gap-4">
-                {/* Mobile Menu Button */}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="sm:hidden h-8 w-8 p-0"
-                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                >
-                  {mobileMenuOpen ? (
-                    <X className="h-5 w-5" />
-                  ) : (
-                    <Menu className="h-5 w-5" />
-                  )}
-                </Button>
-
-                {/* Logo with Text on Mobile, Full Logo on Desktop */}
-                <Link to="/" className="flex items-center gap-2">
-                  {/* Mobile - Show StoriVault text */}
-                  <div className="sm:hidden flex items-center gap-2">
-                    {/* Book Icon */}
-                    <svg
-                      viewBox="0 0 48 48"
-                      className="h-8 w-8"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <defs>
-                        <linearGradient
-                          id="mobileBookGradient"
-                          x1="0%"
-                          y1="0%"
-                          x2="100%"
-                          y2="100%"
-                        >
-                          <stop offset="0%" stopColor="#FF6B35" />
-                          <stop offset="100%" stopColor="#FFA500" />
-                        </linearGradient>
-                      </defs>
-                      <path
-                        d="M6 8C6 6.89543 6.89543 6 8 6H22V38H8C6.89543 38 6 37.1046 6 36V8Z"
-                        fill="url(#mobileBookGradient)"
-                      />
-                      <path
-                        d="M26 6H40C41.1046 6 42 6.89543 42 8V36C42 37.1046 41.1046 38 40 38H26V6Z"
-                        fill="url(#mobileBookGradient)"
-                        opacity="0.8"
-                      />
-                      <rect x="22" y="6" width="4" height="32" fill="#E85D04" />
-                    </svg>
-                    {/* StoriVault Text */}
-                    <span className="font-bold text-lg">
-                      <span className="text-orange-500">Stori</span>
-                      <span className="text-gray-700">Vault</span>
-                    </span>
-                  </div>
-
-                  {/* Desktop - Full Logo Component */}
-                  <div className="hidden sm:block">
-                    <Logo size="sm" showText={true} />
-                  </div>
-                </Link>
-
-                {/* Browse Dropdown - Desktop Only */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="hidden sm:flex items-center gap-1 font-medium"
-                    >
-                      Browse
-                      <ChevronDown className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    align="start"
-                    className="w-56 max-h-[80vh] overflow-y-auto bg-white"
-                  >
-                    {browseCategories.map((category, index) =>
-                      category.isHeader ? (
-                        <DropdownMenuLabel
-                          key={index}
-                          className="font-bold text-gray-900"
-                        >
-                          {category.label}
-                        </DropdownMenuLabel>
-                      ) : (
-                        <DropdownMenuItem key={index} asChild>
-                          <Link to={category.href} className="cursor-pointer">
-                            {category.label}
-                          </Link>
-                        </DropdownMenuItem>
-                      )
-                    )}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-
-              {/* Center - Desktop Search */}
-              <div className="hidden md:flex flex-1 max-w-md mx-8">
-                <form onSubmit={handleSearch} className="relative w-full">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                  <Input
-                    type="search"
-                    placeholder="Search stories, authors..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 w-full rounded-full border-gray-300 focus:border-orange-400 focus:ring-orange-400 bg-gray-50"
-                  />
-                </form>
-              </div>
-
-              {/* Right Section */}
-              <div className="flex items-center gap-1 sm:gap-2">
-                {/* Mobile Search Toggle */}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="md:hidden h-8 w-8 p-0"
-                  onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
-                >
-                  <Search className="h-5 w-5" />
-                </Button>
-
-                {isAuthenticated ? (
-                  <>
-                    {/* Write Button - Desktop */}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="hidden sm:flex items-center gap-1 font-medium"
-                      asChild
-                    >
-                      <Link to="/stories/create">
-                        <PenTool className="h-4 w-4" />
-                        Write
-                      </Link>
-                    </Button>
-
-                    {/* Notifications - Desktop */}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="hidden sm:block h-8 w-8 p-0"
-                    >
-                      <Bell className="h-5 w-5" />
-                    </Button>
-
-                    {/* User Menu */}
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 w-8 rounded-full p-0"
-                        >
-                          <Avatar className="h-8 w-8">
-                            <AvatarImage
-                              src={user?.profile_pic || undefined}
-                              alt={user?.username}
-                            />
-                            <AvatarFallback className="bg-orange-100 text-orange-700">
-                              {user?.username?.charAt(0).toUpperCase() || "U"}
-                            </AvatarFallback>
-                          </Avatar>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        className="w-56"
-                        align="end"
-                        sideOffset={5}
-                      >
-                        <div className="flex items-center justify-start gap-2 p-2">
-                          <div className="flex flex-col space-y-1 leading-none">
-                            <p className="font-medium text-sm">
-                              {user?.username}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              {user?.email}
-                            </p>
-                          </div>
-                        </div>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem asChild>
-                          <Link
-                            to={`/profile/${user?.username}`}
-                            className="cursor-pointer"
-                          >
-                            <User className="mr-2 h-4 w-4" />
-                            Profile
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link to="/library" className="cursor-pointer">
-                            <Library className="mr-2 h-4 w-4" />
-                            My Library
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link to="/my-stories" className="cursor-pointer">
-                            <FileText className="mr-2 h-4 w-4" />
-                            My Stories
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link
-                            to="/stories/create"
-                            className="cursor-pointer sm:hidden"
-                          >
-                            <PenTool className="mr-2 h-4 w-4" />
-                            Write Story
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem asChild>
-                          <Link to="/settings" className="cursor-pointer">
-                            <Settings className="mr-2 h-4 w-4" />
-                            Settings
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={handleLogout}
-                          className="cursor-pointer text-red-600 hover:text-red-600 hover:bg-red-50"
-                        >
-                          <LogOut className="mr-2 h-4 w-4" />
-                          Sign Out
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </>
-                ) : (
-                  <>
-                    {/* Sign In and Sign Up buttons for non-authenticated users */}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-sm font-medium"
-                      asChild
-                    >
-                      <Link to="/auth/login">Sign In</Link>
-                    </Button>
-                    <Button
-                      size="sm"
-                      className="hidden sm:inline-flex bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-sm font-medium"
-                      asChild
-                    >
-                      <Link to="/auth/signup">Sign Up</Link>
-                    </Button>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Mobile Search Bar - Expandable */}
-          {mobileSearchOpen && (
-            <div className="md:hidden border-t bg-white px-4 py-3">
-              <form onSubmit={handleSearch} className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  type="search"
-                  placeholder="Search stories, authors..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 w-full rounded-full text-sm border-gray-300 bg-gray-50"
-                  autoFocus
-                />
-              </form>
-            </div>
-          )}
-
-          {/* Mobile Menu - Slide Down */}
-          {mobileMenuOpen && (
-            <div className="sm:hidden border-t bg-white">
-              <div className="px-4 py-3 space-y-1">
-                {/* Browse Section for Mobile */}
-                <div className="pb-2 mb-2 border-b border-gray-200">
-                  <p className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2 px-3">
-                    Browse Stories
-                  </p>
-                  {browseCategories.slice(1, 7).map((category, index) => (
-                    <Link
-                      key={index}
-                      to={category.href}
-                      className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
-                      onClick={closeMobileMenu}
-                    >
-                      {category.label}
-                    </Link>
-                  ))}
-                  <Link
-                    to="/stories"
-                    className="block px-3 py-2 rounded-md text-sm font-medium text-orange-600 hover:bg-orange-50"
-                    onClick={closeMobileMenu}
-                  >
-                    View All Categories →
-                  </Link>
-                </div>
-
-                {/* Write Section for Mobile */}
-                {isAuthenticated ? (
-                  <div className="pb-2 mb-2 border-b border-gray-200">
-                    <p className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2 px-3">
-                      Writing
-                    </p>
-                    <Link
-                      to="/stories/create"
-                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
-                      onClick={closeMobileMenu}
-                    >
-                      <Plus className="mr-2 h-4 w-4" />
-                      Create New Story
-                    </Link>
-                    <Link
-                      to="/my-stories"
-                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
-                      onClick={closeMobileMenu}
-                    >
-                      <FileText className="mr-2 h-4 w-4" />
-                      My Stories
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="pb-2 mb-2 border-b border-gray-200">
-                    <p className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2 px-3">
-                      Get Started
-                    </p>
-                    <Link
-                      to="/auth/signup"
-                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
-                      onClick={closeMobileMenu}
-                    >
-                      <PenTool className="mr-2 h-4 w-4" />
-                      Sign Up to Write
-                    </Link>
-                  </div>
-                )}
-
-                {/* User Actions */}
-                {isAuthenticated ? (
-                  <>
-                    <Link
-                      to="/library"
-                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
-                      onClick={closeMobileMenu}
-                    >
-                      <Library className="mr-2 h-4 w-4" />
-                      My Library
-                    </Link>
-                    <Link
-                      to={`/profile/${user?.username}`}
-                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
-                      onClick={closeMobileMenu}
-                    >
-                      <User className="mr-2 h-4 w-4" />
-                      Profile
-                    </Link>
-                    <Link
-                      to="/settings"
-                      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
-                      onClick={closeMobileMenu}
-                    >
-                      <Settings className="mr-2 h-4 w-4" />
-                      Settings
-                    </Link>
-                    <button
-                      onClick={handleLogout}
-                      className="flex items-center w-full text-left px-3 py-2 rounded-md text-sm font-medium text-red-600 hover:bg-red-50"
-                    >
-                      <LogOut className="mr-2 h-4 w-4" />
-                      Sign Out
-                    </button>
-                  </>
-                ) : null}
-              </div>
-            </div>
-          )}
-        </div>
-      </header>
-
-      {/* Spacer to prevent content from going under fixed header */}
-      <div className="h-14 sm:h-16" />
-    </>
-  );
-}
-```
-
----
-
-#### 📄 src\components\layout\main-layout.tsx
-<a name='src-components-layout-main-layouttsx'></a>
-
-**Path:** `src\components\layout\main-layout.tsx`
-
-```tsx
-"use client";
-
-import { useEffect } from "react";
-import { Header } from "./header";
-import { Footer } from "./footer";
-import { useAuthStore } from "@/store/authStore";
-import { cn } from "@/lib/utils";
-
-interface MainLayoutProps {
-  children: React.ReactNode;
-  className?: string;
-  showFooter?: boolean;
-}
-
-export function MainLayout({
-  children,
-  className,
-  showFooter = true,
-}: MainLayoutProps) {
-  const { isAuthenticated, fetchMe } = useAuthStore();
-
-  // Fetch user data on mount if authenticated
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchMe();
-    }
-  }, [isAuthenticated, fetchMe]);
-
-  return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <Header />
-      <main className={cn("flex-1 flex flex-col", className)}>
-        <div className="flex-1">{children}</div>
-        {showFooter && !isAuthenticated && <Footer />}
-      </main>
-    </div>
-  );
-}
-```
-
----
-
-### 📁 src\components\ui
-
-#### 📄 src\components\ui\auth-skeleton.tsx
-<a name='src-components-ui-auth-skeletontsx'></a>
-
-**Path:** `src\components\ui\auth-skeleton.tsx`
-
-```tsx
-import { Skeleton } from "./skeleton";
-
-export function AuthFormSkeleton() {
-  return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
-      <div className="max-w-md w-full space-y-8">
-        <div className="bg-white py-8 px-6 shadow-xl rounded-lg sm:px-10">
-          {/* Logo Skeleton */}
-          <div className="flex justify-center mb-6">
-            <div className="flex items-center gap-2">
-              <Skeleton className="h-10 w-10" variant="rounded" />
-              <div className="space-y-1">
-                <Skeleton className="h-6 w-24" variant="text" />
-                <Skeleton className="h-3 w-20" variant="text" />
-              </div>
-            </div>
-          </div>
-
-          {/* Header Skeleton */}
-          <div className="text-center mb-8">
-            <Skeleton className="h-8 w-48 mx-auto mb-2" variant="text" />
-            <Skeleton className="h-4 w-64 mx-auto" variant="text" />
-          </div>
-
-          {/* Form Fields Skeleton */}
-          <div className="space-y-5">
-            {/* Field 1 */}
-            <div>
-              <Skeleton className="h-4 w-24 mb-2" variant="text" />
-              <Skeleton className="h-10 w-full" variant="rounded" />
-            </div>
-
-            {/* Field 2 */}
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <Skeleton className="h-4 w-24" variant="text" />
-                <Skeleton className="h-4 w-28" variant="text" />
-              </div>
-              <Skeleton className="h-10 w-full" variant="rounded" />
-            </div>
-
-            {/* Field 3 */}
-            <div>
-              <Skeleton className="h-4 w-32 mb-2" variant="text" />
-              <Skeleton className="h-10 w-full" variant="rounded" />
-            </div>
-
-            {/* Submit Button */}
-            <Skeleton className="h-10 w-full" variant="rounded" />
-          </div>
-
-          {/* Divider and Footer Link */}
-          <div className="mt-6">
-            <div className="relative mb-6">
-              <div className="absolute inset-0 flex items-center">
-                <Skeleton className="h-px w-full" />
-              </div>
-              <div className="relative flex justify-center">
-                <div className="px-2 bg-white">
-                  <Skeleton className="h-4 w-32" variant="text" />
-                </div>
-              </div>
-            </div>
-
-            <div className="text-center">
-              <Skeleton className="h-4 w-32 mx-auto" variant="text" />
-            </div>
-          </div>
-        </div>
-
-        {/* Terms and Privacy Links */}
-        <div className="text-center">
-          <Skeleton className="h-3 w-64 mx-auto" variant="text" />
-        </div>
-      </div>
-    </div>
-  );
-}
-```
-
----
-
-#### 📄 src\components\ui\create-story-skeleton.tsx
-<a name='src-components-ui-create-story-skeletontsx'></a>
-
-**Path:** `src\components\ui\create-story-skeleton.tsx`
-
-```tsx
-import { Skeleton } from "./skeleton";
-import { Card } from "./card";
-
-export function CreateStorySkeleton() {
-  return (
-    <div className="max-w-6xl mx-auto px-4 py-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <Skeleton className="h-8 w-48" variant="text" />
-        <div className="flex gap-2">
-          <Skeleton className="h-9 w-20" variant="rounded" />
-          <Skeleton className="h-9 w-24" variant="rounded" />
-          <Skeleton className="h-9 w-32" variant="rounded" />
-        </div>
-      </div>
-
-      {/* Tabs */}
-      <Skeleton className="h-10 w-full max-w-md mb-6" variant="rounded" />
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Cover Upload */}
-        <Card>
-          <div className="p-4">
-            <Skeleton className="h-6 w-32 mb-4" variant="text" />
-            <Skeleton className="aspect-[2/3]" variant="rounded" />
-          </div>
-        </Card>
-
-        {/* Form Fields */}
-        <div className="space-y-4">
-          <div>
-            <Skeleton className="h-4 w-16 mb-2" variant="text" />
-            <Skeleton className="h-10 w-full" variant="rounded" />
-          </div>
-
-          <div>
-            <Skeleton className="h-4 w-24 mb-2" variant="text" />
-            <Skeleton className="h-24 w-full" variant="rounded" />
-          </div>
-
-          <div>
-            <Skeleton className="h-4 w-20 mb-2" variant="text" />
-            <Skeleton className="h-10 w-full" variant="rounded" />
-          </div>
-
-          <div>
-            <Skeleton className="h-4 w-12 mb-2" variant="text" />
-            <div className="flex gap-2">
-              <Skeleton className="h-10 flex-1" variant="rounded" />
-              <Skeleton className="h-10 w-20" variant="rounded" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-```
-
----
-
-#### 📄 src\components\ui\edit-story-skeleton.tsx
-<a name='src-components-ui-edit-story-skeletontsx'></a>
-
-**Path:** `src\components\ui\edit-story-skeleton.tsx`
-
-```tsx
-import { Skeleton } from "./skeleton";
-import { Card } from "./card";
-
-export function EditStorySkeleton() {
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Skeleton className="h-8 w-24" variant="rounded" />
-              <Skeleton className="h-8 w-px" />
-              <div>
-                <Skeleton className="h-6 w-24" variant="text" />
-                <Skeleton className="h-3 w-32 mt-1" variant="text" />
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <Skeleton className="h-9 w-24" variant="rounded" />
-              <Skeleton className="h-9 w-32" variant="rounded" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        {/* Tabs */}
-        <Skeleton className="h-10 w-full max-w-md mb-6" variant="rounded" />
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Cover Image Section */}
-          <Card className="lg:col-span-1 bg-white">
-            <div className="p-4">
-              <Skeleton className="h-6 w-32 mb-2" variant="text" />
-              <Skeleton className="h-4 w-full mb-4" variant="text" />
-              <Skeleton className="aspect-[2/3]" variant="rounded" />
-            </div>
-          </Card>
-
-          {/* Story Info */}
-          <div className="lg:col-span-2 space-y-6">
-            <Card className="bg-white">
-              <div className="p-6 space-y-4">
-                <Skeleton className="h-6 w-40 mb-4" variant="text" />
-
-                {/* Title */}
-                <div>
-                  <Skeleton className="h-4 w-16 mb-2" variant="text" />
-                  <Skeleton className="h-10 w-full" variant="rounded" />
-                </div>
-
-                {/* Description */}
-                <div>
-                  <Skeleton className="h-4 w-24 mb-2" variant="text" />
-                  <Skeleton className="h-32 w-full" variant="rounded" />
-                </div>
-
-                {/* Genre */}
-                <div>
-                  <Skeleton className="h-4 w-16 mb-2" variant="text" />
-                  <Skeleton className="h-10 w-full" variant="rounded" />
-                </div>
-
-                {/* Tags */}
-                <div>
-                  <Skeleton className="h-4 w-12 mb-2" variant="text" />
-                  <div className="flex gap-2">
-                    <Skeleton className="h-10 flex-1" variant="rounded" />
-                    <Skeleton className="h-10 w-20" variant="rounded" />
-                  </div>
-                  <div className="flex gap-2 mt-2">
-                    {Array.from({ length: 3 }).map((_, i) => (
-                      <Skeleton
-                        key={i}
-                        className="h-6 w-16"
-                        variant="rounded"
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-```
-
----
-
-#### 📄 src\components\ui\feed-skeleton.tsx
-<a name='src-components-ui-feed-skeletontsx'></a>
-
-**Path:** `src\components\ui\feed-skeleton.tsx`
-
-```tsx
-import { Skeleton } from "./skeleton";
-import { Card } from "./card";
-
-export function FeedSkeleton() {
-  return (
-    <div className="max-w-6xl mx-auto px-4 py-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <Skeleton className="h-8 w-32" variant="text" />
-        <div className="flex items-center gap-2">
-          <Skeleton className="h-9 w-20" variant="rounded" />
-          <Skeleton className="h-9 w-32" variant="rounded" />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <div className="lg:col-span-3">
-          {/* Tabs */}
-          <Skeleton className="h-10 w-full mb-6" variant="rounded" />
-
-          {/* Grid of story cards */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                className="group relative aspect-[4/5] overflow-hidden rounded-lg bg-gray-100"
-              >
-                <Skeleton className="h-full w-full" variant="rectangular" />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Sidebar */}
-        <div className="hidden lg:block space-y-4">
-          {/* User Card */}
-          <Card className="p-4">
-            <div className="flex items-center gap-3">
-              <Skeleton className="h-14 w-14" variant="circular" />
-              <div className="flex-1">
-                <Skeleton className="h-4 w-24 mb-2" variant="text" />
-                <Skeleton className="h-3 w-32" variant="text" />
-              </div>
-            </div>
-            <Skeleton className="h-9 w-full mt-4" variant="rounded" />
-          </Card>
-
-          {/* Suggested Authors */}
-          <Card className="p-4">
-            <div className="flex items-center justify-between mb-4">
-              <Skeleton className="h-5 w-32" variant="text" />
-              <Skeleton className="h-4 w-12" variant="text" />
-            </div>
-            <div className="space-y-3">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Skeleton className="h-8 w-8" variant="circular" />
-                    <div>
-                      <Skeleton className="h-3 w-20 mb-1" variant="text" />
-                      <Skeleton className="h-3 w-28" variant="text" />
-                    </div>
-                  </div>
-                  <Skeleton className="h-7 w-16" variant="rounded" />
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
-      </div>
-    </div>
-  );
-}
-```
-
----
-
-#### 📄 src\components\ui\file-dropzone.tsx
-<a name='src-components-ui-file-dropzonetsx'></a>
-
-**Path:** `src\components\ui\file-dropzone.tsx`
-
-```tsx
-'use client';
-
-import { useCallback, useState } from 'react';
-import { Upload, X, File, Image } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Button } from './button';
-
-interface FileDropzoneProps {
-  onFileSelect: (file: File) => void;
-  accept?: string;
-  maxSize?: number; // in bytes
-  className?: string;
-  disabled?: boolean;
-  multiple?: boolean;
-  value?: File | File[] | null;
-  onRemove?: (index?: number) => void;
-}
-
-export function FileDropzone({
-  onFileSelect,
-  accept = 'image/*',
-  maxSize = 5 * 1024 * 1024, // 5MB default
-  className,
-  disabled = false,
-  multiple = false,
-  value,
-  onRemove,
-}: FileDropzoneProps) {
-  const [isDragOver, setIsDragOver] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const validateFile = useCallback((file: File): boolean => {
-    setError(null);
-    
-    if (maxSize && file.size > maxSize) {
-      setError(`File size must be less than ${Math.round(maxSize / 1024 / 1024)}MB`);
-      return false;
-    }
-
-    if (accept && !accept.split(',').some(type => {
-      const trimmedType = type.trim();
-      if (trimmedType.endsWith('/*')) {
-        return file.type.startsWith(trimmedType.slice(0, -1));
-      }
-      return file.type === trimmedType;
-    })) {
-      setError('File type not supported');
-      return false;
-    }
-
-    return true;
-  }, [accept, maxSize]);
-
-  const handleFileSelect = useCallback((files: FileList) => {
-    const fileArray = Array.from(files);
-    
-    if (multiple) {
-      const validFiles = fileArray.filter(validateFile);
-      validFiles.forEach(onFileSelect);
-    } else {
-      const file = fileArray[0];
-      if (file && validateFile(file)) {
-        onFileSelect(file);
-      }
-    }
-  }, [multiple, validateFile, onFileSelect]);
-
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(false);
-    
-    if (disabled) return;
-    
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      handleFileSelect(files);
-    }
-  }, [disabled, handleFileSelect]);
-
-  const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    if (!disabled) {
-      setIsDragOver(true);
-    }
-  }, [disabled]);
-
-  const handleDragLeave = useCallback(() => {
-    setIsDragOver(false);
-  }, []);
-
-  const handleClick = () => {
-    if (disabled) return;
-    
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = accept;
-    input.multiple = multiple;
-    input.onchange = (e) => {
-      const files = (e.target as HTMLInputElement).files;
-      if (files) {
-        handleFileSelect(files);
-      }
-    };
-    input.click();
-  };
-
-  const renderPreview = () => {
-    if (!value) return null;
-
-    const files = Array.isArray(value) ? value : [value];
-    
-    return (
-      <div className="mt-4 space-y-2">
-        {files.map((file, index) => (
-          <div key={`${file.name}-${index}`} className="flex items-center gap-3 p-3 bg-secondary rounded-lg">
-            <div className="flex-shrink-0">
-              {file.type.startsWith('image/') ? (
-                <Image className="h-5 w-5 text-primary" />
-              ) : (
-                <File className="h-5 w-5 text-muted-foreground" />
-              )}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">{file.name}</p>
-              <p className="text-xs text-muted-foreground">
-                {(file.size / 1024 / 1024).toFixed(2)} MB
-              </p>
-            </div>
-            {onRemove && (
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => onRemove(multiple ? index : undefined)}
-                className="flex-shrink-0"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            )}
-          </div>
-        ))}
-      </div>
-    );
-  };
-
-  return (
-    <div className={cn("space-y-2", className)}>
-      <div
-        className={cn(
-          "relative border-2 border-dashed rounded-lg p-6 transition-colors cursor-pointer",
-          "hover:border-primary/50 hover:bg-primary/5",
-          isDragOver && "border-primary bg-primary/10",
-          disabled && "opacity-50 cursor-not-allowed",
-          error && "border-destructive",
-          !error && !isDragOver && "border-border"
-        )}
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onClick={handleClick}
-      >
-        <div className="flex flex-col items-center justify-center text-center">
-          <Upload className={cn(
-            "h-10 w-10 mb-4",
-            isDragOver ? "text-primary" : "text-muted-foreground"
-          )} />
-          <p className="text-sm font-medium mb-1">
-            Drop files here or click to browse
-          </p>
-          <p className="text-xs text-muted-foreground">
-            {accept === 'image/*' ? 'Images only' : accept} • Max {Math.round(maxSize / 1024 / 1024)}MB
-          </p>
-        </div>
-      </div>
-      
-      {error && (
-        <p className="text-sm text-destructive">{error}</p>
-      )}
-      
-      {renderPreview()}
-    </div>
-  );
-}
-```
-
----
-
-#### 📄 src\components\ui\image-with-fallback.tsx
-<a name='src-components-ui-image-with-fallbacktsx'></a>
-
-**Path:** `src\components\ui\image-with-fallback.tsx`
-
-```tsx
-'use client';
-
-import { useState } from 'react';
-import { cn } from '@/lib/utils';
-
-interface ImageWithFallbackProps extends React.ImgHTMLAttributes<HTMLImageElement> {
-  fallback?: string;
-  fallbackComponent?: React.ReactNode;
-}
-
-export function ImageWithFallback({
-  src,
-  fallback = '/placeholder.svg',
-  fallbackComponent,
-  className,
-  alt,
-  ...props
-}: ImageWithFallbackProps) {
-  const [hasError, setHasError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const handleError = () => {
-    setHasError(true);
-    setIsLoading(false);
-  };
-
-  const handleLoad = () => {
-    setIsLoading(false);
-  };
-
-  if (hasError && fallbackComponent) {
-    return <>{fallbackComponent}</>;
-  }
-
-  return (
-    <div className="relative">
-      {isLoading && (
-        <div className={cn(
-          "absolute inset-0 bg-muted animate-pulse rounded",
-          className
-        )} />
-      )}
-      <img
-        {...props}
-        src={hasError ? fallback : src}
-        alt={alt}
-        className={cn(
-          "transition-opacity duration-200",
-          isLoading ? "opacity-0" : "opacity-100",
-          className
-        )}
-        onError={handleError}
-        onLoad={handleLoad}
-      />
-    </div>
-  );
-}
-```
-
----
-
-#### 📄 src\components\ui\loading-spinner.tsx
-<a name='src-components-ui-loading-spinnertsx'></a>
-
-**Path:** `src\components\ui\loading-spinner.tsx`
-
-```tsx
-import { cn } from '@/lib/utils';
-
-interface LoadingSpinnerProps {
-  size?: 'sm' | 'md' | 'lg';
-  className?: string;
-}
-
-export function LoadingSpinner({ size = 'md', className }: LoadingSpinnerProps) {
-  const sizeClasses = {
-    sm: 'h-4 w-4',
-    md: 'h-6 w-6',
-    lg: 'h-8 w-8'
-  };
-
-  return (
-    <div className={cn(
-      "animate-spin rounded-full border-2 border-current border-t-transparent",
-      sizeClasses[size],
-      className
-    )} />
-  );
-}
-```
-
----
-
-#### 📄 src\components\ui\logo.tsx
-<a name='src-components-ui-logotsx'></a>
-
-**Path:** `src\components\ui\logo.tsx`
-
-```tsx
-// src/components/ui/logo.tsx
-"use client";
-
-import { Link } from "react-router-dom";
-import { cn } from "@/lib/utils";
-import { useEffect } from "react";
-
-interface LogoProps {
-  className?: string;
-  showText?: boolean;
-  size?: "sm" | "md" | "lg";
-  asLink?: boolean;
-  variant?: "default" | "light" | "dark";
-}
-
-export function Logo({
-  className,
-  showText = true,
-  size = "md",
-  asLink = true,
-  variant = "default",
-}: LogoProps) {
-  const sizes = {
-    sm: {
-      container: "h-8",
-      icon: "h-8 w-8",
-      text: "text-xl",
-      tagline: "text-[10px]",
-      spacing: "gap-2",
-      textGap: "gap-0.5",
-    },
-    md: {
-      container: "h-10",
-      icon: "h-10 w-10",
-      text: "text-2xl",
-      tagline: "text-xs",
-      spacing: "gap-2.5",
-      textGap: "gap-0.5",
-    },
-    lg: {
-      container: "h-14",
-      icon: "h-14 w-14",
-      text: "text-4xl",
-      tagline: "text-sm",
-      spacing: "gap-3",
-      textGap: "gap-1",
-    },
-  };
-
-  // Set favicon dynamically (only run once on mount)
-  useEffect(() => {
-    // Only update favicon if we're showing the logo (main app load)
-    if (
-      typeof window !== "undefined" &&
-      !document.querySelector('link[rel="icon"][data-dynamic="true"]')
-    ) {
-      const link = document.createElement("link");
-      link.rel = "icon";
-      link.type = "image/svg+xml";
-      link.setAttribute("data-dynamic", "true");
-
-      // Create inline SVG favicon
-      const svgFavicon = `
-        <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-          <rect width="32" height="32" rx="6" fill="%23FF6B35"/>
-          <path d="M5 6h9v20H5z" fill="white" opacity="0.9"/>
-          <path d="M18 6h9v20h-9z" fill="white" opacity="0.85"/>
-          <rect x="14" y="6" width="4" height="20" fill="%23E85D04"/>
-          <path d="M16 3v10l-2-2-2 2V3h4z" fill="%23FFD700"/>
-        </svg>
-      `;
-
-      link.href = `data:image/svg+xml,${encodeURIComponent(svgFavicon)}`;
-
-      // Remove any existing dynamic favicon
-      const existingDynamic = document.querySelector(
-        'link[rel="icon"][data-dynamic="true"]'
-      );
-      if (existingDynamic) {
-        existingDynamic.remove();
-      }
-
-      document.head.appendChild(link);
-    }
-  }, []);
-
-  const logoIcon = (
-    <svg
-      viewBox="0 0 48 48"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={sizes[size].icon}
-    >
-      <defs>
-        <linearGradient id="vaultGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FF6B35" />
-          <stop offset="50%" stopColor="#FF8C42" />
-          <stop offset="100%" stopColor="#FFA500" />
-        </linearGradient>
-        <linearGradient id="spineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#E85D04" />
-          <stop offset="100%" stopColor="#D84315" />
-        </linearGradient>
-        <linearGradient
-          id="bookmarkGradient"
-          x1="0%"
-          y1="0%"
-          x2="100%"
-          y2="100%"
-        >
-          <stop offset="0%" stopColor="#FFD700" />
-          <stop offset="100%" stopColor="#FFC107" />
-        </linearGradient>
-      </defs>
-
-      {/* Book container */}
-      <rect
-        x="4"
-        y="6"
-        width="40"
-        height="36"
-        rx="4"
-        ry="4"
-        fill="url(#vaultGradient)"
-        opacity="0.1"
-      />
-
-      {/* Left book cover */}
-      <path
-        d="M8 8C8 6.89543 8.89543 6 10 6H22V42H10C8.89543 42 8 41.1046 8 40V8Z"
-        fill="url(#vaultGradient)"
-      />
-
-      {/* Right book cover */}
-      <path
-        d="M26 6H38C39.1046 6 40 6.89543 40 8V40C40 41.1046 39.1046 42 38 42H26V6Z"
-        fill="url(#vaultGradient)"
-        opacity="0.85"
-      />
-
-      {/* Book spine */}
-      <rect x="22" y="6" width="4" height="36" fill="url(#spineGradient)" />
-
-      {/* Pages on left */}
-      <rect x="10" y="10" width="10" height="28" fill="white" opacity="0.9" />
-
-      {/* Pages on right */}
-      <rect x="28" y="10" width="10" height="28" fill="white" opacity="0.85" />
-
-      {/* Bookmark ribbon */}
-      <path
-        d="M24 4 L28 4 L28 20 L26 18 L24 20 Z"
-        fill="url(#bookmarkGradient)"
-      />
-    </svg>
-  );
-
-  const logoContent = (
-    <>
-      {logoIcon}
-      {showText && (
-        <div
-          className={cn("flex flex-col justify-center", sizes[size].textGap)}
-        >
-          <span className={cn("leading-none tracking-tight", sizes[size].text)}>
-            <span
-              className={cn(
-                "font-bold",
-                variant === "light"
-                  ? "text-white"
-                  : variant === "dark"
-                  ? "text-gray-900"
-                  : "text-orange-500"
-              )}
-              style={{ fontFamily: "'Inter', sans-serif" }}
-            >
-              Stori
-            </span>
-            <span
-              className={cn(
-                "font-medium",
-                variant === "light"
-                  ? "text-gray-200"
-                  : variant === "dark"
-                  ? "text-gray-700"
-                  : "text-gray-700 dark:text-gray-300"
-              )}
-              style={{ fontFamily: "'Inter', sans-serif" }}
-            >
-              Vault
-            </span>
-          </span>
-          <span
-            className={cn(
-              "uppercase tracking-[0.25em] font-medium",
-              sizes[size].tagline,
-              variant === "light"
-                ? "text-gray-300"
-                : variant === "dark"
-                ? "text-gray-500"
-                : "text-gray-500 dark:text-gray-400"
-            )}
-            style={{ fontFamily: "'Inter', sans-serif" }}
-          >
-            Your Story Awaits
-          </span>
-        </div>
-      )}
-    </>
-  );
-
-  if (!asLink) {
-    return (
-      <div className={cn("flex items-center", sizes[size].spacing, className)}>
-        {logoContent}
-      </div>
-    );
-  }
-
-  return (
-    <Link
-      to="/"
-      className={cn(
-        "flex items-center transition-all hover:scale-105",
-        sizes[size].spacing,
-        className
-      )}
-      aria-label="StoriVault Home"
-    >
-      {logoContent}
-    </Link>
-  );
-}
-```
-
----
-
-#### 📄 src\components\ui\profile-skeleton.tsx
-<a name='src-components-ui-profile-skeletontsx'></a>
-
-**Path:** `src\components\ui\profile-skeleton.tsx`
-
-```tsx
-import { Skeleton } from "./skeleton";
-import { Card } from "./card";
-
-export function ProfileSkeleton() {
-  return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
-      {/* Profile Header Skeleton */}
-      <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-8 mb-8">
-        <Skeleton
-          className="h-28 w-28 sm:h-32 sm:w-32 md:h-40 md:w-40"
-          variant="circular"
-        />
-
-        <div className="flex-1 w-full space-y-3">
-          <div className="flex flex-col md:flex-row md:items-center gap-4">
-            <Skeleton className="h-8 w-32" variant="text" />
-            <div className="flex gap-2">
-              <Skeleton className="h-8 w-24" variant="rounded" />
-              <Skeleton className="h-8 w-8" variant="rounded" />
-            </div>
-          </div>
-
-          {/* Stats */}
-          <div className="flex gap-6">
-            <Skeleton className="h-5 w-20" variant="text" />
-            <Skeleton className="h-5 w-24" variant="text" />
-            <Skeleton className="h-5 w-24" variant="text" />
-          </div>
-
-          {/* Bio */}
-          <Skeleton className="h-4 w-full max-w-md" variant="text" />
-          <Skeleton className="h-4 w-3/4 max-w-md" variant="text" />
-
-          {/* Additional Info */}
-          <div className="flex gap-4">
-            <Skeleton className="h-4 w-32" variant="text" />
-            <Skeleton className="h-6 w-24" variant="rounded" />
-          </div>
-        </div>
-      </div>
-
-      {/* Tabs Skeleton */}
-      <Skeleton className="h-10 w-full max-w-xs mb-6" variant="rounded" />
-
-      {/* Stories Grid Skeleton */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1 md:gap-4">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <Skeleton key={i} className="aspect-[4/5]" variant="rounded" />
-        ))}
-      </div>
-    </div>
-  );
-}
-```
-
----
-
-#### 📄 src\components\ui\reader-skeleton.tsx
-<a name='src-components-ui-reader-skeletontsx'></a>
-
-**Path:** `src\components\ui\reader-skeleton.tsx`
-
-```tsx
-import { Skeleton } from "./skeleton";
-import { Card } from "./card";
-
-export function ReaderSkeleton() {
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Reader Header */}
-      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Skeleton className="h-8 w-20" variant="rounded" />
-              <div className="hidden md:block space-y-1">
-                <Skeleton className="h-5 w-48" variant="text" />
-                <Skeleton className="h-4 w-32" variant="text" />
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <Skeleton className="h-8 w-24" variant="rounded" />
-              <Skeleton className="h-8 w-8" variant="rounded" />
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Reader Content */}
-      <main className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="mb-8">
-          <Skeleton className="h-10 w-3/4 mb-2" variant="text" />
-          <div className="flex gap-4">
-            <Skeleton className="h-5 w-32" variant="text" />
-            <Skeleton className="h-5 w-24" variant="rounded" />
-          </div>
-        </div>
-
-        <Card>
-          <div className="p-8 space-y-4">
-            {Array.from({ length: 15 }).map((_, i) => (
-              <Skeleton
-                key={i}
-                className="h-4 w-full"
-                variant="text"
-                style={{ width: `${Math.random() * 20 + 80}%` }}
-              />
-            ))}
-          </div>
-        </Card>
-
-        {/* Navigation */}
-        <div className="flex justify-between mt-8">
-          <Skeleton className="h-10 w-36" variant="rounded" />
-          <Skeleton className="h-5 w-12" variant="text" />
-          <Skeleton className="h-10 w-36" variant="rounded" />
-        </div>
-      </main>
-    </div>
-  );
-}
-```
-
----
-
-#### 📄 src\components\ui\story-card-skeleton.tsx
-<a name='src-components-ui-story-card-skeletontsx'></a>
-
-**Path:** `src\components\ui\story-card-skeleton.tsx`
-
-```tsx
-import { Skeleton } from "./skeleton";
-import { Card } from "./card";
-
-interface StoryCardSkeletonProps {
-  variant?: "default" | "compact" | "list" | "featured";
-}
-
-export function StoryCardSkeleton({
-  variant = "default",
-}: StoryCardSkeletonProps) {
-  if (variant === "compact" || variant === "list") {
-    return (
-      <div className="flex gap-3 p-3">
-        <Skeleton width={64} height={80} variant="rounded" />
-        <div className="flex-1 space-y-2">
-          <Skeleton className="h-4 w-3/4" variant="text" />
-          <Skeleton className="h-3 w-full" variant="text" />
-          <Skeleton className="h-3 w-1/2" variant="text" />
-        </div>
-      </div>
-    );
-  }
-
-  if (variant === "featured") {
-    return (
-      <Card className="overflow-hidden">
-        <Skeleton className="aspect-[16/9] w-full" variant="rectangular" />
-        <div className="p-4 space-y-3">
-          <Skeleton className="h-6 w-20" variant="rounded" />
-          <Skeleton className="h-5 w-3/4" variant="text" />
-          <Skeleton className="h-4 w-full" variant="text" />
-          <div className="flex justify-between">
-            <Skeleton className="h-3 w-16" variant="text" />
-            <Skeleton className="h-3 w-16" variant="text" />
-          </div>
-        </div>
-      </Card>
-    );
-  }
-
-  return (
-    <Card className="overflow-hidden">
-      <Skeleton className="aspect-[2/3] w-full" variant="rectangular" />
-      <div className="p-4 space-y-3">
-        <Skeleton className="h-5 w-3/4" variant="text" />
-        <Skeleton className="h-4 w-full" variant="text" />
-        <Skeleton className="h-4 w-2/3" variant="text" />
-        <div className="flex gap-2">
-          <Skeleton className="h-6 w-16" variant="rounded" />
-          <Skeleton className="h-6 w-16" variant="rounded" />
-        </div>
-      </div>
-    </Card>
-  );
-}
-```
-
----
-
-#### 📄 src\components\ui\story-card.tsx
-<a name='src-components-ui-story-cardtsx'></a>
-
-**Path:** `src\components\ui\story-card.tsx`
-
-```tsx
-'use client';
-
-import { Link } from 'react-router-dom';
-import { Eye, Heart, MessageCircle, Clock } from 'lucide-react';
-import { Story } from '@/types';
-import { ImageWithFallback } from './image-with-fallback';
-import { Badge } from './badge';
-import { cn } from '@/lib/utils';
-
-interface StoryCardProps {
-  story: Story;
-  className?: string;
-  showStats?: boolean;
-  variant?: 'default' | 'compact' | 'featured';
-}
-
-export function StoryCard({ 
-  story, 
-  className, 
-  showStats = true,
-  variant = 'default' 
-}: StoryCardProps) {
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return new Intl.RelativeTimeFormat('en', { numeric: 'auto' }).format(
-      Math.ceil((date.getTime() - Date.now()) / (1000 * 60 * 60 * 24)),
-      'day'
-    );
-  };
-
-  const formatCount = (count: number) => {
-    if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M`;
-    if (count >= 1000) return `${(count / 1000).toFixed(1)}K`;
-    return count.toString();
-  };
-
-  if (variant === 'compact') {
-    return (
-      <Link to={`/stories/${story.id}`}>
-        <div className={cn(
-          "group flex gap-3 p-3 rounded-lg transition-colors hover:bg-secondary/50",
-          className
-        )}>
-          <div className="relative flex-shrink-0">
-            <ImageWithFallback
-              src={story.cover_image || '/placeholder.svg'}
-              alt={story.title}
-              className="w-16 h-20 object-cover rounded-md"
-            />
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-sm line-clamp-2 group-hover:text-primary transition-colors">
-              {story.title}
-            </h3>
-            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-              {story.description}
-            </p>
-            <div className="flex items-center gap-2 mt-2">
-              <Badge variant="secondary" className="text-xs px-2 py-0">
-                {story.genre}
-              </Badge>
-              {showStats && (
-                <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <Eye className="h-3 w-3" />
-                  {formatCount(story.reads_count)}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </Link>
-    );
-  }
-
-  if (variant === 'featured') {
-    return (
-      <Link to={`/stories/${story.id}`}>
-        <div className={cn(
-          "group relative overflow-hidden rounded-xl bg-gradient-card shadow-medium hover:shadow-strong transition-all duration-300",
-          className
-        )}>
-          <div className="aspect-[16/9] relative">
-            <ImageWithFallback
-              src={story.cover_image || '/placeholder.svg'}
-              alt={story.title}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-            <div className="absolute bottom-4 left-4 right-4 text-white">
-              <Badge variant="secondary" className="mb-2 bg-primary text-primary-foreground">
-                {story.genre}
-              </Badge>
-              <h3 className="font-bold text-lg line-clamp-2 group-hover:text-primary-light transition-colors">
-                {story.title}
-              </h3>
-              <p className="text-sm text-gray-200 mt-1 line-clamp-2">
-                {story.description}
-              </p>
-            </div>
-          </div>
-          {showStats && (
-            <div className="p-4 flex items-center justify-between text-sm text-muted-foreground">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1">
-                  <Eye className="h-4 w-4" />
-                  {formatCount(story.reads_count)}
-                </div>
-                <div className="flex items-center gap-1">
-                  <Heart className="h-4 w-4" />
-                  {formatCount(story.votes_count)}
-                </div>
-                <div className="flex items-center gap-1">
-                  <MessageCircle className="h-4 w-4" />
-                  {formatCount(story.comments_count)}
-                </div>
-              </div>
-              <div className="flex items-center gap-1">
-                <Clock className="h-4 w-4" />
-                {formatDate(story.updated_at)}
-              </div>
-            </div>
-          )}
-        </div>
-      </Link>
-    );
-  }
-
-  return (
-    <Link to={`/stories/${story.id}`}>
-      <div className={cn(
-        "group bg-card rounded-lg shadow-soft hover:shadow-medium transition-all duration-300 overflow-hidden",
-        className
-      )}>
-        <div className="aspect-[2/3] relative">
-          <ImageWithFallback
-            src={story.cover_image || '/placeholder.svg'}
-            alt={story.title}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute top-2 right-2">
-            <Badge variant="secondary" className="bg-background/90 text-foreground">
-              {story.genre}
-            </Badge>
-          </div>
-        </div>
-        <div className="p-4">
-          <h3 className="font-semibold line-clamp-2 group-hover:text-primary transition-colors">
-            {story.title}
-          </h3>
-          <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-            {story.description}
-          </p>
-          {story.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-2">
-              {story.tags.slice(0, 2).map((tag, index) => (
-                <Badge key={index} variant="outline" className="text-xs">
-                  {tag}
-                </Badge>
-              ))}
-              {story.tags.length > 2 && (
-                <span className="text-xs text-muted-foreground">
-                  +{story.tags.length - 2} more
-                </span>
-              )}
-            </div>
-          )}
-          {showStats && (
-            <div className="flex items-center justify-between mt-3 text-sm text-muted-foreground">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-1">
-                  <Eye className="h-4 w-4" />
-                  {formatCount(story.reads_count)}
-                </div>
-                <div className="flex items-center gap-1">
-                  <Heart className="h-4 w-4" />
-                  {formatCount(story.votes_count)}
-                </div>
-              </div>
-              <div className="flex items-center gap-1">
-                <Clock className="h-4 w-4" />
-                {formatDate(story.updated_at)}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    </Link>
-  );
-}
-```
-
----
-
-#### 📄 src\components\ui\story-detail-skeleton.tsx
-<a name='src-components-ui-story-detail-skeletontsx'></a>
-
-**Path:** `src\components\ui\story-detail-skeleton.tsx`
-
-```tsx
-import { Skeleton } from "./skeleton";
-import { Card } from "./card";
-
-export function StoryDetailSkeleton() {
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      {/* Hero Section */}
-      <div className="relative">
-        <Skeleton
-          className="absolute inset-0 h-[500px]"
-          variant="rectangular"
-        />
-        <div className="absolute inset-0 h-[500px] bg-gradient-to-b from-black/70 via-black/50 to-background" />
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 pt-8 pb-20">
-          <Skeleton className="h-9 w-20 mb-4" variant="rounded" />
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="flex justify-center lg:justify-start">
-              <Skeleton className="w-64 h-96 rounded-xl" variant="rounded" />
-            </div>
-
-            <div className="lg:col-span-2 space-y-6">
-              <div>
-                <Skeleton className="h-12 w-3/4 mb-3" variant="text" />
-                <Skeleton className="h-6 w-full mb-2" variant="text" />
-                <Skeleton className="h-6 w-5/6" variant="text" />
-              </div>
-
-              {/* Author Info */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
-                <div className="flex items-center gap-4">
-                  <Skeleton className="h-14 w-14" variant="circular" />
-                  <div>
-                    <Skeleton className="h-5 w-32 mb-2" variant="text" />
-                    <Skeleton className="h-4 w-48" variant="text" />
-                  </div>
-                  <Skeleton className="h-9 w-24 ml-auto" variant="rounded" />
-                </div>
-              </div>
-
-              {/* Stats Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {Array.from({ length: 4 }).map((_, i) => (
-                  <Skeleton
-                    key={i}
-                    className="h-24 rounded-lg"
-                    variant="rounded"
-                  />
-                ))}
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Skeleton className="h-11 w-36" variant="rounded" />
-                <Skeleton className="h-11 w-24" variant="rounded" />
-                <Skeleton className="h-11 w-24" variant="rounded" />
-                <Skeleton className="h-11 w-24" variant="rounded" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Content Area */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <Card className="bg-white p-6">
-          <Skeleton className="h-6 w-32 mb-4" variant="text" />
-          <Skeleton className="h-4 w-full mb-2" variant="text" />
-          <Skeleton className="h-4 w-full mb-2" variant="text" />
-          <Skeleton className="h-4 w-3/4" variant="text" />
-        </Card>
-      </div>
-    </div>
-  );
-}
-```
-
----
-
-#### 📄 src\components\ui\toast-provider.tsx
-<a name='src-components-ui-toast-providertsx'></a>
-
-**Path:** `src\components\ui\toast-provider.tsx`
-
-```tsx
-'use client';
-
-import { useEffect } from 'react';
-import { CheckCircle, XCircle, AlertCircle, Info, X } from 'lucide-react';
-import { useUiStore } from '@/store/uiStore';
-import { cn } from '@/lib/utils';
-
-const toastIcons = {
-  success: CheckCircle,
-  error: XCircle,
-  warning: AlertCircle,
-  info: Info,
-};
-
-const toastStyles = {
-  success: 'bg-success-light text-success border-success/20',
-  error: 'bg-destructive-light text-destructive border-destructive/20',
-  warning: 'bg-warning-light text-warning border-warning/20',
-  info: 'bg-accent/10 text-accent border-accent/20',
-};
-
-export function ToastProvider() {
-  const { toasts, removeToast } = useUiStore();
-
-  return (
-    <div className="fixed top-4 right-4 z-50 space-y-2">
-      {toasts.map((toast) => {
-        const Icon = toastIcons[toast.type];
-        
-        return (
-          <div
-            key={toast.id}
-            className={cn(
-              "flex items-start gap-3 p-4 rounded-lg border shadow-medium max-w-sm animate-in slide-in-from-right-full",
-              toastStyles[toast.type]
-            )}
-          >
-            <Icon className="h-5 w-5 flex-shrink-0 mt-0.5" />
-            <div className="flex-1 min-w-0">
-              <h4 className="font-semibold text-sm">{toast.title}</h4>
-              {toast.description && (
-                <p className="text-sm opacity-90 mt-1">{toast.description}</p>
-              )}
-            </div>
-            <button
-              onClick={() => removeToast(toast.id)}
-              className="flex-shrink-0 opacity-70 hover:opacity-100 transition-opacity"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-```
-
----
-
-#### 📄 src\components\ui\toast.tsx
-<a name='src-components-ui-toasttsx'></a>
-
-**Path:** `src\components\ui\toast.tsx`
-
-```tsx
-import * as React from "react";
-import * as ToastPrimitives from "@radix-ui/react-toast";
-import { cva, type VariantProps } from "class-variance-authority";
-import { X } from "lucide-react";
-
-import { cn } from "@/lib/utils";
-
-const ToastProvider = ToastPrimitives.Provider;
-
-const ToastViewport = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Viewport>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Viewport>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Viewport
-    ref={ref}
-    className={cn(
-      "fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]",
-      className,
-    )}
-    {...props}
-  />
-));
-ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
-
-const toastVariants = cva(
-  "group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full",
-  {
-    variants: {
-      variant: {
-        default: "border bg-background text-foreground",
-        destructive: "destructive group border-destructive bg-destructive text-destructive-foreground",
+## Tailwind.Config.Ts Files
+
+### <a id='tailwindconfigts'></a> `tailwind.config.ts`
+
+**File Type:** tailwind.config.ts
+
+```typescript
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      animation: {
+        shimmer: "shimmer 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        // ... existing animations
+      },
+      keyframes: {
+        shimmer: {
+          "0%, 100%": {
+            opacity: "1",
+          },
+          "50%": {
+            opacity: "0.5",
+          },
+        },
+        // ... existing keyframes
       },
     },
-    defaultVariants: {
-      variant: "default",
+  },
+}
+```
+
+---
+
+
+## Tsconfig.App.Json Files
+
+### <a id='tsconfigappjson'></a> `tsconfig.app.json`
+
+**File Type:** tsconfig.app.json
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitAny": false,
+    "noFallthroughCasesInSwitch": false,
+
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src"]
+}
+```
+
+---
+
+
+## Tsconfig.Json Files
+
+### <a id='tsconfigjson'></a> `tsconfig.json`
+
+**File Type:** tsconfig.json
+
+```json
+{
+  "files": [],
+  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "noImplicitAny": false,
+    "noUnusedParameters": false,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "noUnusedLocals": false,
+    "strictNullChecks": false
+  }
+}
+```
+
+---
+
+
+## Tsconfig.Node.Json Files
+
+### <a id='tsconfignodejson'></a> `tsconfig.node.json`
+
+**File Type:** tsconfig.node.json
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["vite.config.ts"]
+}
+```
+
+---
+
+
+## Vercel.Json Files
+
+### <a id='verceljson'></a> `vercel.json`
+
+**File Type:** vercel.json
+
+```json
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    }
+  ],
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": null
+}
+```
+
+---
+
+
+## Vite.Config.Ts Files
+
+### <a id='viteconfigts'></a> `vite.config.ts`
+
+**File Type:** vite.config.ts
+
+```typescript
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react-swc";
+import path from "path";
+import { componentTagger } from "lovable-tagger";
+
+// https://vitejs.dev/config/
+export default defineConfig(({ mode }) => ({
+  server: {
+    host: "::",
+    port: 8080,
+  },
+  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
     },
   },
-);
-
-const Toast = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Root>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> & VariantProps<typeof toastVariants>
->(({ className, variant, ...props }, ref) => {
-  return <ToastPrimitives.Root ref={ref} className={cn(toastVariants({ variant }), className)} {...props} />;
-});
-Toast.displayName = ToastPrimitives.Root.displayName;
-
-const ToastAction = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Action>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Action>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Action
-    ref={ref}
-    className={cn(
-      "inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium ring-offset-background transition-colors group-[.destructive]:border-muted/40 hover:bg-secondary group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 group-[.destructive]:focus:ring-destructive disabled:pointer-events-none disabled:opacity-50",
-      className,
-    )}
-    {...props}
-  />
-));
-ToastAction.displayName = ToastPrimitives.Action.displayName;
-
-const ToastClose = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Close>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Close>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Close
-    ref={ref}
-    className={cn(
-      "absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity group-hover:opacity-100 group-[.destructive]:text-red-300 hover:text-foreground group-[.destructive]:hover:text-red-50 focus:opacity-100 focus:outline-none focus:ring-2 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600",
-      className,
-    )}
-    toast-close=""
-    {...props}
-  >
-    <X className="h-4 w-4" />
-  </ToastPrimitives.Close>
-));
-ToastClose.displayName = ToastPrimitives.Close.displayName;
-
-const ToastTitle = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Title>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Title>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Title ref={ref} className={cn("text-sm font-semibold", className)} {...props} />
-));
-ToastTitle.displayName = ToastPrimitives.Title.displayName;
-
-const ToastDescription = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Description>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Description>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Description ref={ref} className={cn("text-sm opacity-90", className)} {...props} />
-));
-ToastDescription.displayName = ToastPrimitives.Description.displayName;
-
-type ToastProps = React.ComponentPropsWithoutRef<typeof Toast>;
-
-type ToastActionElement = React.ReactElement<typeof ToastAction>;
-
-export {
-  type ToastProps,
-  type ToastActionElement,
-  ToastProvider,
-  ToastViewport,
-  Toast,
-  ToastTitle,
-  ToastDescription,
-  ToastClose,
-  ToastAction,
-};
+  build: {
+    outDir: "dist",
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom", "react-router-dom"],
+          ui: ["@radix-ui/react-dialog", "@radix-ui/react-dropdown-menu"],
+        },
+      },
+    },
+  },
+  // Add base URL if your app is not served from root
+  base: "/",
+}));
 ```
 
 ---
 
-### 📁 src\pages\auth
 
-#### 📄 src\pages\auth\LoginPage.tsx
-<a name='src-pages-auth-LoginPagetsx'></a>
+## 📊 Documentation Statistics
 
-**Path:** `src\pages\auth\LoginPage.tsx`
+- **Total Files Documented:** 125
+- **Total Size:** 618,533 characters
 
-```tsx
-// src/pages/auth/LoginPage.tsx
-"use client";
-
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff, Mail, Lock, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { Logo } from "@/components/ui/logo";
-import { useAuthStore } from "@/store/authStore";
-import { cn } from "@/lib/utils";
-
-export function LoginPage() {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-  const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const { login, isLoading, error, clearError } = useAuthStore();
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
-    clearError();
-  };
-
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-
-    try {
-      await login(formData.email, formData.password);
-      navigate("/feed");
-    } catch (error: any) {
-      if (error.details) {
-        const fieldErrors: Record<string, string> = {};
-        Object.entries(error.details).forEach(([field, messages]) => {
-          fieldErrors[field] = Array.isArray(messages) ? messages[0] : messages;
-        });
-        setErrors(fieldErrors);
-      }
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        {/* Card Container */}
-        <div className="bg-white py-8 px-6 shadow-xl rounded-lg sm:px-10">
-          {/* Logo */}
-          <div className="flex justify-center mb-6">
-            <Logo size="md" showText={true} />
-          </div>
-
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-900">Welcome back!</h2>
-            <p className="mt-2 text-sm text-gray-600">
-              Sign in to continue your reading journey
-            </p>
-          </div>
-
-          {/* Error Alert */}
-          {error && (
-            <Alert variant="destructive" className="mb-6">
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Email Field */}
-            <div>
-              <Label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Email Address
-              </Label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-4 w-4 text-gray-400" />
-                </div>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="your@email.com"
-                  className={cn(
-                    "pl-10 block w-full",
-                    "border-gray-300 focus:border-orange-500 focus:ring-orange-500",
-                    errors.email &&
-                      "border-red-500 focus:border-red-500 focus:ring-red-500"
-                  )}
-                  disabled={isLoading}
-                />
-              </div>
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-              )}
-            </div>
-
-            {/* Password Field */}
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <Label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Password
-                </Label>
-                <Link
-                  to="/auth/forgot-password"
-                  className="text-sm text-orange-600 hover:text-orange-500"
-                >
-                  Forgot password?
-                </Link>
-              </div>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-4 w-4 text-gray-400" />
-                </div>
-                <Input
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  autoComplete="current-password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  placeholder="••••••••"
-                  className={cn(
-                    "pl-10 pr-10 block w-full",
-                    "border-gray-300 focus:border-orange-500 focus:ring-orange-500",
-                    errors.password &&
-                      "border-red-500 focus:border-red-500 focus:ring-red-500"
-                  )}
-                  disabled={isLoading}
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-                  ) : (
-                    <Eye className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-                  )}
-                </button>
-              </div>
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
-              )}
-            </div>
-
-            {/* Submit Button */}
-            <div>
-              <Button
-                type="submit"
-                className="w-full flex justify-center items-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <>
-                    <LoadingSpinner size="sm" className="mr-2" />
-                    Signing in...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="h-4 w-4 mr-2" />
-                    Sign In to StoriVault
-                  </>
-                )}
-              </Button>
-            </div>
-          </form>
-
-          {/* Sign Up Link */}
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">
-                  New to StoriVault?
-                </span>
-              </div>
-            </div>
-
-            <div className="mt-6 text-center">
-              <Link
-                to="/auth/signup"
-                className="font-medium text-orange-600 hover:text-orange-500"
-              >
-                Create an account
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Terms and Privacy */}
-        <p className="text-center text-xs text-gray-500">
-          By signing in, you agree to our{" "}
-          <Link to="/terms" className="text-orange-600 hover:text-orange-500">
-            Terms of Service
-          </Link>{" "}
-          and{" "}
-          <Link to="/privacy" className="text-orange-600 hover:text-orange-500">
-            Privacy Policy
-          </Link>
-        </p>
-      </div>
-    </div>
-  );
-}
-```
+**File Type Distribution:**
+- `.css`: 2 files
+- `.html`: 1 files
+- `.js`: 2 files
+- `.json`: 6 files
+- `.md`: 1 files
+- `.svg`: 2 files
+- `.ts`: 27 files
+- `.tsx`: 83 files
+- `no-ext`: 1 files
 
 ---
-
-#### 📄 src\pages\auth\SignupPage.tsx
-<a name='src-pages-auth-SignupPagetsx'></a>
-
-**Path:** `src\pages\auth\SignupPage.tsx`
-
-```tsx
-// src/pages/auth/SignupPage.tsx
-"use client";
-
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff, Mail, Lock, User, Sparkles, Check } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { Progress } from "@/components/ui/progress";
-import { Logo } from "@/components/ui/logo";
-import { useAuthStore } from "@/store/authStore";
-import { cn } from "@/lib/utils";
-
-export function SignupPage() {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [passwordStrength, setPasswordStrength] = useState(0);
-
-  const { signup, isLoading, error, clearError } = useAuthStore();
-
-  const calculatePasswordStrength = (password: string) => {
-    let strength = 0;
-    if (password.length >= 8) strength += 25;
-    if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength += 25;
-    if (password.match(/[0-9]/)) strength += 25;
-    if (password.match(/[^a-zA-Z0-9]/)) strength += 25;
-    setPasswordStrength(strength);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-
-    if (name === "password") {
-      calculatePasswordStrength(value);
-    }
-
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
-    clearError();
-  };
-
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!formData.username.trim()) {
-      newErrors.username = "Username is required";
-    } else if (formData.username.length < 3) {
-      newErrors.username = "Username must be at least 3 characters";
-    } else if (!/^[a-zA-Z0-9_-]+$/.test(formData.username)) {
-      newErrors.username =
-        "Username can only contain letters, numbers, hyphens, and underscores";
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
-    }
-
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password";
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-
-    try {
-      await signup(formData.username, formData.email, formData.password);
-      navigate("/feed");
-    } catch (error: any) {
-      if (error.details) {
-        const fieldErrors: Record<string, string> = {};
-        Object.entries(error.details).forEach(([field, messages]) => {
-          fieldErrors[field] = Array.isArray(messages) ? messages[0] : messages;
-        });
-        setErrors(fieldErrors);
-      }
-    }
-  };
-
-  const getPasswordStrengthColor = () => {
-    if (passwordStrength <= 25) return "bg-red-500";
-    if (passwordStrength <= 50) return "bg-orange-500";
-    if (passwordStrength <= 75) return "bg-yellow-500";
-    return "bg-green-500";
-  };
-
-  const getPasswordStrengthText = () => {
-    if (passwordStrength <= 25) return "Weak";
-    if (passwordStrength <= 50) return "Fair";
-    if (passwordStrength <= 75) return "Good";
-    return "Strong";
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        {/* Card Container */}
-        <div className="bg-white py-8 px-6 shadow-xl rounded-lg sm:px-10">
-          {/* Logo */}
-          <div className="flex justify-center mb-6">
-            <Logo size="md" showText={true} />
-          </div>
-
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-900">
-              Join StoriVault
-            </h2>
-            <p className="mt-2 text-sm text-gray-600">
-              Create your account and start your literary journey
-            </p>
-          </div>
-
-          {/* Error Alert */}
-          {error && (
-            <Alert variant="destructive" className="mb-6">
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Username Field */}
-            <div>
-              <Label
-                htmlFor="username"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Username
-              </Label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-4 w-4 text-gray-400" />
-                </div>
-                <Input
-                  id="username"
-                  name="username"
-                  type="text"
-                  autoComplete="username"
-                  value={formData.username}
-                  onChange={handleInputChange}
-                  placeholder="Choose your pen name"
-                  className={cn(
-                    "pl-10 block w-full",
-                    "border-gray-300 focus:border-orange-500 focus:ring-orange-500",
-                    errors.username &&
-                      "border-red-500 focus:border-red-500 focus:ring-red-500"
-                  )}
-                  disabled={isLoading}
-                />
-              </div>
-              {errors.username && (
-                <p className="mt-1 text-sm text-red-600">{errors.username}</p>
-              )}
-            </div>
-
-            {/* Email Field */}
-            <div>
-              <Label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Email Address
-              </Label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-4 w-4 text-gray-400" />
-                </div>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="your@email.com"
-                  className={cn(
-                    "pl-10 block w-full",
-                    "border-gray-300 focus:border-orange-500 focus:ring-orange-500",
-                    errors.email &&
-                      "border-red-500 focus:border-red-500 focus:ring-red-500"
-                  )}
-                  disabled={isLoading}
-                />
-              </div>
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-              )}
-            </div>
-
-            {/* Password Field */}
-            <div>
-              <Label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Password
-              </Label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-4 w-4 text-gray-400" />
-                </div>
-                <Input
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  autoComplete="new-password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  placeholder="Create a strong password"
-                  className={cn(
-                    "pl-10 pr-10 block w-full",
-                    "border-gray-300 focus:border-orange-500 focus:ring-orange-500",
-                    errors.password &&
-                      "border-red-500 focus:border-red-500 focus:ring-red-500"
-                  )}
-                  disabled={isLoading}
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-                  ) : (
-                    <Eye className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-                  )}
-                </button>
-              </div>
-              {formData.password && (
-                <div className="mt-2">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-gray-500">
-                      Password strength
-                    </span>
-                    <span
-                      className={cn(
-                        "text-xs font-medium",
-                        passwordStrength > 75
-                          ? "text-green-600"
-                          : passwordStrength > 50
-                          ? "text-yellow-600"
-                          : passwordStrength > 25
-                          ? "text-orange-600"
-                          : "text-red-600"
-                      )}
-                    >
-                      {getPasswordStrengthText()}
-                    </span>
-                  </div>
-                  <Progress value={passwordStrength} className="h-1.5" />
-                </div>
-              )}
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
-              )}
-            </div>
-
-            {/* Confirm Password Field */}
-            <div>
-              <Label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Confirm Password
-              </Label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-4 w-4 text-gray-400" />
-                </div>
-                <Input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type={showConfirmPassword ? "text" : "password"}
-                  autoComplete="new-password"
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                  placeholder="Confirm your password"
-                  className={cn(
-                    "pl-10 pr-10 block w-full",
-                    "border-gray-300 focus:border-orange-500 focus:ring-orange-500",
-                    errors.confirmPassword &&
-                      "border-red-500 focus:border-red-500 focus:ring-red-500"
-                  )}
-                  disabled={isLoading}
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                >
-                  {showConfirmPassword ? (
-                    <EyeOff className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-                  ) : (
-                    <Eye className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-                  )}
-                </button>
-                {formData.confirmPassword &&
-                  formData.password === formData.confirmPassword && (
-                    <div className="absolute inset-y-0 right-10 flex items-center pr-3">
-                      <Check className="h-4 w-4 text-green-500" />
-                    </div>
-                  )}
-              </div>
-              {errors.confirmPassword && (
-                <p className="mt-1 text-sm text-red-600">
-                  {errors.confirmPassword}
-                </p>
-              )}
-            </div>
-
-            {/* Submit Button */}
-            <div>
-              <Button
-                type="submit"
-                className="w-full flex justify-center items-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <>
-                    <LoadingSpinner size="sm" className="mr-2" />
-                    Creating account...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="h-4 w-4 mr-2" />
-                    Create Your Account
-                  </>
-                )}
-              </Button>
-            </div>
-          </form>
-
-          {/* Sign In Link */}
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">
-                  Already have an account?
-                </span>
-              </div>
-            </div>
-
-            <div className="mt-6 text-center">
-              <Link
-                to="/auth/login"
-                className="font-medium text-orange-600 hover:text-orange-500"
-              >
-                Sign in instead
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Terms and Privacy */}
-        <p className="text-center text-xs text-gray-500">
-          By creating an account, you agree to our{" "}
-          <Link to="/terms" className="text-orange-600 hover:text-orange-500">
-            Terms of Service
-          </Link>{" "}
-          and{" "}
-          <Link to="/privacy" className="text-orange-600 hover:text-orange-500">
-            Privacy Policy
-          </Link>
-        </p>
-      </div>
-    </div>
-  );
-}
-```
-
----
-
+*End of Frontend Documentation*

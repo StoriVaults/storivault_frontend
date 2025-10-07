@@ -40,6 +40,8 @@ export interface User {
   email: string;
   bio: string | null;
   profile_pic: string | null;
+  cover_image: string | null;
+  is_google_user?: boolean;
   followers_count: number;
   following_count: number;
   stories_count: number;
@@ -50,6 +52,7 @@ export interface User {
 export interface UpdateProfileRequest {
   bio?: string | null;
   profile_pic?: string | null;
+  cover_image?: string | null;
 }
 
 export interface ChangePasswordRequest {

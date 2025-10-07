@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import {
   ChevronLeft,
   ChevronRight,
@@ -428,9 +430,67 @@ export function StoryReaderPage() {
               className="prose prose-lg dark:prose-invert max-w-none"
             >
               {currentChapter.content ? (
-                <div className="whitespace-pre-wrap">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    h1: ({ node, ...props }) => (
+                      <h1 style={{ color: currentTheme.text }} {...props} />
+                    ),
+                    h2: ({ node, ...props }) => (
+                      <h2 style={{ color: currentTheme.text }} {...props} />
+                    ),
+                    h3: ({ node, ...props }) => (
+                      <h3 style={{ color: currentTheme.text }} {...props} />
+                    ),
+                    p: ({ node, ...props }) => (
+                      <p style={{ color: currentTheme.text }} {...props} />
+                    ),
+                    strong: ({ node, ...props }) => (
+                      <strong style={{ color: currentTheme.text, fontWeight: 'bold' }} {...props} />
+                    ),
+                    em: ({ node, ...props }) => (
+                      <em style={{ color: currentTheme.text, fontStyle: 'italic' }} {...props} />
+                    ),
+                    a: ({ node, ...props }) => (
+                      <a style={{ color: currentTheme.sliderThumb }} {...props} />
+                    ),
+                    blockquote: ({ node, ...props }) => (
+                      <blockquote
+                        style={{
+                          borderLeftColor: currentTheme.sliderThumb,
+                          color: currentTheme.secondaryText,
+                        }}
+                        {...props}
+                      />
+                    ),
+                    code: ({ node, inline, ...props }: any) => {
+                      return inline ? (
+                        <code
+                          style={{
+                            backgroundColor: theme === "dark" || theme === "night" ? "#2a2a2a" : "#f3f4f6",
+                            color: currentTheme.text,
+                            padding: "2px 6px",
+                            borderRadius: "3px",
+                          }}
+                          {...props}
+                        />
+                      ) : (
+                        <code
+                          style={{
+                            backgroundColor: theme === "dark" || theme === "night" ? "#2a2a2a" : "#f3f4f6",
+                            color: currentTheme.text,
+                            display: "block",
+                            padding: "12px",
+                            borderRadius: "6px",
+                          }}
+                          {...props}
+                        />
+                      );
+                    },
+                  }}
+                >
                   {currentChapter.content}
-                </div>
+                </ReactMarkdown>
               ) : (
                 <p
                   className="italic"
