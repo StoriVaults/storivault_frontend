@@ -56,50 +56,6 @@ const literaryColors = {
   skyBlue: "#A8DADC",
 };
 
-// Featured Authors with literary avatars
-const featuredAuthors = [
-  {
-    id: 1,
-    name: "Eleanor Whitmore",
-    avatar:
-      "https://api.dicebear.com/7.x/lorelei/svg?seed=Eleanor&backgroundColor=FFD3B6",
-    genre: "Romance",
-    stories: 47,
-    followers: "15.2K",
-    quote: "Every story begins with a single word...",
-  },
-  {
-    id: 2,
-    name: "Marcus Chen",
-    avatar:
-      "https://api.dicebear.com/7.x/lorelei/svg?seed=Marcus&backgroundColor=A8DADC",
-    genre: "Mystery",
-    stories: 32,
-    followers: "12.8K",
-    quote: "In the shadows of words, truth emerges.",
-  },
-  {
-    id: 3,
-    name: "Isabella Rose",
-    avatar:
-      "https://api.dicebear.com/7.x/lorelei/svg?seed=Isabella&backgroundColor=E6E6FA",
-    genre: "Fantasy",
-    stories: 68,
-    followers: "28.5K",
-    quote: "Magic lives between the lines.",
-  },
-  {
-    id: 4,
-    name: "Thomas Blackwood",
-    avatar:
-      "https://api.dicebear.com/7.x/lorelei/svg?seed=Thomas&backgroundColor=B5EAD7",
-    genre: "Thriller",
-    stories: 29,
-    followers: "9.7K",
-    quote: "Every chapter holds a secret.",
-  },
-];
-
 // Reading quotes
 const inspiringQuotes = [
   {
@@ -164,7 +120,6 @@ export function HomePage() {
   const { isAuthenticated, user } = useAuthStore();
   const [featuredStories, setFeaturedStories] = useState<Story[]>([]);
   const [trendingStories, setTrendingStories] = useState<Story[]>([]);
-  const [newStories, setNewStories] = useState<Story[]>([]);
   const [popularStories, setPopularStories] = useState<Story[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentQuote, setCurrentQuote] = useState(0);
@@ -181,21 +136,15 @@ export function HomePage() {
   useEffect(() => {
     const fetchHomeData = async () => {
       try {
-        const [
-          featuredResponse,
-          trendingResponse,
-          newResponse,
-          popularResponse,
-        ] = await Promise.all([
-          storiesApi.getStories({ page: 1, limit: 6, sort: "popular" }),
-          storiesApi.getStories({ page: 1, limit: 12, sort: "trending" }),
-          storiesApi.getStories({ page: 1, limit: 8, sort: "latest" }),
-          storiesApi.getStories({ page: 1, limit: 4, sort: "popular" }),
-        ]);
+        const [featuredResponse, trendingResponse, popularResponse] =
+          await Promise.all([
+            storiesApi.getStories({ page: 1, limit: 6, sort: "popular" }),
+            storiesApi.getStories({ page: 1, limit: 12, sort: "trending" }),
+            storiesApi.getStories({ page: 1, limit: 4, sort: "popular" }),
+          ]);
 
         setFeaturedStories(featuredResponse.items);
         setTrendingStories(trendingResponse.items);
-        setNewStories(newResponse.items);
         setPopularStories(popularResponse.items);
       } catch (error) {
         console.error("Failed to fetch home data:", error);
@@ -281,7 +230,7 @@ export function HomePage() {
     );
   }
 
-  // Main Content (existing code continues here...)
+  // Main Content
   return (
     <MainLayout showFooter={true}>
       {/* Custom Literary Styles */}
@@ -853,116 +802,12 @@ export function HomePage() {
           </section>
         )}
 
-        {/* New Stories Section - Mobile Responsive */}
-        {newStories.length > 0 && (
-          <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
-            <div className="max-w-7xl mx-auto">
-              <div className="flex items-center justify-between mb-8 sm:mb-10 md:mb-12">
-                <div>
-                  <h2
-                    className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-serif flex items-center gap-2 sm:gap-3"
-                    style={{ color: literaryColors.coffee }}
-                  >
-                    <Sparkles
-                      className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10"
-                      style={{ color: literaryColors.lavender }}
-                    />
-                    Fresh Off the Press
-                  </h2>
-                  <p
-                    className="mt-1 sm:mt-2 text-xs sm:text-sm md:text-base"
-                    style={{ color: literaryColors.ink }}
-                  >
-                    Discover new stories published this week
-                  </p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4">
-                {newStories.map((story, index) => (
-                  <Link
-                    key={story.id}
-                    to={`/stories/${story.id}`}
-                    className="group cursor-pointer fade-in-up"
-                    style={{ animationDelay: `${index * 0.05}s` }}
-                  >
-                    <div className="aspect-[2/3] relative overflow-hidden rounded-lg book-shadow transform hover:scale-110 transition-all">
-                      <img
-                        src={
-                          story.cover_image ||
-                          `https://source.unsplash.com/200x300/?book,cover,${index}`
-                        }
-                        alt={story.title}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="absolute bottom-1.5 sm:bottom-2 left-1.5 sm:left-2 right-1.5 sm:right-2">
-                          <p className="text-[10px] sm:text-xs text-white font-bold line-clamp-2">
-                            {story.title}
-                          </p>
-                          <Badge
-                            className="mt-0.5 sm:mt-1 text-[10px] sm:text-xs px-1.5 py-0"
-                            style={{ backgroundColor: literaryColors.lavender }}
-                          >
-                            {story.genre}
-                          </Badge>
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Reading Challenge Section - Mobile Responsive */}
-        <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
-          <div className="max-w-7xl mx-auto">
-            <Card
-              className="p-6 sm:p-8 md:p-12 border-0 paper-texture relative overflow-hidden"
-              style={{ backgroundColor: literaryColors.lavender }}
-            >
-              <Bookmark className="absolute top-5 right-5 sm:top-10 sm:right-10 h-20 w-20 sm:h-32 sm:w-32 opacity-10 -rotate-12" />
-              <div className="relative z-10 text-center">
-                <h2
-                  className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-serif mb-3 sm:mb-4"
-                  style={{ color: literaryColors.coffee }}
-                >
-                  Join the Monthly Reading Challenge
-                </h2>
-                <p
-                  className="text-sm sm:text-base md:text-lg mb-6 sm:mb-8 max-w-2xl mx-auto px-4"
-                  style={{ color: literaryColors.ink }}
-                >
-                  Read 10 stories this month and earn exclusive badges, unlock
-                  special features, and join our community of passionate
-                  readers!
-                </p>
-                <Button
-                  size="default"
-                  className="rounded-full px-6 py-5 sm:px-8 sm:py-6 text-base sm:text-lg book-shadow"
-                  style={{
-                    backgroundColor: literaryColors.coffee,
-                    color: literaryColors.cream,
-                  }}
-                >
-                  <Trophy className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5" />
-                  Start Challenge
-                </Button>
-              </div>
-            </Card>
-          </div>
-        </section>
-
         {/* Final CTA - Mobile Responsive */}
         <section className="py-16 sm:py-24 md:py-32 px-4 sm:px-6 md:px-8 relative overflow-hidden">
           <div className="absolute inset-0">
             <div
               className="absolute inset-0"
-              style={{
-                background: `linear-gradient(135deg, ${literaryColors.gold}20, ${literaryColors.dustyRose}20, ${literaryColors.lavender}20)`,
-              }}
+              style={{ backgroundColor: "white" }}
             />
           </div>
 

@@ -1,6 +1,6 @@
 # 🎨 StoriVault Frontend Documentation
 
-**Generated on:** 2025-10-06 17:52:59  
+**Generated on:** 2025-10-08 04:11:11  
 **Project Path:** `D:\NexusNao\PROJECTS\StoriVault\EDITING\frontend`  
 **Project Name:** storivault-frontend  
 **Version:** 1.0.0  
@@ -52,6 +52,7 @@
 - [chapters.ts](#src-apis-chaptersts)
 - [client.ts](#src-apis-clientts)
 - [index.ts](#src-apis-indexts)
+- [library.ts](#src-apis-libraryts)
 - [stories.ts](#src-apis-storiests)
 - [uploads.ts](#src-apis-uploadsts)
 - [users.ts](#src-apis-usersts)
@@ -368,9 +369,12 @@ export default tseslint.config(
     "react-dom": "^18.3.1",
     "react-easy-crop": "^5.5.3",
     "react-hook-form": "^7.61.1",
+    "react-markdown": "^10.1.0",
     "react-resizable-panels": "^2.1.9",
     "react-router-dom": "^6.30.1",
     "recharts": "^2.15.4",
+    "rehype-raw": "^7.0.0",
+    "remark-gfm": "^4.0.1",
     "sonner": "^1.7.4",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
@@ -807,6 +811,38 @@ export * from './stories';
 export * from './chapters';
 export * from './uploads';
 export * from './votes';
+export * from './library';
+```
+
+---
+
+### <a id='src-apis-libraryts'></a> `src\apis\library.ts`
+
+**API Module:** library.ts
+
+```typescript
+import { apiClient } from './client';
+import { Story, PaginatedResponse } from '@/types';
+
+export const libraryApi = {
+  // Save story to library
+  saveStory: async (storyId: string): Promise<void> => {
+    await apiClient.post(`/library/${storyId}`);
+  },
+
+  // Remove story from library
+  removeStory: async (storyId: string): Promise<void> => {
+    await apiClient.delete(`/library/${storyId}`);
+  },
+
+  // Get saved stories
+  getSavedStories: async (page = 1, limit = 20): Promise<PaginatedResponse<Story>> => {
+    const response = await apiClient.get<PaginatedResponse<Story>>('/library', {
+      params: { page, limit }
+    });
+    return response.data;
+  }
+};
 ```
 
 ---
@@ -972,13 +1008,32 @@ export const usersApi = {
   // Upload profile picture
   uploadProfilePicture: async (file: File): Promise<User> => {
     const formData = createFormData({ file });
-    
+
     const response = await apiClient.post<User>('/users/me/profile-pic', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
-    
+
+    return response.data;
+  },
+
+  // Upload cover image
+  uploadCoverImage: async (file: File): Promise<User> => {
+    const formData = createFormData({ file });
+
+    const response = await apiClient.post<User>('/users/me/cover-image', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return response.data;
+  },
+
+  // Delete cover image
+  deleteCoverImage: async (): Promise<User> => {
+    const response = await apiClient.delete<User>('/users/me/cover-image');
     return response.data;
   },
 
@@ -1022,6 +1077,18 @@ export const usersApi = {
   // Delete account
   deleteAccount: async (): Promise<void> => {
     await apiClient.delete('/users/me');
+  },
+
+  // Get user settings
+  getSettings: async (): Promise<any> => {
+    const response = await apiClient.get('/users/me/settings');
+    return response.data;
+  },
+
+  // Update user settings
+  updateSettings: async (settings: any): Promise<any> => {
+    const response = await apiClient.put('/users/me/settings', settings);
+    return response.data;
   }
 };
 ```
@@ -1042,8 +1109,17 @@ export const votesApi = {
     const request: VoteRequest = {
       chapter_id: chapterId
     };
-    
+
     await apiClient.post('/votes', request);
+  },
+
+  // Unvote a chapter
+  unvote: async (chapterId: string): Promise<void> => {
+    const request: VoteRequest = {
+      chapter_id: chapterId
+    };
+
+    await apiClient.delete('/votes', { data: request });
   }
 };
 ```
@@ -5971,7 +6047,7 @@ const SelectContent = React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
-        "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-white dark:bg-gray-800 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
         position === "popper" &&
           "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
         className,
@@ -6010,7 +6086,7 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-gray-100 dark:focus:bg-gray-700 focus:text-accent-foreground hover:bg-gray-50 dark:hover:bg-gray-700",
       className,
     )}
     {...props}
@@ -10026,6 +10102,8 @@ import {
   Plus,
   X,
   Image as ImageIcon,
+  BookOpen,
+  Settings,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10293,40 +10371,81 @@ export function CreateStoryPage() {
 
   return (
     <MainLayout showFooter={false}>
-      <div className="max-w-6xl mx-auto px-4 py-6">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Create New Story</h1>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={() => navigate(-1)}>
-              Cancel
-            </Button>
-            <Button variant="outline">
-              <Eye className="h-4 w-4 mr-2" />
-              Preview
-            </Button>
-            <Button onClick={handleSubmit} disabled={isSubmitting}>
-              <Save className="h-4 w-4 mr-2" />
-              {isSubmitting ? "Publishing..." : "Publish Story"}
-            </Button>
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
+        {/* Header */}
+        <div className="bg-white border-b shadow-sm sticky top-0 z-10">
+          <div className="max-w-6xl mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Button variant="ghost" onClick={() => navigate(-1)}>
+                  <X className="h-5 w-5" />
+                </Button>
+                <div>
+                  <h1 className="text-xl font-bold bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">
+                    Create New Story
+                  </h1>
+                  <p className="text-xs text-gray-500">Share your creativity with the world</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm">
+                  <Eye className="h-4 w-4 mr-2" />
+                  Preview
+                </Button>
+                <Button
+                  onClick={handleSubmit}
+                  disabled={isSubmitting}
+                  className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white"
+                >
+                  <Save className="h-4 w-4 mr-2" />
+                  {isSubmitting ? "Publishing..." : "Publish Story"}
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
 
+        {/* Main Content */}
+        <div className="max-w-6xl mx-auto px-4 py-8">
+
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-1 min-[450px]:grid-cols-3">
-            <TabsTrigger value="details">Story Details</TabsTrigger>
-            <TabsTrigger value="chapters">Chapters</TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-1 min-[450px]:grid-cols-3 bg-white shadow-sm rounded-xl p-1 mb-8">
+            <TabsTrigger
+              value="details"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-amber-500 data-[state=active]:text-white rounded-lg transition-all"
+            >
+              <ImageIcon className="h-4 w-4 mr-2" />
+              Story Details
+            </TabsTrigger>
+            <TabsTrigger
+              value="chapters"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-amber-500 data-[state=active]:text-white rounded-lg transition-all"
+            >
+              <BookOpen className="h-4 w-4 mr-2" />
+              Chapters
+            </TabsTrigger>
+            <TabsTrigger
+              value="settings"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-amber-500 data-[state=active]:text-white rounded-lg transition-all"
+            >
+              <Settings className="h-4 w-4 mr-2" />
+              Settings
+            </TabsTrigger>
           </TabsList>
 
           {/* Story Details Tab */}
-          <TabsContent value="details" className="space-y-6 mt-6">
+          <TabsContent value="details" className="space-y-6 mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Cover Image */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Cover Image</CardTitle>
+              <Card className="bg-white shadow-md border-0 overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-orange-100 to-amber-100">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <ImageIcon className="h-5 w-5 text-orange-600" />
+                    Cover Image
+                  </CardTitle>
+                  <p className="text-xs text-gray-600">Add an eye-catching cover for your story</p>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="pt-6">
                   {coverPreview ? (
                     <div className="relative aspect-[2/3] rounded-lg overflow-hidden bg-gray-100">
                       <img
@@ -10357,87 +10476,112 @@ export function CreateStoryPage() {
               </Card>
 
               {/* Story Info */}
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="title">Title</Label>
-                  <Input
-                    id="title"
-                    value={storyData.title}
-                    onChange={(e) =>
-                      setStoryData({ ...storyData, title: e.target.value })
-                    }
-                    placeholder="Enter your story title"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea
-                    id="description"
-                    value={storyData.description}
-                    onChange={(e) =>
-                      setStoryData({
-                        ...storyData,
-                        description: e.target.value,
-                      })
-                    }
-                    placeholder="Write a brief description of your story"
-                    rows={4}
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="genre">Genre</Label>
-                  <Select
-                    value={storyData.genre}
-                    onValueChange={(value) =>
-                      setStoryData({ ...storyData, genre: value })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a genre" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {GENRES.map((genre) => (
-                        <SelectItem key={genre} value={genre}>
-                          {genre}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label htmlFor="tags">Tags</Label>
-                  <div className="flex gap-2">
+              <Card className="bg-white shadow-md border-0">
+                <CardHeader className="bg-gradient-to-r from-orange-100 to-amber-100">
+                  <CardTitle className="text-lg">Story Information</CardTitle>
+                  <p className="text-xs text-gray-600">Tell readers what your story is about</p>
+                </CardHeader>
+                <CardContent className="pt-6 space-y-4">
+                  <div>
+                    <Label htmlFor="title" className="text-sm font-semibold text-gray-700">
+                      Title *
+                    </Label>
                     <Input
-                      id="tags"
-                      value={currentTag}
-                      onChange={(e) => setCurrentTag(e.target.value)}
-                      placeholder="Add tags"
-                      onKeyPress={(e) => {
-                        if (e.key === "Enter") {
-                          e.preventDefault();
-                          addTag();
-                        }
-                      }}
+                      id="title"
+                      value={storyData.title}
+                      onChange={(e) =>
+                        setStoryData({ ...storyData, title: e.target.value })
+                      }
+                      placeholder="Enter a captivating title..."
+                      className="mt-2 border-gray-300 focus:border-orange-500 focus:ring-orange-500"
                     />
-                    <Button type="button" onClick={addTag}>
-                      Add
-                    </Button>
                   </div>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {storyData.tags.map((tag) => (
-                      <Badge key={tag} variant="secondary">
-                        {tag}
-                        <button className="ml-2" onClick={() => removeTag(tag)}>
-                          <X className="h-3 w-3" />
-                        </button>
-                      </Badge>
-                    ))}
+
+                  <div>
+                    <Label htmlFor="description" className="text-sm font-semibold text-gray-700">
+                      Description
+                    </Label>
+                    <Textarea
+                      id="description"
+                      value={storyData.description}
+                      onChange={(e) =>
+                        setStoryData({
+                          ...storyData,
+                          description: e.target.value,
+                        })
+                      }
+                      placeholder="Describe what makes your story unique..."
+                      rows={4}
+                      className="mt-2 border-gray-300 focus:border-orange-500 focus:ring-orange-500 resize-none"
+                    />
                   </div>
-                </div>
-              </div>
+
+                  <div>
+                    <Label htmlFor="genre" className="text-sm font-semibold text-gray-700">
+                      Genre *
+                    </Label>
+                    <Select
+                      value={storyData.genre}
+                      onValueChange={(value) =>
+                        setStoryData({ ...storyData, genre: value })
+                      }
+                    >
+                      <SelectTrigger className="mt-2 border-gray-300 focus:border-orange-500 focus:ring-orange-500">
+                        <SelectValue placeholder="Choose a genre..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {GENRES.map((genre) => (
+                          <SelectItem key={genre} value={genre}>
+                            {genre}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="tags" className="text-sm font-semibold text-gray-700">
+                      Tags
+                    </Label>
+                    <p className="text-xs text-gray-500 mb-2">Help readers discover your story</p>
+                    <div className="flex gap-2">
+                      <Input
+                        id="tags"
+                        value={currentTag}
+                        onChange={(e) => setCurrentTag(e.target.value)}
+                        placeholder="e.g., romance, adventure..."
+                        onKeyPress={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            addTag();
+                          }
+                        }}
+                        className="border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                      />
+                      <Button
+                        type="button"
+                        onClick={addTag}
+                        className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600"
+                      >
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="flex flex-wrap gap-2 mt-3">
+                      {storyData.tags.map((tag) => (
+                        <Badge
+                          key={tag}
+                          className="bg-gradient-to-r from-orange-100 to-amber-100 text-orange-700 hover:from-orange-200 hover:to-amber-200"
+                        >
+                          {tag}
+                          <button className="ml-2" onClick={() => removeTag(tag)}>
+                            <X className="h-3 w-3" />
+                          </button>
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </TabsContent>
 
@@ -10640,6 +10784,7 @@ export function CreateStoryPage() {
             </Card>
           </TabsContent>
         </Tabs>
+        </div>
       </div>
     </MainLayout>
   );
@@ -13749,6 +13894,12 @@ import {
   ZoomIn,
   ZoomOut,
   RotateCw,
+  Home,
+  Bell,
+  MessageSquare,
+  Heart,
+  Archive,
+  Clock,
 } from "lucide-react";
 import Cropper from "react-easy-crop";
 import type { Area, Point } from "react-easy-crop";
@@ -13765,7 +13916,7 @@ import { MainLayout } from "@/components/layout/main-layout";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useAuthStore } from "@/store/authStore";
 import { Story, User } from "@/types";
-import { storiesApi, usersApi } from "@/apis";
+import { storiesApi, usersApi, libraryApi } from "@/apis";
 import { UserController } from "@/controllers/userController";
 import { useUiStore } from "@/store/uiStore";
 import { formatDate, formatNumber } from "@/helper/formatting";
@@ -13808,6 +13959,11 @@ export function ProfilePage() {
   const [newProfilePic, setNewProfilePic] = useState<File | null>(null);
   const [profilePicPreview, setProfilePicPreview] = useState<string>("");
 
+  // Cover image state
+  const [newCoverImage, setNewCoverImage] = useState<File | null>(null);
+  const [coverImagePreview, setCoverImagePreview] = useState<string>("");
+  const [showCoverCropper, setShowCoverCropper] = useState(false);
+
   // Cropper state
   const [showCropper, setShowCropper] = useState(false);
   const [imageToCrop, setImageToCrop] = useState<string>("");
@@ -13815,14 +13971,25 @@ export function ProfilePage() {
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
+  const [cropType, setCropType] = useState<'profile' | 'cover'>('profile');
+
+  // Profile picture modal viewer
+  const [showProfilePicModal, setShowProfilePicModal] = useState(false);
+  const [modalImageUrl, setModalImageUrl] = useState<string>("");
 
   const isOwnProfile = user?.username === username;
 
   useEffect(() => {
+    console.log('Profile Debug:', {
+      username,
+      userUsername: user?.username,
+      isOwnProfile,
+      user: { id: user?.id, username: user?.username, profile_pic: user?.profile_pic, cover_image: user?.cover_image }
+    });
     if (username) {
       fetchProfileData();
     }
-  }, [username]);
+  }, [username, user]);
 
   const fetchProfileData = async () => {
     if (!username) return;
@@ -13955,6 +14122,19 @@ export function ProfilePage() {
 
   const fetchSavedStories = async () => {
     try {
+      // Try to load from backend first
+      try {
+        const response = await libraryApi.getSavedStories(1, 100);
+        setSavedStories(response.items);
+        // Update localStorage as backup
+        const savedIds = response.items.map(s => s.id);
+        localStorage.setItem("saved_stories", JSON.stringify(savedIds));
+        return;
+      } catch (error) {
+        console.error("Failed to fetch saved stories from backend:", error);
+      }
+
+      // Fallback to localStorage
       const savedIds = JSON.parse(
         localStorage.getItem("saved_stories") || "[]"
       );
@@ -14112,9 +14292,53 @@ export function ProfilePage() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImageToCrop(reader.result as string);
+        setCropType('profile');
         setShowCropper(true);
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleCoverImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 10 * 1024 * 1024) {
+        addToast({
+          title: "File too large",
+          description: "Cover image must be less than 10MB",
+          type: "error",
+        });
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageToCrop(reader.result as string);
+        setCropType('cover');
+        setShowCropper(true);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveCoverImage = async () => {
+    try {
+      const updatedUser = await usersApi.deleteCoverImage();
+      setProfileUser(updatedUser);
+      updateUser(updatedUser);
+      setCoverImagePreview("");
+      setNewCoverImage(null);
+      addToast({
+        title: "Cover image removed",
+        description: "Your cover image has been removed",
+        type: "success",
+      });
+    } catch (error) {
+      addToast({
+        title: "Error",
+        description: "Failed to remove cover image",
+        type: "error",
+      });
     }
   };
 
@@ -14127,16 +14351,30 @@ export function ProfilePage() {
         croppedAreaPixels,
         rotation
       );
-      const croppedFile = new File([croppedBlob], "profile.jpg", {
-        type: "image/jpeg",
-      });
 
-      setNewProfilePic(croppedFile);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfilePicPreview(reader.result as string);
-      };
-      reader.readAsDataURL(croppedFile);
+      if (cropType === 'profile') {
+        const croppedFile = new File([croppedBlob], "profile.jpg", {
+          type: "image/jpeg",
+        });
+
+        setNewProfilePic(croppedFile);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setProfilePicPreview(reader.result as string);
+        };
+        reader.readAsDataURL(croppedFile);
+      } else {
+        const croppedFile = new File([croppedBlob], "cover.jpg", {
+          type: "image/jpeg",
+        });
+
+        setNewCoverImage(croppedFile);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setCoverImagePreview(reader.result as string);
+        };
+        reader.readAsDataURL(croppedFile);
+      }
 
       setShowCropper(false);
       setImageToCrop("");
@@ -14182,6 +14420,27 @@ export function ProfilePage() {
         }
       }
 
+      // Upload new cover image if selected
+      if (newCoverImage) {
+        try {
+          const updatedUser = await usersApi.uploadCoverImage(newCoverImage);
+          setProfileUser(updatedUser);
+          updateUser(updatedUser);
+          setCoverImagePreview(updatedUser.cover_image || "");
+          addToast({
+            title: "Cover image updated",
+            description: "Your cover image has been updated successfully",
+            type: "success",
+          });
+        } catch (error) {
+          addToast({
+            title: "Error",
+            description: "Failed to upload cover image",
+            type: "error",
+          });
+        }
+      }
+
       // Update bio if changed
       const updates: any = {};
       if (editForm.bio !== profileUser?.bio) {
@@ -14205,6 +14464,7 @@ export function ProfilePage() {
 
       setEditDialogOpen(false);
       setNewProfilePic(null);
+      setNewCoverImage(null);
 
       addToast({
         title: "Profile updated!",
@@ -14223,10 +14483,20 @@ export function ProfilePage() {
     }
   };
 
-  const handleRemoveFromSaved = (storyId: string) => {
+  const handleRemoveFromSaved = async (storyId: string) => {
+    try {
+      // Try to remove from backend
+      await libraryApi.removeStory(storyId);
+    } catch (error) {
+      console.error("Failed to remove from backend:", error);
+    }
+
+    // Update localStorage
     const savedIds = JSON.parse(localStorage.getItem("saved_stories") || "[]");
     const updated = savedIds.filter((id: string) => id !== storyId);
     localStorage.setItem("saved_stories", JSON.stringify(updated));
+
+    // Update UI
     setSavedStories((prev) => prev.filter((s) => s.id !== storyId));
 
     addToast({
@@ -14262,21 +14532,79 @@ export function ProfilePage() {
 
   return (
     <MainLayout showFooter={false}>
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        {/* Profile Header */}
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-8 mb-8">
-          {/* Profile Picture */}
-          <div className="flex-shrink-0">
-            <Avatar className="h-28 w-28 sm:h-32 sm:w-32 md:h-40 md:w-40 border-4 border-gray-200 shadow-lg">
-              <AvatarImage src={profileUser.profile_pic || undefined} />
-              <AvatarFallback className="text-2xl md:text-3xl bg-gradient-to-br from-primary/20 to-primary/10">
-                {profileUser.username?.[0].toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-          </div>
+      <div className="max-w-5xl mx-auto">
+        {/* Cover Image */}
+        <div className="relative w-full h-48 md:h-64 bg-gradient-to-r from-orange-200 to-amber-200 overflow-hidden">
+          {profileUser.cover_image || coverImagePreview ? (
+            <img
+              src={coverImagePreview || profileUser.cover_image || undefined}
+              alt="Cover"
+              className="w-full h-full object-cover"
+            />
+          ) : null}
 
-          {/* Profile Info */}
-          <div className="flex-1 w-full">
+          {isOwnProfile && (
+            <div className="absolute top-4 right-4 flex gap-2">
+              <label>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="bg-white/90 hover:bg-white"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById('cover-upload')?.click();
+                  }}
+                >
+                  <Camera className="h-4 w-4 mr-2" />
+                  {profileUser.cover_image ? 'Change Cover' : 'Add Cover'}
+                </Button>
+                <input
+                  id="cover-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleCoverImageSelect}
+                  className="hidden"
+                />
+              </label>
+
+              {profileUser.cover_image && (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="bg-white/90 hover:bg-white"
+                  onClick={handleRemoveCoverImage}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Profile Content */}
+        <div className="px-4 py-8">
+          {/* Profile Header */}
+          <div className="relative mb-8">
+            {/* Profile Picture - Positioned to overlap cover image */}
+            <div className="flex justify-center md:justify-start -mt-16 md:absolute md:left-4 md:top-0">
+              <div className="flex-shrink-0 relative">
+                <Avatar
+                  className="h-28 w-28 sm:h-32 sm:w-32 md:h-40 md:w-40 border-4 border-white shadow-lg cursor-pointer hover:opacity-90 transition-opacity"
+                  onClick={() => {
+                    setModalImageUrl(profileUser.profile_pic || `https://api.dicebear.com/7.x/avataaars/svg?seed=${profileUser.username}`);
+                    setShowProfilePicModal(true);
+                  }}
+                >
+                  <AvatarImage src={profileUser.profile_pic || undefined} />
+                  <AvatarFallback className="text-2xl md:text-3xl bg-gradient-to-br from-primary/20 to-primary/10">
+                    {profileUser.username?.[0].toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+            </div>
+
+            {/* Profile Info */}
+            <div className="flex-1 w-full pt-6 md:ml-48 md:pt-0">
             {/* Username and Actions */}
             <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
               <h1 className="text-xl sm:text-2xl font-medium">
@@ -14331,67 +14659,140 @@ export function ProfilePage() {
               </div>
             </div>
 
-            {/* Stats */}
-            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 mb-4 text-sm">
-              <div className="text-center">
-                <span className="font-semibold text-lg">
-                  {publicStories.length}
-                </span>
-                <span className="text-gray-600 ml-1">
-                  {publicStories.length === 1 ? "story" : "stories"}
-                </span>
-                {isOwnProfile && privateStories.length > 0 && (
-                  <span className="text-gray-500 ml-2">
-                    (+{privateStories.length} private)
+              {/* Stats */}
+              <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 mb-4 text-sm">
+                <div className="text-center">
+                  <span className="font-semibold text-lg">
+                    {publicStories.length}
                   </span>
-                )}
+                  <span className="text-gray-600 ml-1">
+                    {publicStories.length === 1 ? "story" : "stories"}
+                  </span>
+                  {isOwnProfile && privateStories.length > 0 && (
+                    <span className="text-gray-500 ml-2">
+                      (+{privateStories.length} private)
+                    </span>
+                  )}
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
+                  <button className="text-center hover:underline order-1 sm:order-1">
+                    <span className="font-semibold text-base sm:text-lg">
+                      {formatNumber(profileUser.followers_count)}
+                    </span>
+                    <span className="text-gray-600 ml-1 text-sm sm:text-base">
+                      followers
+                    </span>
+                  </button>
+                  <button className="text-center hover:underline order-2 sm:order-2">
+                    <span className="font-semibold text-base sm:text-lg">
+                      {formatNumber(profileUser.following_count)}
+                    </span>
+                    <span className="text-gray-600 ml-1 text-sm sm:text-base">
+                      following
+                    </span>
+                  </button>
+                </div>
               </div>
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
-                <button className="text-center hover:underline order-1 sm:order-1">
-                  <span className="font-semibold text-base sm:text-lg">
-                    {formatNumber(profileUser.followers_count)}
-                  </span>
-                  <span className="text-gray-600 ml-1 text-sm sm:text-base">
-                    followers
-                  </span>
-                </button>
-                <button className="text-center hover:underline order-2 sm:order-2">
-                  <span className="font-semibold text-base sm:text-lg">
-                    {formatNumber(profileUser.following_count)}
-                  </span>
-                  <span className="text-gray-600 ml-1 text-sm sm:text-base">
-                    following
-                  </span>
-                </button>
-              </div>
-            </div>
 
-            {/* Bio */}
-            {profileUser.bio && (
-              <div className="text-sm whitespace-pre-line text-gray-700">
-                {profileUser.bio}
-              </div>
-            )}
-
-            {/* Additional Stats */}
-            <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
-              <div className="flex items-center gap-1">
-                <Calendar className="h-3 w-3" />
-                Joined {formatDate(profileUser.created_at)}
-              </div>
-              {profileStats.totalReads > 0 && (
-                <div className="flex items-center gap-1">
-                  <Badge variant="secondary" className="text-xs">
-                    {formatNumber(profileStats.totalReads)} total reads
-                  </Badge>
+              {/* Bio */}
+              {profileUser.bio && (
+                <div className="text-sm whitespace-pre-line text-gray-700">
+                  {profileUser.bio}
                 </div>
               )}
+
+              {/* Additional Stats */}
+              <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
+                <div className="flex items-center gap-1">
+                  <Calendar className="h-3 w-3" />
+                  Joined {formatDate(profileUser.created_at)}
+                </div>
+                {profileStats.totalReads > 0 && (
+                  <div className="flex items-center gap-1">
+                    <Badge variant="secondary" className="text-xs">
+                      {formatNumber(profileStats.totalReads)} total reads
+                    </Badge>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
+        {/* Desktop Sidebar & Mobile Bottom Nav */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
+          {/* Sidebar - Hidden on mobile, shown on desktop */}
+          <aside className="hidden lg:block lg:col-span-3">
+            <Card className="sticky top-20">
+              <div className="p-4 space-y-1">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start gap-3 hover:bg-gray-100"
+                  onClick={() => navigate("/")}
+                >
+                  <Home className="h-5 w-5" />
+                  <span>Home</span>
+                </Button>
+
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start gap-3 hover:bg-gray-100"
+                  onClick={() => navigate("/stories")}
+                >
+                  <BookOpen className="h-5 w-5" />
+                  <span>Explore Stories</span>
+                </Button>
+
+                {isOwnProfile && (
+                  <>
+                    <Separator className="my-2" />
+
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start gap-3 hover:bg-gray-100"
+                      onClick={() => setActiveTab("saved")}
+                    >
+                      <Bookmark className="h-5 w-5" />
+                      <span>Saved</span>
+                    </Button>
+
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start gap-3 hover:bg-gray-100"
+                      onClick={() => navigate("/notifications")}
+                    >
+                      <Bell className="h-5 w-5" />
+                      <span>Notifications</span>
+                    </Button>
+
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start gap-3 hover:bg-gray-100"
+                      onClick={() => navigate("/messages")}
+                    >
+                      <MessageSquare className="h-5 w-5" />
+                      <span>Messages</span>
+                    </Button>
+
+                    <Separator className="my-2" />
+
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start gap-3 hover:bg-gray-100"
+                      onClick={() => navigate("/settings")}
+                    >
+                      <Settings className="h-5 w-5" />
+                      <span>Settings</span>
+                    </Button>
+                  </>
+                )}
+              </div>
+            </Card>
+          </aside>
+
+          {/* Main Content Area */}
+          <div className="lg:col-span-9">
+            {/* Tabs */}
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="w-full justify-start border-b rounded-none h-auto p-0 bg-transparent">
             <TabsTrigger
               value="stories"
@@ -14549,12 +14950,71 @@ export function ProfilePage() {
         {/* Floating Action Button for Creating Stories */}
         {isOwnProfile && (
           <Button
-            className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600"
+            className="fixed bottom-20 lg:bottom-6 right-6 h-14 w-14 rounded-full shadow-lg bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 z-40"
             size="icon"
             onClick={() => navigate("/stories/create")}
           >
             <Plus className="h-6 w-6" />
           </Button>
+        )}
+          </div>
+        </div>
+
+        {/* Mobile Bottom Navigation - Shown only on mobile */}
+        {isOwnProfile && (
+          <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-50">
+            <div className="flex items-center justify-around py-3 px-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex flex-col items-center gap-1 h-auto py-2 px-3"
+                onClick={() => navigate("/")}
+              >
+                <Home className="h-5 w-5" />
+                <span className="text-xs">Home</span>
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex flex-col items-center gap-1 h-auto py-2 px-3"
+                onClick={() => navigate("/stories")}
+              >
+                <BookOpen className="h-5 w-5" />
+                <span className="text-xs">Explore</span>
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex flex-col items-center gap-1 h-auto py-2 px-3"
+                onClick={() => setActiveTab("saved")}
+              >
+                <Bookmark className="h-5 w-5" />
+                <span className="text-xs">Saved</span>
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex flex-col items-center gap-1 h-auto py-2 px-3"
+                onClick={() => navigate("/notifications")}
+              >
+                <Bell className="h-5 w-5" />
+                <span className="text-xs">Alerts</span>
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex flex-col items-center gap-1 h-auto py-2 px-3"
+                onClick={() => navigate("/settings")}
+              >
+                <Settings className="h-5 w-5" />
+                <span className="text-xs">Settings</span>
+              </Button>
+            </div>
+          </div>
         )}
       </div>
 
@@ -14798,7 +15258,7 @@ export function ProfilePage() {
             <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-bold text-white">
-                  Crop Profile Picture
+                  {cropType === 'profile' ? 'Crop Profile Picture' : 'Crop Cover Image'}
                 </h2>
                 <Button
                   variant="ghost"
@@ -14810,7 +15270,9 @@ export function ProfilePage() {
                 </Button>
               </div>
               <p className="text-white/90 text-sm mt-1">
-                Adjust the image to fit perfectly in your round profile picture
+                {cropType === 'profile'
+                  ? 'Adjust the image to fit perfectly in your round profile picture'
+                  : 'Adjust the image for your profile cover'}
               </p>
             </div>
 
@@ -14821,8 +15283,8 @@ export function ProfilePage() {
                 crop={crop}
                 zoom={zoom}
                 rotation={rotation}
-                aspect={1}
-                cropShape="round"
+                aspect={cropType === 'profile' ? 1 : 16/9}
+                cropShape={cropType === 'profile' ? "round" : "rect"}
                 showGrid={false}
                 onCropChange={setCrop}
                 onZoomChange={setZoom}
@@ -14898,6 +15360,30 @@ export function ProfilePage() {
           </div>
         </div>
       )}
+
+      {/* Profile Picture Modal Viewer */}
+      {showProfilePicModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setShowProfilePicModal(false)}>
+          <div className="relative max-w-md w-full aspect-square">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute top-4 right-4 bg-white/20 hover:bg-white/30 rounded-full text-white z-10"
+              onClick={() => setShowProfilePicModal(false)}
+            >
+              <X className="h-6 w-6" />
+            </Button>
+            <div className="w-full h-full rounded-full overflow-hidden border-4 border-white shadow-2xl">
+              <img
+                src={modalImageUrl}
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+        </div>
     </MainLayout>
   );
 }
@@ -15059,36 +15545,63 @@ export function SettingsPage() {
     loginAlerts: true,
   });
 
-  // Load saved settings
+  // Load saved settings from backend
   useEffect(() => {
-    const savedSettings = localStorage.getItem("user-settings");
-    if (savedSettings) {
+    const loadSettings = async () => {
       try {
-        const parsed = JSON.parse(savedSettings);
-        setSettings((prev) => ({ ...prev, ...parsed }));
+        // Try to load from backend first
+        const backendSettings = await usersApi.getSettings();
+        if (backendSettings && Object.keys(backendSettings).length > 0) {
+          setSettings((prev) => ({ ...prev, ...backendSettings }));
+          // Also save to localStorage as backup
+          localStorage.setItem("user-settings", JSON.stringify(backendSettings));
+        } else {
+          // Fallback to localStorage
+          const savedSettings = localStorage.getItem("user-settings");
+          if (savedSettings) {
+            try {
+              const parsed = JSON.parse(savedSettings);
+              setSettings((prev) => ({ ...prev, ...parsed }));
+            } catch (error) {
+              console.error("Failed to parse saved settings:", error);
+            }
+          }
+        }
       } catch (error) {
-        console.error("Failed to load settings:", error);
+        console.error("Failed to load settings from backend:", error);
+        // Fallback to localStorage
+        const savedSettings = localStorage.getItem("user-settings");
+        if (savedSettings) {
+          try {
+            const parsed = JSON.parse(savedSettings);
+            setSettings((prev) => ({ ...prev, ...parsed }));
+          } catch (error) {
+            console.error("Failed to parse saved settings:", error);
+          }
+        }
       }
-    }
 
-    // Load reading preferences
-    const readingPrefs = localStorage.getItem("reading-preferences");
-    if (readingPrefs) {
-      try {
-        const parsed = JSON.parse(readingPrefs);
-        setSettings((prev) => ({
-          ...prev,
-          fontSize:
-            parsed.fontSize === 18
-              ? "small"
-              : parsed.fontSize === 22
-              ? "large"
-              : "medium",
-        }));
-      } catch (error) {
-        console.error("Failed to load reading preferences:", error);
+      // Load reading preferences
+      const readingPrefs = localStorage.getItem("reading-preferences");
+      if (readingPrefs) {
+        try {
+          const parsed = JSON.parse(readingPrefs);
+          setSettings((prev) => ({
+            ...prev,
+            fontSize:
+              parsed.fontSize === 18
+                ? "small"
+                : parsed.fontSize === 22
+                ? "large"
+                : "medium",
+          }));
+        } catch (error) {
+          console.error("Failed to load reading preferences:", error);
+        }
       }
-    }
+    };
+
+    loadSettings();
   }, []);
 
   // Save settings to localStorage when they change
@@ -15110,13 +15623,22 @@ export function SettingsPage() {
   const handleSaveSettings = async () => {
     setIsSaving(true);
     try {
-      // Save settings to backend (when API is available)
-      // For now, just save to localStorage
       const settingsToSave = { ...settings };
       delete settingsToSave.currentPassword;
       delete settingsToSave.newPassword;
       delete settingsToSave.confirmPassword;
+      delete settingsToSave.email;
+      delete settingsToSave.username;
 
+      // Save settings to backend
+      try {
+        await usersApi.updateSettings(settingsToSave);
+      } catch (error) {
+        console.error("Failed to save settings to backend:", error);
+        // Continue anyway and save to localStorage
+      }
+
+      // Also save to localStorage as backup
       localStorage.setItem("user-settings", JSON.stringify(settingsToSave));
 
       // Apply theme
@@ -15271,31 +15793,35 @@ export function SettingsPage() {
     <MainLayout showFooter={false}>
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
-        <div className="bg-white border-b">
-          <div className="max-w-5xl mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
-                  <ChevronLeft className="h-4 w-4 mr-2" />
-                  Back
+        <div className="bg-white border-b sticky top-0 z-40">
+          <div className="max-w-5xl mx-auto px-4 py-3 sm:py-4">
+            {/* Mobile Header - Stack vertically */}
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-3 min-w-0">
+                <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="flex-shrink-0">
+                  <ChevronLeft className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Back</span>
                 </Button>
-                <h1 className="text-xl font-bold">Settings</h1>
+                <h1 className="text-lg sm:text-xl font-bold truncate">Settings</h1>
               </div>
               {hasChanges && (
                 <Button
                   onClick={handleSaveSettings}
                   disabled={isSaving}
-                  className="bg-green-600 hover:bg-green-700"
+                  size="sm"
+                  className="bg-green-600 hover:bg-green-700 w-full sm:w-auto"
                 >
                   {isSaving ? (
                     <>
                       <LoadingSpinner size="sm" className="mr-2" />
-                      Saving...
+                      <span className="hidden sm:inline">Saving...</span>
+                      <span className="sm:hidden">Saving</span>
                     </>
                   ) : (
                     <>
                       <Save className="h-4 w-4 mr-2" />
-                      Save Changes
+                      <span className="hidden sm:inline">Save Changes</span>
+                      <span className="sm:hidden">Save</span>
                     </>
                   )}
                 </Button>
@@ -15305,30 +15831,48 @@ export function SettingsPage() {
         </div>
 
         {/* Main Content */}
-        <div className="max-w-5xl mx-auto px-4 py-6">
+        <div className="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="mb-6 bg-white">
-              <TabsTrigger value="account">
-                <User className="h-4 w-4 mr-2" />
-                Account
-              </TabsTrigger>
-              <TabsTrigger value="privacy">
-                <Eye className="h-4 w-4 mr-2" />
-                Privacy
-              </TabsTrigger>
-              <TabsTrigger value="notifications">
-                <Bell className="h-4 w-4 mr-2" />
-                Notifications
-              </TabsTrigger>
-              <TabsTrigger value="display">
-                <Monitor className="h-4 w-4 mr-2" />
-                Display
-              </TabsTrigger>
-              <TabsTrigger value="security">
-                <Shield className="h-4 w-4 mr-2" />
-                Security
-              </TabsTrigger>
-            </TabsList>
+            {/* Responsive Tab Navigation */}
+            <div className="mb-4 sm:mb-6">
+              <TabsList className="h-auto p-1 bg-white grid grid-cols-3 sm:flex sm:flex-wrap sm:w-auto">
+                <TabsTrigger
+                  value="account"
+                  className="flex-col sm:flex-row gap-1 sm:gap-2 text-xs sm:text-sm px-2 py-2.5 sm:px-4 h-auto"
+                >
+                  <User className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="truncate">Account</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="privacy"
+                  className="flex-col sm:flex-row gap-1 sm:gap-2 text-xs sm:text-sm px-2 py-2.5 sm:px-4 h-auto"
+                >
+                  <Eye className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="truncate">Privacy</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="notifications"
+                  className="flex-col sm:flex-row gap-1 sm:gap-2 text-xs sm:text-sm px-2 py-2.5 sm:px-4 h-auto"
+                >
+                  <Bell className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="truncate">Notifications</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="display"
+                  className="flex-col sm:flex-row gap-1 sm:gap-2 text-xs sm:text-sm px-2 py-2.5 sm:px-4 h-auto"
+                >
+                  <Monitor className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="truncate">Display</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="security"
+                  className="flex-col sm:flex-row gap-1 sm:gap-2 text-xs sm:text-sm px-2 py-2.5 sm:px-4 h-auto"
+                >
+                  <Shield className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="truncate">Security</span>
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
             {/* Account Settings */}
             <TabsContent value="account" className="space-y-6">
@@ -15355,7 +15899,7 @@ export function SettingsPage() {
 
                   <div>
                     <Label htmlFor="email">Email Address</Label>
-                    <div className="flex gap-2 mt-1">
+                    <div className="flex flex-col sm:flex-row gap-2 mt-1">
                       <Input
                         id="email"
                         type="email"
@@ -15363,9 +15907,9 @@ export function SettingsPage() {
                         disabled
                         className="flex-1 bg-gray-50"
                       />
-                      <Button variant="outline" size="sm" disabled>
-                        <Mail className="h-4 w-4 mr-2" />
-                        Verify
+                      <Button variant="outline" size="sm" disabled className="w-full sm:w-auto">
+                        <Mail className="h-4 w-4 sm:mr-2" />
+                        <span className="sm:inline">Verify</span>
                       </Button>
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
@@ -15377,13 +15921,24 @@ export function SettingsPage() {
 
                   <div>
                     <h3 className="font-medium mb-3">Password</h3>
-                    <Button
-                      variant="outline"
-                      onClick={() => setShowPasswordDialog(true)}
-                    >
-                      <Key className="h-4 w-4 mr-2" />
-                      Change Password
-                    </Button>
+                    {user?.is_google_user ? (
+                      <div className="space-y-2">
+                        <Alert>
+                          <AlertCircle className="h-4 w-4" />
+                          <AlertDescription>
+                            You signed in with Google. Password management is handled through your Google account.
+                          </AlertDescription>
+                        </Alert>
+                      </div>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        onClick={() => setShowPasswordDialog(true)}
+                      >
+                        <Key className="h-4 w-4 mr-2" />
+                        Change Password
+                      </Button>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -15461,38 +16016,38 @@ export function SettingsPage() {
                       }
                       className="mt-2 space-y-2"
                     >
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="public" id="public" />
-                        <Label htmlFor="public" className="font-normal">
-                          <div>
-                            <Globe className="h-4 w-4 inline mr-2" />
-                            Public
+                      <div className="flex items-start space-x-3">
+                        <RadioGroupItem value="public" id="public" className="mt-0.5" />
+                        <Label htmlFor="public" className="font-normal cursor-pointer">
+                          <div className="flex items-center gap-2">
+                            <Globe className="h-4 w-4 flex-shrink-0" />
+                            <span className="font-medium">Public</span>
                           </div>
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-gray-500 mt-1 leading-relaxed">
                             Anyone can view your profile
                           </p>
                         </Label>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="friends" id="friends" />
-                        <Label htmlFor="friends" className="font-normal">
-                          <div>
-                            <User className="h-4 w-4 inline mr-2" />
-                            Following Only
+                      <div className="flex items-start space-x-3">
+                        <RadioGroupItem value="friends" id="friends" className="mt-0.5" />
+                        <Label htmlFor="friends" className="font-normal cursor-pointer">
+                          <div className="flex items-center gap-2">
+                            <User className="h-4 w-4 flex-shrink-0" />
+                            <span className="font-medium">Following Only</span>
                           </div>
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-gray-500 mt-1 leading-relaxed">
                             Only people you follow can see your full profile
                           </p>
                         </Label>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="private" id="private" />
-                        <Label htmlFor="private" className="font-normal">
-                          <div>
-                            <Lock className="h-4 w-4 inline mr-2" />
-                            Private
+                      <div className="flex items-start space-x-3">
+                        <RadioGroupItem value="private" id="private" className="mt-0.5" />
+                        <Label htmlFor="private" className="font-normal cursor-pointer">
+                          <div className="flex items-center gap-2">
+                            <Lock className="h-4 w-4 flex-shrink-0" />
+                            <span className="font-medium">Private</span>
                           </div>
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-gray-500 mt-1 leading-relaxed">
                             Only you can see your profile
                           </p>
                         </Label>
@@ -15502,11 +16057,11 @@ export function SettingsPage() {
 
                   <Separator />
 
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-1">
+                  <div className="space-y-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="space-y-1 min-w-0 flex-1">
                         <Label htmlFor="show-email">Show Email Address</Label>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-gray-500 leading-relaxed">
                           Display your email on your profile
                         </p>
                       </div>
@@ -15516,15 +16071,16 @@ export function SettingsPage() {
                         onCheckedChange={(checked) =>
                           handleSettingChange("showEmail", checked)
                         }
+                        className="flex-shrink-0 mt-1"
                       />
                     </div>
 
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-1">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="space-y-1 min-w-0 flex-1">
                         <Label htmlFor="show-activity">
                           Show Reading Activity
                         </Label>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-gray-500 leading-relaxed">
                           Let others see what you're reading
                         </p>
                       </div>
@@ -15534,6 +16090,7 @@ export function SettingsPage() {
                         onCheckedChange={(checked) =>
                           handleSettingChange("showReadingActivity", checked)
                         }
+                        className="flex-shrink-0 mt-1"
                       />
                     </div>
                   </div>
@@ -15549,17 +16106,17 @@ export function SettingsPage() {
                 </CardHeader>
                 <CardContent>
                   <div>
-                    <Label htmlFor="messages">Allow messages from</Label>
+                    <Label htmlFor="messages" className="block mb-3">Allow messages from</Label>
                     <Select
                       value={settings.allowMessages}
                       onValueChange={(value) =>
                         handleSettingChange("allowMessages", value)
                       }
                     >
-                      <SelectTrigger className="mt-1">
+                      <SelectTrigger className="w-full">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="w-full">
                         <SelectItem value="everyone">Everyone</SelectItem>
                         <SelectItem value="following">
                           People I follow
@@ -15580,7 +16137,7 @@ export function SettingsPage() {
                 </CardHeader>
                 <CardContent>
                   <div>
-                    <Label htmlFor="story-visibility">
+                    <Label htmlFor="story-visibility" className="block mb-3">
                       Default Story Visibility
                     </Label>
                     <Select
@@ -15589,10 +16146,10 @@ export function SettingsPage() {
                         handleSettingChange("defaultStoryVisibility", value)
                       }
                     >
-                      <SelectTrigger className="mt-1">
+                      <SelectTrigger className="w-full">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="w-full">
                         <SelectItem value="public">Public</SelectItem>
                         <SelectItem value="private">Private</SelectItem>
                       </SelectContent>
@@ -15611,11 +16168,11 @@ export function SettingsPage() {
                     Choose how you want to receive notifications
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
+                <CardContent className="space-y-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-1 min-w-0 flex-1">
                       <Label htmlFor="email-notif">Email Notifications</Label>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 leading-relaxed">
                         Receive notifications via email
                       </p>
                     </div>
@@ -15625,13 +16182,14 @@ export function SettingsPage() {
                       onCheckedChange={(checked) =>
                         handleSettingChange("emailNotifications", checked)
                       }
+                      className="flex-shrink-0 mt-1"
                     />
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-1 min-w-0 flex-1">
                       <Label htmlFor="push-notif">Push Notifications</Label>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 leading-relaxed">
                         Browser push notifications
                       </p>
                     </div>
@@ -15641,6 +16199,7 @@ export function SettingsPage() {
                       onCheckedChange={(checked) =>
                         handleSettingChange("pushNotifications", checked)
                       }
+                      className="flex-shrink-0 mt-1"
                     />
                   </div>
                 </CardContent>
@@ -15653,48 +16212,52 @@ export function SettingsPage() {
                     Get notified about interactions
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="follower-notif">New Followers</Label>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <Label htmlFor="follower-notif" className="flex-1 cursor-pointer">New Followers</Label>
                     <Switch
                       id="follower-notif"
                       checked={settings.notifyNewFollower}
                       onCheckedChange={(checked) =>
                         handleSettingChange("notifyNewFollower", checked)
                       }
+                      className="flex-shrink-0"
                     />
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="comment-notif">New Comments</Label>
+                  <div className="flex items-center justify-between gap-4">
+                    <Label htmlFor="comment-notif" className="flex-1 cursor-pointer">New Comments</Label>
                     <Switch
                       id="comment-notif"
                       checked={settings.notifyNewComment}
                       onCheckedChange={(checked) =>
                         handleSettingChange("notifyNewComment", checked)
                       }
+                      className="flex-shrink-0"
                     />
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="vote-notif">New Votes</Label>
+                  <div className="flex items-center justify-between gap-4">
+                    <Label htmlFor="vote-notif" className="flex-1 cursor-pointer">New Votes</Label>
                     <Switch
                       id="vote-notif"
                       checked={settings.notifyNewVote}
                       onCheckedChange={(checked) =>
                         handleSettingChange("notifyNewVote", checked)
                       }
+                      className="flex-shrink-0"
                     />
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="update-notif">Story Updates</Label>
+                  <div className="flex items-center justify-between gap-4">
+                    <Label htmlFor="update-notif" className="flex-1 cursor-pointer">Story Updates</Label>
                     <Switch
                       id="update-notif"
                       checked={settings.notifyStoryUpdate}
                       onCheckedChange={(checked) =>
                         handleSettingChange("notifyStoryUpdate", checked)
                       }
+                      className="flex-shrink-0"
                     />
                   </div>
                 </CardContent>
@@ -15706,10 +16269,10 @@ export function SettingsPage() {
                   <CardDescription>Periodic summary emails</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-1 min-w-0 flex-1">
                       <Label htmlFor="weekly-digest">Weekly Digest</Label>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 leading-relaxed">
                         Get a weekly summary of activity
                       </p>
                     </div>
@@ -15719,6 +16282,7 @@ export function SettingsPage() {
                       onCheckedChange={(checked) =>
                         handleSettingChange("notifyWeeklyDigest", checked)
                       }
+                      className="flex-shrink-0 mt-1"
                     />
                   </div>
                 </CardContent>
@@ -15777,17 +16341,17 @@ export function SettingsPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <Label htmlFor="font-size">Default Font Size</Label>
+                    <Label htmlFor="font-size" className="block mb-3">Default Font Size</Label>
                     <Select
                       value={settings.fontSize}
                       onValueChange={(value) =>
                         handleSettingChange("fontSize", value)
                       }
                     >
-                      <SelectTrigger className="mt-1">
+                      <SelectTrigger className="w-full">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="w-full">
                         <SelectItem value="small">Small</SelectItem>
                         <SelectItem value="medium">Medium</SelectItem>
                         <SelectItem value="large">Large</SelectItem>
@@ -15795,12 +16359,12 @@ export function SettingsPage() {
                     </Select>
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-1 min-w-0 flex-1">
                       <Label htmlFor="reading-mode">
                         Simplified Reading Mode
                       </Label>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 leading-relaxed">
                         Hide distractions while reading
                       </p>
                     </div>
@@ -15810,6 +16374,7 @@ export function SettingsPage() {
                       onCheckedChange={(checked) =>
                         handleSettingChange("readingMode", checked)
                       }
+                      className="flex-shrink-0 mt-1"
                     />
                   </div>
                 </CardContent>
@@ -15823,12 +16388,12 @@ export function SettingsPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-1 min-w-0 flex-1">
                       <Label htmlFor="mature-content">
                         Show Mature Content
                       </Label>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 leading-relaxed">
                         Display stories marked as mature
                       </p>
                     </div>
@@ -15838,6 +16403,7 @@ export function SettingsPage() {
                       onCheckedChange={(checked) =>
                         handleSettingChange("showMatureContent", checked)
                       }
+                      className="flex-shrink-0 mt-1"
                     />
                   </div>
                 </CardContent>
@@ -15880,7 +16446,7 @@ export function SettingsPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <Label htmlFor="session-timeout">
+                    <Label htmlFor="session-timeout" className="block mb-3">
                       Auto-logout after inactivity (days)
                     </Label>
                     <Select
@@ -15889,10 +16455,10 @@ export function SettingsPage() {
                         handleSettingChange("sessionTimeout", parseInt(value))
                       }
                     >
-                      <SelectTrigger className="mt-1">
+                      <SelectTrigger className="w-full">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="w-full">
                         <SelectItem value="7">7 days</SelectItem>
                         <SelectItem value="14">14 days</SelectItem>
                         <SelectItem value="30">30 days</SelectItem>
@@ -15901,10 +16467,10 @@ export function SettingsPage() {
                     </Select>
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-1 min-w-0 flex-1">
                       <Label htmlFor="login-alerts">Login Alerts</Label>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 leading-relaxed">
                         Get notified of new login attempts
                       </p>
                     </div>
@@ -15914,6 +16480,7 @@ export function SettingsPage() {
                       onCheckedChange={(checked) =>
                         handleSettingChange("loginAlerts", checked)
                       }
+                      className="flex-shrink-0 mt-1"
                     />
                   </div>
 
@@ -15941,10 +16508,10 @@ export function SettingsPage() {
 
       {/* Change Password Dialog */}
       <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md mx-4">
           <DialogHeader>
-            <DialogTitle>Change Password</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-lg sm:text-xl">Change Password</DialogTitle>
+            <DialogDescription className="text-sm sm:text-base">
               Enter your current password and choose a new one
             </DialogDescription>
           </DialogHeader>
@@ -17457,6 +18024,8 @@ export function StoryDetailPage() {
 ```tsx
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import {
   ChevronLeft,
   ChevronRight,
@@ -17885,9 +18454,67 @@ export function StoryReaderPage() {
               className="prose prose-lg dark:prose-invert max-w-none"
             >
               {currentChapter.content ? (
-                <div className="whitespace-pre-wrap">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    h1: ({ node, ...props }) => (
+                      <h1 style={{ color: currentTheme.text }} {...props} />
+                    ),
+                    h2: ({ node, ...props }) => (
+                      <h2 style={{ color: currentTheme.text }} {...props} />
+                    ),
+                    h3: ({ node, ...props }) => (
+                      <h3 style={{ color: currentTheme.text }} {...props} />
+                    ),
+                    p: ({ node, ...props }) => (
+                      <p style={{ color: currentTheme.text }} {...props} />
+                    ),
+                    strong: ({ node, ...props }) => (
+                      <strong style={{ color: currentTheme.text, fontWeight: 'bold' }} {...props} />
+                    ),
+                    em: ({ node, ...props }) => (
+                      <em style={{ color: currentTheme.text, fontStyle: 'italic' }} {...props} />
+                    ),
+                    a: ({ node, ...props }) => (
+                      <a style={{ color: currentTheme.sliderThumb }} {...props} />
+                    ),
+                    blockquote: ({ node, ...props }) => (
+                      <blockquote
+                        style={{
+                          borderLeftColor: currentTheme.sliderThumb,
+                          color: currentTheme.secondaryText,
+                        }}
+                        {...props}
+                      />
+                    ),
+                    code: ({ node, inline, ...props }: any) => {
+                      return inline ? (
+                        <code
+                          style={{
+                            backgroundColor: theme === "dark" || theme === "night" ? "#2a2a2a" : "#f3f4f6",
+                            color: currentTheme.text,
+                            padding: "2px 6px",
+                            borderRadius: "3px",
+                          }}
+                          {...props}
+                        />
+                      ) : (
+                        <code
+                          style={{
+                            backgroundColor: theme === "dark" || theme === "night" ? "#2a2a2a" : "#f3f4f6",
+                            color: currentTheme.text,
+                            display: "block",
+                            padding: "12px",
+                            borderRadius: "6px",
+                          }}
+                          {...props}
+                        />
+                      );
+                    },
+                  }}
+                >
                   {currentChapter.content}
-                </div>
+                </ReactMarkdown>
               ) : (
                 <p
                   className="italic"
@@ -18718,6 +19345,8 @@ export interface User {
   email: string;
   bio: string | null;
   profile_pic: string | null;
+  cover_image: string | null;
+  is_google_user?: boolean;
   followers_count: number;
   following_count: number;
   stories_count: number;
@@ -18728,6 +19357,7 @@ export interface User {
 export interface UpdateProfileRequest {
   bio?: string | null;
   profile_pic?: string | null;
+  cover_image?: string | null;
 }
 
 export interface ChangePasswordRequest {
@@ -19209,8 +19839,8 @@ export default defineConfig(({ mode }) => ({
 
 ## 📊 Documentation Statistics
 
-- **Total Files Documented:** 125
-- **Total Size:** 618,533 characters
+- **Total Files Documented:** 126
+- **Total Size:** 644,968 characters
 
 **File Type Distribution:**
 - `.css`: 2 files
@@ -19219,7 +19849,7 @@ export default defineConfig(({ mode }) => ({
 - `.json`: 6 files
 - `.md`: 1 files
 - `.svg`: 2 files
-- `.ts`: 27 files
+- `.ts`: 28 files
 - `.tsx`: 83 files
 - `no-ext`: 1 files
 
