@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { ProfileSkeleton } from "@/components/ui/profile-skeleton";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   Grid3X3,
@@ -47,8 +46,14 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { MainLayout } from "@/components/layout/main-layout";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { useAuthStore } from "@/store/authStore";
 import { Story, User } from "@/types";
 import { storiesApi, usersApi, libraryApi } from "@/apis";
@@ -98,7 +103,6 @@ export function ProfilePage() {
   // Cover image state
   const [newCoverImage, setNewCoverImage] = useState<File | null>(null);
   const [coverImagePreview, setCoverImagePreview] = useState<string>("");
-  const [showCoverCropper, setShowCoverCropper] = useState(false);
 
   // Cropper state
   const [showCropper, setShowCropper] = useState(false);
@@ -584,10 +588,16 @@ export function ProfilePage() {
     });
   };
 
+  // Loading state UI
   if (isLoading) {
     return (
-      <div className="flex min-h-screen">
-        <ProfileSkeleton />
+      <div className="flex min-h-screen bg-white">
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <LoadingSpinner className="h-12 w-12 mx-auto mb-4" />
+            <p className="text-gray-500">Loading profile...</p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -639,13 +649,13 @@ export function ProfilePage() {
       icon: MessageSquare,
       label: "Messages",
       onClick: () => navigate("/messages"),
-      badge: isOwnProfile ? 3 : 0, // Example badge count
+      badge: isOwnProfile ? 3 : 0,
     },
     {
       icon: Heart,
       label: "Notifications",
       onClick: () => navigate("/notifications"),
-      badge: isOwnProfile ? 7 : 0, // Example badge count
+      badge: isOwnProfile ? 7 : 0,
     },
     {
       icon: PlusSquare,
@@ -1162,9 +1172,172 @@ export function ProfilePage() {
         </div>
       </div>
 
-      {/* All modals remain the same */}
-      {/* Edit Profile Modal, Cropper Modal, Profile Picture Modal remain unchanged */}
-      {/* ... existing modal code ... */}
+      {/* Edit Profile Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Edit Profile</DialogTitle>
+            <DialogDescription>
+              Make changes to your profile here
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            {/* Profile Picture Section */}
+            <div className="flex items-center gap-4">
+              <Avatar className="h-20 w-20">
+                <AvatarImage src={profilePicPreview || undefined} />
+                <AvatarFallback>
+                  {profileUser?.username?.[0].toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex gap-2">
+                <label>
+                  <Button variant="outline" size="sm" asChild>
+                    <span>
+                      <Camera className="h-4 w-4 mr-2" />
+                      Change
+                    </span>
+                  </Button>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleProfilePicSelect}
+                    className="hidden"
+                  />
+                </label>
+                {profilePicPreview && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setProfilePicPreview("");
+                      setNewProfilePic(null);
+                    }}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            {/* Bio Field */}
+            <div>
+              <Label htmlFor="bio">Bio</Label>
+              <Textarea
+                id="bio"
+                value={editForm.bio}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, bio: e.target.value })
+                }
+                placeholder="Tell us about yourself..."
+                className="min-h-[100px]"
+                maxLength={150}
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                {editForm.bio.length}/150
+              </p>
+            </div>
+
+            {/* Update Button */}
+            <div className="flex justify-end gap-2 pt-4">
+              <Button
+                variant="outline"
+                onClick={() => setEditDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleUpdateProfile}
+                disabled={isUpdatingProfile}
+              >
+                {isUpdatingProfile ? (
+                  <>
+                    <LoadingSpinner className="h-4 w-4 mr-2" />
+                    Updating...
+                  </>
+                ) : (
+                  "Save Changes"
+                )}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Image Cropper Dialog */}
+      <Dialog open={showCropper} onOpenChange={setShowCropper}>
+        <DialogContent className="sm:max-w-[600px] p-0">
+          <div className="relative h-[400px] bg-black">
+            <Cropper
+              image={imageToCrop}
+              crop={crop}
+              zoom={zoom}
+              rotation={rotation}
+              aspect={cropType === "profile" ? 1 : 16 / 9}
+              onCropChange={setCrop}
+              onCropComplete={onCropComplete}
+              onZoomChange={setZoom}
+              onRotationChange={setRotation}
+            />
+          </div>
+          <div className="p-4 space-y-4">
+            {/* Zoom Control */}
+            <div className="flex items-center gap-2">
+              <ZoomOut className="h-4 w-4" />
+              <input
+                type="range"
+                min={1}
+                max={3}
+                step={0.1}
+                value={zoom}
+                onChange={(e) => setZoom(Number(e.target.value))}
+                className="flex-1"
+              />
+              <ZoomIn className="h-4 w-4" />
+            </div>
+
+            {/* Rotation Control */}
+            <div className="flex items-center gap-2">
+              <RotateCw className="h-4 w-4" />
+              <input
+                type="range"
+                min={0}
+                max={360}
+                value={rotation}
+                onChange={(e) => setRotation(Number(e.target.value))}
+                className="flex-1"
+              />
+              <span className="text-sm w-12">{rotation}°</span>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={handleCropCancel}>
+                Cancel
+              </Button>
+              <Button onClick={handleCropSave}>Apply</Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Profile Picture Modal */}
+      <Dialog open={showProfilePicModal} onOpenChange={setShowProfilePicModal}>
+        <DialogContent className="sm:max-w-[500px] p-0">
+          <div className="relative">
+            <img src={modalImageUrl} alt="Profile" className="w-full h-auto" />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white"
+              onClick={() => setShowProfilePicModal(false)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
