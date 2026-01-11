@@ -100,8 +100,22 @@ export function LoginPage() {
         {/* Card Container */}
         <div className="bg-white py-8 px-6 shadow-xl rounded-lg sm:px-10">
           {/* Logo */}
-          <div className="flex justify-center mb-6">
-            <Logo size="md" showText={true} />
+          <div className="flex flex-col items-center mb-6">
+            <Logo size="md" showText={false} iconClassName="h-20 w-20" />
+            <span className="mt-1 text-2xl leading-none tracking-tight">
+              <span
+                className="font-bold text-orange-500"
+                style={{ fontFamily: "'Cinzel', serif" }}
+              >
+                Stori
+              </span>
+              <span
+                className="font-medium text-gray-700"
+                style={{ fontFamily: "'Cinzel', serif" }}
+              >
+                Vault
+              </span>
+            </span>
           </div>
 
           {/* Header */}
