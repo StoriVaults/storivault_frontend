@@ -10,12 +10,14 @@ interface MainLayoutProps {
   children: React.ReactNode;
   className?: string;
   showFooter?: boolean;
+  scale?: number;
 }
 
 export function MainLayout({
   children,
   className,
   showFooter = true,
+  scale = 1,
 }: MainLayoutProps) {
   const { isAuthenticated, fetchMe } = useAuthStore();
 
@@ -26,8 +28,11 @@ export function MainLayout({
     }
   }, [isAuthenticated, fetchMe]);
 
+  const layoutStyle =
+    scale !== 1 ? { zoom: scale } : undefined;
+
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col" style={layoutStyle}>
       <Header />
       <main className={cn("flex-1 flex flex-col", className)}>
         <div className="flex-1">{children}</div>

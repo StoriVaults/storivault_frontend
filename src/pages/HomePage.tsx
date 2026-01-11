@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -33,13 +33,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { StoryCard } from "@/components/ui/story-card";
-import { StoryCardSkeleton } from "@/components/ui/story-card-skeleton";
-import { Skeleton } from "@/components/ui/skeleton";
 import { MainLayout } from "@/components/layout/main-layout";
 import { useAuthStore } from "@/store/authStore";
 import { Story } from "@/types";
 import { storiesApi } from "@/apis";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
+import { LottieAnimation } from "@/components/ui/lottie-animation";
+import { MagneticButton } from "@/components/ui/magnetic-button";
 
 // Literary color palette - warm and inviting
 const literaryColors = {
@@ -121,7 +122,6 @@ export function HomePage() {
   const [featuredStories, setFeaturedStories] = useState<Story[]>([]);
   const [trendingStories, setTrendingStories] = useState<Story[]>([]);
   const [popularStories, setPopularStories] = useState<Story[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [currentQuote, setCurrentQuote] = useState(0);
   const [hoveredGenre, setHoveredGenre] = useState<string | null>(null);
 
@@ -148,91 +148,15 @@ export function HomePage() {
         setPopularStories(popularResponse.items);
       } catch (error) {
         console.error("Failed to fetch home data:", error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
     fetchHomeData();
   }, []);
 
-  // Loading State
-  if (isLoading) {
-    return (
-      <MainLayout>
-        <div
-          className="min-h-screen"
-          style={{ backgroundColor: literaryColors.cream }}
-        >
-          {/* Hero Section Skeleton */}
-          <section className="relative overflow-hidden py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
-            <div className="relative z-10 max-w-7xl mx-auto text-center">
-              <Skeleton className="h-8 w-48 mx-auto mb-6" variant="rounded" />
-              <Skeleton className="h-16 w-3/4 mx-auto mb-4" variant="text" />
-              <Skeleton className="h-6 w-1/2 mx-auto mb-8" variant="text" />
-              <div className="flex justify-center gap-4 mb-12">
-                <Skeleton className="h-12 w-40" variant="rounded" />
-                <Skeleton className="h-12 w-32" variant="rounded" />
-              </div>
-              {/* Stats Skeleton */}
-              <div className="grid grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-sm sm:max-w-md md:max-w-none mx-auto">
-                <div className="text-center">
-                  <Skeleton className="h-10 w-24 mx-auto mb-2" variant="text" />
-                  <Skeleton className="h-4 w-20 mx-auto" variant="text" />
-                </div>
-                <div className="text-center">
-                  <Skeleton className="h-10 w-24 mx-auto mb-2" variant="text" />
-                  <Skeleton className="h-4 w-20 mx-auto" variant="text" />
-                </div>
-                <div className="text-center">
-                  <Skeleton className="h-10 w-24 mx-auto mb-2" variant="text" />
-                  <Skeleton className="h-4 w-20 mx-auto" variant="text" />
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Featured Stories Skeleton */}
-          <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
-            <div className="max-w-7xl mx-auto">
-              <div className="text-center mb-8 sm:mb-10 md:mb-12">
-                <Skeleton className="h-8 w-64 mx-auto mb-4" variant="text" />
-                <Skeleton className="h-5 w-96 mx-auto" variant="text" />
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-                {Array.from({ length: 6 }).map((_, index) => (
-                  <StoryCardSkeleton key={index} variant="default" />
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* Genre Discovery Skeleton */}
-          <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
-            <div className="max-w-7xl mx-auto">
-              <div className="text-center mb-8 sm:mb-10 md:mb-12">
-                <Skeleton className="h-8 w-64 mx-auto mb-4" variant="text" />
-                <Skeleton className="h-5 w-80 mx-auto" variant="text" />
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
-                {Array.from({ length: 6 }).map((_, index) => (
-                  <Skeleton
-                    key={index}
-                    className="h-32 rounded-lg"
-                    variant="rounded"
-                  />
-                ))}
-              </div>
-            </div>
-          </section>
-        </div>
-      </MainLayout>
-    );
-  }
-
   // Main Content
   return (
-    <MainLayout showFooter={true}>
+    <MainLayout showFooter={true} scale={0.9}>
       {/* Custom Literary Styles */}
       <style>{`
         @keyframes page-float {
@@ -298,6 +222,19 @@ export function HomePage() {
         .gold-ring {
           box-shadow: 0 0 0 4px ${literaryColors.gold}, 0 0 0 8px rgba(212, 165, 116, 0.3);
         }
+
+        .glass-morphism {
+          background: rgba(255, 255, 255, 0.2);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .text-gradient-gold {
+          background: linear-gradient(135deg, ${literaryColors.gold} 0%, #B8860B 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
       `}</style>
 
       {/* Add Google Font for handwritten style */}
@@ -310,166 +247,137 @@ export function HomePage() {
         className="min-h-screen"
         style={{ backgroundColor: literaryColors.cream }}
       >
-        {/* Hero Section - Cozy Library Theme - MOBILE OPTIMIZED */}
-        <section className="relative overflow-hidden py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
-          {/* Floating background elements - Hidden on mobile for performance */}
-          <div className="hidden sm:block absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-10 left-10 w-32 h-40 bg-white/40 rounded-lg rotate-12 page-float" />
-            <div
-              className="absolute top-20 right-20 w-28 h-36 bg-white/30 rounded-lg -rotate-6 page-float"
-              style={{ animationDelay: "2s" }}
+        {/* Hero Section - Elite Digital Library */}
+        <section className="relative overflow-hidden pt-2 pb-0 md:pt-6 md:pb-0 px-4 sm:px-6 md:px-8">
+          {/* Animated Background Elements */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 0.15, scale: 1 }}
+              transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
+              className="absolute -top-24 -left-24 w-96 h-96 rounded-full blur-3xl"
+              style={{ backgroundColor: literaryColors.gold }}
             />
-            <div
-              className="absolute bottom-10 left-1/4 w-24 h-32 bg-white/35 rounded-lg rotate-3 page-float"
-              style={{ animationDelay: "4s" }}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 0.1, scale: 1.2 }}
+              transition={{ duration: 3, repeat: Infinity, repeatType: "reverse", delay: 1 }}
+              className="absolute top-1/2 -right-24 w-80 h-80 rounded-full blur-3xl"
+              style={{ backgroundColor: literaryColors.skyBlue }}
             />
-            <Feather className="absolute top-1/3 right-10 h-20 w-20 text-amber-700/20 quill-write" />
-            <BookOpen className="absolute bottom-20 right-1/3 h-24 w-24 text-amber-600/15 rotate-12" />
-            <Coffee className="absolute top-1/2 left-10 h-16 w-16 text-amber-800/20" />
           </div>
 
-          <div className="relative z-10 max-w-7xl mx-auto text-center">
-            
-
-            <h1
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif mb-4 sm:mb-6 fade-in-up leading-tight"
-              style={{ color: literaryColors.coffee }}
-            >
-              Where Stories
-              <span
-                className="block text-glow mt-1 sm:mt-2"
-                style={{ color: literaryColors.gold }}
+          <div className="relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12">
+            <div className="flex-1 text-left">
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8 }}
               >
-                Come to Life
-              </span>
-            </h1>
+                
 
-            <p
-              className="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 sm:mb-8 max-w-3xl mx-auto handwritten fade-in-up px-4"
-              style={{ color: literaryColors.ink, animationDelay: "0.2s" }}
-            >
-              "{inspiringQuotes[currentQuote].text}"
-              <span className="block text-xs sm:text-sm mt-2 font-serif">
-                — {inspiringQuotes[currentQuote].author}
-              </span>
-            </p>
+                <h1
+                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif mb-4 leading-tight"
+                  style={{ color: literaryColors.coffee }}
+                >
+                  Where Stories{" "}
+                  <span className="text-gradient-gold block">Come to Life</span>
+                </h1>
 
-            <div
-              className="flex flex-col gap-3 sm:flex-row sm:gap-4 justify-center mb-8 sm:mb-12 fade-in-up px-4"
-              style={{ animationDelay: "0.4s" }}
-            >
-              {isAuthenticated ? (
-                <>
-                  <Button
-                    size="default"
-                    className="group px-6 py-5 sm:px-8 sm:py-6 text-base sm:text-lg rounded-full shadow-lg transform hover:scale-105 transition-all"
-                    style={{
-                      backgroundColor: literaryColors.coffee,
-                      color: literaryColors.cream,
-                    }}
-                    asChild
-                  >
-                    <Link to="/stories">
-                      <Library className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5 group-hover:rotate-12 transition-transform" />
-                      Explore Library
-                    </Link>
-                  </Button>
-                  <Button
-                    size="default"
-                    variant="outline"
-                    className="px-6 py-5 sm:px-8 sm:py-6 text-base sm:text-lg rounded-full border-2 transform hover:scale-105 transition-all"
-                    style={{
-                      borderColor: literaryColors.gold,
-                      color: literaryColors.coffee,
-                    }}
-                    asChild
-                  >
-                    <Link to="/stories/create">
-                      <PenTool className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5" />
-                      Start Writing
-                    </Link>
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button
-                    size="default"
-                    className="group px-8 py-5 sm:px-10 sm:py-6 text-lg sm:text-xl rounded-full book-shadow transform hover:scale-105 transition-all"
-                    style={{
-                      backgroundColor: literaryColors.gold,
-                      color: literaryColors.coffee,
-                    }}
-                    asChild
-                  >
-                    <Link to="/stories">
-                      <BookOpen className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6 group-hover:rotate-12 transition-transform" />
-                      Start Reading Free
-                    </Link>
-                  </Button>
-                  <Button
-                    size="default"
-                    variant="outline"
-                    className="px-6 py-5 sm:px-8 sm:py-6 text-base sm:text-lg rounded-full border-2"
-                    style={{
-                      borderColor: literaryColors.coffee,
-                      color: literaryColors.coffee,
-                    }}
-                    asChild
-                  >
-                    <Link to="/auth/signup">Join as Writer</Link>
-                  </Button>
-                </>
-              )}
+                <p
+                  className="text-lg md:text-xl mb-6 max-w-xl handwritten leading-relaxed"
+                  style={{ color: literaryColors.ink }}
+                >
+                  <AnimatePresence mode="wait">
+                    <motion.span
+                      key={currentQuote}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.5 }}
+                      className="block"
+                    >
+                      "{inspiringQuotes[currentQuote].text}"
+                      <span className="block text-sm mt-3 font-serif italic text-muted-foreground">
+                        â€” {inspiringQuotes[currentQuote].author}
+                      </span>
+                    </motion.span>
+                  </AnimatePresence>
+                </p>
+
+                <div className="flex flex-wrap gap-4 mb-2">
+                  <MagneticButton>
+                    <Button
+                      size="lg"
+                      className="group px-8 py-7 text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all"
+                      style={{
+                        backgroundColor: literaryColors.coffee,
+                        color: literaryColors.cream,
+                      }}
+                      asChild
+                    >
+                      <Link to="/stories">
+                        <BookOpen className="mr-3 h-6 w-6 group-hover:rotate-12 transition-transform" />
+                        Explore Library
+                      </Link>
+                    </Button>
+                  </MagneticButton>
+
+                  <MagneticButton>
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      className="px-8 py-7 text-lg rounded-2xl border-2 glass-morphism hover:bg-white/20 transition-all"
+                      style={{
+                        borderColor: literaryColors.gold,
+                        color: literaryColors.coffee,
+                      }}
+                      asChild
+                    >
+                      <Link to="/stories/create">
+                        <PenTool className="mr-3 h-6 w-6" />
+                        Start Writing
+                      </Link>
+                    </Button>
+                  </MagneticButton>
+                </div>
+
+                {/* Live Reading Stats */}
+                <div className="flex gap-8 sm:gap-12">
+                  {[
+                    { label: "Pages Today", val: "2.5M+", color: literaryColors.gold },
+                    { label: "Active Readers", val: "850K+", color: literaryColors.dustyRose },
+                    { label: "Stories", val: "125K+", color: literaryColors.sage },
+                  ].map((stat, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5 + i * 0.1 }}
+                    >
+                      <div className="text-2xl sm:text-3xl font-bold" style={{ color: stat.color }}>{stat.val}</div>
+                      <div className="text-xs sm:text-sm uppercase tracking-wider font-semibold opacity-70" style={{ color: literaryColors.ink }}>{stat.label}</div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
             </div>
 
-            {/* Live Reading Stats - Mobile Optimized Grid */}
-            <div
-              className="grid grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-sm sm:max-w-md md:max-w-none mx-auto fade-in-up"
-              style={{ animationDelay: "0.6s" }}
+            <motion.div
+              className="flex-1 relative w-full max-w-2xl"
+              initial={{ opacity: 0, scale: 0.9, rotate: 5 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              transition={{ duration: 1, ease: "easeOut" }}
             >
-              <div className="text-center">
-                <div
-                  className="text-2xl sm:text-3xl md:text-4xl font-bold"
-                  style={{ color: literaryColors.gold }}
-                >
-                  2.5M+
-                </div>
-                <div
-                  className="text-xs sm:text-sm"
-                  style={{ color: literaryColors.ink }}
-                >
-                  Pages Today
-                </div>
+              <div className="relative z-10 flex items-center justify-center">
+                <LottieAnimation
+                  path="/lottie/Pen%20and%20Book.json"
+                  loop={true}
+                  className="w-full h-full max-w-xl mx-auto"
+                />
               </div>
-              <div className="text-center">
-                <div
-                  className="text-2xl sm:text-3xl md:text-4xl font-bold"
-                  style={{ color: literaryColors.dustyRose }}
-                >
-                  850K+
-                </div>
-                <div
-                  className="text-xs sm:text-sm"
-                  style={{ color: literaryColors.ink }}
-                >
-                  Active Readers
-                </div>
-              </div>
-              <div className="text-center">
-                <div
-                  className="text-2xl sm:text-3xl md:text-4xl font-bold"
-                  style={{ color: literaryColors.sage }}
-                >
-                  125K+
-                </div>
-                <div
-                  className="text-xs sm:text-sm"
-                  style={{ color: literaryColors.ink }}
-                >
-                  Stories
-                </div>
-              </div>
-            </div>
+
+            </motion.div>
           </div>
         </section>
 
@@ -497,27 +405,47 @@ export function HomePage() {
                 >
                   Featured Stories This Week
                 </h2>
-                <p
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.2 }}
                   className="text-sm sm:text-base md:text-lg px-4"
                   style={{ color: literaryColors.ink }}
                 >
                   Handpicked tales that will captivate your imagination
-                </p>
+                </motion.p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: {
+                    opacity: 1,
+                    transition: {
+                      staggerChildren: 0.1
+                    }
+                  }
+                }}
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8"
+              >
                 {featuredStories.slice(0, 6).map((story, index) => (
-                  <div
+                  <motion.div
                     key={story.id}
-                    className="group fade-in-up"
-                    style={{ animationDelay: `${index * 0.1}s` }}
+                    variants={{
+                      hidden: { opacity: 0, y: 30 },
+                      visible: { opacity: 1, y: 0 }
+                    }}
                   >
                     <Card className="overflow-hidden border-0 book-shadow hover:scale-105 transition-all duration-300">
                       <div className="aspect-[3/4] relative overflow-hidden">
                         <img
                           src={
                             story.cover_image ||
-                            `https://source.unsplash.com/400x600/?book,library,${index}`
+                            `https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=400&h=600&auto=format&fit=crop`
                           }
                           alt={story.title}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
@@ -551,9 +479,9 @@ export function HomePage() {
                         </div>
                       </div>
                     </Card>
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
 
               <div className="text-center mt-6 sm:mt-8">
                 <Button
@@ -585,73 +513,98 @@ export function HomePage() {
               >
                 Find Your Perfect Genre
               </h2>
-              <p
+              <motion.p
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
                 className="text-sm sm:text-base md:text-lg"
                 style={{ color: literaryColors.ink }}
               >
                 Every reader has a story waiting to be discovered
-              </p>
+              </motion.p>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: {
+                    staggerChildren: 0.05
+                  }
+                }
+              }}
+              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6"
+            >
               {genreCards.map((genre) => {
                 const Icon = genre.icon;
                 return (
-                  <Link
+                  <motion.div
                     key={genre.name}
-                    to={`/stories?genre=${genre.name}`}
-                    className={cn(
-                      "group cursor-pointer transform hover:scale-110 transition-all duration-300",
-                      genre.shape
-                    )}
-                    onMouseEnter={() => setHoveredGenre(genre.name)}
-                    onMouseLeave={() => setHoveredGenre(null)}
+                    variants={{
+                      hidden: { opacity: 0, scale: 0.8 },
+                      visible: { opacity: 1, scale: 1 }
+                    }}
+                    whileHover={{ scale: 1.05, y: -5 }}
                   >
-                    <Card
+                    <Link
+                      to={`/stories?genre=${genre.name}`}
                       className={cn(
-                        "p-3 sm:p-4 md:p-6 h-full border-0 text-center book-shadow",
+                        "group cursor-pointer transition-all duration-300 block h-full",
                         genre.shape
                       )}
-                      style={{
-                        backgroundColor:
-                          hoveredGenre === genre.name ? genre.color : "white",
-                        transition: "all 0.3s ease",
-                      }}
+                      onMouseEnter={() => setHoveredGenre(genre.name)}
+                      onMouseLeave={() => setHoveredGenre(null)}
                     >
-                      <Icon
-                        className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 mx-auto mb-2 sm:mb-3"
+                      <Card
+                        className={cn(
+                          "p-3 sm:p-4 md:p-6 h-full border-0 text-center book-shadow",
+                          genre.shape
+                        )}
                         style={{
-                          color:
-                            hoveredGenre === genre.name ? "white" : genre.color,
-                        }}
-                      />
-                      <h3
-                        className="font-bold text-xs sm:text-sm mb-0.5 sm:mb-1"
-                        style={{
-                          color:
-                            hoveredGenre === genre.name
-                              ? "white"
-                              : literaryColors.coffee,
+                          backgroundColor:
+                            hoveredGenre === genre.name ? genre.color : "white",
+                          transition: "all 0.3s ease",
                         }}
                       >
-                        {genre.name}
-                      </h3>
-                      <p
-                        className="text-[10px] sm:text-xs"
-                        style={{
-                          color:
-                            hoveredGenre === genre.name
-                              ? "rgba(255,255,255,0.8)"
-                              : literaryColors.ink,
-                        }}
-                      >
-                        {genre.stories} stories
-                      </p>
-                    </Card>
-                  </Link>
+                        <Icon
+                          className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 mx-auto mb-2 sm:mb-3"
+                          style={{
+                            color:
+                              hoveredGenre === genre.name ? "white" : genre.color,
+                          }}
+                        />
+                        <h3
+                          className="font-bold text-xs sm:text-sm mb-0.5 sm:mb-1"
+                          style={{
+                            color:
+                              hoveredGenre === genre.name
+                                ? "white"
+                                : literaryColors.coffee,
+                          }}
+                        >
+                          {genre.name}
+                        </h3>
+                        <p
+                          className="text-[10px] sm:text-xs"
+                          style={{
+                            color:
+                              hoveredGenre === genre.name
+                                ? "rgba(255,255,255,0.8)"
+                                : literaryColors.ink,
+                          }}
+                        >
+                          {genre.stories} stories
+                        </p>
+                      </Card>
+                    </Link>
+                  </motion.div>
                 );
               })}
-            </div>
+            </motion.div>
           </div>
         </section>
 
@@ -834,6 +787,8 @@ export function HomePage() {
           </div>
         </section>
       </div>
-    </MainLayout>
+    </MainLayout >
   );
 }
+
+
