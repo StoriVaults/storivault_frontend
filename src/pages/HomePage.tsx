@@ -329,18 +329,7 @@ export function HomePage() {
           </div>
 
           <div className="relative z-10 max-w-7xl mx-auto text-center">
-            <div className="mb-4 sm:mb-6 md:mb-8">
-              <Badge
-                className="px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium rounded-full"
-                style={{
-                  backgroundColor: literaryColors.gold,
-                  color: literaryColors.coffee,
-                }}
-              >
-                <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
-                Welcome to Your Literary Haven
-              </Badge>
-            </div>
+            
 
             <h1
               className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif mb-4 sm:mb-6 fade-in-up leading-tight"

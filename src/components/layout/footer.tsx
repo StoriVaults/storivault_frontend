@@ -42,7 +42,12 @@ export function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
             {/* Brand Section with New Logo */}
             <div className="lg:col-span-2">
-              <Logo size="md" className="mb-4" />
+              <Logo
+                size="sm"
+                className="mb-4"
+                vaultClassName="text-white"
+                iconClassName="h-12 w-12"
+              />
               <p className="text-gray-300 mb-4 max-w-sm">
                 Your gateway to infinite stories. Discover captivating tales,
                 connect with passionate writers, and immerse yourself in worlds

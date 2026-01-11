@@ -101,49 +101,7 @@ export function Header() {
 
                 {/* Logo with Text on Mobile, Full Logo on Desktop */}
                 <Link to="/" className="flex items-center gap-2">
-                  {/* Mobile - Show StoriVault text */}
-                  <div className="sm:hidden flex items-center gap-2">
-                    {/* Book Icon */}
-                    <svg
-                      viewBox="0 0 48 48"
-                      className="h-8 w-8"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <defs>
-                        <linearGradient
-                          id="mobileBookGradient"
-                          x1="0%"
-                          y1="0%"
-                          x2="100%"
-                          y2="100%"
-                        >
-                          <stop offset="0%" stopColor="#FF6B35" />
-                          <stop offset="100%" stopColor="#FFA500" />
-                        </linearGradient>
-                      </defs>
-                      <path
-                        d="M6 8C6 6.89543 6.89543 6 8 6H22V38H8C6.89543 38 6 37.1046 6 36V8Z"
-                        fill="url(#mobileBookGradient)"
-                      />
-                      <path
-                        d="M26 6H40C41.1046 6 42 6.89543 42 8V36C42 37.1046 41.1046 38 40 38H26V6Z"
-                        fill="url(#mobileBookGradient)"
-                        opacity="0.8"
-                      />
-                      <rect x="22" y="6" width="4" height="32" fill="#E85D04" />
-                    </svg>
-                    {/* StoriVault Text */}
-                    <span className="font-bold text-lg">
-                      <span className="text-orange-500">Stori</span>
-                      <span className="text-gray-700">Vault</span>
-                    </span>
-                  </div>
-
-                  {/* Desktop - Full Logo Component */}
-                  <div className="hidden sm:block">
-                    <Logo size="sm" showText={true} />
-                  </div>
+                  <Logo size="sm" showText={true} />
                 </Link>
 
                 {/* Browse Dropdown - Desktop Only */}
