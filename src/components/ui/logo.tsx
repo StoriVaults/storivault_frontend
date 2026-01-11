@@ -113,6 +113,7 @@ export function Logo({
   return (
     <Link
       to="/"
+      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       className={cn(
         "flex items-center transition-all hover:scale-105",
         sizes[size].spacing,
